@@ -1509,6 +1509,8 @@ export const zh: Record<string, string> = {
 	'asm.ctxTitleNoLimit': '此标签页的对话当前占用 {used} token（未给助手分配连接）。',
 	'asm.ctxAria': '上下文窗口占用',
 	'asm.ctxNewTab': '开一个全新标签页，本页保留其记录',
+	'asm.waitApproval': '等待你的批准',
+	'asm.working': '工作中',
 	'asm.costAria': '助手的开销',
 	'asm.costTitle': '使用前须知',
 	'asm.costText': '一条消息可能产生多次模型请求，每次都携带整个对话和全部工具定义。请在其背后的密钥上设置消费限额。',

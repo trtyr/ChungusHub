@@ -26,6 +26,7 @@
 	 * amount of streaming can resize the row or move the timeline above it.
 	 */
 	import AssistantWorkMotion from './AssistantWorkMotion.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { motionFor, WORK_WORDS, type WorkMotion } from '$lib/config/assistant-motion';
 	import type { AssistantSessionRuntime } from '$lib/types/assistant';
 
@@ -165,7 +166,7 @@
 			<span class="activity-word" aria-hidden="true">{word}</span>
 		{/key}
 	{/if}
-	<span class="sr-only">{mode === 'held' ? 'Waiting for your approval' : 'Working'}</span>
+	<span class="sr-only">{mode === 'held' ? i18n.t('asm.waitApproval') : i18n.t('asm.working')}</span>
 	<span class="activity-trail" aria-hidden="true">
 		{#each TICK_INDEXES as i (i)}
 			<span class="activity-tick" style:opacity={glow(i)}></span>

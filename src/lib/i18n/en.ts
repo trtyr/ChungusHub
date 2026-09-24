@@ -1605,6 +1605,8 @@ export const en: Record<string, string> = {
 	'asm.ctxTitleNoLimit': "This tab's conversation currently occupies {used} tokens (no connection is assigned to the Assistant).",
 	'asm.ctxAria': 'Context window usage',
 	'asm.ctxNewTab': 'Start a fresh tab, this one keeps its transcript',
+	'asm.waitApproval': 'Waiting for your approval',
+	'asm.working': 'Working',
 	'asm.costAria': 'What the assistant costs',
 	'asm.costTitle': 'Before you use this',
 	'asm.costText': 'A single message can produce many model requests, each carrying the whole conversation and every tool definition. Set a spending limit on the key behind it.',
