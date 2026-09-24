@@ -5,6 +5,7 @@
 	 * Content only: the view chrome lives in AssistantSettingsView.
 	 */
 	import { onMount } from 'svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import Toggle from '$lib/components/ui/Toggle.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
@@ -240,7 +241,7 @@
 				description: e.description,
 				// A name already on the list starts unticked: browsing the defaults or
 				// re-reading your own export must not quietly double what is on screen.
-				tag: have.has(e.name.trim().toLowerCase()) ? 'In your list' : undefined
+				tag: have.has(e.name.trim().toLowerCase()) ? i18n.t('asm.skInList') : undefined
 			}))
 		};
 	}
@@ -273,7 +274,7 @@
 		items = [...items, ...added];
 		// A failed save reloads from the server, which drops every one of them: nothing
 		// lands half-added, and the source is still there to try again.
-		await persist(added, `Added ${chosen.length} skill${chosen.length === 1 ? '' : 's'}`);
+		await persist(added, i18n.t('asm.skAdded', { n: chosen.length }));
 	}
 </script>
 
@@ -285,17 +286,17 @@
 				checked={item.enabled}
 				size="sm"
 				disabled={item.busy}
-				label={item.enabled ? 'Disable skill' : 'Enable skill'}
+				label={item.enabled ? i18n.t('asm.skDisable') : i18n.t('asm.skEnable')}
 				onchange={() => toggle(item)}
 			/>
 			<button type="button" class="skill-summary" onclick={() => (item.expanded = !item.expanded)} aria-expanded={item.expanded}>
-				<span class="skill-name">{item.name.trim() || 'New skill'}</span>
-				<span class="skill-desc">{item.description.trim() || 'Describe when the assistant should use this.'}</span>
+				<span class="skill-name">{item.name.trim() || i18n.t('asm.skNew')}</span>
+				<span class="skill-desc">{item.description.trim() || i18n.t('asm.skDescFallback')}</span>
 			</button>
-			<button type="button" class="skill-icon-btn skill-icon-btn--danger" onclick={() => requestRemove(item)} aria-label="Delete skill" title="Delete skill">
+			<button type="button" class="skill-icon-btn skill-icon-btn--danger" onclick={() => requestRemove(item)} aria-label={i18n.t('asm.skDelete')} title={i18n.t('asm.skDelete')}>
 				<Icon name="trash" class="w-3.5 h-3.5" />
 			</button>
-			<button type="button" class="skill-icon-btn" onclick={() => (item.expanded = !item.expanded)} aria-label={item.expanded ? 'Collapse' : 'Expand'}>
+			<button type="button" class="skill-icon-btn" onclick={() => (item.expanded = !item.expanded)} aria-label={item.expanded ? i18n.t('asm.collapse') : i18n.t('asm.expand')}>
 				<Icon name={item.expanded ? 'chevronDown' : 'chevronRight'} class="w-4 h-4" />
 			</button>
 		</div>
@@ -303,16 +304,16 @@
 		{#if item.expanded}
 			<div class="skill-editor">
 				<label class="skill-field">
-					<span class="skill-field-label">Title</span>
-					<input class="skill-input" bind:value={item.name} placeholder="Skill name" maxlength="120" />
+					<span class="skill-field-label">{i18n.t('asm.skTitle')}</span>
+					<input class="skill-input" bind:value={item.name} placeholder={i18n.t('asm.skNamePlaceholder')} maxlength="120" />
 				</label>
 				<label class="skill-field">
-					<span class="skill-field-label">Description <span class="skill-field-hint">the one line in the assistant's index, which is what it decides from</span></span>
-					<input class="skill-input" bind:value={item.description} placeholder="When should the assistant reach for this skill?" maxlength="300" />
+					<span class="skill-field-label">{i18n.t('asm.skDesc')} <span class="skill-field-hint">{i18n.t('asm.skDescHint')}</span></span>
+					<input class="skill-input" bind:value={item.description} placeholder={i18n.t('asm.skDescPlaceholder')} maxlength="300" />
 				</label>
 				<label class="skill-field">
-					<span class="skill-field-label">Guide</span>
-					<textarea class="skill-textarea" bind:value={item.body} spellcheck="false" rows="12" placeholder="The full instructions the assistant follows…"></textarea>
+					<span class="skill-field-label">{i18n.t('asm.skGuide')}</span>
+					<textarea class="skill-textarea" bind:value={item.body} spellcheck="false" rows="12" placeholder={i18n.t('asm.skGuidePlaceholder')}></textarea>
 				</label>
 				<div class="skill-actions">
 					<div class="skill-actions-left">
@@ -342,7 +343,7 @@
 {/snippet}
 
 {#if loading}
-	<p class="skills-note">Loading skills…</p>
+	<p class="skills-note">{i18n.t('asm.skLoading')}</p>
 {:else if error}
 	<Alert message={error} />
 {:else}
@@ -366,7 +367,7 @@
 			</button>
 		</div>
 		{#if items.length === 0}
-			<p class="skills-note">No skills yet. Write one, import a set, or take the ones ChungusHub ships with from Defaults.</p>
+			<p class="skills-note">{i18n.t('asm.skEmpty')}</p>
 		{:else}
 			{#each items as item (item.id)}
 				{@render skillCard(item)}
@@ -390,8 +391,8 @@
 
 <ConfirmDialog
 	open={deleteTarget !== null}
-	title="Delete skill"
-	message={`Delete the skill "${deleteTarget?.name}"? A skill ChungusHub ships with can be taken again from Defaults; one you wrote is gone unless you exported it.`}
+	title={i18n.t('asm.skDelete')}
+	message={i18n.t('asm.skDeleteAsk', { name: deleteTarget?.name ?? '' })}
 	confirmLabel="Delete"
 	variant="danger"
 	destructive
