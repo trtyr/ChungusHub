@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import ImageLightbox from '$lib/components/ui/ImageLightbox.svelte';
 	import { uiStore } from '$lib/stores/ui.svelte';
 	import { viewport } from '$lib/stores/viewport.svelte';
@@ -101,10 +102,10 @@
 	 *  real outcome the panel must state, not a section it quietly omits. */
 	let emptyResponseNote = $derived.by(() => {
 		if (!selected) return '';
-		if (selected.status === 'pending') return 'Still in flight: the provider has not answered yet.';
-		if (selected.status === 'error') return 'Nothing was received; the request failed (see the error above).';
-		if (selected.status === 'cancelled') return 'Stopped before the provider sent anything.';
-		return 'The provider returned an empty response body.';
+		if (selected.status === 'pending') return i18n.t('dp.pending');
+		if (selected.status === 'error') return i18n.t('dp.error');
+		if (selected.status === 'cancelled') return i18n.t('dp.cancelled');
+		return i18n.t('dp.emptyBody');
 	});
 
 	function responseText(entry: PromptLogEntry): string {
@@ -143,7 +144,7 @@
 	function popOut(): void {
 		const win = window.open('/debug', 'chungushub-debug', 'popup,width=1100,height=820');
 		if (!win) {
-			toastStore.error('The debug window was blocked. Allow pop-ups for this site.');
+			toastStore.error(i18n.t('dp.popupBlocked'));
 			return;
 		}
 		win.focus();
@@ -178,7 +179,7 @@
 			<!-- Phones have no second screen to move the panel to, and a named pop-up window is
 			     either blocked or lands as a tab that replaces the app. -->
 			{#if !standalone && !viewport.isMobile}
-				<button class="head-btn" type="button" onclick={popOut} title="Move the panel to its own window">
+				<button class="head-btn" type="button" onclick={popOut} title={i18n.t('dp.popOut')}>
 					<Icon name="restore" class="w-3.5 h-3.5" strokeWidth={1.75} />
 					Pop out
 				</button>
@@ -188,7 +189,7 @@
 				Clear
 			</button>
 			{#if !standalone}
-				<button class="head-btn" type="button" onclick={() => uiStore.closeDebugPanel()} aria-label="Close">
+				<button class="head-btn" type="button" onclick={() => uiStore.closeDebugPanel()} aria-label={i18n.t('dp.close')}>
 					<Icon name="x" class="w-4 h-4" strokeWidth={1.75} />
 				</button>
 			{/if}
@@ -199,13 +200,13 @@
 		<div class="banner error">Couldn't load the shared log: {promptLogStore.error}</div>
 	{/if}
 	{#if promptLogStore.large}
-		<div class="banner warn">The log is large ({entries.length} entries). Consider Clear to keep things snappy. Nothing is dropped automatically.</div>
+		<div class="banner warn">{i18n.t('dp.largeLog', { n: entries.length })}</div>
 	{/if}
 
 	<div class="panel-body" class:mobile-detail={mobileDetail}>
 		<aside class="list panel-scroll">
 			{#if entries.length === 0}
-				<p class="empty">No prompts logged yet. Send a message or talk to the assistant. They’ll appear here.</p>
+				<p class="empty">{i18n.t('dp.empty')}</p>
 			{:else}
 				{#each entries as entry (entry.id)}
 					{@const rowSize = promptSize(entry)}
@@ -229,7 +230,7 @@
 								class="cmp-btn"
 								class:on={compareIds.includes(entry.id)}
 								type="button"
-								title="Add to compare"
+								title={i18n.t('dp.addToCompare')}
 								onclick={(e) => {
 									e.stopPropagation();
 									promptLogStore.toggleCompare(entry.id);
@@ -253,7 +254,7 @@
 							<span
 								class="tok"
 								class:reported={rowSize.reported}
-								title={rowSize.reported ? 'Prompt tokens reported by the provider' : 'Our estimate; the provider has not reported prompt usage for this request'}
+								title={rowSize.reported ? i18n.t('dp.reported') : i18n.t('dp.estimate')}
 							>{rowSize.reported ? '' : '~'}{rowSize.tokens.toLocaleString()} tok</span>
 							{#if formatDuration(entry.startedAt, entry.endedAt)}
 								<span class="sep">·</span>
@@ -268,20 +269,20 @@
 		<section class="detail">
 			{#if comparePair}
 				<div class="compare-bar">
-					<span>Comparing two prompts</span>
-					<button class="head-btn" type="button" onclick={() => (viewport.isMobile ? backToList() : promptLogStore.clearCompare())}>Exit compare</button>
+					<span>{i18n.t('dp.comparing')}</span>
+					<button class="head-btn" type="button" onclick={() => (viewport.isMobile ? backToList() : promptLogStore.clearCompare())}>{i18n.t('dp.exitCompare')}</button>
 				</div>
 				<div class="compare-host">
 					<PromptCompareView a={comparePair[0]} b={comparePair[1]} />
 				</div>
 			{:else if compareIds.length === 1}
-				<div class="hint">Pick a second prompt (⇄) to compare against the one you selected.</div>
+				<div class="hint">{i18n.t('dp.pickSecond')}</div>
 			{:else if selected}
 				{@const entry = selected}
 				<div class="detail-head" style={`--st:${statusColor(entry.status)}`}>
 					<div class="dh-line">
 						{#if viewport.isMobile}
-							<button class="back-btn" type="button" onclick={backToList} aria-label="Back to the list">
+							<button class="back-btn" type="button" onclick={backToList} aria-label={i18n.t('dp.backToList')}>
 								<Icon name="chevronLeft" class="w-4 h-4" strokeWidth={2} />
 							</button>
 						{/if}
@@ -290,7 +291,7 @@
 						</span>
 						<span class="dh-model" title={entry.model}>{entry.model}</span>
 						{#if entry.resultModel && entry.resultModel !== entry.model}
-							<span class="dh-resolved" title="The model the provider reported serving">→ {entry.resultModel}</span>
+							<span class="dh-resolved" title={i18n.t('dp.resolvedTip')}>→ {entry.resultModel}</span>
 						{/if}
 						<span class="dh-provider">{entry.resultProvider ?? entry.provider}</span>
 						<span class="spacer"></span>
@@ -298,13 +299,13 @@
 						     identity line there squeezes the view switch down to unreadable stubs. -->
 						<div class="dh-tools">
 							<div class="seg">
-								<button class="seg-btn" class:on={!rawView} type="button" onclick={() => (rawView = false)}>Pretty</button>
-								<button class="seg-btn" class:on={rawView} type="button" onclick={() => (rawView = true)}>Raw</button>
+								<button class="seg-btn" class:on={!rawView} type="button" onclick={() => (rawView = false)}>{i18n.t('dp.pretty')}</button>
+								<button class="seg-btn" class:on={rawView} type="button" onclick={() => (rawView = true)}>{i18n.t('dp.raw')}</button>
 							</div>
 							<CopyButton
-								label={viewport.isMobile ? undefined : 'Copy all'}
+								label={viewport.isMobile ? undefined : i18n.t('dp.copyAll')}
 								text={() => rawPayload(entry)}
-								title="Copy the whole captured record as JSON"
+								title={i18n.t('dp.copyRecord')}
 							/>
 						</div>
 					</div>
@@ -369,8 +370,8 @@
 					{:else}
 						<section class="section">
 							<div class="sec-head">
-								<span class="sec-title">Request fields</span>
-								<span class="sec-meta">everything sent alongside the messages</span>
+								<span class="sec-title">{i18n.t('dp.requestFields')}</span>
+								<span class="sec-meta">{i18n.t('dp.requestMeta')}</span>
 							</div>
 							<div class="chips">
 								{#each requestChips(entry) as chip}
@@ -384,12 +385,12 @@
 								<div class="sec-head">
 									<button class="sec-toggle" type="button" onclick={toggleTools} aria-expanded={fold.toolsOpen}>
 										<Icon name={fold.toolsOpen ? 'chevronDown' : 'chevronRight'} class="w-3 h-3 shrink-0" strokeWidth={2.25} />
-										<span class="sec-title">Tool definitions</span>
+										<span class="sec-title">{i18n.t('dp.tools')}</span>
 										<span class="sec-count">{tools.length}</span>
 									</button>
 									<span class="sec-meta">~{toolSize.toLocaleString()} tok · {toolShare}% of the request</span>
 									<span class="spacer"></span>
-									<CopyButton text={() => JSON.stringify(tools, null, 2)} title="Copy every tool definition as JSON" />
+									<CopyButton text={() => JSON.stringify(tools, null, 2)} title={i18n.t('dp.copyTools')} />
 								</div>
 								{#if fold.toolsOpen}
 									<div class="transcript">
@@ -408,19 +409,19 @@
 
 						<section class="section">
 							<div class="sec-head">
-								<span class="sec-title">Messages</span>
+								<span class="sec-title">{i18n.t('dp.messages')}</span>
 								<span class="sec-count">{entry.messages.length}</span>
 								<span
 									class="sec-meta"
-									title={images.length ? 'Image attachments are logged from the wire payload, so a picture listed here did ride this request' : undefined}
+									title={images.length ? i18n.t('dp.wireImages') : undefined}
 								>~{messageSize.toLocaleString()} tok{images.length ? ` · ${images.length} image${images.length === 1 ? '' : 's'} attached` : ''}</span>
 								<span class="spacer"></span>
 								<button
 									class="sec-btn"
 									type="button"
 									onclick={() => foldMessages(!allMessagesFolded)}
-								>{allMessagesFolded ? 'Unfold all' : 'Fold all'}</button>
-								<CopyButton text={() => JSON.stringify(entry.messages, null, 2)} title="Copy the whole message array as JSON" />
+								>{allMessagesFolded ? i18n.t('dp.unfoldAll') : i18n.t('dp.foldAll')}</button>
+								<CopyButton text={() => JSON.stringify(entry.messages, null, 2)} title={i18n.t('dp.copyMessages')} />
 							</div>
 							<div class="transcript">
 								{#each entry.messages as msg, i (i)}
@@ -438,11 +439,11 @@
 
 						<section class="section">
 							<div class="sec-head">
-								<span class="sec-title">Response</span>
+								<span class="sec-title">{i18n.t('dp.response')}</span>
 								{#if entry.finishReason}<span class="sec-count">{entry.finishReason}</span>{/if}
 								<span class="spacer"></span>
 								{#if hasResponse}
-									<CopyButton text={() => responseText(entry)} title="Copy the response text" />
+									<CopyButton text={() => responseText(entry)} title={i18n.t('dp.copyResponse')} />
 								{/if}
 							</div>
 							{#if hasResponse}
@@ -471,7 +472,7 @@
 					{/if}
 				</div>
 			{:else}
-				<div class="hint">Select a prompt on the left to inspect exactly what was sent.</div>
+				<div class="hint">{i18n.t('dp.pickLeft')}</div>
 			{/if}
 		</section>
 	</div>
