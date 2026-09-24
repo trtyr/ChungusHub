@@ -7,6 +7,7 @@
 	 * [data-history-toggle] attribute.
 	 */
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import { assistantSessionStore } from '$lib/stores/assistantSessions.svelte';
 	import { chatStore } from '$lib/stores/chat.svelte';
@@ -52,9 +53,9 @@
 	let deleteMessage = $derived.by(() => {
 		if (!deleteTarget) return '';
 		const n = deleteTarget.messageCount ?? 0;
-		const what = n > 0 ? `its ${n} message${n === 1 ? '' : 's'}` : 'its whole conversation';
-		const running = store.runtime[deleteTarget.id]?.busy ? ' Its running turn is stopped first.' : '';
-		return `Delete "${deleteTarget.title}" and ${what}? This cannot be undone.${running}`;
+		const what = n > 0 ? i18n.t('asm.histAndMsgs', { n }) : i18n.t('asm.histWholeConv');
+		const running = store.runtime[deleteTarget.id]?.busy ? ' ' + i18n.t('asm.histRunning') : '';
+		return i18n.t('asm.histDeleteAsk', { name: deleteTarget.title ?? '' }) + ' ' + what + '. ' + i18n.t('chat.cannotUndo') + running;
 	});
 
 	function askDeleteSession(e: MouseEvent, id: string) {
@@ -114,7 +115,7 @@
 		<!-- svelte-ignore a11y_autofocus -- the dropdown opens as a search surface -->
 		<input
 			class="assistant-history-search"
-			placeholder="Search sessions…"
+			placeholder={i18n.t('asm.histSearch')}
 			bind:value={query}
 			autofocus
 			onkeydown={(e) => {
@@ -126,16 +127,16 @@
 				}
 			}}
 		/>
-		<button type="button" class="assistant-history-new" onclick={onNewSession} title="New session">
+		<button type="button" class="assistant-history-new" onclick={onNewSession} title={i18n.t('asm.histNew')}>
 			<Icon name="plus" class="w-3.5 h-3.5" />
 			New
 		</button>
 	</div>
 	<div class="assistant-history-list">
 		{#if store.sessions.length === 0}
-			<div class="assistant-history-empty">No past sessions yet.</div>
+			<div class="assistant-history-empty">{i18n.t('asm.histEmpty')}</div>
 		{:else if historyGroups.length === 0}
-			<div class="assistant-history-empty">Nothing matches "{query}".</div>
+			<div class="assistant-history-empty">{i18n.t('chat.nothingMatches')}</div>
 		{:else}
 			{#each historyGroups as group (group.label)}
 				<div class="assistant-history-group">{group.label}</div>
@@ -168,7 +169,7 @@
 										<span
 											class="assistant-history-dot"
 											class:assistant-history-dot--busy={store.runtime[session.id]?.busy}
-											title={store.runtime[session.id]?.busy ? 'Running' : 'Open as a tab'}
+											title={store.runtime[session.id]?.busy ? i18n.t('asm.working') : i18n.t('asm.histOpenTab')}
 										></span>
 									{/if}
 									<span class="assistant-history-title">{session.title}</span>
@@ -182,8 +183,8 @@
 									type="button"
 									class="assistant-history-rename-btn"
 									onclick={(e) => startRename(e, session.id)}
-									aria-label="Rename session"
-									title="Rename"
+									aria-label={i18n.t('asm.histRenameAria')}
+									title={i18n.t('asm.rename')}
 								>
 									<Icon name="pencil" class="w-3.5 h-3.5" />
 								</button>
@@ -191,8 +192,8 @@
 									type="button"
 									class="assistant-history-delete"
 									onclick={(e) => askDeleteSession(e, session.id)}
-									aria-label="Delete session"
-									title="Delete"
+									aria-label={i18n.t('asm.histDeleteAria')}
+									title={i18n.t('common.delete')}
 								>
 									<Icon name="trash" class="w-3.5 h-3.5" />
 								</button>
@@ -207,7 +208,7 @@
 
 <ConfirmDialog
 	open={deleteTarget !== null}
-	title="Delete session"
+	title={i18n.t('asm.histDeleteTitle')}
 	message={deleteMessage}
 	confirmLabel="Delete"
 	variant="danger"
