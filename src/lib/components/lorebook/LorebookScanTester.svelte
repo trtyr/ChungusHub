@@ -13,6 +13,7 @@
 	import { resolveLorebooks } from '$lib/lorebook/engine';
 	import { lorebookSettingsStore } from '$lib/lorebook/settings.svelte';
 	import LorebookTraceList from './LorebookTraceList.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import type { Lorebook } from '$lib/lorebook/types';
 
 	interface Props {
@@ -47,20 +48,20 @@
 </script>
 
 <div class="st-body">
-	<label class="st-label section-label" for="lorebook-scan-test">Text to scan</label>
+	<label class="st-label section-label" for="lorebook-scan-test">{i18n.t('lbst.textLabel')}</label>
 	<textarea
 		id="lorebook-scan-test"
 		bind:value={text}
 		class="input-base st-input"
 		rows="4"
-		placeholder="Paste a few lines of story. One line is one turn, oldest first…"
+		placeholder={i18n.t('lbst.textPlaceholder')}
 	></textarea>
 
 	{#if result}
-		<p class="st-note">Trigger rolls always pass here, so an entry's chance never hides it.</p>
+		<p class="st-note">{i18n.t('lbst.rollNote')}</p>
 		<LorebookTraceList trace={result.trace} />
 	{:else}
-		<p class="st-note">Nothing to scan yet.</p>
+		<p class="st-note">{i18n.t('lbst.nothing')}</p>
 	{/if}
 </div>
 
