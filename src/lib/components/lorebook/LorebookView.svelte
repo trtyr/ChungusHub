@@ -7,6 +7,7 @@
 	 */
 	import { tick } from 'svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import EmptyState from '$lib/components/ui/EmptyState.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
@@ -106,13 +107,13 @@
 		})),
 		...boundChats.map((chat) => ({
 			id: chat.id,
-			name: chat.title?.trim() || 'Untitled chat',
+			name: chat.title?.trim() || i18n.t('lbw.untitledChat'),
 			icon: 'chat' as const,
 			// A chat has no portrait of its own, and borrowing its character's would read as a
 			// chip naming that character rather than this story.
 			thumb: null as string | null,
 			focus: undefined as string | undefined,
-			title: 'Open this chat',
+			title: i18n.t('lbw.openChat'),
 			open: () => openChat(chat.id)
 		}))
 	]);
@@ -286,7 +287,7 @@
 			if (b.id === bookId) continue;
 			for (const e of b.entries) {
 				if (matches(e)) {
-					out.push({ bookId: b.id, bookName: b.name || 'Untitled lorebook', entry: e });
+					out.push({ bookId: b.id, bookName: b.name || i18n.t('lbw.untitledLorebook'), entry: e });
 					if (out.length >= 8) return out;
 				}
 			}
@@ -345,7 +346,7 @@
 		if (!selectedBook || transferBusy) return;
 		const sourceId = selectedBook.id;
 		const ids = [...selectedIds];
-		const name = lorebookStore.getBook(targetId)?.name || 'Untitled lorebook';
+		const name = lorebookStore.getBook(targetId)?.name || i18n.t('lbw.untitledLorebook');
 		moveOpen = false;
 		copyOpen = false;
 		transferBusy = true;
@@ -354,7 +355,7 @@
 			if (landed === 0) {
 				// Both ends resolved a moment ago, so nothing landing means another device
 				// deleted the entries, or the book they were going to, while the panel stood.
-				toastStore.error('Nothing was left to send');
+				toastStore.error(i18n.t('lbw.nothingToSend'));
 				return;
 			}
 			const verb = mode === 'move' ? 'Moved' : 'Copied';
@@ -538,7 +539,7 @@
 					<Icon name="bookOpen" class="w-4 h-4" strokeWidth={1.5} />
 				</span>
 				<h2 class="editor-header-name" class:is-untitled={!selectedBook.name}>
-					{selectedBook.name || 'Untitled lorebook'}
+					{selectedBook.name || i18n.t('lbw.untitledLorebook')}
 				</h2>
 			</div>
 			<div class="editor-header-actions">
@@ -551,8 +552,8 @@
 								onclick={toggle}
 								aria-haspopup="menu"
 								aria-expanded={open}
-								aria-label="Lorebook actions"
-								title="Lorebook actions"
+								aria-label={i18n.t('lbw.actions')}
+								title={i18n.t('lbw.actions')}
 							>
 								<Icon name="dotsVertical" class="w-4 h-4" strokeWidth={1.5} />
 							</button>
@@ -573,7 +574,7 @@
 							onclick={() => closeActionsAnd(() => (bookDeleteOpen = true))}
 						>
 							<Icon name="trash" class="w-4 h-4" strokeWidth={1.5} />
-							<span>Delete lorebook</span>
+							<span>{i18n.t('lbv.deleteTitle')}</span>
 						</button>
 					</BrowsePopover>
 				</div>
@@ -584,8 +585,8 @@
 					type="button"
 					class="editor-header-btn"
 					onclick={onClose}
-					aria-label="Close lorebook"
-					title="Close (Esc)"
+					aria-label={i18n.t('lbw.close')}
+					title={i18n.t('lbw.closeTip')}
 				>
 					<Icon name="close" class="w-[1.15rem] h-[1.15rem]" strokeWidth={1.5} />
 				</button>
@@ -604,7 +605,7 @@
 					tabindex="0"
 					onclick={() => coverInput?.click()}
 					onkeydown={(e) => e.key === 'Enter' && coverInput?.click()}
-					aria-label={coverUrl ? 'Change cover' : 'Add a cover'}
+					aria-label={coverUrl ? i18n.t('lbw.changeCover') : i18n.t('lbw.addCover')}
 					aria-disabled={coverBusy}
 				>
 					{#if coverBusy}
@@ -616,12 +617,12 @@
 							class="lb-plate-art"
 							style={portraitFocusStyle(selectedBook.coverFocus)}
 						/>
-						<span class="lb-plate-veil">Change cover</span>
+						<span class="lb-plate-veil">{i18n.t('lbw.changeCover')}</span>
 						<button
 							type="button"
 							class="portrait-overlay-action lb-plate-act lb-plate-act--x"
 							onclick={removeCover}
-							aria-label="Remove cover"
+							aria-label={i18n.t('lbw.removeCover')}
 						>
 							<Icon name="close" class="w-3.5 h-3.5" />
 						</button>
@@ -629,15 +630,15 @@
 							type="button"
 							class="portrait-overlay-action lb-plate-act lb-plate-act--crop"
 							onclick={openFraming}
-							aria-label="Adjust framing"
-							title="Adjust framing"
+							aria-label={i18n.t('lbw.adjustFraming')}
+							title={i18n.t('lbw.adjustFraming')}
 						>
 							<Icon name="crop" class="w-3.5 h-3.5" />
 						</button>
 					{:else}
 						<span class="lb-plate-add">
 							<Icon name="bookOpen" class="w-10 h-10" strokeWidth={1.25} />
-							<span>Add cover</span>
+							<span>{i18n.t('lbw.addCover')}</span>
 						</span>
 					{/if}
 				</div>
@@ -662,7 +663,7 @@
 								lorebookStore.updateBookMeta(selectedBook.id, {
 									name: (e.target as HTMLInputElement).value
 								})}
-							placeholder="Name this book…"
+							placeholder={i18n.t('lbw.namePlaceholder')}
 							class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm placeholder:text-text-muted"
 						/>
 					</div>
@@ -677,14 +678,14 @@
 							onclick={() => (bindOpen = !bindOpen)}
 							aria-haspopup="true"
 							aria-expanded={bindOpen}
-							title="Attach this book to a character, a persona or a chat"
+							title={i18n.t('lbw.attachTip')}
 						>
 							<Icon name="plus" class="w-3.5 h-3.5" />
-							<span>Bind to…</span>
+							<span>{i18n.t('lbw.bind')}</span>
 						</button>
 
 						{#if carriers.length > 0}
-							<span class="section-label">Bound to</span>
+							<span class="section-label">{i18n.t('lbw.boundTo')}</span>
 							<div class="lb-chips">
 								{#each shownCarriers as carrier (carrier.id)}
 									<button
@@ -711,14 +712,14 @@
 										class="lb-chip lb-chip--more"
 										onclick={() => (allCarriers = !allCarriers)}
 									>
-										{allCarriers ? 'Show fewer' : `+${carriers.length - CARRIER_LIMIT} more`}
+										{allCarriers ? i18n.t('lbw.showFewer') : i18n.t('lbw.moreN', { n: carriers.length - CARRIER_LIMIT })}
 									</button>
 								{/if}
 							</div>
 						{:else if !selectedBook.global}
 							<!-- Held back while the book is in every chat: a book reaching every chat
 							     must not read as one reaching nothing. -->
-							<p class="lb-bind-none">Not linked</p>
+							<p class="lb-bind-none">{i18n.t('lbv.notLinked')}</p>
 						{/if}
 					</div>
 				</div>
@@ -735,7 +736,7 @@
 							aria-expanded={stripOpen}
 						>
 							<Icon name="settings" class="w-4 h-4 text-text-muted flex-shrink-0" />
-							<span class="strip-title">Activation</span>
+							<span class="strip-title">{i18n.t('lb.whereApplies')}</span>
 							<span class="strip-sum">
 								{#each summary as part (part.text)}
 									<span class="strip-part" class:is-set={part.set}>{part.text}</span>
@@ -760,7 +761,7 @@
 							aria-expanded={testerOpen}
 						>
 							<Icon name="search" class="w-4 h-4 text-text-muted flex-shrink-0" />
-							<span class="strip-title">Test scan</span>
+							<span class="strip-title">{i18n.t('lbst.textLabel')}</span>
 							<span class="strip-sum">
 								<span class="strip-part">see what this book fires on</span>
 							</span>
@@ -776,7 +777,7 @@
 
 				{#if total === 0}
 					<div class="py-14">
-						<EmptyState icon="feather" size="sm" title="No entries yet">
+						<EmptyState icon="feather" size="sm" title={i18n.t('lbw.noEntries')}>
 							Entries are facts injected into the story when their keywords come up, or on
 							every turn.
 							{#snippet actions()}
@@ -795,7 +796,7 @@
 								bind:this={searchEl}
 								bind:value={search}
 								type="text"
-								placeholder="Search {total} {total === 1 ? 'entry' : 'entries'}…"
+								placeholder={i18n.t('lbw.searchEntriesN', { n: total })}
 								aria-label="Search entries"
 								class="input-base"
 							/>
@@ -811,8 +812,8 @@
 										onclick={toggle}
 										aria-haspopup="true"
 										aria-expanded={open}
-										aria-label="Filter and sort entries"
-										title="Filter & sort"
+										aria-label={i18n.t('lbw.filterEntries')}
+										title={i18n.t('clv.filterSort')}
 									>
 										<Icon name="filter" class="w-4 h-4" />
 										{#if hidden.length > 0}
@@ -821,8 +822,8 @@
 									</button>
 								{/snippet}
 								<div class="brw-sec">
-									<div class="brw-sec-head"><span class="brw-sec-title">Sort by</span></div>
-									<div class="brw-opts" role="radiogroup" aria-label="Sort entries by">
+									<div class="brw-sec-head"><span class="brw-sec-title">{i18n.t('clv.sortBy')}</span></div>
+									<div class="brw-opts" role="radiogroup" aria-label={i18n.t('lbw.sortEntriesAria')}>
 										{#each LOREBOOK_ENTRY_SORT_OPTIONS as option (option.id)}
 											<button
 												type="button"
@@ -838,10 +839,10 @@
 									</div>
 								</div>
 								<div class="brw-sec">
-									<div class="brw-sec-head"><span class="brw-sec-title">Show</span></div>
+									<div class="brw-sec-head"><span class="brw-sec-title">{i18n.t('clv.show')}</span></div>
 									<!-- The natures wear the dot their rows wear, so the filter and the list name
 									     a row the same way. -->
-									<div class="brw-opts brw-opts--3" role="group" aria-label="Filter by entry behavior">
+									<div class="brw-opts brw-opts--3" role="group" aria-label={i18n.t('lbw.filterEntriesAria')}>
 										{#each LOREBOOK_ENTRY_NATURE_OPTIONS as option (option.id)}
 											<button
 												type="button"
@@ -863,15 +864,15 @@
 								class:is-active={selectMode}
 								onclick={() => (selectMode = !selectMode)}
 								aria-pressed={selectMode}
-								aria-label="Select entries"
-								title="Select entries"
+								aria-label={i18n.t('lbw.selectEntries')}
+								title={i18n.t('lbw.selectEntries')}
 							>
 								<Icon name="checkCircle" class="w-4 h-4" />
 							</button>
 
-							<button type="button" class="brw-new" onclick={addEntry} title="New entry">
+							<button type="button" class="brw-new" onclick={addEntry} title={i18n.t('lbw.newEntry')}>
 								<Icon name="plus" class="w-4 h-4" />
-								<span class="brw-new-label">New</span>
+								<span class="brw-new-label">{i18n.t('clv.new')}</span>
 							</button>
 						</div>
 					</div>
@@ -882,7 +883,7 @@
 								type="button"
 								class="brw-bulk-x"
 								onclick={() => (selectMode = false)}
-								aria-label="Exit selection"
+								aria-label={i18n.t('clv.exitSelection')}
 							>
 								<Icon name="close" class="w-4 h-4" />
 							</button>
@@ -966,7 +967,7 @@
 								onclick={() => (bulkDeleteOpen = true)}
 							>
 								<Icon name="trash" class="w-3.5 h-3.5" />
-								<span class="brw-bulk-label">Delete</span>
+								<span class="brw-bulk-label">{i18n.t('clv.delete')}</span>
 							</button>
 						</div>
 					{/if}
@@ -976,7 +977,7 @@
 							<!-- Names the narrowing that emptied the list and offers a way out of each one
 							     that is on: a list the funnel emptied must not read as a search that missed. -->
 							<p class="text-sm font-ui text-text-secondary">
-								{q ? `Nothing matches “${search}”.` : 'Every entry here is hidden.'}
+								{q ? i18n.t('lbw.nothingMatch', { q: search }) : i18n.t('lbw.allHidden')}
 							</p>
 							<div class="mt-2 flex items-center justify-center gap-4">
 								{#if q}
@@ -1023,7 +1024,7 @@
 							<section class="mt-3">
 								<div class="lb-part">
 									<Icon name="globe" class="w-3.5 h-3.5 text-text-muted" />
-									<span class="lb-part-label section-label">Elsewhere in the archive</span>
+									<span class="lb-part-label section-label">{i18n.t('lbw.elsewhere')}</span>
 									<span class="lb-part-rule"></span>
 								</div>
 								<ul>
@@ -1035,7 +1036,7 @@
 												onclick={() => openInBook(hit.bookId, hit.entry.id)}
 											>
 												<span class="lb-else-title" class:is-untitled={!hit.entry.comment}>
-													{hit.entry.comment || 'Untitled entry'}
+													{hit.entry.comment || i18n.t('lbw.untitledEntry')}
 												</span>
 												<span class="lb-else-book">{hit.bookName}</span>
 											</button>
@@ -1070,7 +1071,7 @@
 	<div
 		class="bind-pop surface-float"
 		role="group"
-		aria-label="Bind this lorebook"
+		aria-label={i18n.t('lbw.bind')}
 		tabindex="-1"
 		bind:this={bindPanel}
 		use:anchorTo={bindAnchor}
@@ -1083,7 +1084,7 @@
 	<PortraitFramingDialog
 		open={framingOpen}
 		imagePath={coverPath}
-		name={selectedBook?.name || 'Untitled lorebook'}
+		name={selectedBook?.name || i18n.t('lbw.untitledLorebook')}
 		focus={selectedBook?.coverFocus}
 		onSave={(focus) => lorebookStore.setCoverFocus(bookId, focus)}
 		onClose={() => (framingOpen = false)}
@@ -1092,7 +1093,7 @@
 
 <ConfirmDialog
 	open={bookDeleteOpen}
-	title="Delete lorebook"
+	title={i18n.t('lbv.deleteTitle')}
 	message={bookDeleteMessage}
 	confirmLabel="Delete"
 	variant="danger"
@@ -1104,8 +1105,8 @@
 
 <ConfirmDialog
 	open={bulkDeleteOpen}
-	title="Delete entries"
-	message={`Delete ${selectedIds.size} ${selectedIds.size === 1 ? 'entry' : 'entries'} from "${selectedBook?.name || 'Untitled lorebook'}"? This cannot be undone.`}
+	title={i18n.t('lbw.deleteEntries')}
+	message={i18n.t('lbw.deleteEntriesMsg', { n: selectedIds.size, name: selectedBook?.name || i18n.t('lbw.untitledLorebook') })}
 	confirmLabel="Delete"
 	variant="danger"
 	destructive
@@ -1116,8 +1117,8 @@
 
 <ConfirmDialog
 	open={entryDeleteId !== null}
-	title="Delete entry"
-	message={`Delete "${entryToDelete?.comment || 'Untitled entry'}"? This cannot be undone.`}
+	title={i18n.t('ler.deleteEntry')}
+	message={i18n.t('lbw.deleteEntryMsg', { name: entryToDelete?.comment || i18n.t('lbw.untitledEntry') })}
 	confirmLabel="Delete"
 	variant="danger"
 	destructive
