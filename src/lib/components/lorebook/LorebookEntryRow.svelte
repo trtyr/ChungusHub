@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { lorebookStore } from '$lib/lorebook/store.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { lorebookSettingsStore } from '$lib/lorebook/settings.svelte';
 	import {
 		DEFAULT_GROUP_WEIGHT,
@@ -355,12 +356,12 @@
 					class="lbr-glyph"
 					role="switch"
 					aria-checked={!entry.disable}
-					aria-label={entry.disable ? 'Enable entry' : 'Disable entry'}
+					aria-label={entry.disable ? i18n.t('ler.enableEntry') : i18n.t('ler.disableEntry')}
 					title={entry.disable
-						? 'Off, click to enable'
+						? i18n.t('ler.offClickToEnable')
 						: entry.constant
-							? 'Always active, click to disable'
-							: 'Keyword-triggered, click to disable'}
+							? i18n.t('ler.alwaysActive')
+							: i18n.t('ler.keywordOff')}
 					onclick={toggleDisable}
 				>
 					<span class="lbr-dot lbr-dot-{nature}"></span>
@@ -377,12 +378,12 @@
 					{entry.comment || 'Untitled entry'}
 				</span>
 				{#if entry.constant}
-					<span class="lbr-sub lbr-sub-always">Always active</span>
+					<span class="lbr-sub lbr-sub-always">{i18n.t('ler.alwaysActive')}</span>
 				{:else if entry.key.length > 0}
 					<span class="lbr-sub">{entry.key.join(' · ')}</span>
 				{:else}
 					<span class="lbr-sub lbr-sub-warn">
-						<Icon name="warning" class="w-3 h-3" />No keywords, never fires
+						<Icon name="warning" class="w-3 h-3" />{i18n.t('ler.noKeywords')}
 					</span>
 				{/if}
 			</button>
@@ -391,11 +392,11 @@
 				{#if entry.content && !entry.disable}
 					<span
 						class="lbr-weight"
-						title="≈ prompt tokens when this entry fires"
+						title={i18n.t('ler.tokenTitle')}
 					>~{contentTokens}</span>
 				{/if}
 				<!-- Quick fields: edit priority and trigger chance without unfolding the row. -->
-				<label class="lbr-mini" title="Order, lower is injected first">
+				<label class="lbr-mini" title={i18n.t('ler.orderMini')}>
 					<span class="lbr-mini-key">ord</span>
 					<input
 						type="text"
@@ -406,7 +407,7 @@
 						aria-label="Order"
 					/>
 				</label>
-				<label class="lbr-mini" title="Trigger chance, 100 = always">
+				<label class="lbr-mini" title={i18n.t('ler.chanceMini')}>
 					<input
 						type="text"
 						inputmode="numeric"
@@ -442,8 +443,8 @@
 						type="text"
 						value={entry.comment}
 						oninput={(e) => update({ comment: (e.target as HTMLInputElement).value })}
-						placeholder="Untitled entry"
-						aria-label="Entry title"
+						placeholder={i18n.t('ler.untitledEntry')}
+						aria-label={i18n.t('ler.entryTitle')}
 						class="ed-title"
 					/>
 					<div class="mt-2.5 flex items-center gap-3 flex-wrap">
@@ -486,19 +487,19 @@
 				{#if !entry.constant}
 					<!-- Triggers -->
 					<div>
-						<span class="ed-label section-label">Keywords</span>
+						<span class="ed-label section-label">{i18n.t('ler.keywords')}</span>
 						<KeyChipInput
 							keys={entry.key}
 							onChange={(next) => setKeys('key', next)}
 							rules={entry.keyRules}
 							onRulesChange={setKeyRules}
 							defaults={keyDefaults}
-							placeholder="dragon, wyrm, fire beast…"
-							ariaLabel="Primary keywords"
+							placeholder={i18n.t('ler.primaryPlaceholder')}
+							ariaLabel={i18n.t('ler.primaryAria')}
 						/>
 						{#if entry.key.length === 0 && !entry.disable}
 							<p class="mt-1.5 text-xs text-warning inline-flex items-center gap-1 font-ui">
-								<Icon name="warning" class="w-3.5 h-3.5" />No keywords, so this entry never fires.
+								<Icon name="warning" class="w-3.5 h-3.5" />{i18n.t('ler.noKeywordsFull')}
 							</p>
 						{:else}
 							<p class="mt-1.5 text-xs font-ui text-text-muted">
@@ -510,7 +511,7 @@
 
 					<div>
 						<div class="flex items-center justify-between gap-2 mb-1.5">
-							<span class="ed-label section-label !mb-0">Filter</span>
+							<span class="ed-label section-label !mb-0">{i18n.t('ler.filter')}</span>
 							<Select
 								value={String(entry.selectiveLogic)}
 								onchange={(e) =>
@@ -531,8 +532,8 @@
 							rules={entry.keyRules}
 							onRulesChange={setKeyRules}
 							defaults={keyDefaults}
-							placeholder="optional, leave empty to ignore"
-							ariaLabel="Secondary keywords"
+							placeholder={i18n.t('ler.secondaryPlaceholder')}
+							ariaLabel={i18n.t('ler.secondaryAria')}
 						/>
 						{#if entry.keysecondary.length > 0}
 							<p class="mt-1.5 text-xs font-ui text-text-muted">
@@ -545,15 +546,15 @@
 				<!-- Content -->
 				<div>
 					<div class="flex items-baseline justify-between gap-2 mb-1.5">
-						<label for="entry-content-{entryId}" class="ed-label section-label !mb-0">Content</label>
-						<span class="font-mono text-[0.65rem] text-text-muted tabular-nums">~{contentTokens} tokens</span>
+						<label for="entry-content-{entryId}" class="ed-label section-label !mb-0">{i18n.t('ler.content')}</label>
+						<span class="font-mono text-[0.65rem] text-text-muted tabular-nums">{i18n.t('lb.tokensN', { n: contentTokens })}</span>
 					</div>
 					<textarea
 						id="entry-content-{entryId}"
 						use:autoResize={{ maxHeight: 560, value: entry.content }}
 						value={entry.content}
 						oninput={(e) => update({ content: (e.target as HTMLTextAreaElement).value })}
-						placeholder="The text woven into context when this entry fires…"
+						placeholder={i18n.t('ler.contentPlaceholder')}
 						class="input-base w-full px-3.5 py-2.5 font-body text-[0.95rem] leading-relaxed text-text-primary placeholder:text-text-muted placeholder:italic resize-none min-h-[9rem]"
 					></textarea>
 					<p class="mt-1.5 text-xs font-ui text-text-muted">
@@ -565,7 +566,7 @@
 				<!-- Fine print -->
 				<div class="grid grid-cols-2 gap-x-5 gap-y-4 max-w-[26rem]">
 					<div>
-						<label for="entry-order-{entryId}" class="ed-label section-label">Order</label>
+						<label for="entry-order-{entryId}" class="ed-label section-label">{i18n.t('ler.order')}</label>
 						<div class="flex items-stretch gap-1.5">
 							<input
 								id="entry-order-{entryId}"
@@ -585,7 +586,7 @@
 								</button>
 							</div>
 						</div>
-						<p class="mt-1 text-xs font-ui text-text-muted">Lower is injected first.</p>
+						<p class="mt-1 text-xs font-ui text-text-muted">{i18n.t('ler.orderHelp')}</p>
 					</div>
 					<div>
 						<label for="entry-prob-{entryId}" class="ed-label section-label">Trigger %</label>
@@ -598,7 +599,7 @@
 							onblur={() => (probabilityDraft = String(effectiveProbability))}
 							class="input-base w-full px-3 py-2 font-mono text-sm text-text-primary"
 						/>
-						<p class="mt-1 text-xs font-ui text-text-muted">Chance to fire · 100 = always.</p>
+						<p class="mt-1 text-xs font-ui text-text-muted">{i18n.t('ler.chanceHelp')}</p>
 					</div>
 					<div>
 						<span class="ed-label section-label">Case-sensitive</span>
@@ -615,7 +616,7 @@
 						</div>
 					</div>
 					<div>
-						<span class="ed-label section-label">Whole words</span>
+						<span class="ed-label section-label">{i18n.t('ler.wholeWords')}</span>
 						<div class="ed-cascade">
 							<Toggle
 								checked={entry.matchWholeWords ?? wholeDefault}
@@ -639,15 +640,15 @@
 						aria-expanded={showAdvanced}
 					>
 						<Icon name="chevronDown" class="w-3.5 h-3.5 ed-adv-chev" />
-						Advanced
+					{i18n.t('ler.advanced')}
 						{#if advancedSummary}<span class="ed-adv-sum">{advancedSummary}</span>{/if}
 					</button>
 					{#if showAdvanced}
 						<div class="ed-adv-body">
 							<div>
 								<div class="ed-adv-label">
-									<label for="entry-depth-{entryId}" class="ed-label section-label !mb-0">Scan depth</label>
-									<InfoTip text="Recent messages this entry searches · 0 = the whole chat." />
+									<label for="entry-depth-{entryId}" class="ed-label section-label !mb-0">{i18n.t('ler.scanDepth')}</label>
+									<InfoTip text={i18n.t('ler.scanDepthTip')} />
 								</div>
 								<div class="ed-cascade">
 									<input
@@ -668,9 +669,9 @@
 
 							<div>
 								<div class="ed-adv-label">
-									<span class="ed-label section-label !mb-0">Also scan</span>
+									<span class="ed-label section-label !mb-0">{i18n.t('ler.alsoScan')}</span>
 									<InfoTip
-										text="Text searched besides the chat: the cards in play, and the steering standing over this reply. Nothing picked = the chat alone."
+										text={i18n.t('ler.alsoScanTip')}
 									/>
 								</div>
 								<div class="ed-pills">
@@ -690,9 +691,9 @@
 
 							<div>
 								<div class="ed-adv-label">
-									<label for="entry-woken-{entryId}" class="ed-label section-label !mb-0">Woken by</label>
+									<label for="entry-woken-{entryId}" class="ed-label section-label !mb-0">{i18n.t('ler.wokenBy')}</label>
 									<InfoTip
-										text="What may wake this entry: the story text, or the content of entries that already fired. A level stages that: the next one opens only once the level below it wakes nothing new."
+										text={i18n.t('ler.wokenByTip')}
 									/>
 								</div>
 								<div class="flex items-end gap-3 flex-wrap">
@@ -709,7 +710,7 @@
 									</Select>
 									{#if wokenBy === 'entriesOnly'}
 										<label class="ed-timed">
-											<span class="ed-timed-name">Level</span>
+											<span class="ed-timed-name">{i18n.t('ler.level')}</span>
 											<input
 												type="text"
 												inputmode="numeric"
@@ -725,27 +726,26 @@
 								     an entry that cannot fire, which is the absence hardest to explain. -->
 								{#if wokenBy === 'never'}
 									<p class="mt-1.5 text-xs font-ui text-text-muted">
-										SillyTavern has this entry waiting for another one to wake it while also refusing
-										to be woken, so nothing can fire it. Picking a source is a real change.
+										{i18n.t('ler.stWarn')}
 									</p>
 								{:else if wokenBy === 'entriesOnly' && bookDefaults && !bookDefaults.recursiveScanning}
 									<p class="mt-1.5 text-xs font-ui text-text-muted">
-										This book never re-reads what fires, so nothing can wake this entry.
+										{i18n.t('ler.noRecursionWarn')}
 									</p>
 								{/if}
 							</div>
 
 							<div>
 								<div class="ed-adv-label">
-									<span class="ed-label section-label !mb-0">Wakes others</span>
+									<span class="ed-label section-label !mb-0">{i18n.t('ler.wakesOthers')}</span>
 									<InfoTip
-										text="When off, this entry's own content is never re-read, so it cannot pull other entries in."
+										text={i18n.t('ler.wakesOthersTip')}
 									/>
 								</div>
 								<div class="ed-cascade">
 									<Toggle
 										checked={!recursion?.preventRecursion}
-										label="Wakes others"
+										label={i18n.t('ler.wakesOthers')}
 										onchange={(next) => setRecursion({ preventRecursion: !next })}
 									/>
 								</div>
@@ -753,8 +753,8 @@
 
 							<div>
 								<div class="ed-adv-label">
-									<span class="ed-label section-label !mb-0">Fires on</span>
-									<InfoTip text="Which generations this entry may join. Nothing picked = all of them." />
+									<span class="ed-label section-label !mb-0">{i18n.t('ler.firesOn')}</span>
+									<InfoTip text={i18n.t('ler.firesOnTip')} />
 								</div>
 								<div class="ed-pills">
 									{#each LOREBOOK_TRIGGERS as t (t.id)}
@@ -773,9 +773,9 @@
 
 							<div>
 								<div class="ed-adv-label">
-									<span class="ed-label section-label !mb-0">Timing</span>
+									<span class="ed-label section-label !mb-0">{i18n.t('ler.timing')}</span>
 									<InfoTip
-										text="After it fires it stays in for Sticky more replies, then sits out Cooldown of them. Delay holds it back until the chat has that many messages."
+										text={i18n.t('ler.timingTip')}
 									/>
 								</div>
 								<div class="flex items-start gap-3">
@@ -787,7 +787,7 @@
 												inputmode="numeric"
 												value={timedValue(t.field)}
 												oninput={(e) => commitTimed(t.field, (e.target as HTMLInputElement).value)}
-												placeholder="off"
+												placeholder={i18n.t('ler.off')}
 												class="input-base w-14 px-2 py-1.5 font-mono text-sm text-text-primary text-center"
 											/>
 										</label>
@@ -797,9 +797,9 @@
 
 							<div>
 								<div class="ed-adv-label">
-									<label for="entry-group-{entryId}" class="ed-label section-label !mb-0">Inclusion group</label>
+									<label for="entry-group-{entryId}" class="ed-label section-label !mb-0">{i18n.t('ler.inclusionGroup')}</label>
 									<InfoTip
-										text="Only one entry per label reaches a prompt, and several labels are comma-separated. A prioritized entry takes the slot first, Decide by matches narrows it to whichever matched most keys, and whatever is left goes to a weighted roll."
+										text={i18n.t('ler.inclusionGroupTip')}
 									/>
 								</div>
 								<input
@@ -807,13 +807,13 @@
 									type="text"
 									value={entry.group ?? ''}
 									oninput={(e) => update({ group: (e.target as HTMLInputElement).value })}
-									placeholder="weather, mood…"
+									placeholder={i18n.t('ler.groupPlaceholder')}
 									class="input-base w-full max-w-[16rem] px-3 py-2 font-ui text-sm text-text-primary"
 								/>
 								{#if entry.group?.trim()}
 									<div class="mt-2.5 flex items-center gap-4 flex-wrap">
 										<label class="ed-timed">
-											<span class="ed-timed-name">Weight</span>
+											<span class="ed-timed-name">{i18n.t('ler.weight')}</span>
 											<input
 												type="text"
 												inputmode="numeric"
@@ -830,18 +830,18 @@
 										<div class="ed-cascade">
 											<Toggle
 												checked={entry.groupOverride ?? false}
-												label="Prioritize"
+												label={i18n.t('ler.prioritize')}
 												onchange={(next) => update({ groupOverride: next })}
 											/>
-											<span class="text-xs font-ui text-text-secondary">Prioritize</span>
+											<span class="text-xs font-ui text-text-secondary">{i18n.t('ler.prioritize')}</span>
 										</div>
 										<div class="ed-cascade">
 											<Toggle
 												checked={entry.useGroupScoring ?? false}
-												label="Decide by matches"
+												label={i18n.t('ler.decideByMatches')}
 												onchange={(next) => update({ useGroupScoring: next })}
 											/>
-											<span class="text-xs font-ui text-text-secondary">Decide by matches</span>
+											<span class="text-xs font-ui text-text-secondary">{i18n.t('ler.decideByMatches')}</span>
 										</div>
 									</div>
 								{/if}
@@ -849,9 +849,9 @@
 
 							<div>
 								<div class="ed-adv-label">
-									<label for="entry-place-{entryId}" class="ed-label section-label !mb-0">Placement</label>
+									<label for="entry-place-{entryId}" class="ed-label section-label !mb-0">{i18n.t('ler.placement')}</label>
 									<InfoTip
-										text="It joins the block the preset placed at {'{{lorebook}}'}, or rides inside the story as its own turn, that many turns back from the newest. Without {'{{chatHistory}}'} in the preset an at-depth entry falls back to the block."
+										text={i18n.t('ler.placementTip')}
 									/>
 								</div>
 								<div class="flex items-end gap-3 flex-wrap">
@@ -863,15 +863,15 @@
 										variant="compact"
 										class="!w-auto"
 									>
-										<option value={String(LOREBOOK_POSITION_BLOCK)}>In the lorebook block</option>
-										<option value={String(LOREBOOK_POSITION_AT_DEPTH)}>At a depth in the chat</option>
+										<option value={String(LOREBOOK_POSITION_BLOCK)}>{i18n.t('ler.inBlock')}</option>
+										<option value={String(LOREBOOK_POSITION_AT_DEPTH)}>{i18n.t('ler.atDepth')}</option>
 										{#if foreignPosition}
 											<option value={String(entry.position)}>{foreignPosition}</option>
 										{/if}
 									</Select>
 									{#if atDepth}
 										<label class="ed-timed">
-											<span class="ed-timed-name">Depth</span>
+											<span class="ed-timed-name">{i18n.t('ler.depth')}</span>
 											<input
 												type="text"
 												inputmode="numeric"
@@ -882,13 +882,13 @@
 											/>
 										</label>
 										<label class="ed-timed">
-											<span class="ed-timed-name">As</span>
+											<span class="ed-timed-name">{i18n.t('ler.as')}</span>
 											<Select
 												value={String(entry.role ?? 0)}
 												onchange={(e) => update({ role: parseInt((e.target as HTMLSelectElement).value, 10) })}
 												variant="compact"
 												class="!w-auto"
-												aria-label="Injected turn role"
+												aria-label={i18n.t('ler.turnRoleAria')}
 											>
 												{#each LOREBOOK_ROLES as r (r.id)}
 													<option value={String(r.id)}>{r.label}</option>
@@ -901,8 +901,7 @@
 								     place for is a fact about THIS entry, so it stays on screen. -->
 								{#if foreignPosition}
 									<p class="mt-1.5 text-xs font-ui text-text-muted">
-										SillyTavern puts this entry somewhere this app has no place for, so it goes into
-										the block here and leaves as it arrived. Picking another place is a real change.
+										{i18n.t('ler.stPlacementWarn')}
 									</p>
 								{/if}
 							</div>
@@ -916,8 +915,8 @@
 						type="button"
 						class="icon-btn !w-8 !h-8"
 						onclick={onDuplicate}
-						aria-label="Duplicate entry"
-						title="Duplicate"
+						aria-label={i18n.t('ler.duplicateEntry')}
+						title={i18n.t('ler.duplicate')}
 					>
 						<Icon name="copy" class="w-4 h-4" />
 					</button>
@@ -925,8 +924,8 @@
 						type="button"
 						class="icon-btn !w-8 !h-8 hover:!text-error hover:!bg-error/10"
 						onclick={onDelete}
-						aria-label="Delete entry"
-						title="Delete"
+						aria-label={i18n.t('ler.deleteEntry')}
+						title={i18n.t('common.delete')}
 					>
 						<Icon name="trash" class="w-4 h-4" />
 					</button>
