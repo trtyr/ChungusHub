@@ -19,6 +19,7 @@
 	import { layoutStoryTree, type StoryMapNode } from '$lib/utils/story-map-layout';
 	import { findDeepestLeafFromNode } from '$lib/utils/message-tree';
 	import { branchColorHex } from '$lib/utils/branch-labels';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import type { BranchLabel } from '$lib/types/chat';
 
 	// ===== Geometry =====
@@ -94,17 +95,17 @@
 	// {{char}}/{{user}} resolve live for every preview surface, same as the chat renders
 	// them (coupling #6 in architecture/chat-sessions.md). Rows stay raw.
 	let selfRefChar = $derived(
-		characterLibraryStore.entries.find((e) => e.id === chat?.characterId)?.identity.name || 'Story'
+		characterLibraryStore.entries.find((e) => e.id === chat?.characterId)?.identity.name || i18n.t('role.story')
 	);
-	let selfRefUser = $derived(openChatSetup.persona?.identity.name || 'You');
+	let selfRefUser = $derived(openChatSetup.persona?.identity.name || i18n.t('role.you'));
 
 	function roleLabel(role: StoryMapNode['role']): string {
-		return role === 'user' ? 'You' : role === 'assistant' ? selfRefChar : 'System';
+		return role === 'user' ? i18n.t('role.you') : role === 'assistant' ? selfRefChar : i18n.t('role.system');
 	}
 
 	function expandText(text: string, cap: number): string {
 		const t = expandSelfRefs(text, selfRefChar, selfRefUser);
-		return t.length > cap ? t.slice(0, cap) + '…' : t || '(empty)';
+		return t.length > cap ? t.slice(0, cap) + '…' : t || i18n.t('common.emptyText');
 	}
 
 	function hoverSnippet(text: string, cap: number): string {
@@ -818,14 +819,15 @@
 
 	// ===== SVG helpers =====
 	function nodeAria(n: StoryMapNode): string {
-		const parts = [`${roleLabel(n.role)} turn ${n.depth + 1}`];
-		if (n.label) parts.push(`branch "${n.label.name}"`);
-		if (n.siblingCount > 1) parts.push(`variant ${n.siblingIndex + 1} of ${n.siblingCount}`);
-		if (n.isForkPoint) parts.push(`${n.childCount} branches below`);
-		if (n.isActiveLeaf) parts.push('current position');
-		else if (n.onActivePath) parts.push('on current path');
-		if (n.isCanonLeaf) parts.push('canon ending');
-		else if (n.onCanonPath) parts.push('on canon path');
+		const parts = [i18n.t('storymap.ariaTurn', { role: roleLabel(n.role), n: n.depth + 1 })];
+		if (n.label) parts.push(i18n.t('storymap.ariaBranch', { name: n.label.name }));
+		if (n.siblingCount > 1)
+			parts.push(i18n.t('storymap.variantOf', { n: n.siblingIndex + 1, total: n.siblingCount }));
+		if (n.isForkPoint) parts.push(i18n.t('storymap.branchesBelow', { n: n.childCount }));
+		if (n.isActiveLeaf) parts.push(i18n.t('storymap.ariaCurrentPos'));
+		else if (n.onActivePath) parts.push(i18n.t('storymap.ariaOnActivePath'));
+		if (n.isCanonLeaf) parts.push(i18n.t('storymap.ariaCanonEnding'));
+		else if (n.onCanonPath) parts.push(i18n.t('storymap.ariaOnCanonPath'));
 		return parts.join(', ');
 	}
 
@@ -851,17 +853,17 @@
 
 <div class="map-view">
 	<header class="overlay-header overlay-header--stacked">
-		<h2 class="overlay-title">Story Map</h2>
+		<h2 class="overlay-title">{i18n.t('nav.storymap')}</h2>
 		<div class="overlay-crumb">
 			{#if chat}
 				<span class="overlay-subject">{chat.title}</span>
 				<span class="overlay-facts">
-					{pathTurns} turn{pathTurns === 1 ? '' : 's'}{branchCount > 1
-						? ` on this branch · ${branchCount} branches`
+					{i18n.t('storymap.pathTurns', { n: pathTurns })}{branchCount > 1
+						? ` ${i18n.t('storymap.branchStats', { n: branchCount })}`
 						: ''}
 				</span>
 			{:else}
-				<span class="overlay-facts">No chat open</span>
+				<span class="overlay-facts">{i18n.t('storymap.noChatOpen')}</span>
 			{/if}
 		</div>
 	</header>
@@ -869,12 +871,12 @@
 	<div class="map-stage" bind:this={stageEl}>
 		{#if !chat}
 			<div class="map-empty">
-				<EmptyState icon="sitemap" size="sm">Open a chat to see its story map.</EmptyState>
+				<EmptyState icon="sitemap" size="sm">{i18n.t('storymap.openChatHint')}</EmptyState>
 			</div>
 		{:else if graph.nodes.length === 0}
 			<div class="map-empty">
-				<EmptyState icon="sitemap" size="sm" title="No messages yet">
-					Write your first turn, and branches will appear here as the story splits.
+				<EmptyState icon="sitemap" size="sm" title={i18n.t('storymap.noMessages')}>
+					{i18n.t('storymap.noMessagesHint')}
 				</EmptyState>
 			</div>
 		{:else}
@@ -894,7 +896,7 @@
 				onkeydown={onCanvasKeydown}
 				role="application"
 				tabindex="0"
-				aria-label="Story branch map"
+				aria-label={i18n.t('storymap.mapAria')}
 				aria-describedby="storymap-usage"
 			>
 				<svg class="map-svg" class:is-searching={searchActive} width="100%" height="100%">
@@ -998,7 +1000,7 @@
 			     then the transient strip (search / compare pick / teaching hint). -->
 			<div class="map-top">
 			{#if labeledNodes.length > 0}
-				<nav class="map-branches surface-float" aria-label="Labeled branches">
+				<nav class="map-branches surface-float" aria-label={i18n.t('storymap.labeledBranches')}>
 					{#each labeledNodes as n (n.id)}
 						<button
 							type="button"
@@ -1021,8 +1023,8 @@
 						bind:this={searchInputEl}
 						bind:value={query}
 						type="text"
-						placeholder="Search turns and branch names…"
-						aria-label="Search turns and branch names"
+						placeholder={i18n.t('storymap.searchPlaceholder')}
+						aria-label={i18n.t('storymap.searchPlaceholder')}
 						onkeydown={onSearchKeydown}
 					/>
 					<span class="map-search-count" aria-live="polite">
@@ -1031,7 +1033,7 @@
 					<button
 						type="button"
 						class="map-tool-btn map-tool-btn--sm"
-						aria-label="Previous match"
+						aria-label={i18n.t('storymap.prevMatch')}
 						disabled={matches.length === 0}
 						onclick={() => cycleMatch(-1)}
 					>
@@ -1040,25 +1042,25 @@
 					<button
 						type="button"
 						class="map-tool-btn map-tool-btn--sm"
-						aria-label="Next match"
+						aria-label={i18n.t('storymap.nextMatch')}
 						disabled={matches.length === 0}
 						onclick={() => cycleMatch(1)}
 					>
 						<Icon name="chevronDown" class="w-4 h-4" />
 					</button>
-					<button type="button" class="map-tool-btn map-tool-btn--sm" aria-label="Close search" onclick={closeSearch}>
+					<button type="button" class="map-tool-btn map-tool-btn--sm" aria-label={i18n.t('storymap.closeSearch')} onclick={closeSearch}>
 						<Icon name="close" class="w-4 h-4" />
 					</button>
 				</div>
 			{:else if compareFrom}
 				<div class="map-banner surface-float" role="status" aria-live="polite">
 					<Icon name="columns" class="w-4 h-4" />
-					<span>Pick the branch to compare against</span>
+					<span>{i18n.t('storymap.pickCompare')}</span>
 					{#if canCompareCurrent}
-						<button type="button" class="map-banner-btn" onclick={compareWithCurrent}>Use current path</button>
+						<button type="button" class="map-banner-btn" onclick={compareWithCurrent}>{i18n.t('storymap.useCurrentPath')}</button>
 					{/if}
 					<button type="button" class="map-banner-btn map-banner-btn--ghost" onclick={() => (compareFrom = null)}>
-						Cancel
+						{i18n.t('common.cancel')}
 					</button>
 				</div>
 			{/if}
@@ -1066,9 +1068,9 @@
 
 			<!-- Legend -->
 			<div class="map-legend surface-float">
-				<span class="lg"><span class="lg-swatch lg-active"></span>Current path</span>
-				<span class="lg"><span class="lg-swatch lg-canon"></span>Canon</span>
-				<span class="lg"><span class="lg-swatch lg-fork"></span>Fork</span>
+				<span class="lg"><span class="lg-swatch lg-active"></span>{i18n.t('storymap.legendActive')}</span>
+				<span class="lg"><span class="lg-swatch lg-canon"></span>{i18n.t('storymap.canon')}</span>
+				<span class="lg"><span class="lg-swatch lg-fork"></span>{i18n.t('storymap.legendFork')}</span>
 			</div>
 
 			<!-- Bottom-right: overview + view controls, thumb-reachable on touch. -->
@@ -1089,7 +1091,7 @@
 						onNavigate={centerWorld}
 					/>
 				{/if}
-				<div class="map-tools surface-float" role="toolbar" aria-label="Map tools">
+				<div class="map-tools surface-float" role="toolbar" aria-label={i18n.t('storymap.mapTools')}>
 					<!-- Search sits with the other tools rather than in the header, so every
 					     control over the canvas is in one place. -->
 					<button
@@ -1097,29 +1099,29 @@
 						class="map-tool-btn"
 						class:is-on={searchOpen}
 						aria-pressed={searchOpen}
-						aria-label="Search turns"
-						title="Search turns and branch names"
+						aria-label={i18n.t('storymap.searchTurns')}
+						title={i18n.t('storymap.searchPlaceholder')}
 						onclick={toggleSearch}
 					>
 						<Icon name="search" class="w-4 h-4" />
 					</button>
 					<span class="map-tools-sep"></span>
-					<button type="button" class="map-tool-btn" aria-label="Zoom out" title="Zoom out (-)" onclick={() => zoomBy(1 / 1.2)}>
+					<button type="button" class="map-tool-btn" aria-label={i18n.t('storymap.zoomOut')} title={i18n.t('storymap.zoomOutTitle')} onclick={() => zoomBy(1 / 1.2)}>
 						<Icon name="minimize" class="w-4 h-4" />
 					</button>
 					<span class="map-zoom-level">{pct}%</span>
-					<button type="button" class="map-tool-btn" aria-label="Zoom in" title="Zoom in (+)" onclick={() => zoomBy(1.2)}>
+					<button type="button" class="map-tool-btn" aria-label={i18n.t('storymap.zoomIn')} title={i18n.t('storymap.zoomInTitle')} onclick={() => zoomBy(1.2)}>
 						<Icon name="plus" class="w-4 h-4" />
 					</button>
 					<span class="map-tools-sep"></span>
-					<button type="button" class="map-tool-btn" aria-label="Fit map to view" title="Fit to view (0)" onclick={fitAnimated}>
+					<button type="button" class="map-tool-btn" aria-label={i18n.t('storymap.fitAria')} title={i18n.t('storymap.fitTitle')} onclick={fitAnimated}>
 						<Icon name="maximize" class="w-4 h-4" />
 					</button>
 					<button
 						type="button"
 						class="map-tool-btn"
-						aria-label="Center on current position"
-						title="Center on current position"
+						aria-label={i18n.t('storymap.centerAria')}
+						title={i18n.t('storymap.centerAria')}
 						onclick={() => chat?.activeLeafId && centerOn(chat.activeLeafId)}
 					>
 						<Icon name="target" class="w-4 h-4" />
@@ -1129,8 +1131,8 @@
 						class="map-tool-btn"
 						class:is-on={minimapVisible}
 						aria-pressed={minimapVisible}
-						aria-label="Toggle overview map"
-						title="Toggle overview map"
+						aria-label={i18n.t('storymap.toggleMinimap')}
+						title={i18n.t('storymap.toggleMinimap')}
 						onclick={() => (minimapOn = !minimapVisible)}
 					>
 						<Icon name="radar" class="w-4 h-4" />
@@ -1146,7 +1148,7 @@
 						<div class="hc-head">
 							<span class="hc-dot hc-dot--{hn.role}"></span>
 							<span class="hc-role">{roleLabel(hn.role)}</span>
-							<span class="hc-turn">Turn {hn.depth + 1}</span>
+							<span class="hc-turn">{i18n.t('storymap.turn', { n: hn.depth + 1 })}</span>
 							<span class="hc-time">{fmtTime(hn.createdAt)}</span>
 						</div>
 						{#if hn.label}
@@ -1156,9 +1158,9 @@
 						{/if}
 						<p class="hc-preview">{hoverSnippet(hn.content, 240)}</p>
 						{#if hn.siblingCount > 1}
-							<div class="hc-foot">Variant {hn.siblingIndex + 1} of {hn.siblingCount} · double-click to open</div>
+							<div class="hc-foot">{i18n.t('storymap.variantOpen', { n: hn.siblingIndex + 1, total: hn.siblingCount })}</div>
 						{:else}
-							<div class="hc-foot">Double-click to open in chat</div>
+							<div class="hc-foot">{i18n.t('storymap.doubleClickOpen')}</div>
 						{/if}
 					</div>
 				{/if}
@@ -1185,9 +1187,7 @@
 	</div>
 
 	<p id="storymap-usage" class="sr-only">
-		Interactive story branch map. Tab to a turn, then use the arrow keys to move between turns: up to
-		the parent, down to a reply, left and right between sibling branches. Press Enter to open a turn in
-		the chat. Press plus or minus to zoom and zero to fit the whole map.
+		{i18n.t('storymap.usage')}
 	</p>
 </div>
 
