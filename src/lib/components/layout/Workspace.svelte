@@ -32,6 +32,7 @@
 	import HintLayer from '$lib/components/layout/HintLayer.svelte';
 	import { matchShortcut } from '$lib/commands/shortcuts.svelte';
 	import { chatCursor } from '$lib/stores/chatCursor.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	let activeOverlay = $derived(uiStore.activeOverlay);
 	let welcomeOpen = $derived(uiStore.welcomeOpen);
@@ -331,7 +332,7 @@
 			     TitleBar and composer stay reachable by Tab on purpose), and claiming
 			     modality a focus trap doesn't back up only misleads a screen reader.
 			     ChatsView lands focus in its own search field and Escape closes it. -->
-			<div class="chats-modal" role="dialog" aria-label="Chats" transition:fade={{ duration: 120 }}>
+			<div class="chats-modal" role="dialog" aria-label={i18n.t('welcome.chats')} transition:fade={{ duration: 120 }}>
 				<div class="chats-modal-panel surface-float" data-panel>
 					<ChatsView />
 				</div>
