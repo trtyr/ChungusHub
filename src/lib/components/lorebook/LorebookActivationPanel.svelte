@@ -18,6 +18,7 @@
 	 * where a setting is NOT is a heading over an apology.
 	 */
 	import Toggle from '$lib/components/ui/Toggle.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import OverrideMark from '$lib/components/ui/OverrideMark.svelte';
 	import { lorebookStore } from '$lib/lorebook/store.svelte';
 	import { lorebookSettingsStore } from '$lib/lorebook/settings.svelte';
@@ -116,18 +117,18 @@
 	     about it and no row to offer. -->
 	{#if book}
 		<div>
-			<span class="act-label section-label">Where it applies</span>
+			<span class="act-label section-label">{i18n.t('lb.whereApplies')}</span>
 			<div class="act-card">
 				<div class="act-row" use:toggleRow>
 					<span class="act-row-text">
-						<span class="act-row-name">Use in every chat</span>
+						<span class="act-row-name">{i18n.t('lb.useEveryChat')}</span>
 						<span class="act-row-help">
-							Every chat scans it, even with no character or persona linking it
+							{i18n.t('lb.useEveryChatHelp')}
 						</span>
 					</span>
 					<Toggle
 						checked={!!book.global}
-						label="Use in every chat"
+						label={i18n.t('lb.useEveryChat')}
 						onchange={setReach}
 					/>
 				</div>
@@ -137,13 +138,13 @@
 
 	<!-- Scanning -->
 	<div>
-		<span class="act-label section-label">Scanning</span>
+		<span class="act-label section-label">{i18n.t('lb.scanning')}</span>
 		<div class="act-card">
 			<div class="act-row">
 				<label for="lb-scan-{scope}" class="act-row-text">
-					<span class="act-row-name">Scan depth</span>
+					<span class="act-row-name">{i18n.t('lb.scanDepth')}</span>
 					<span class="act-row-help">
-						How many recent messages are searched for keywords · 0 = the whole context
+						{i18n.t('lb.scanDepthHelp')}
 					</span>
 				</label>
 				{@render mark(resolved.scanDepth !== globals.scanDepth, () => setBook({ scanDepth: null }))}
@@ -164,9 +165,9 @@
 			</div>
 			<div class="act-row" use:toggleRow>
 				<span class="act-row-text">
-					<span class="act-row-name">Recursive scan</span>
+					<span class="act-row-name">{i18n.t('lb.recursiveScan')}</span>
 					<span class="act-row-help">
-						An activated entry can activate others by mentioning their keywords
+						{i18n.t('lb.recursiveScanHelp')}
 					</span>
 				</span>
 				{@render mark(
@@ -175,7 +176,7 @@
 				)}
 				<Toggle
 					checked={recursion}
-					label="Recursive scan"
+					label={i18n.t('lb.recursiveScan')}
 					onchange={(next) =>
 						scope === 'book'
 							? setBook({ recursiveScanning: next })
@@ -185,11 +186,11 @@
 			{#if recursion}
 				<div class="act-row" class:is-inert={stepsInert}>
 					<label for="lb-steps-{scope}" class="act-row-text">
-						<span class="act-row-name">Max recursion passes</span>
+						<span class="act-row-name">{i18n.t('lb.maxRecursion')}</span>
 						<span class="act-row-help">
 							{stepsInert
-								? 'Books recurse together, so the one shared loop is capped in the defaults'
-								: 'How many times activated content is re-scanned · 0 = until nothing new fires'}
+								? i18n.t('lb.maxRecursionInert')
+								: i18n.t('lb.maxRecursionHelp')}
 						</span>
 					</label>
 					{@render mark(
@@ -219,14 +220,14 @@
 			{#if recursion && scope === 'global'}
 				<div class="act-row" use:toggleRow>
 					<span class="act-row-text">
-						<span class="act-row-name">Books recurse together</span>
+						<span class="act-row-name">{i18n.t('lb.crossBook')}</span>
 						<span class="act-row-help">
-							An entry can wake entries in any other book in play, not only in its own
+							{i18n.t('lb.crossBookHelp')}
 						</span>
 					</span>
 					<Toggle
 						checked={globals.crossBookRecursion}
-						label="Books recurse together"
+						label={i18n.t('lb.crossBook')}
 						onchange={(next) => setGlobal({ crossBookRecursion: next })}
 					/>
 				</div>
@@ -234,20 +235,19 @@
 		</div>
 		{#if scope === 'book'}
 			<p class="act-foot">
-				Whether books recurse together is one property of the whole scan, so it is set in
-				Global Settings, on the Lorebooks shelf.
+				{i18n.t('lb.crossBookFoot')}
 			</p>
 		{/if}
 	</div>
 
 	<!-- Keyword matching -->
 	<div>
-		<span class="act-label section-label">Keyword matching</span>
+		<span class="act-label section-label">{i18n.t('lb.keywordMatching')}</span>
 		<div class="act-card">
 			<div class="act-row" use:toggleRow>
 				<span class="act-row-text">
-					<span class="act-row-name">Case-sensitive</span>
-					<span class="act-row-help">Keys must match case as written</span>
+					<span class="act-row-name">{i18n.t('lb.caseSensitive')}</span>
+					<span class="act-row-help">{i18n.t('lb.caseSensitiveHelp')}</span>
 				</span>
 				{@render mark(
 					resolved.caseSensitive !== globals.caseSensitive,
@@ -255,16 +255,16 @@
 				)}
 				<Toggle
 					checked={caseValue}
-					label="Case-sensitive"
+					label={i18n.t('lb.caseSensitive')}
 					onchange={(next) =>
 						scope === 'book' ? setBook({ caseSensitive: next }) : setGlobal({ caseSensitive: next })}
 				/>
 			</div>
 			<div class="act-row" use:toggleRow>
 				<span class="act-row-text">
-					<span class="act-row-name">Match whole words</span>
+					<span class="act-row-name">{i18n.t('lb.wholeWords')}</span>
 					<span class="act-row-help">
-						Single-word keys only match as whole words, so “art” won’t fire on “cartography”
+						{i18n.t('lb.wholeWordsHelp')}
 					</span>
 				</span>
 				{@render mark(
@@ -273,7 +273,7 @@
 				)}
 				<Toggle
 					checked={wholeValue}
-					label="Match whole words"
+					label={i18n.t('lb.wholeWords')}
 					onchange={(next) =>
 						scope === 'book'
 							? setBook({ matchWholeWords: next })
@@ -281,20 +281,19 @@
 				/>
 			</div>
 		</div>
-		<p class="act-foot">An entry falls back to these two unless it sets its own.</p>
+		<p class="act-foot">{i18n.t('lb.matchFallback')}</p>
 	</div>
 
 	<!-- Budget: one share of the prompt for all lore at once, so it has no book layer. -->
 	{#if scope === 'global'}
 		<div>
-			<span class="act-label section-label">Prompt budget</span>
+			<span class="act-label section-label">{i18n.t('lb.budget')}</span>
 			<div class="act-card">
 				<div class="act-row">
 					<label for="lb-budget" class="act-row-text">
-						<span class="act-row-name">Lore budget</span>
+						<span class="act-row-name">{i18n.t('lb.loreBudget')}</span>
 						<span class="act-row-help">
-							Largest share of the context lore may take, in % · 0 = no limit. When exceeded,
-							the lowest-priority entries (highest order) are dropped first.
+							{i18n.t('lb.loreBudgetHelp')}
 						</span>
 					</label>
 					<div class="flex items-center gap-1.5 flex-shrink-0">
