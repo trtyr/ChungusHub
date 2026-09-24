@@ -1605,6 +1605,7 @@ export const en: Record<string, string> = {
 	'asm.ctxTitleNoLimit': "This tab's conversation currently occupies {used} tokens (no connection is assigned to the Assistant).",
 	'asm.ctxAria': 'Context window usage',
 	'asm.ctxNewTab': 'Start a fresh tab, this one keeps its transcript',
+	'asm.approvalModeAria': 'Default approval mode',
 	'asm.noLines': 'This file has no lines.',
 	'asm.reading': 'Reading…',
 	'asm.showMoreLines': 'Show more ({n} line(s) left)',

@@ -12,6 +12,7 @@
 	 * so this page and the composer's pill cannot describe the same switch two different ways.
 	 */
 	import { onMount } from 'svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import { APPROVAL_MODES, readApprovalMode, type ApprovalModeInfo } from '$lib/config/assistant-approval';
 	import { db } from '$lib/services/database';
@@ -67,7 +68,7 @@
 	});
 </script>
 
-<div class="apr-modes" role="radiogroup" aria-label="Default approval mode">
+<div class="apr-modes" role="radiogroup" aria-label={i18n.t('asm.approvalModeAria')}>
 	{#each APPROVAL_MODES as choice (choice.mode)}
 		<button
 			type="button"
