@@ -127,42 +127,42 @@ function backupsSummary(): string {
 
 export const SETTINGS_GROUPS: SettingsGroup[] = [
 	{
-		label: 'Connection',
-		rows: [{ page: 'connections', label: 'Connections', icon: 'radar', preview: connectionsSummary }]
+		label: 'sp.groupConnection',
+		rows: [{ page: 'connections', label: 'sp.rowConnections', icon: 'radar', preview: connectionsSummary }]
 	},
 	{
-		label: 'App',
+		label: 'sp.groupApp',
 		rows: [
-			{ page: 'general', label: 'General', icon: 'settings' },
-			{ page: 'audio', label: 'Audio', icon: 'bell', preview: audioSummary },
-			{ page: 'engines', label: 'Engines', icon: 'bolt', preview: enginesSummary },
-			{ page: 'security', label: 'Security', icon: 'shield' },
-			{ page: 'backups', label: 'Backups', icon: 'archive', preview: backupsSummary },
-			{ page: 'import', label: 'Import', icon: 'download' }
+			{ page: 'general', label: 'sp.rowGeneral', icon: 'settings' },
+			{ page: 'audio', label: 'sp.rowAudio', icon: 'bell', preview: audioSummary },
+			{ page: 'engines', label: 'sp.rowEngines', icon: 'bolt', preview: enginesSummary },
+			{ page: 'security', label: 'sp.rowSecurity', icon: 'shield' },
+			{ page: 'backups', label: 'sp.rowBackups', icon: 'archive', preview: backupsSummary },
+			{ page: 'import', label: 'sp.rowImport', icon: 'download' }
 		]
 	},
 	{
-		label: 'Appearance',
+		label: 'sp.groupAppearance',
 		rows: [
-			{ page: 'interface', label: 'Interface', icon: 'sun' },
-			{ page: 'chat', label: 'Chat', icon: 'columns' }
+			{ page: 'interface', label: 'sp.rowInterface', icon: 'sun' },
+			{ page: 'chat', label: 'sp.rowChat', icon: 'columns' }
 		]
 	},
 	{
-		label: 'Advanced',
+		label: 'sp.groupAdvanced',
 		rows: [
-			{ page: 'prompt-builder', label: 'Prompt Builder', icon: 'wrench' },
-			{ page: 'regex', label: 'Regex', icon: 'filter' },
-			{ page: 'advanced', label: 'Advanced', icon: 'flask' }
+			{ page: 'prompt-builder', label: 'sp.rowPromptBuilder', icon: 'wrench' },
+			{ page: 'regex', label: 'sp.rowRegex', icon: 'filter' },
+			{ page: 'advanced', label: 'sp.rowAdvanced', icon: 'flask' }
 		]
 	},
 	{
-		label: 'About',
+		label: 'sp.groupAbout',
 		rows: [
-			{ page: 'about', label: 'About', icon: 'info', preview: () => APP_VERSION },
+			{ page: 'about', label: 'sp.rowAbout', icon: 'info', preview: () => APP_VERSION },
 			{
 				page: 'developer',
-				label: 'Developer',
+				label: 'sp.rowDeveloper',
 				icon: 'sliders',
 				shown: () => advancedSettingsStore.developerMode
 			}

@@ -49,7 +49,7 @@
 		if (engineId) return { group: 'Engines', label: ENGINES.find((e) => e.id === engineId)?.name ?? 'Engine' };
 		for (const group of SETTINGS_GROUPS) {
 			const row = group.rows.find((r) => r.page === page);
-			if (row) return { group: group.label, label: row.label };
+			if (row) return { group: i18n.t(group.label), label: i18n.t(row.label) };
 		}
 		return null;
 	});

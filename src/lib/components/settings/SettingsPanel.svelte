@@ -3,6 +3,7 @@
 	import SettingsPageView from './SettingsPageView.svelte';
 	import { uiStore } from '$lib/stores/ui.svelte';
 	import { SETTINGS_GROUPS, ANCHOR_PAGES, type SettingsPage } from '$lib/config/settings-pages';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { fly } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 
@@ -138,7 +139,7 @@
 					{#if page === 'root' || split}
 						{#each SETTINGS_GROUPS as group (group.label)}
 							<div class="group">
-								<span class="section-label group-label">{group.label}</span>
+								<span class="section-label group-label">{i18n.t(group.label)}</span>
 								<nav class="drill" aria-label={group.label}>
 									<!-- `shown` is read here rather than baked into the config, so a row
 									     that comes and goes (Developer) appears and leaves under a list
@@ -152,7 +153,7 @@
 											onclick={() => go(row.page)}
 										>
 											<Icon name={row.icon} class="w-4 h-4 drill-icon" strokeWidth={1.75} />
-											<span class="drill-label">{row.label}</span>
+											<span class="drill-label">{i18n.t(row.label)}</span>
 											{#if row.preview}
 												<span class="drill-value">{row.preview()}</span>
 											{/if}

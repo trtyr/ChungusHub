@@ -17,6 +17,7 @@
 	 * box, since a row that vanished under the pointer would take its own way back with it.
 	 */
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import TriTick from './TriTick.svelte';
 	import { importRun } from '$lib/stores/import-run.svelte';
 	import type { PlanGroup, PlanGroupId, PlanItem } from '$lib/services/sillyTavernFolderScan';
@@ -116,17 +117,17 @@
 
 <div class="plan">
 	<div class="plan-head">
-		<span class="section-label">Found in {root || 'the folder you picked'}</span>
+		<span class="section-label">{i18n.t('plan.foundIn', { root: root || i18n.t('plan.folderFallback') })}</span>
 		{#if groups.length > 0}
 			<div class="plan-bulk font-ui">
-				<button type="button" onclick={() => importRun.setAll(true)}>Select all</button>
-				<button type="button" onclick={() => importRun.setAll(false)}>Select none</button>
+				<button type="button" onclick={() => importRun.setAll(true)}>{i18n.t('plan.selectAll')}</button>
+				<button type="button" onclick={() => importRun.setAll(false)}>{i18n.t('plan.selectNone')}</button>
 			</div>
 		{/if}
 	</div>
 
 	{#if groups.length === 0}
-		<p class="empty font-ui">Every file in there has come over already</p>
+		<p class="empty font-ui">{i18n.t('plan.allImported')}</p>
 	{/if}
 
 	<ul class="groups">
@@ -166,7 +167,7 @@
 							<input
 								type="search"
 								class="input-base item-filter font-ui"
-								placeholder="Filter {group.label.toLowerCase()}…"
+								placeholder={i18n.t('plan.filterPlaceholder', { label: group.label })}
 								bind:value={
 									() => filters[group.id] ?? '',
 									(v) => (filters = { ...filters, [group.id]: v })
@@ -175,7 +176,7 @@
 						{/if}
 
 						{#if shown.length === 0}
-							<p class="empty font-ui">Nothing matches that</p>
+							<p class="empty font-ui">{i18n.t('chat.nothingMatches')}</p>
 						{:else}
 							<ul class="items">
 								{#each shown as item (item.id)}
