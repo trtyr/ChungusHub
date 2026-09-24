@@ -13,6 +13,7 @@
 	import { messageStore } from '$lib/stores/messages.svelte';
 	import { chatCursor } from '$lib/stores/chatCursor.svelte';
 	import { toastStore } from '$lib/stores/toast.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { characterLibraryStore } from '$lib/stores/characterLibrary.svelte';
 	import { chatStore } from '$lib/stores/chat.svelte';
 	import { themeStore } from '$lib/stores/theme.svelte';
@@ -138,13 +139,13 @@
 	// touching the row (matches the generation path in prompt-assembly.toInjectedMessage).
 	const selfRefChar = $derived(
 		characterLibraryStore.entries.find((e) => e.id === chatStore.activeChat?.characterId)?.identity
-			.name || 'Character'
+			.name || i18n.t('role.character')
 	);
 	// Both come off the open chat's ONE resolution rather than this turn's own: the claims
 	// belong to the chat, so a per-message copy parsed the same blob and walked the same
 	// library once per turn on screen. Also keeps them out of `bodyHtml`, which recomputes
 	// per streamed token.
-	const selfRefUser = $derived(openChatSetup.persona?.identity.name || 'You');
+	const selfRefUser = $derived(openChatSetup.persona?.identity.name || i18n.t('role.you'));
 	const displayPreset = $derived(openChatSetup.preset);
 
 	$effect(() => {
@@ -265,7 +266,7 @@
 		// silently change what Save does (a rewrite becomes a fork), so refuse out loud instead:
 		// the composer stays typeable while a turn is being edited, so this is reachable.
 		if (isEditing) {
-			toastStore.warning('That turn is already open in the editor');
+			toastStore.warning(i18n.t('chat.alreadyEditing'));
 			return;
 		}
 		handleBranchClick();
@@ -389,10 +390,10 @@
 	});
 	const speakerName = $derived(
 		message.role === 'user'
-			? userPersona?.name?.trim() || 'You'
+			? userPersona?.name?.trim() || i18n.t('role.you')
 			: message.role === 'assistant'
-				? assistantSpeaker?.name?.trim() || 'Assistant'
-				: 'System'
+				? assistantSpeaker?.name?.trim() || i18n.t('role.story')
+				: i18n.t('role.system')
 	);
 	const speakerImagePath = $derived(
 		message.role === 'user'
@@ -422,7 +423,7 @@
 		// The store toasts its own generation failures; only its throw-guards reach here, and
 		// the button is gated on the one this row can see.
 		void messageStore.generateOpeningScene(direction).catch((error) => {
-			toastStore.failed('generate the opening scene', error);
+			toastStore.failed(i18n.t('chat.failOpening'), error);
 		});
 	}
 
@@ -437,7 +438,7 @@
 	function handleContinue() {
 		// The store toasts its own generation failures; only its throw-guards reach here.
 		void messageStore.continueMessage().catch((error) => {
-			toastStore.failed('continue the reply', error);
+			toastStore.failed(i18n.t('chat.failContinue'), error);
 		});
 	}
 	const messageTokens = $derived(countTokens(message.content, message.model ?? undefined));
@@ -450,8 +451,8 @@
 	// Shown in the meta info icon's tooltip; "~" marks a local estimate.
 	const tokenLabel = $derived(
 		actualTokens !== null
-			? `${actualTokens.toLocaleString()} tokens`
-			: `~${messageTokens} tokens`
+			? i18n.t('chat.tokensLabel', { n: actualTokens.toLocaleString() })
+			: i18n.t('chat.tokensEstimateLabel', { n: messageTokens })
 	);
 	// Continue flow: the live tail joins the stored content through the preview rule (the
 	// final write's seam rule, plus a hold on tails that are still pure restatement, so a
@@ -529,7 +530,7 @@
 	onkeydown={handleRowKeydown}
 	onmouseenter={() => (showActions = true)}
 	onmouseleave={() => (showActions = false)}
-	aria-label="{message.role} message{archived ? ' (in memory)' : ''}"
+	aria-label={`${i18n.t('chat.messageAria', { role: i18n.t(message.role === 'user' ? 'role.you' : message.role === 'assistant' ? 'role.story' : 'role.system') })}${archived ? ` · ${i18n.t('chat.inMemory')}` : ''}`}
 >
 	<div class="message-inner">
 		<div class="message-main {isUser ? 'message-main-user' : 'message-main-assistant'}">
@@ -606,14 +607,14 @@
 									     Cancel drops back into the editor with the text still there. -->
 									{#if pendingEdit !== null}
 										<div class="memory-confirm">
-											<p class="memory-confirm-title">This turn is in memory</p>
+											<p class="memory-confirm-title">{i18n.t('chat.turnInMemory')}</p>
 											{#each editLines as line (line)}
 												<p class="memory-confirm-line">{line}</p>
 											{/each}
 											<div class="memory-confirm-actions">
 												<HoldToConfirmButton holdMs={holdMsForBlast(editBlast)} onconfirm={() => commitPendingEdit(false)}>
 													<Icon name="check" class="w-3.5 h-3.5" />
-													Save the edit
+													{i18n.t('chat.saveEdit')}
 												</HoldToConfirmButton>
 												<!-- The cheap door, and a plain click on purpose: the gesture is the
 												     difference between the two saves. Holding pays for the rebuild;
@@ -624,15 +625,15 @@
 												>
 													<Icon name="feather" class="w-3.5 h-3.5" />
 													<span>
-														Save quietly
-														<span class="memory-confirm-minor-note">Saves without rebuilding this part of the memory. Use it when the turn still says the same thing.</span>
+														{i18n.t('chat.saveQuietly')}
+														<span class="memory-confirm-minor-note">{i18n.t('chat.saveQuietlyNote')}</span>
 													</span>
 												</button>
 												<button
 													class="w-full px-3 py-2 text-left text-sm font-ui font-medium text-text-secondary hover:bg-bg-tertiary rounded-[var(--radius-lg)] transition-all duration-150"
 													onclick={() => (pendingEdit = null)}
 												>
-													Keep editing
+													{i18n.t('chat.keepEditing')}
 												</button>
 											</div>
 										</div>
@@ -647,9 +648,9 @@
 													type="button"
 													class="message-attachment"
 													onclick={() => (viewerIndex = i)}
-													title="View full size"
+													title={i18n.t('chat.viewFullSize')}
 												>
-													<img src={imageService.thumbnailUrl(path)} alt="Attachment" loading="lazy" />
+													<img src={imageService.thumbnailUrl(path)} alt={i18n.t('chat.attachment')} loading="lazy" />
 												</button>
 											{/each}
 										</div>
@@ -684,7 +685,7 @@
 									onCopy={handleCopy}
 									onRegenerate={showRegenerate ? handleRegenerateClick : undefined}
 									{showRegenerate}
-									regenerateLabel={isUser ? (hasReply ? 'Regenerate' : 'Generate Reply') : 'Retry'}
+									regenerateLabel={isUser ? (hasReply ? i18n.t('chat.regenerate') : i18n.t('chat.generateReply')) : i18n.t('chat.retry')}
 									onContinue={showContinue ? handleContinue : undefined}
 									{showContinue}
 									onBranch={handleBranchClick}
@@ -705,7 +706,7 @@
 										}}
 										role="button"
 										tabindex="-1"
-										aria-label="Close menu"
+										aria-label={i18n.t('common.closeMenu')}
 									></div>
 									<div
 										bind:this={deleteMenuElement}
@@ -714,10 +715,17 @@
 									>
 										{#if confirmingDelete}
 											<div class="p-3 border-b border-border-subtle bg-error/10">
-												<p class="text-sm font-ui font-medium text-error">Are you sure?</p>
+												<p class="text-sm font-ui font-medium text-error">{i18n.t('chat.areYouSure')}</p>
 												<p class="text-xs text-text-muted mt-1">
-													This deletes {confirmCount} message{confirmCount === 1 ? '' : 's'}{confirmingDelete === 'with_descendants' && deleteBlast.branches > 1 ? ` across ${deleteBlast.branches} branches` : ''}.
-													This cannot be undone.
+													{i18n.t('chat.deleteConfirmCopy', {
+														n: confirmCount,
+														s: confirmCount === 1 ? '' : 's',
+														branches:
+															confirmingDelete === 'with_descendants' && deleteBlast.branches > 1
+																? i18n.t('chat.acrossBranches', { n: deleteBlast.branches })
+																: ''
+													})}
+													{i18n.t('chat.cannotUndo')}
 												</p>
 												<!-- What it costs memory, in the numbers of THIS delete: which summaries
 												     go, which pause, and what re-reads them. Absent when memory is off or
@@ -732,7 +740,7 @@
 													onconfirm={() => handleDeleteAction(confirmingDelete!)}
 												>
 													<Icon name="trash" class="w-3.5 h-3.5" />
-													Delete {confirmCount} message{confirmCount === 1 ? '' : 's'}
+													{i18n.t('chat.deleteN', { n: confirmCount, s: confirmCount === 1 ? '' : 's' })}
 												</HoldToConfirmButton>
 												<button
 													class="w-full px-3 py-2 text-left text-sm font-ui font-medium text-text-secondary hover:bg-bg-tertiary rounded-[var(--radius-lg)] transition-all duration-150"
@@ -743,7 +751,7 @@
 											</div>
 										{:else}
 											<div class="p-3 border-b border-border-subtle bg-bg-secondary">
-												<p class="text-sm font-ui font-medium text-text-primary">Delete message</p>
+												<p class="text-sm font-ui font-medium text-text-primary">{i18n.t('chat.deleteMessage')}</p>
 											</div>
 											<div class="p-1.5">
 												{#if hasBelow}
@@ -752,19 +760,19 @@
 															class="w-full text-left px-3 py-2.5 hover:bg-bg-tertiary rounded-[var(--radius-lg)] text-sm font-ui transition-all duration-150"
 															onclick={() => handleDeleteAction('this_only')}
 														>
-															<span class="font-medium text-text-primary">Delete this message only</span>
-															<p class="text-text-muted text-xs mt-0.5">Replies below are kept and reattach to the previous turn</p>
+															<span class="font-medium text-text-primary">{i18n.t('chat.deleteThisOnly')}</span>
+															<p class="text-text-muted text-xs mt-0.5">{i18n.t('chat.deleteThisOnlyHint')}</p>
 														</button>
 													{/if}
 													<button
 														class="w-full text-left px-3 py-2.5 hover:bg-error/5 rounded-[var(--radius-lg)] text-sm font-ui transition-all duration-150"
 														onclick={() => handleDeleteAction('with_descendants')}
 													>
-														<span class="font-medium text-error">Delete with all responses</span>
+														<span class="font-medium text-error">{i18n.t('chat.deleteWithDescendants')}</span>
 														<p class="text-text-muted text-xs mt-0.5">
 															{canSplice
-																? 'Remove this and everything below it'
-																: 'This turn starts a branch, so it can only go whole'} · {deleteBlast.messages} message{deleteBlast.messages === 1 ? '' : 's'}
+																? i18n.t('chat.deleteDescendantsHint')
+																: i18n.t('chat.deleteBranchHeadHint')} · {i18n.t('chat.nMessages', { n: deleteBlast.messages, s: deleteBlast.messages === 1 ? '' : 's' })}
 														</p>
 													</button>
 												{:else}
@@ -772,8 +780,8 @@
 														class="w-full text-left px-3 py-2.5 hover:bg-error/5 rounded-[var(--radius-lg)] text-sm font-ui transition-all duration-150"
 														onclick={() => handleDeleteAction('this_only')}
 													>
-														<span class="font-medium text-error">Delete this message</span>
-														<p class="text-text-muted text-xs mt-0.5">Nothing follows this turn · this can't be undone</p>
+														<span class="font-medium text-error">{i18n.t('chat.deleteSingle')}</span>
+														<p class="text-text-muted text-xs mt-0.5">{i18n.t('chat.deleteSingleHint')}</p>
 													</button>
 												{/if}
 												<button
@@ -801,7 +809,7 @@
 										}}
 										role="button"
 										tabindex="-1"
-										aria-label="Close menu"
+										aria-label={i18n.t('common.closeMenu')}
 									></div>
 									<div
 										bind:this={regenerateMenuElement}
@@ -810,10 +818,13 @@
 									>
 										{#if confirmingReplace}
 											<div class="p-3 border-b border-border-subtle bg-error/10">
-												<p class="text-sm font-ui font-medium text-error">Replace reply?</p>
+												<p class="text-sm font-ui font-medium text-error">{i18n.t('chat.replaceReplyTitle')}</p>
 												<p class="text-xs text-text-muted mt-1">
-													This deletes {belowBlast.messages} message{belowBlast.messages === 1 ? '' : 's'}{belowBlast.branches > 1 ? ` across ${belowBlast.branches} branches` : ''} below
-													and generates a fresh reply. This can't be undone.
+													{i18n.t('chat.replaceConfirmCopy', {
+														n: belowBlast.messages,
+														s: belowBlast.messages === 1 ? '' : 's',
+														branches: belowBlast.branches > 1 ? i18n.t('chat.acrossBranches', { n: belowBlast.branches }) : ''
+													})}
 												</p>
 											</div>
 											<div class="p-1.5 space-y-1.5">
@@ -822,7 +833,7 @@
 													onconfirm={() => handleRegenerateAction('replace')}
 												>
 													<Icon name="warning" class="w-3.5 h-3.5" />
-													Delete {belowBlast.messages} message{belowBlast.messages === 1 ? '' : 's'} & replace
+													{i18n.t('chat.deleteNReplace', { n: belowBlast.messages, s: belowBlast.messages === 1 ? '' : 's' })}
 												</HoldToConfirmButton>
 												<button
 													class="w-full px-3 py-2 text-left text-sm font-ui font-medium text-text-secondary hover:bg-bg-tertiary rounded-[var(--radius-lg)] transition-all duration-150"
@@ -834,7 +845,7 @@
 										{:else}
 										<div class="p-3 border-b border-border-subtle bg-bg-secondary">
 											<p class="text-sm font-ui font-medium text-text-primary">
-												{message.role === 'user' ? 'Regenerate reply' : 'Regenerate response'}
+												{message.role === 'user' ? i18n.t('chat.regenReplyTitle') : i18n.t('chat.regenResponseTitle')}
 											</p>
 										</div>
 										<div class="p-1.5">
@@ -843,12 +854,12 @@
 												onclick={() => handleRegenerateAction('replace')}
 											>
 												<span class="font-medium text-text-primary">
-													{message.role === 'user' ? 'Replace reply' : 'Replace current'}
+													{message.role === 'user' ? i18n.t('chat.replaceReply') : i18n.t('chat.replaceCurrent')}
 												</span>
 												<p class="text-text-muted text-xs mt-0.5">
 													{message.role === 'user'
-														? 'Delete the replies below and generate a fresh one'
-														: 'Delete this response and generate a new one'}
+														? i18n.t('chat.replaceReplyHint')
+														: i18n.t('chat.replaceCurrentHint')}
 												</p>
 											</button>
 											<button
@@ -856,12 +867,12 @@
 												onclick={() => handleRegenerateAction('branch')}
 											>
 												<span class="font-medium text-text-primary">
-													{message.role === 'user' ? 'Add alternate reply' : 'Create alternate'}
+													{message.role === 'user' ? i18n.t('chat.addAlternate') : i18n.t('chat.createAlternate')}
 												</span>
 												<p class="text-text-muted text-xs mt-0.5">
 													{message.role === 'user'
-														? 'Keep the current reply and generate another to swipe between'
-														: 'Keep this response and generate a new branch'}
+														? i18n.t('chat.addAlternateHint')
+														: i18n.t('chat.createAlternateHint')}
 												</p>
 											</button>
 											<button
@@ -890,8 +901,8 @@
 												class="opening-btn"
 												onclick={() => (openingPopoverOpen = true)}
 												disabled={messageStore.isStreaming}
-												aria-label="Write another opening scene"
-												title="Write another opening scene"
+												aria-label={i18n.t('chat.writeOpening')}
+												title={i18n.t('chat.writeOpening')}
 											>
 												<Icon name="sparkles" class="w-3.5 h-3.5" strokeWidth={1.75} />
 											</button>
@@ -919,7 +930,7 @@
 	<ImageLightbox
 		images={imageAttachments}
 		bind:index={viewerIndex}
-		alt="Chat attachment"
+		alt={i18n.t('chat.attachmentAria')}
 		onClose={() => (viewerIndex = null)}
 	/>
 {/if}
@@ -928,7 +939,7 @@
      turn on screen carrying a parked copy of one would cost the transcript for a panel almost
      nobody has open. -->
 {#if loreTrace && loreOpen}
-	<Dialog open onClose={() => (loreOpen = false)} title="Lorebook scan" size="xl">
+	<Dialog open onClose={() => (loreOpen = false)} title={i18n.t('chat.lorebookScan')} size="xl">
 		<LorebookTraceList trace={loreTrace} />
 	</Dialog>
 {/if}

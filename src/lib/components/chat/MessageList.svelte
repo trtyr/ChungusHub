@@ -82,7 +82,7 @@
 		try {
 			await messageStore.generateOpeningScene(direction);
 		} catch (error) {
-			toastStore.failed('generate the opening scene', error);
+			toastStore.failed(i18n.t('chat.failOpening'), error);
 		}
 	}
 
