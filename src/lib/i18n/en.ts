@@ -435,6 +435,8 @@ export const en: Record<string, string> = {
 	'chat.personaEmpty': 'No personas in your library yet. Create one from the Personas tab.',
 	'chat.emptyPickPersona': 'Pick a character and a persona, and the story starts from their first message.',
 	'chat.genTime': 'Generation time',
+	'chat.continueLabel': 'Continue',
+	'chat.branchLabel': 'Branch',
 	'storymap.noChatOpen': 'No chat open',
 	'storymap.openChatHint': 'Open a chat to see its story map.',
 	'storymap.noMessages': 'No messages yet',

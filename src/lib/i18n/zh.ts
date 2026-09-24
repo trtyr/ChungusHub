@@ -421,6 +421,8 @@ export const zh: Record<string, string> = {
 	'chat.personaEmpty': '资料库里还没有用户角色。请到「用户角色」页签创建一个。',
 	'chat.emptyPickPersona': '选一个角色和一个用户角色，故事将从他们的第一条消息开始。',
 	'chat.genTime': '生成用时',
+	'chat.continueLabel': '继续',
+	'chat.branchLabel': '分支',
 	'storymap.noChatOpen': '未打开聊天',
 	'storymap.openChatHint': '打开一个聊天即可查看它的故事地图。',
 	'storymap.noMessages': '还没有消息',

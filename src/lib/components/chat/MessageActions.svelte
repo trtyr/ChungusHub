@@ -60,7 +60,7 @@
 		title={i18n.t('chat.edit')}
 	>
 		<Icon name="edit" class="w-3.5 h-3.5" strokeWidth={1.75} />
-		<span class="action-label">Edit</span>
+		<span class="action-label">{i18n.t('chat.edit')}</span>
 	</button>
 
 	<button
@@ -96,7 +96,7 @@
 			title={i18n.t('chat.continueTitle')}
 		>
 			<Icon name="feather" class="w-3.5 h-3.5" strokeWidth={1.75} />
-			<span class="action-label">Continue</span>
+			<span class="action-label">{i18n.t('chat.continueLabel')}</span>
 		</button>
 	{/if}
 
@@ -109,7 +109,7 @@
 			title={i18n.t('chat.branchTitle')}
 		>
 			<Icon name="branch" class="w-3.5 h-3.5" strokeWidth={1.75} />
-			<span class="action-label">Branch</span>
+			<span class="action-label">{i18n.t('chat.branchLabel')}</span>
 		</button>
 	{/if}
 
@@ -121,7 +121,7 @@
 		title={i18n.t('common.delete')}
 	>
 		<Icon name="trash" class="w-3.5 h-3.5" strokeWidth={1.75} />
-		<span class="action-label">Delete</span>
+		<span class="action-label">{i18n.t('common.delete')}</span>
 	</button>
 </div>
 
