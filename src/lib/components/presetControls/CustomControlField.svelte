@@ -12,6 +12,7 @@
 -->
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import InfoTip from '$lib/components/ui/InfoTip.svelte';
 	import Select from '$lib/components/ui/Select.svelte';
 	import Toggle from '$lib/components/ui/Toggle.svelte';
@@ -58,12 +59,12 @@
 	// not a switch, so "leave this on" would be wrong on the majority of them.
 	const ADVICE: Record<PromptControlAdvice, { label: string; title: string }> = {
 		recommended: {
-			label: 'Recommended',
-			title: 'Core to how this preset works, and what it arrives on is the author’s deliberate pick.'
+			label: i18n.t('pcf.recLabel'),
+			title: i18n.t('pcf.recTitle')
 		},
-		optional: { label: 'Optional', title: 'Taste rather than craft. Any setting here is a fine one.' },
-		advanced: { label: 'Advanced', title: 'The author expects you to know what this does.' },
-		troubleshooting: { label: 'If trouble', title: 'Only worth reaching for when something is going wrong.' }
+		optional: { label: i18n.t('pcf.optLabel'), title: i18n.t('pcf.optTitle') },
+		advanced: { label: i18n.t('pcf.advLabel'), title: i18n.t('pcf.advTitle') },
+		troubleshooting: { label: i18n.t('pcf.troubleLabel'), title: i18n.t('pcf.troubleTitle') }
 	};
 
 	let advice = $derived(control.advice ? ADVICE[control.advice] : null);
@@ -147,11 +148,11 @@
 						class="pcf-reset"
 						onclick={onReset}
 						title={baseline === undefined
-							? 'Changed from what the author set, click to put it back'
-							: 'Changed from the setup you applied, click to put it back'}
+							? i18n.t('pcf.resetAuthor')
+							: i18n.t('pcf.resetSetup')}
 					>
 						<span class="pcf-reset-dot"></span>
-						<span class="pcf-reset-label">Reset</span>
+						<span class="pcf-reset-label">{i18n.t('pcf.reset')}</span>
 					</button>
 				{/if}
 			</span>
@@ -209,7 +210,7 @@
 					max={track.max}
 					step={track.step}
 					value={range[0]}
-					aria-label="{control.label || 'Untitled'}, lower end"
+					aria-label={i18n.t('pcf.lowerEnd', { label: control.label || i18n.t('pcf.untitled') })}
 					oninput={(e) => setLow(Number((e.target as HTMLInputElement).value))}
 				/>
 				<input
@@ -218,7 +219,7 @@
 					max={track.max}
 					step={track.step}
 					value={range[1]}
-					aria-label="{control.label || 'Untitled'}, upper end"
+					aria-label={i18n.t('pcf.upperEnd', { label: control.label || i18n.t('pcf.untitled') })}
 					oninput={(e) => setHigh(Number((e.target as HTMLInputElement).value))}
 				/>
 			</div>
@@ -270,7 +271,7 @@
 				<button
 					type="button"
 					class="pcf-tag is-selected is-custom"
-					title="Yours, click to remove"
+					title={i18n.t('pcf.customTag')}
 					onclick={() => toggleTag(entry)}
 				>
 					{entry}
@@ -284,20 +285,20 @@
 					type="text"
 					bind:value={customEntry}
 					onkeydown={onCustomKeydown}
-					placeholder={control.customPlaceholder ?? 'Add your own…'}
-					aria-label="Add your own entry"
+					placeholder={control.customPlaceholder ?? i18n.t('pcf.addOwn')}
+					aria-label={i18n.t('pcf.addOwnAria')}
 					class="input-base flex-1 min-w-0 px-3 py-1.5 text-text-primary font-ui text-sm placeholder:text-text-muted"
 				/>
 				<button type="button" class="pcf-custom-add" onclick={addCustomTag} disabled={!customEntry.trim()}>
-					Add
+					{i18n.t('pcf.add')}
 				</button>
 			</div>
 		{/if}
 	{/if}
 
 	{#if tokens > 0}
-		<p class="pcf-cost" title="What this control adds to every prompt">
-			{tokens.toLocaleString()} token{tokens === 1 ? '' : 's'}
+		<p class="pcf-cost" title={i18n.t('pcf.costTip')}>
+			{i18n.t('pcf.tokensN', { n: tokens.toLocaleString() })}
 		</p>
 	{/if}
 </div>
