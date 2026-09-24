@@ -1,6 +1,7 @@
 <script lang="ts">
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
+import { i18n } from '$lib/i18n/i18n.svelte';
 	import ChatDefaultSelect from './ChatDefaultSelect.svelte';
 	import { characterLibraryStore } from '$lib/stores/characterLibrary.svelte';
 	import { connectionStore } from '$lib/stores/connections.svelte';
@@ -145,8 +146,8 @@
 		return rows;
 	});
 
-	const typeLabel = 'Character';
-	const typeLabelLower = 'character';
+	const typeLabel = $derived(i18n.t('ee.typeLabel'));
+	const typeLabelLower = $derived(i18n.t('ee.typeLabelLower'));
 
 	// Typing is debounced; everything below it is a discrete action and writes at once.
 	function handleFieldChange(field: 'name', value: string) {
@@ -221,10 +222,10 @@
 	let showDeleteConfirm = $state(false);
 	let deleteUsage = $state<{ chatCount: number; castCount: number } | null>(null);
 	let deleteMessage = $derived.by(() => {
-		const name = data?.name || `this ${typeLabelLower}`;
-		const base = `Are you sure you want to delete ${name}? This cannot be undone.`;
+		const name = data?.name || i18n.t('ee.nameFallback');
+		const base = i18n.t('ee.deleteMsg', { name });
 		if (!deleteUsage || deleteUsage.castCount === 0) return base;
-		return `${base} It is currently in ${deleteUsage.chatCount} chat cast(s) (${deleteUsage.castCount} reference(s)); those references will be removed.`;
+		return base + i18n.t('ee.deleteUsage', { chats: deleteUsage.chatCount, refs: deleteUsage.castCount });
 	});
 
 	async function openDeleteConfirm() {
@@ -263,7 +264,7 @@
 			await characterLibraryStore.flushEntry(entry.id);
 			characterLibraryStore.confirmNewEntry(entry.id);
 			flashSaved();
-			toastStore.success(`${typeLabel} saved`);
+			toastStore.success(i18n.t('ee.saved', { t: typeLabel }));
 		} finally {
 			committing = false;
 		}
@@ -312,7 +313,7 @@
 	<div class="flex flex-col h-full">
 		<LibraryEditorHeader
 			name={data.name}
-			fallbackName={`Unnamed ${typeLabel}`}
+			fallbackName={i18n.t('ee.unnamed', { t: typeLabel })}
 			{isNew}
 			busy={committing}
 			saving={committing || saving}
@@ -425,9 +426,9 @@
 
 	<ConfirmDialog
 		open={showDeleteConfirm}
-		title="Delete {typeLabel}"
+		title={i18n.t('ee.deleteTitle', { t: typeLabel })}
 		message={deleteMessage}
-		confirmLabel="Delete"
+		confirmLabel={i18n.t('common.delete')}
 		variant="danger"
 		destructive
 		onConfirm={() => { showDeleteConfirm = false; handleDelete(); }}
