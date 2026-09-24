@@ -27,6 +27,7 @@
 
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import SettingsPageView from './SettingsPageView.svelte';
 	import { uiStore } from '$lib/stores/ui.svelte';
 	import { SETTINGS_GROUPS } from '$lib/config/settings-pages';
@@ -125,8 +126,8 @@
 				class="icon-btn"
 				disabled={!canBack}
 				onclick={goBack}
-				aria-label="Back"
-				title="Back"
+				aria-label={i18n.t('common.back')}
+				title={i18n.t('common.back')}
 			>
 				<Icon name="chevronLeft" class="w-4 h-4" strokeWidth={2} />
 			</button>
@@ -135,8 +136,8 @@
 				class="icon-btn"
 				disabled={!canForward}
 				onclick={goForward}
-				aria-label="Forward"
-				title="Forward"
+				aria-label={i18n.t('common.forward')}
+				title={i18n.t('common.forward')}
 			>
 				<Icon name="chevronRight" class="w-4 h-4" strokeWidth={2} />
 			</button>
@@ -149,7 +150,7 @@
 			<h2 class="overlay-subject">{info?.label ?? ''}</h2>
 		</div>
 		<div class="overlay-actions">
-			<button type="button" class="icon-btn" onclick={close} aria-label="Close" title="Close">
+			<button type="button" class="icon-btn" onclick={close} aria-label={i18n.t('common.close')} title={i18n.t('common.close')}>
 				<Icon name="x" class="w-4 h-4" strokeWidth={2} />
 			</button>
 		</div>

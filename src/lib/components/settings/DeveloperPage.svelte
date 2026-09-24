@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { openWelcomeDialog } from '$lib/components/layout/WelcomeDialog.svelte';
 	import { generalSettingsStore } from '$lib/stores/general-settings.svelte';
 </script>
@@ -14,12 +15,12 @@
 	     and is put back there rather than previewed out of context here. -->
 	<section class="card">
 		<div class="card-head">
-			<span class="card-title">Notices</span>
+			<span class="card-title">{i18n.t('dev.notices')}</span>
 		</div>
 		<div class="card-body">
 			<div class="notice">
-				<span class="notice-label">First-run greeting</span>
-				<p class="hint">The greeting a new reader meets, as they meet it.</p>
+				<span class="notice-label">{i18n.t('dev.firstRunGreeting')}</span>
+				<p class="hint">{i18n.t('dev.firstRunHint')}</p>
 				<button type="button" class="open-btn" onclick={openWelcomeDialog}>
 					<Icon name="sparkles" class="w-3.5 h-3.5" strokeWidth={1.75} />
 					Open the greeting
@@ -27,8 +28,8 @@
 			</div>
 
 			<div class="notice">
-				<span class="notice-label">Assistant cost notice</span>
-				<p class="hint">What the Chungus Assistant states about its cost, in its own panel.</p>
+				<span class="notice-label">{i18n.t('dev.assistantCost')}</span>
+				<p class="hint">{i18n.t('dev.assistantCostHint')}</p>
 				{#if generalSettingsStore.assistantCostSeen}
 					<button
 						type="button"
@@ -39,7 +40,7 @@
 						Show it again
 					</button>
 				{:else}
-					<p class="armed">Showing in the assistant panel until its Got it is pressed.</p>
+					<p class="armed">{i18n.t('dev.assistantArmed')}</p>
 				{/if}
 			</div>
 		</div>
