@@ -18,25 +18,25 @@
 	 * nothing.
 	 */
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { generalSettingsStore } from '$lib/stores/general-settings.svelte';
 </script>
 
-<section class="cost" aria-label="What the assistant costs">
+<section class="cost" aria-label={i18n.t('asm.costAria')}>
 	<div class="cost-body panel-scroll">
 		<span class="cost-icon"><Icon name="coin" class="w-7 h-7" strokeWidth={1.5} /></span>
-		<h2 class="cost-title">Before you use this</h2>
+		<h2 class="cost-title">{i18n.t('asm.costTitle')}</h2>
 		<p class="cost-text">
-			A single message can produce many model requests, each carrying the whole conversation
-			and every tool definition. Set a spending limit on the key behind it.
+			{i18n.t('asm.costText')}
 		</p>
 		<p class="cost-aside">
-			If you have used an agentic coding tool, this works much the same way.
+			{i18n.t('asm.costAside')}
 		</p>
 	</div>
 
 	<div class="cost-foot">
 		<button type="button" onclick={() => generalSettingsStore.setAssistantCostSeen(true)}>
-			Got it
+			{i18n.t('asm.costOk')}
 		</button>
 	</div>
 </section>

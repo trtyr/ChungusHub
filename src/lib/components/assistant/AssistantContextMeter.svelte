@@ -6,6 +6,7 @@
 	 * the warn threshold it offers the real remedy inline: a fresh tab.
 	 */
 	import { assistantSessionStore } from '$lib/stores/assistantSessions.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { connectionStore } from '$lib/stores/connections.svelte';
 
 	interface Props {
@@ -34,17 +35,17 @@
 		class:assistant-ctx--warn={pct !== null && pct >= 80 && pct < 95}
 		class:assistant-ctx--danger={pct !== null && pct >= 95}
 		title={limit
-			? `This tab's conversation occupies ${fmtTokens(used)} of the Assistant connection's ${fmtTokens(limit)}-token context size. Near the top the oldest turns start dropping out, so open a new tab for unrelated work or raise Context Size on that connection.`
-			: `This tab's conversation currently occupies ${fmtTokens(used)} tokens (no connection is assigned to the Assistant).`}
+			? i18n.t('asm.ctxTitleLimit', { used: fmtTokens(used), limit: fmtTokens(limit) })
+			: i18n.t('asm.ctxTitleNoLimit', { used: fmtTokens(used) })}
 	>
 		{#if limit && pct !== null}
-			<div class="assistant-ctx-bar" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label="Context window usage">
+			<div class="assistant-ctx-bar" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label={i18n.t('asm.ctxAria')}>
 				<div class="assistant-ctx-fill" style:width="{pct}%"></div>
 			</div>
 		{/if}
 		<span class="assistant-ctx-num">{fmtTokens(used)}{limit ? ` / ${fmtTokens(limit)} · ${pct}%` : ' ctx'}</span>
 		{#if pct !== null && pct >= 80}
-			<button type="button" class="assistant-ctx-newtab" onclick={onNewTab} title="Start a fresh tab, this one keeps its transcript">
+			<button type="button" class="assistant-ctx-newtab" onclick={onNewTab} title={i18n.t('asm.ctxNewTab')}>
 				New tab
 			</button>
 		{/if}
