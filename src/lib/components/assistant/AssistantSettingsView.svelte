@@ -12,6 +12,7 @@
 	 * exactly like every other call the app makes.
 	 */
 	import { onMount } from 'svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import InfoTip from '$lib/components/ui/InfoTip.svelte';
 	import AssistantSuggestionsSection from './AssistantSuggestionsSection.svelte';
@@ -56,7 +57,7 @@
 			await db.setSetting('assistantCustomInstructions', next);
 			instructionsSaved = next;
 			instructionsDraft = next;
-			toastStore.success(next ? 'Instructions saved, in effect for new sessions' : 'Instructions cleared');
+			toastStore.success(next ? i18n.t('asm.setSaved') : i18n.t('asm.setCleared'));
 		} catch (e) {
 			instructionsDraft = instructionsSaved;
 			toastStore.failed('save the assistant instructions', e);
@@ -91,14 +92,14 @@
 	}
 </script>
 
-<section class="assistant-settings-view" aria-label="Assistant settings">
+<section class="assistant-settings-view" aria-label={i18n.t('asm.settingsAria')}>
 	<header class="assistant-settings-header">
-		<button bind:this={backButton} type="button" class="assistant-settings-back" onclick={onClose} aria-label="Back to assistant chat" title="Back to assistant chat">
+		<button bind:this={backButton} type="button" class="assistant-settings-back" onclick={onClose} aria-label={i18n.t('asm.backToChat')} title={i18n.t('asm.backToChat')}>
 			<Icon name="arrowLeft" class="w-4 h-4" />
 		</button>
 		<div class="assistant-settings-title">
 			<Icon name="settings" class="w-4 h-4 text-accent" />
-			<h2>Assistant Settings</h2>
+			<h2>{i18n.t('asm.settingsTitle')}</h2>
 		</div>
 	</header>
 
@@ -110,7 +111,7 @@
 					Instructions
 				</h3>
 				<InfoTip
-					text="Standing instructions that ride the assistant's prompt on every turn, so they cost a little context and outrank its built-in tone, though never the approval rules below. An edit reaches new sessions and any open one you Apply it to."
+					text={i18n.t('asm.instrTip')}
 				/>
 			</div>
 
@@ -120,8 +121,8 @@
 				onblur={commitInstructions}
 				maxlength={CUSTOM_INSTRUCTIONS_MAX}
 				disabled={!instructionsLoaded}
-				placeholder="e.g. Always reply in my language. Keep character voices distinct. Never touch lorebook entries without asking first."
-				aria-label="Assistant custom instructions"
+				placeholder={i18n.t('asm.instrPlaceholder')}
+				aria-label={i18n.t('asm.instrAria')}
 			></textarea>
 			<div class="instructions-meta">
 				<span class:instructions-count--full={instructionsDraft.length >= CUSTOM_INSTRUCTIONS_MAX}>
@@ -137,7 +138,7 @@
 					Suggested Prompts
 				</h3>
 				<InfoTip
-					text="The lines the assistant's empty screen offers, in this order. The first four show on their own and Show more reveals the rest. Tapping one fills the composer instead of sending it, and none of them reach the model, so an open session needs no Apply."
+					text={i18n.t('asm.sugTip')}
 				/>
 			</div>
 			<AssistantSuggestionsSection />
@@ -150,7 +151,7 @@
 					Skills
 				</h3>
 				<InfoTip
-					text="Guides the assistant reads before specialized work. Only a skill's title and description cost prompt space; it pulls the full guide when a task matches one."
+					text={i18n.t('asm.skillsTip')}
 				/>
 			</div>
 			<AssistantSkillsSection />
@@ -176,7 +177,7 @@
 					Capabilities
 				</h3>
 				<InfoTip
-					text="Every enabled family's tool descriptions ride the front of every request, so switching one off makes the assistant cheaper as well as narrower. Off bites every open session at once; on reaches new sessions and any open one you Apply the settings to."
+					text={i18n.t('asm.toolsTip')}
 				/>
 			</div>
 			<AssistantCapabilitiesSection />
