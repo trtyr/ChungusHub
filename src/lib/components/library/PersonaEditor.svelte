@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
+import { i18n } from '$lib/i18n/i18n.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
@@ -160,10 +161,10 @@
 	let showConvert = $state(false);
 
 	let showDeleteConfirm = $state(false);
-	let deleteName = $derived(snapshot?.name || 'this persona');
+	let deleteName = $derived(snapshot?.name || i18n.t('pe.deleteNameFallback'));
 	let deleteMessage = $derived(
-		`Are you sure you want to delete ${deleteName}? This cannot be undone.` +
-			(isActive ? ' New chats start as it, so another one takes that over.' : '')
+		i18n.t('pe.deleteMsg', { deleteName }) +
+			(isActive ? i18n.t('pe.deleteActiveNote') : '')
 	);
 	// The app keeps at least one persona (architecture/library.md): the server refuses the last
 	// delete, so the menu item goes inert and says why rather than vanishing.
@@ -314,7 +315,7 @@
 								style={portraitFocusStyle(snapshot.portraitFocus)}
 							/>
 							<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover/portrait:opacity-100 transition-opacity flex items-end justify-center pb-2.5">
-								<span class="text-white/90 text-xs font-ui">Change photo</span>
+								<span class="text-white/90 text-xs font-ui">{i18n.t('pe.changePhoto')}</span>
 							</div>
 							<button
 								type="button"
@@ -328,15 +329,15 @@
 								type="button"
 								class="portrait-overlay-action absolute bottom-1.5 right-1.5 p-1 rounded-full bg-black/50 text-white/80 hover:bg-black/75 hover:text-white"
 								onclick={handleAdjustFraming}
-								aria-label="Adjust framing"
-								title="Adjust framing"
+								aria-label={i18n.t('pe.adjustFraming')}
+								title={i18n.t('pe.adjustFraming')}
 							>
 								<Icon name="crop" class="w-3.5 h-3.5" />
 							</button>
 						{:else}
 							<div class="w-full h-full flex flex-col items-center justify-center text-text-muted group-hover/portrait:text-accent transition-colors gap-1.5">
 								<Icon name="image" class="w-7 h-7" />
-								<span class="text-xs font-ui">Add photo</span>
+								<span class="text-xs font-ui">{i18n.t('pe.addPhoto')}</span>
 							</div>
 						{/if}
 					</div>
@@ -350,7 +351,7 @@
 							type="text"
 							value={snapshot.name}
 							oninput={(e) => handleNameChange((e.target as HTMLInputElement).value)}
-							placeholder="What should characters call you?"
+							placeholder={i18n.t('pe.namePlaceholder')}
 							class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm placeholder:text-text-muted"
 						/>
 					</div>
@@ -364,7 +365,7 @@
 					<div class="space-y-3">
 						<div class="w-full flex items-center gap-1.5 py-0.5">
 							<Icon name="user" class="w-3.5 h-3.5 text-accent" />
-							<span class="text-xs font-ui font-semibold uppercase tracking-wide text-accent">Persona</span>
+							<span class="text-xs font-ui font-semibold uppercase tracking-wide text-accent">{i18n.t('pe.persona')}</span>
 							<span class="flex-1 border-t border-border-subtle/70 ml-1"></span>
 						</div>
 						<div class="rounded-[var(--radius-lg)] border border-border-subtle bg-bg-secondary/40 transition-colors hover:border-border">
@@ -375,7 +376,7 @@
 								{#if !personaSent}
 									<span
 										class="inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-ui font-medium rounded-[var(--radius-sm)] bg-warning/15 text-warning shrink-0"
-										title={`Not sent to the AI. Add {{${BLOB_MACRO.persona}}} to the active preset to include it.`}
+										title={i18n.t('pe.notSentTip')}
 									>
 										<Icon name="eyeOff" class="w-3 h-3" />
 										Not sent to AI
@@ -388,7 +389,7 @@
 									id="persona-description-{entry.id}"
 									value={snapshot.traits.description ?? ''}
 									oninput={(e) => handleDescriptionChange((e.target as HTMLTextAreaElement).value)}
-									placeholder="Who you are: appearance, presence, how you carry yourself, how you speak…"
+									placeholder={i18n.t('pe.descPlaceholder')}
 									class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm placeholder:text-text-muted resize-none min-h-[12rem] {personaSent
 										? ''
 										: 'opacity-60'}"
@@ -418,9 +419,9 @@
 
 	<ConfirmDialog
 		open={showDeleteConfirm}
-		title="Delete persona"
+		title={i18n.t('pe.deleteTitle')}
 		message={deleteMessage}
-		confirmLabel="Delete"
+		confirmLabel={i18n.t('common.delete')}
 		variant="danger"
 		destructive
 		onConfirm={() => { showDeleteConfirm = false; handleDelete(); }}

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
 	import Dialog from '$lib/components/ui/Dialog.svelte';
+import { i18n } from '$lib/i18n/i18n.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Slider from '$lib/components/ui/Slider.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
@@ -198,7 +199,7 @@
 	}
 </script>
 
-<Dialog {open} {onClose} title="Adjust framing" size="lg">
+<Dialog {open} {onClose} title={i18n.t('pf.title')} size="lg">
 	<div class="space-y-4">
 		<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -- a direct-manipulation
@@ -276,7 +277,7 @@
 		</p>
 
 		<div class="flex items-center gap-3">
-			<span class="text-xs font-ui text-text-secondary shrink-0">Zoom</span>
+			<span class="text-xs font-ui text-text-secondary shrink-0">{i18n.t('pf.zoom')}</span>
 			<Slider
 				value={draft.zoom}
 				min={1}
@@ -299,9 +300,9 @@
 		</div>
 
 		<div class="flex gap-3 justify-end pt-1">
-			<Button variant="ghost" onclick={onClose} disabled={saving}>Cancel</Button>
+			<Button variant="ghost" onclick={onClose} disabled={saving}>{i18n.t('common.cancel')}</Button>
 			<Button variant="primary" onclick={handleSave} disabled={saving || !natural}>
-				Save framing
+				{i18n.t('pf.save')}
 			</Button>
 		</div>
 	</div>

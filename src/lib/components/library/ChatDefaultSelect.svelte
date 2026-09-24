@@ -12,6 +12,7 @@
 	 * together so the pointer and the keyboard never disagree about which row is next.
 	 */
 	import Icon from '$lib/components/ui/Icon.svelte';
+import { i18n } from '$lib/i18n/i18n.svelte';
 
 	interface Option {
 		id: string;
@@ -157,7 +158,7 @@
 				<!-- Inert: this IS the stored value, and it names nothing to switch to. -->
 				<div class="row is-inert">
 					<span class="check is-visible"><Icon name="check" class="w-3.5 h-3.5" /></span>
-					<span class="row-name">No longer here</span>
+					<span class="row-name">{i18n.t('cd.noLongerHere')}</span>
 				</div>
 			{/if}
 
@@ -165,7 +166,7 @@
 
 			<div class="list" bind:this={listEl}>
 				{#if options.length === 0}
-					<p class="empty">Nothing here yet</p>
+					<p class="empty">{i18n.t('cd.nothingYet')}</p>
 				{:else}
 					{#each options as option, index (option.id)}
 						<button
