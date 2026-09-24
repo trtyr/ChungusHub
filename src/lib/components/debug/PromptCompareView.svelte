@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { DIFF_LINE_CAP, lineDiff } from '$lib/debug/diff';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { formatTime, sourceColor } from '$lib/debug/format';
 	import type { PromptLogEntry, PromptLogMessage } from '$lib/debug/types';
 
@@ -107,9 +108,9 @@
 
 	<p class="summary">
 		{changedCount === 0
-			? 'No differences: same messages, same attachments, same tool definitions.'
-			: `${changedCount} of ${blocks.length} block${blocks.length === 1 ? '' : 's'} differ`}
-		<span class="legend"><span class="swatch rm"></span>only in A<span class="swatch ad"></span>only in B</span>
+			? i18n.t('dbg.noDiff')
+			: i18n.t('dbg.nDiff', { n: changedCount, total: blocks.length })}
+		<span class="legend"><span class="swatch rm"></span>{i18n.t('dbg.onlyA')}<span class="swatch ad"></span>{i18n.t('dbg.onlyB')}</span>
 	</p>
 
 	<div class="blocks">
@@ -118,18 +119,18 @@
 				<div class="block-head">
 					<span class="block-role">{block.label}</span>
 					{#if block.onlyIn === 'a'}
-						<span class="badge rm">only in A</span>
+						<span class="badge rm">{i18n.t('dbg.onlyA')}</span>
 					{:else if block.onlyIn === 'b'}
-						<span class="badge ad">only in B</span>
+						<span class="badge ad">{i18n.t('dbg.onlyB')}</span>
 					{:else if block.identical}
-						<span class="badge same">identical · {block.sameLines} lines</span>
+						<span class="badge same">{i18n.t('dbg.sameN', { n: block.sameLines })}</span>
 					{:else if block.coarse}
 						<span
 							class="badge changed"
-							title={`Over ${DIFF_LINE_CAP.toLocaleString()} lines on one side, so the line-by-line match was skipped. This shows both versions whole, not the exact edits.`}
-						>changed · coarse</span>
+							title={i18n.t('dbg.coarseTip', { n: DIFF_LINE_CAP.toLocaleString() })}
+						>{i18n.t('dbg.changedCoarse')}</span>
 					{:else}
-						<span class="badge changed">changed</span>
+						<span class="badge changed">{i18n.t('dbg.changed')}</span>
 					{/if}
 				</div>
 				{#if !block.identical}
