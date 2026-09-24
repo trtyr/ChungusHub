@@ -14,6 +14,7 @@
 	 * there yet. The panel's Apply notice is what says so.
 	 */
 	import { onMount } from 'svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import InfoTip from '$lib/components/ui/InfoTip.svelte';
 	import Toggle from '$lib/components/ui/Toggle.svelte';
@@ -80,7 +81,7 @@
 	});
 </script>
 
-<div class="cap-presets" role="group" aria-label="Capability presets">
+<div class="cap-presets" role="group" aria-label={i18n.t('asm.capPresets')}>
 	{#each catalog?.presets ?? [] as preset (preset.id)}
 		<button
 			type="button"
@@ -104,15 +105,15 @@
 			<div class="cap-text">
 				<span class="cap-name">{group.label}</span>
 				{#if group.experimental}
-					<span class="cap-experimental">Experimental</span>
+					<span class="cap-experimental">{i18n.t('asm.experimental')}</span>
 				{/if}
-				<InfoTip text={`${group.describe} Tools: ${group.tools.join(', ')}.`} />
+				<InfoTip text={`${group.describe} ${i18n.t('asm.toolsList', { tools: group.tools.join(', ') })}`} />
 				<span class="cap-cost">~{group.tokens.toLocaleString()}</span>
 			</div>
 			{#if group.alwaysOn}
-				<span class="cap-always" title="Core is what the assistant is: reading your workspace.">
+				<span class="cap-always" title={i18n.t('asm.coreAlways')}>
 					<Icon name="lock" class="w-3 h-3" />
-					Always on
+					{i18n.t('asm.alwaysOn')}
 				</span>
 			{:else}
 				<Toggle
