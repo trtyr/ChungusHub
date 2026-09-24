@@ -24,6 +24,7 @@
 	 * arrives as a fresh instance with nothing decided.
 	 */
 	import { tick } from 'svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import type { AssistantQuestion, AssistantQuestionAnswer } from '$lib/services/transport';
 
@@ -155,11 +156,11 @@
 	}
 </script>
 
-<section class="ask" aria-label="Questions from the assistant">
+<section class="ask" aria-label={i18n.t('asm.qAria')}>
 	<header class="ask-head">
 		<Icon name="annotation" class="w-3.5 h-3.5 shrink-0" />
 		<span class="ask-title" aria-live="polite">
-			{questions.length === 1 ? 'The assistant is asking' : `The assistant is asking ${questions.length} things`}
+			{questions.length === 1 ? i18n.t('asm.askingOne') : i18n.t('asm.askingN', { n: questions.length })}
 		</span>
 		{#if questions.length > 1}
 			<span class="ask-count">{step + 1} / {questions.length}</span>
@@ -190,8 +191,8 @@
 						class="ask-take"
 						disabled={sent}
 						onclick={() => void take(option)}
-						title="Put these words in the box below and change them"
-						aria-label="Write your own answer starting from: {option}"
+						title={i18n.t('asm.qUseHint')}
+						aria-label={i18n.t('asm.qStartFrom', { option })}
 					>
 						<Icon name="download" class="w-3 h-3" />
 					</button>
@@ -206,8 +207,8 @@
 				class="ask-input"
 				value={typed[step] ?? ''}
 				disabled={sent}
-				placeholder={multiple ? 'Add something of your own' : 'Or write your own answer'}
-				aria-label={multiple ? 'Add your own answer' : 'Write your own answer'}
+				placeholder={multiple ? i18n.t('asm.qAddOwn') : i18n.t('asm.qWriteOwn')}
+				aria-label={multiple ? i18n.t('asm.qAddOwnAria') : i18n.t('asm.qWriteOwnAria')}
 				oninput={(e) => onType(e.currentTarget.value)}
 				onfocus={claimBox}
 				onkeydown={onBoxKey}
@@ -217,7 +218,7 @@
 
 	<footer class="ask-foot">
 		{#if questions.length > 1}
-			<button type="button" class="ask-nav" disabled={step === 0} onclick={() => go(step - 1)} aria-label="Previous question">
+			<button type="button" class="ask-nav" disabled={step === 0} onclick={() => go(step - 1)} aria-label={i18n.t('asm.qPrev')}>
 				<Icon name="chevronLeft" class="w-3.5 h-3.5" />
 			</button>
 			<button
@@ -225,7 +226,7 @@
 				class="ask-nav"
 				disabled={step === questions.length - 1}
 				onclick={() => go(step + 1)}
-				aria-label="Next question"
+				aria-label={i18n.t('asm.qNext')}
 			>
 				<Icon name="chevronRight" class="w-3.5 h-3.5" />
 			</button>
@@ -234,7 +235,7 @@
 			{#if !complete}{remaining === 1 ? '1 still needs an answer' : `${remaining} still need an answer`}{/if}
 		</span>
 		<button type="button" class="ask-send" disabled={sent || !complete} onclick={send}>
-			{questions.length === 1 ? 'Send answer' : 'Send answers'}
+			{questions.length === 1 ? i18n.t('asm.qSendOne') : i18n.t('asm.qSendN')}
 		</button>
 	</footer>
 </section>
