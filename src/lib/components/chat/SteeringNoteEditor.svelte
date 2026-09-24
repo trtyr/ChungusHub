@@ -32,6 +32,7 @@
 		type SteeringNote,
 		type SteeringScope
 	} from '$lib/types/steering';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	interface Props {
 		note: SteeringNote;
@@ -117,14 +118,14 @@
 		{#if onback}
 			<button type="button" class="head-link font-ui" onclick={onback}>
 				<Icon name="chevronLeft" class="w-3 h-3" />
-				Steering
+				{i18n.t('chat.steeringTitle')}
 			</button>
 		{:else}
 			<span class="head-title font-ui">{noteLabel(note)}</span>
 		{/if}
 		<button type="button" class="head-link head-danger font-ui" onclick={remove}>
 			<Icon name="trash" class="w-3 h-3" />
-			Delete
+			{i18n.t('common.delete')}
 		</button>
 	</div>
 
@@ -134,8 +135,8 @@
 		class="label-input font-ui"
 		value={note.title}
 		oninput={(e) => steeringStore.scheduleEdit(note.id, { title: e.currentTarget.value })}
-		placeholder="Name"
-		aria-label="Steering name"
+		placeholder={i18n.t('chat.steeringNamePlaceholder')}
+		aria-label={i18n.t('chat.steeringNameAria')}
 	/>
 
 	<textarea
@@ -144,15 +145,15 @@
 		value={note.text}
 		use:autoResize={{ maxHeight, value: note.text, grip: false }}
 		oninput={(e) => steeringStore.scheduleEdit(note.id, { text: e.currentTarget.value })}
-		placeholder="Guide the story: injected into the prompt, never shown in the chat…"
+		placeholder={i18n.t('chat.steeringTextPlaceholder')}
 	></textarea>
 
 	<!-- Both pill fields stack: four rungs, one of them carrying a version name, never fit
 	     beside a label, and a left-aligned wrapping row next to a right-aligned one read as
 	     a single blob. Same rhythm for both, label over controls. -->
 	<div class="field field--stacked">
-		<span class="field-label font-ui">Applies to</span>
-		<div class="pills pills-wrap" role="radiogroup" aria-label="Scope">
+		<span class="field-label font-ui">{i18n.t('chat.appliesTo')}</span>
+		<div class="pills pills-wrap" role="radiogroup" aria-label={i18n.t('chat.scopeAria')}>
 			{#each choices as choice (choice.scope)}
 				{@const disabled = !choice.available && note.scope !== choice.scope}
 				{@const hint = choice.available ? choice.hint : `${choice.hint} (nothing here to bind to)`}
@@ -176,8 +177,8 @@
 							{disabled}
 							aria-haspopup="listbox"
 							aria-expanded={versionListOpen}
-							aria-label="Choose a version"
-							title="Choose a version"
+							aria-label={i18n.t('chat.chooseVersion')}
+							title={i18n.t('chat.chooseVersion')}
 							onclick={() => (versionListOpen = !versionListOpen)}
 						>
 							<Icon name="chevronDown" class="w-3 h-3" />
@@ -203,7 +204,7 @@
 		<!-- Inside the field, not after it: the list belongs to the pill that opened it and
 		     has to sit close enough to say so. -->
 		{#if versionListOpen}
-			<div class="version-list" role="listbox" aria-label="Version">
+			<div class="version-list" role="listbox" aria-label={i18n.t('chat.versionListAria')}>
 				{#each versions as version (version.id)}
 					<button
 						type="button"
@@ -217,11 +218,11 @@
 						<!-- The chat's own pin is the only version that leaves the note active here;
 						     picking any other is legal and inert, so say which is which. -->
 						{#if version.id === target.characterVersionId}
-							<span class="version-opt-tag">pinned here</span>
+							<span class="version-opt-tag">{i18n.t('chat.pinnedHere')}</span>
 						{/if}
 					</button>
 				{:else}
-					<p class="version-empty">No versions to choose from.</p>
+					<p class="version-empty">{i18n.t('chat.noVersions')}</p>
 				{/each}
 			</div>
 		{/if}
@@ -231,23 +232,23 @@
 	     where. Otherwise "Character" reads as the open chat's character. -->
 	{#if foreign}
 		<p class="foreign-note">
-			Bound to {bindingLabel(note)}. Inert here until the chat matches. Re-pick above to move it.
+			{i18n.t('chat.foreignBinding', { label: bindingLabel(note) })}
 		</p>
 	{/if}
 
 	<div class="field field--stacked">
-		<span class="field-label font-ui">Lifetime</span>
-		<div class="pills" role="radiogroup" aria-label="Lifetime">
+		<span class="field-label font-ui">{i18n.t('chat.lifetime')}</span>
+		<div class="pills" role="radiogroup" aria-label={i18n.t('chat.lifetime')}>
 			<button
 				type="button"
 				role="radio"
 				aria-checked={note.mode === 'pinned'}
 				class="pill"
 				class:pill--active={note.mode === 'pinned'}
-				title="Rides every reply until you switch it off"
+				title={i18n.t('chat.pinnedEveryReplyTitle')}
 				onclick={() => steeringStore.update(note.id, { mode: 'pinned' })}
 			>
-				Every reply
+				{i18n.t('chat.pinnedEveryReply')}
 			</button>
 			<button
 				type="button"
@@ -255,10 +256,10 @@
 				aria-checked={note.mode === 'once'}
 				class="pill"
 				class:pill--active={note.mode === 'once'}
-				title="Rides the next reply, then removes itself"
+				title={i18n.t('chat.onceTitle')}
 				onclick={() => steeringStore.update(note.id, { mode: 'once' })}
 			>
-				Next reply
+				{i18n.t('chat.nextReply')}
 			</button>
 		</div>
 	</div>
@@ -270,7 +271,7 @@
 		onclick={() => (advancedOpen = !advancedOpen)}
 	>
 		<Icon name="chevronRight" class="w-3 h-3 transition-transform {advancedOpen ? 'rotate-90' : ''}" />
-		Advanced placement
+		{i18n.t('chat.advancedPlacement')}
 	</button>
 
 	{#if advancedOpen}
@@ -279,9 +280,9 @@
 		<div class="adv">
 			<label
 				class="adv-row"
-				title="How many story turns back from the end the guidance sits. 0 = right after the newest turn."
+				title={i18n.t('chat.depthTitle')}
 			>
-				<span class="field-label font-ui">Depth</span>
+				<span class="field-label font-ui">{i18n.t('chat.depth')}</span>
 				<OverrideMark
 					overridden={placement.depth !== defaults.depth}
 					onRevert={() => steeringStore.update(note.id, { depth: null })}
@@ -296,8 +297,8 @@
 					onblur={() => (depthDraft = String(placement.depth))}
 				/>
 			</label>
-			<div class="adv-row" role="radiogroup" aria-label="Injection role">
-				<span class="field-label font-ui">Role</span>
+			<div class="adv-row" role="radiogroup" aria-label={i18n.t('chat.injectionRoleAria')}>
+				<span class="field-label font-ui">{i18n.t('chat.role')}</span>
 				<OverrideMark
 					overridden={placement.role !== defaults.role}
 					onRevert={() => steeringStore.update(note.id, { role: null })}
@@ -312,12 +313,12 @@
 							class:pill--active={placement.role === role}
 							onclick={() => steeringStore.update(note.id, { role })}
 						>
-							{role}
+							{i18n.t('role.' + (role === 'user' ? 'you' : role === 'assistant' ? 'story' : 'system'))}
 						</button>
 					{/each}
 				</div>
 			</div>
-			<p class="adv-note">Inherited values come from Settings → Engines → Steering.</p>
+			<p class="adv-note">{i18n.t('chat.advInheritedNote')}</p>
 		</div>
 	{/if}
 </div>
