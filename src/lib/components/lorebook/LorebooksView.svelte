@@ -621,7 +621,7 @@
 								type="button"
 								class="brw-chip-x"
 								onclick={() => toggleLinkState(state.id)}
-								aria-label="Show {state.noun} again"
+								aria-label={i18n.t('lbw.showAgainAria', { n: state.noun })}
 							>
 								<Icon name="close" class="w-2.5 h-2.5" />
 							</button>

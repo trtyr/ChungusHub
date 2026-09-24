@@ -404,7 +404,7 @@
 						value={orderDraft}
 						oninput={(e) => commitOrder((e.target as HTMLInputElement).value)}
 						onblur={() => (orderDraft = entry ? String(entry.order) : '')}
-						aria-label="Order"
+						aria-label={i18n.t('lbw.order')}
 					/>
 				</label>
 				<label class="lbr-mini" title={i18n.t('ler.chanceMini')}>
@@ -414,7 +414,7 @@
 						value={probabilityDraft}
 						oninput={(e) => commitProbability((e.target as HTMLInputElement).value)}
 						onblur={() => (probabilityDraft = String(effectiveProbability))}
-						aria-label="Trigger percent"
+						aria-label={i18n.t('lbw.triggerPercent')}
 					/>
 					<span class="lbr-mini-key">%</span>
 				</label>
@@ -448,7 +448,7 @@
 						class="ed-title"
 					/>
 					<div class="mt-2.5 flex items-center gap-3 flex-wrap">
-						<div class="ed-seg" role="radiogroup" aria-label="Entry behavior">
+						<div class="ed-seg" role="radiogroup" aria-label={i18n.t('lbw.entryBehavior')}>
 							<button
 								type="button"
 								class="ed-seg-btn"
@@ -519,7 +519,7 @@
 								disabled={entry.keysecondary.length === 0}
 								variant="compact"
 								class="!w-auto"
-								aria-label="Secondary key logic"
+								aria-label={i18n.t('lbw.secondaryLogic')}
 							>
 								{#each LOREBOOK_LOGICS as l (l.id)}
 									<option value={String(l.id)}>{logicGlyph[l.id]}</option>
@@ -578,10 +578,10 @@
 								class="input-base w-full px-3 py-2 font-mono text-sm text-text-primary"
 							/>
 							<div class="flex flex-col gap-0.5">
-								<button type="button" class="ed-step" onclick={() => nudgeOrder(-1)} aria-label="Decrease order">
+								<button type="button" class="ed-step" onclick={() => nudgeOrder(-1)} aria-label={i18n.t('lbw.decOrder')}>
 									<Icon name="chevronUp" class="w-3.5 h-3.5" />
 								</button>
-								<button type="button" class="ed-step" onclick={() => nudgeOrder(1)} aria-label="Increase order">
+								<button type="button" class="ed-step" onclick={() => nudgeOrder(1)} aria-label={i18n.t('lbw.incOrder')}>
 									<Icon name="chevronDown" class="w-3.5 h-3.5" />
 								</button>
 							</div>

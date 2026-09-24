@@ -797,7 +797,7 @@
 								bind:value={search}
 								type="text"
 								placeholder={i18n.t('lbw.searchEntriesN', { n: total })}
-								aria-label="Search entries"
+								aria-label={i18n.t('lbw.searchEntriesAria')}
 								class="input-base"
 							/>
 						</div>

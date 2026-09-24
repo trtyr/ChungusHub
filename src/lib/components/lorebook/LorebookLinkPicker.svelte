@@ -101,7 +101,7 @@
 		/>
 	</div>
 
-	<div class="lbp-list" role="group" aria-label="Lorebooks to link">
+	<div class="lbp-list" role="group" aria-label={i18n.t('lbw.linkListAria')}>
 		{#if visible.length === 0}
 			<p class="lbp-no-results">{i18n.t('lbk.noMatch', { query })}</p>
 		{:else}

@@ -69,7 +69,7 @@
 		/>
 	</div>
 
-	<div class="lbt-sort" role="radiogroup" aria-label="Sort lorebooks by">
+	<div class="lbt-sort" role="radiogroup" aria-label={i18n.t('lv2.sortAria')}>
 		{#each SORTS as option (option.id)}
 			<button
 				type="button"
