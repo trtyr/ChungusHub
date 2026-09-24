@@ -182,14 +182,14 @@
 <div class="iface">
 	<section class="card" data-setting="palette">
 		<div class="card-head">
-			<span class="card-title">Palette</span>
+			<span class="card-title">{i18n.t('if.paletteTitle')}</span>
 			<InfoTip
-				text="Every color in the app is worked out from the one in force. Build your own from any of them."
+				text={i18n.t('if.paletteTip')}
 			/>
 		</div>
 
 		<div class="card-body">
-			<div class="palette-grid" role="radiogroup" aria-label="Base palette">
+			<div class="palette-grid" role="radiogroup" aria-label={i18n.t('if.paletteAria')}>
 				{#each themeStore.palettes as palette (palette.id)}
 					<div class="palette-slot">
 						<button
@@ -215,8 +215,8 @@
 							<button
 								type="button"
 								class="palette-edit"
-								title="Edit {palette.name}"
-								aria-label="Edit {palette.name}"
+								title={i18n.t('if.editPalette', { name: palette.name })}
+								aria-label={i18n.t('if.editPalette', { name: palette.name })}
 								onclick={() =>
 									editingId === palette.id ? closeEditor() : openEditor(palette.id)}
 							>
@@ -228,14 +228,14 @@
 
 				<button type="button" class="palette-new" onclick={forkActivePalette}>
 					<span class="palette-new-plus">+</span>
-					<span class="palette-new-label">New palette</span>
-					<span class="palette-new-hint">A copy of the one you are wearing, yours to edit.</span>
+					<span class="palette-new-label">{i18n.t('if.newPalette')}</span>
+					<span class="palette-new-hint">{i18n.t('if.newPaletteHint')}</span>
 				</button>
 			</div>
 
 			<div class="sub-block">
-				<span class="section-label">Contrast</span>
-				<div class="seg-pills" role="radiogroup" aria-label="Text contrast">
+				<span class="section-label">{i18n.t('if.contrast')}</span>
+				<div class="seg-pills" role="radiogroup" aria-label={i18n.t('if.contrastAria')}>
 					{#each CONTRAST_OPTIONS as opt (opt.value)}
 						<button
 							type="button"
@@ -264,12 +264,12 @@
 
 	<section class="card" data-setting="accent">
 		<div class="card-head">
-			<span class="card-title">Accent</span>
-			<InfoTip text="One hue over the palette, tuned for dark and light on its own." />
+			<span class="card-title">{i18n.t('if.accentTitle')}</span>
+			<InfoTip text={i18n.t('if.accentTip')} />
 		</div>
 
 		<div class="card-body">
-			<div class="accent-row" role="radiogroup" aria-label="Accent color">
+			<div class="accent-row" role="radiogroup" aria-label={i18n.t('if.accentAria')}>
 				{#each themeStore.accents as accent (accent.id)}
 					<button
 						type="button"
@@ -292,8 +292,8 @@
 						style="background: {appearance.accent === 'custom'
 							? appearance.customAccent
 							: 'transparent'}"
-						title="Custom color"
-						aria-label="Custom accent color"
+						title={i18n.t('if.customColor')}
+						aria-label={i18n.t('if.customAccentAria')}
 						aria-expanded={customOpen}
 						onclick={toggleCustom}
 					>
@@ -314,13 +314,13 @@
 
 	<section class="card" data-setting="interface-type">
 		<div class="card-head">
-			<span class="card-title">Interface Type</span>
-			<InfoTip text="Fonts other than the default download the first time you pick them." />
+			<span class="card-title">{i18n.t('if.interfaceType')}</span>
+			<InfoTip text={i18n.t('if.interfaceTypeTip')} />
 		</div>
 
 		<div class="card-body">
 			<div class="slider-block">
-				<label for="interface-font" class="slider-label">Interface font</label>
+				<label for="interface-font" class="slider-label">{i18n.t('if.interfaceFont')}</label>
 				<Select
 					id="interface-font"
 					variant="compact"
@@ -339,7 +339,7 @@
 	<section class="card" data-setting="interface-language">
 		<div class="card-head">
 			<span class="card-title">Language / 语言</span>
-			<InfoTip text="UI language. Synced across your devices like every other setting." />
+			<InfoTip text={i18n.t('if.langTip')} />
 		</div>
 		<div class="card-body">
 			<div class="slider-block">
@@ -360,9 +360,9 @@
 
 	<section class="card" data-setting="surfaces">
 		<div class="card-head">
-			<span class="card-title">Surfaces</span>
+			<span class="card-title">{i18n.t('if.surfacesTitle')}</span>
 			<InfoTip
-				text="How every surface in the app is cut and how heavy it feels. Turn the last two down on a weaker device."
+				text={i18n.t('if.surfacesTip')}
 			/>
 		</div>
 
@@ -370,9 +370,9 @@
 			<div class="slider-block">
 				<div class="slider-top">
 					<div class="slider-label-wrap">
-						<label for="corners" class="slider-label">Corners</label>
+						<label for="corners" class="slider-label">{i18n.t('if.corners')}</label>
 						<InfoTip
-							text="Rounds every surface there is, the message card included. The card carries a second rounding of its own on top, under Chat."
+							text={i18n.t('if.cornersTip')}
 						/>
 					</div>
 					<span class="slider-value">{pct(appearance.radius)}</span>
@@ -394,8 +394,8 @@
 			</div>
 
 			<div class="sub-block">
-				<span class="section-label">Glass blur</span>
-				<div class="seg-pills" role="radiogroup" aria-label="Glass blur">
+				<span class="section-label">{i18n.t('if.glassBlur')}</span>
+				<div class="seg-pills" role="radiogroup" aria-label={i18n.t('if.glassAria')}>
 					{#each GLASS_OPTIONS as opt (opt.value)}
 						<button
 							type="button"
@@ -413,7 +413,7 @@
 			</div>
 
 			<div class="toggle-row" use:toggleRow>
-				<span class="slider-label">Reduce animations</span>
+				<span class="slider-label">{i18n.t('if.reduceAnimations')}</span>
 				<Toggle
 					checked={appearance.motion === 'reduced'}
 					label="Reduce animations"
@@ -425,14 +425,14 @@
 
 	<section class="card" data-setting="chat-scene">
 		<div class="card-head">
-			<span class="card-title">Scene</span>
+			<span class="card-title">{i18n.t('if.sceneTitle')}</span>
 			<InfoTip
-				text="A chat given its own scene keeps it: switching back to the app's leaves this one where you left it, ready to pick up again."
+				text={i18n.t('if.sceneTip')}
 			/>
 		</div>
 
 		<div class="card-body">
-			<div class="seg-pills" role="radiogroup" aria-label="Which scene the cards below edit">
+			<div class="seg-pills" role="radiogroup" aria-label={i18n.t('if.sceneScopeAria')}>
 				<button
 					type="button"
 					role="radio"
@@ -452,7 +452,7 @@
 					class:active={ownScene}
 					class:seg-lift={ownScene}
 					disabled={!canScope}
-					title={canScope ? undefined : 'Open a chat to give it a scene of its own.'}
+					title={canScope ? undefined : i18n.t('if.needChatForScene')}
 					onclick={() =>
 						chatSceneStore.adopt({
 							background: backgroundStore.config,
@@ -468,11 +468,11 @@
 
 	<section class="card" data-setting="background">
 		<div class="card-head">
-			<span class="card-title">Background</span>
+			<span class="card-title">{i18n.t('if.backgroundTitle')}</span>
 			<InfoTip
-				text="A picture behind the whole workspace, with ambient effects and every panel layered on top of it."
+				text={i18n.t('if.backgroundTip')}
 			/>
-			{#if ownScene}<span class="scope-chip font-ui">This chat</span>{/if}
+			{#if ownScene}<span class="scope-chip font-ui">{i18n.t('if.thisChat')}</span>{/if}
 		</div>
 
 		<div class="card-body">
@@ -496,7 +496,7 @@
 					</div>
 				{:else}
 					<button type="button" class="bg-hero-empty" onclick={() => (backgroundPickerOpen = true)}>
-						<span class="bg-hero-empty-title font-ui">Choose a background</span>
+						<span class="bg-hero-empty-title font-ui">{i18n.t('if.chooseBackground')}</span>
 						<span class="bg-hero-empty-hint font-ui">
 							Pick one of the bundled scenes, or bring your own image.
 						</span>
@@ -508,9 +508,9 @@
 				<div class="slider-block">
 					<div class="slider-top">
 						<div class="slider-label-wrap">
-							<label for="bg-dim" class="slider-label">Dim</label>
+							<label for="bg-dim" class="slider-label">{i18n.t('if.dim')}</label>
 							<InfoTip
-								text="Darkens the picture itself, always plain black. The reading column's own shade is a separate control, under Chat."
+								text={i18n.t('if.dimTip')}
 							/>
 						</div>
 						<span class="slider-value">{pct(background.dim)}</span>
@@ -532,7 +532,7 @@
 				</div>
 				<div class="slider-block">
 					<div class="slider-top">
-						<label for="bg-blur" class="slider-label">Blur</label>
+						<label for="bg-blur" class="slider-label">{i18n.t('if.blur')}</label>
 						<span class="slider-value">{Math.round(background.blur)}px</span>
 					</div>
 					<input
@@ -558,9 +558,9 @@
 		<div class="card-head">
 			<span class="card-title">Ambient Effects</span>
 			<InfoTip
-				text="Weather and atmosphere layered over the whole workspace. Stack as many effects as you like."
+				text={i18n.t('if.ambientTip')}
 			/>
-			{#if ownScene}<span class="scope-chip font-ui">This chat</span>{/if}
+			{#if ownScene}<span class="scope-chip font-ui">{i18n.t('if.thisChat')}</span>{/if}
 			{#if ambientStore.config.types.length > 0}
 				<button type="button" class="link-btn clear-mix" onclick={() => ambientStore.clearAmbients()}>
 					Clear all
@@ -583,9 +583,9 @@
 
 <ConfirmDialog
 	open={confirmRestore}
-	title="Restore interface defaults"
-	message="Palette, accent, interface font, corners and glass all go back to the shipped default. The background, the ambient mix and every Chat setting are left alone. This cannot be undone."
-	confirmLabel="Restore defaults"
+	title={i18n.t('if.restoreTitle')}
+	message={i18n.t('if.restoreMsg')}
+	confirmLabel={i18n.t('if.restoreConfirm')}
 	variant="danger"
 	destructive
 	onConfirm={restoreDefaults}
