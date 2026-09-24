@@ -8,6 +8,7 @@
 	 * outcome for a control whose whole job is getting the payload out of the panel.
 	 */
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { copyText } from '$lib/utils/clipboard';
 
 	interface Props {
@@ -46,7 +47,7 @@
 	class:failed={phase === 'failed'}
 	type="button"
 	onclick={copy}
-	title={phase === 'failed' ? `Copy failed: ${failure}` : title}
+	title={phase === 'failed' ? i18n.t('dbg.copyFailed', { why: failure }) : title}
 	aria-label={title}
 >
 	<Icon
@@ -54,7 +55,7 @@
 		class="w-3.5 h-3.5 shrink-0"
 		strokeWidth={1.75}
 	/>
-	{#if label}<span class="copy-label">{phase === 'failed' ? 'failed' : label}</span>{/if}
+	{#if label}<span class="copy-label">{phase === 'failed' ? i18n.t('dbg.failed') : label}</span>{/if}
 </button>
 
 <style>

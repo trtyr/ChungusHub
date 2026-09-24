@@ -1457,6 +1457,8 @@ export const zh: Record<string, string> = {
 	'pcv.carriedNone': '此预设自带 {n} 条查找替换规则。它们都不改动发送给模型的内容。',
 	'pcv.carriedOne': '此预设自带 1 条查找替换规则，它会改写发送给模型的内容。',
 	'pcv.carriedAll': '此预设自带 {n} 条查找替换规则，全部都会改写发送给模型的内容。',
+	'dbg.copyFailed': '复制失败：{why}',
+	'dbg.failed': '失败',
 	'pcv.carriedSome': '此预设自带 {n} 条查找替换规则，其中 {m} 条会改写发送给模型的内容。',
 	'storymap.noChatOpen': '未打开聊天',
 	'storymap.openChatHint': '打开一个聊天即可查看它的故事地图。',
