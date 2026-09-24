@@ -3,6 +3,7 @@
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Alert from '$lib/components/ui/Alert.svelte';
 	import { failureText } from '$lib/stores/toast.svelte';
 	import { apiGet, fileUrl } from '$lib/services/transport';
@@ -91,14 +92,14 @@
 	}
 </script>
 
-<Dialog {open} {onClose} title="Workspace Background" size="xl">
+<Dialog {open} {onClose} title={i18n.t('bg.title')} size="xl">
 	<div class="space-y-3">
 		<Alert message={error} />
 
 		{#if loading && backgrounds.length === 0}
-			<p class="picker-note font-ui">Loading backgrounds…</p>
+			<p class="picker-note font-ui">{i18n.t('bg.loading')}</p>
 		{:else}
-			<div class="bg-grid" role="radiogroup" aria-label="Workspace background">
+			<div class="bg-grid" role="radiogroup" aria-label={i18n.t('bg.title')}>
 				<button
 					type="button"
 					role="radio"
@@ -110,7 +111,7 @@
 					<span class="bg-tile-image bg-tile-none" aria-hidden="true">
 						<span class="bg-none-swatch"></span>
 					</span>
-					<span class="bg-tile-name">None</span>
+					<span class="bg-tile-name">{i18n.t('audio.none')}</span>
 				</button>
 
 				{#each backgrounds as entry (entry.path)}
@@ -135,8 +136,8 @@
 									class="bg-tile-delete"
 									role="button"
 									tabindex="-1"
-									title="Delete this background"
-									aria-label="Delete {entry.name}"
+									title={i18n.t('bg.deleteThis')}
+									aria-label={i18n.t('bg.deleteNamed', { name: entry.name })}
 									onclick={(e) => {
 										e.stopPropagation();
 										deleteTarget = entry;
@@ -171,19 +172,19 @@
 	     scrolls. Negative margins cancel the dialog's content padding so the bar
 	     hugs the panel's edges. -->
 	<div class="picker-footer">
-		<span class="picker-note font-ui">PNG, JPG, WebP, GIF or AVIF.</span>
+		<span class="picker-note font-ui">{i18n.t('bg.types')}</span>
 		<Button variant="secondary" size="sm" disabled={uploading} onclick={() => fileInput?.click()}>
 			<Icon name="upload" class="w-3.5 h-3.5" />
-			{uploading ? 'Uploading…' : 'Upload image'}
+			{uploading ? i18n.t('chat.uploading') : i18n.t('bg.upload')}
 		</Button>
 	</div>
 </Dialog>
 
 <ConfirmDialog
 	open={deleteTarget !== null}
-	title="Delete background"
-	message={`Delete "${deleteTarget?.name}"? This cannot be undone.`}
-	confirmLabel="Delete"
+	title={i18n.t('bg.deleteTitle')}
+	message={i18n.t('bg.deleteConfirm', { name: deleteTarget?.name ?? '' })}
+	confirmLabel={i18n.t('common.delete')}
 	variant="danger"
 	destructive
 	onConfirm={handleDelete}

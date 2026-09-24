@@ -3,6 +3,7 @@
 	import Button from '$lib/components/ui/Button.svelte';
 	import InfoTip from '$lib/components/ui/InfoTip.svelte';
 	import Alert from '$lib/components/ui/Alert.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import SillyTavernPlan from './SillyTavernPlan.svelte';
 	import { importRun } from '$lib/stores/import-run.svelte';
 
@@ -48,19 +49,19 @@
 	let reportLines = $derived<Line[]>(
 		report
 			? [
-					{ label: 'Characters', result: report.characters },
-					{ label: 'Sprites', result: report.sprites },
-					{ label: 'Personas', result: report.personas },
-					{ label: 'Chats', result: report.chats },
+					{ label: i18n.t('imp.catCharacters'), result: report.characters },
+					{ label: i18n.t('imp.catSprites'), result: report.sprites },
+					{ label: i18n.t('imp.catPersonas'), result: report.personas },
+					{ label: i18n.t('imp.catChats'), result: report.chats },
 					{
-						label: 'Lorebooks',
+						label: i18n.t('imp.catLorebooks'),
 						result: report.worlds,
 						// The books a card carried have no row on the confirm card, since they are
 						// not files in the folder, so the count is the only place they are named.
 						extra:
-							report.worlds.fromCards > 0 ? `${report.worlds.fromCards} from cards` : undefined
+							report.worlds.fromCards > 0 ? i18n.t('imp.fromCards', { n: report.worlds.fromCards }) : undefined
 					},
-					{ label: 'Backgrounds', result: report.backgrounds }
+					{ label: i18n.t('imp.catBackgrounds'), result: report.backgrounds }
 				]
 			: []
 	);
@@ -77,22 +78,21 @@
 		</div>
 		<div class="card-body">
 			<p class="lede font-ui">
-				Point this at your SillyTavern profile folder, <code>data/default-user</code>. It all comes
-				over in one pass, or you can leave parts of it behind before the run starts.
+				{i18n.t('imp.ledePre')}<code>data/default-user</code>{i18n.t('imp.ledePost')}
 			</p>
 
 			<ul class="what font-ui">
-				<li><Icon name="user" class="w-3.5 h-3.5" /> Characters (linked lorebooks too)</li>
-				<li><Icon name="image" class="w-3.5 h-3.5" /> Sprites, named after their filenames</li>
-				<li><Icon name="users" class="w-3.5 h-3.5" /> Personas (name + description from settings)</li>
-				<li><Icon name="chat" class="w-3.5 h-3.5" /> Chats (swipes preserved as branches)</li>
-				<li><Icon name="scroll" class="w-3.5 h-3.5" /> Worlds / lorebooks</li>
-				<li><Icon name="image" class="w-3.5 h-3.5" /> Backgrounds</li>
+				<li><Icon name="user" class="w-3.5 h-3.5" /> {i18n.t('imp.whatCharacters')}</li>
+				<li><Icon name="image" class="w-3.5 h-3.5" /> {i18n.t('imp.whatSprites')}</li>
+				<li><Icon name="users" class="w-3.5 h-3.5" /> {i18n.t('imp.whatPersonas')}</li>
+				<li><Icon name="chat" class="w-3.5 h-3.5" /> {i18n.t('imp.whatChats')}</li>
+				<li><Icon name="scroll" class="w-3.5 h-3.5" /> {i18n.t('imp.whatWorlds')}</li>
+				<li><Icon name="image" class="w-3.5 h-3.5" /> {i18n.t('imp.whatBackgrounds')}</li>
 			</ul>
 
 			<Button variant="primary" size="sm" disabled={importing} onclick={() => folderInput?.click()}>
 				<Icon name="folder" class="w-3.5 h-3.5" />
-				{importing ? 'Importing…' : 'Choose SillyTavern folder'}
+				{importing ? i18n.t('imp.importing') : i18n.t('imp.chooseFolder')}
 			</Button>
 
 			<Alert message={importRun.error} />
@@ -109,14 +109,14 @@
 						<label class="again font-ui">
 							<input type="checkbox" bind:checked={importRun.bringKnownAgain} />
 							<span>
-								Include the {importRun.alreadyImported === 1
-									? 'file'
-									: `${importRun.alreadyImported} files`} this folder has already sent
+								{i18n.t('imp.include', { list: importRun.alreadyImported === 1
+									? i18n.t('imp.fileOne')
+									: i18n.t('imp.fileN', { n: importRun.alreadyImported }) })}
 							</span>
 						</label>
 						{#if importRun.bringKnownAgain}
 							<p class="again-note font-ui">
-								Anything you still have arrives a second time, as a copy.
+								{i18n.t('imp.againNote')}
 							</p>
 						{/if}
 					{/if}
@@ -128,10 +128,10 @@
 							disabled={planned === 0}
 							onclick={() => importRun.start()}
 						>
-							Import {planned} file{planned === 1 ? '' : 's'}
+							{i18n.t('imp.importN', { n: planned })}
 						</Button>
 						<Button variant="secondary" size="sm" onclick={() => importRun.discard()}>
-							Cancel
+							{i18n.t('common.cancel')}
 						</Button>
 					</div>
 				</div>
@@ -139,35 +139,32 @@
 
 			{#if report}
 				<div class="report">
-					<span class="section-label">Import summary</span>
+					<span class="section-label">{i18n.t('imp.summary')}</span>
 
 					{#if importRun.stoppedBy === 'you'}
 						<p class="note font-ui">
-							Stopped. Choose the same folder again to bring over what is left.
+							{i18n.t('imp.stoppedYou')}
 						</p>
 					{:else if importRun.stoppedBy === 'connection'}
 						<p class="note font-ui">
-							Stopped: the server went away. Choose the same folder again once it is back and the
-							rest comes over.
+							{i18n.t('imp.stoppedConn')}
 						</p>
 					{/if}
 					{#if report.ledgerLost > 0}
 						<p class="note font-ui">
-							{report.ledgerLost}
-							{report.ledgerLost === 1 ? 'file' : 'files'} came over but could not be marked as imported.
-							Choosing this folder again brings them a second time.
+							{i18n.t('imp.ledgerLost', { n: report.ledgerLost })}
 						</p>
 					{/if}
 					<ul class="report-list font-ui">
 						{#each reportLines as line (line.label)}
 							<li>
 								<span class="report-label">{line.label}</span>
-								<span class="report-count">{line.result.imported} imported</span>
+								<span class="report-count">{i18n.t('imp.importedN', { n: line.result.imported })}</span>
 								{#if line.extra}
 									<span class="report-extra">{line.extra}</span>
 								{/if}
 								{#if line.result.failed.length > 0}
-									<span class="report-fail">{line.result.failed.length} failed</span>
+									<span class="report-fail">{i18n.t('imp.failedN', { n: line.result.failed.length })}</span>
 								{/if}
 							</li>
 						{/each}
@@ -175,36 +172,26 @@
 
 					{#if report.worlds.linked > 0}
 						<p class="note font-ui">
-							{report.worlds.linked}
-							{report.worlds.linked === 1 ? 'character was' : 'characters were'} linked to a lorebook
-							that was already here, instead of a second copy of it.
+							{i18n.t('imp.linked', { n: report.worlds.linked })}
 						</p>
 					{/if}
 
 					{#if report.chats.skippedNoCharacter.length > 0}
 						<p class="note font-ui">
-							{report.chats.skippedNoCharacter.length} chat{report.chats.skippedNoCharacter.length ===
-							1
-								? ''
-								: 's'} skipped, no matching character in the library. Import the character first, then
-							re-run.
+							{i18n.t('imp.chatsSkipped', { n: report.chats.skippedNoCharacter.length })}
 						</p>
 					{/if}
 
 					{#if report.sprites.skippedNoCharacter.length > 0}
 						<p class="note font-ui">
-							{report.sprites.skippedNoCharacter.length} sprite folder{report.sprites
-								.skippedNoCharacter.length === 1
-								? ''
-								: 's'} skipped, no matching character in the library. Import the character first, then
-							re-run.
+							{i18n.t('imp.spritesSkipped', { n: report.sprites.skippedNoCharacter.length })}
 						</p>
 					{/if}
 
 					{#each reportLines as line (line.label)}
 						{#if line.result.failed.length > 0}
 							<details class="fails">
-								<summary class="font-ui">{line.label} failures ({line.result.failed.length})</summary>
+								<summary class="font-ui">{i18n.t('imp.failures', { label: line.label, n: line.result.failed.length })}</summary>
 								<ul class="font-mono">
 									{#each line.result.failed as f (f)}
 										<li>{f}</li>
