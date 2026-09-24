@@ -17,6 +17,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import EmptyState from '$lib/components/ui/EmptyState.svelte';
 	import ChatOverrideNotice from '$lib/components/ui/ChatOverrideNotice.svelte';
 	import { isSectionIcon } from '$lib/config/section-icons';
@@ -341,13 +342,10 @@
 
 	let carriedLine = $derived.by(() => {
 		const n = carriedRules.length;
-		const opening = `This preset ships ${n} find & replace rule${n === 1 ? '' : 's'}`;
-		if (carriedToPrompt === 0) return `${opening}. None of them change what is sent to the model.`;
-		if (n === 1) return `${opening}, and it rewrites what is sent to the model.`;
-		if (carriedToPrompt === n) return `${opening}, and all of them rewrite what is sent to the model.`;
-		const some =
-			carriedToPrompt === 1 ? 'one of them rewrites' : `${carriedToPrompt} of them rewrite`;
-		return `${opening}, and ${some} what is sent to the model.`;
+		if (n === 1) return i18n.t('pcv.carriedOne');
+		if (carriedToPrompt === 0) return i18n.t('pcv.carriedNone', { n });
+		if (carriedToPrompt === n) return i18n.t('pcv.carriedAll', { n });
+		return i18n.t('pcv.carriedSome', { n, m: carriedToPrompt });
 	});
 
 	// The preset the open chat is built from, when that is not the one this panel names. Every
@@ -432,7 +430,7 @@
 						onclick={() => (presetMenuOpen = !presetMenuOpen)}
 						aria-haspopup="menu"
 						aria-expanded={presetMenuOpen}
-						title="Switch preset"
+						title={i18n.t('pcv.switch')}
 					>
 						<span class="overlay-subject">{activePreset.name}</span>
 						<Icon name="chevronDown" class="w-3.5 h-3.5 text-text-muted flex-shrink-0" />
@@ -449,7 +447,7 @@
 									onclick={() => pickPreset(preset.id)}
 								>
 									<span class="pcv-switch-item-name">{preset.name}</span>
-									{#if presetService.hasDraft(preset.id)}<span class="pcv-switch-draft">Draft</span>{/if}
+									{#if presetService.hasDraft(preset.id)}<span class="pcv-switch-draft">{i18n.t('pcv.draft')}</span>{/if}
 									{#if preset.id === activeId}<Icon name="check" class="w-3.5 h-3.5 flex-shrink-0" />{/if}
 								</button>
 							{/each}
@@ -457,7 +455,7 @@
 					{/if}
 				</div>
 			{:else}
-				<span class="overlay-facts">No preset active</span>
+				<span class="overlay-facts">{i18n.t('pcv.noneActive')}</span>
 			{/if}
 			<PresetManager
 				id="controls-preset-select"
@@ -472,16 +470,15 @@
 	<main class="pcv-body panel-scroll">
 		{#if !activePreset}
 			<div class="pcv-blank">
-				<EmptyState icon="sliders" size="sm" title="No presets yet">
-					A preset carries the prompt this chat is built from, and the controls its
-					author exposed. Import one from the actions menu in this panel's header.
+				<EmptyState icon="sliders" size="sm" title={i18n.t('pcv.noneTitle')}>
+					{i18n.t('pcv.noneBody')}
 				</EmptyState>
 			</div>
 		{:else}
 			<div class="pcv-sheet">
 				{#if storyPreset}
 					<ChatOverrideNotice
-						subject="the active preset"
+						subject={i18n.t('pcv.subjectActive')}
 						using={storyPreset.name}
 						instead={activePreset.name}
 					/>
@@ -534,16 +531,15 @@
 					<div class="pcv-carried">
 						<Icon name="filter" class="w-3.5 h-3.5 flex-shrink-0" strokeWidth={1.5} />
 						<span class="pcv-carried-text">{carriedLine}</span>
-						<button type="button" class="pcv-carried-link" onclick={openRegexRules}>See them</button>
+						<button type="button" class="pcv-carried-link" onclick={openRegexRules}>{i18n.t('pcv.carriedSee')}</button>
 					</div>
 				{/if}
 
 				{#if activeControls.length === 0}
 					<!-- Empty state: say what the feature is and where controls come from. -->
 					<div class="pcv-intro">
-						<EmptyState icon="sliders" size="sm" title="“{activePreset.name}” has no controls yet">
-							Controls are knobs a preset author wires to macros inside the prompt. Once they
-							exist, you shape generation from here with a flick, no prompt editing needed.
+						<EmptyState icon="sliders" size="sm" title={i18n.t('pcv.noControlsTitle', { name: activePreset.name })}>
+							{i18n.t('pcv.noControlsBody')}
 						</EmptyState>
 						<p class="pcv-intro-note">
 							Craft them in the Prompt Builder under “Preset controls”, then watch this page become a form.
@@ -558,14 +554,14 @@
 						<section class="pcv-kits">
 							<div class="pcv-kits-head">
 								<Icon name="sparkles" class="w-3.5 h-3.5 flex-shrink-0" strokeWidth={1.5} />
-								<span class="pcv-kits-title">The author's setups</span>
+								<span class="pcv-kits-title">{i18n.t('pcv.kitsTitle')}</span>
 							</div>
 							<!-- Equal cells, not content-sized chips: a row that sizes itself to its
 							     text puts a stubby box beside a wide one and wraps into a ragged
 							     grid the moment there are three. Every card carries the same
 							     anatomy (mark, name, one line of why), so the only thing that
 							     varies between them is what they say. -->
-							<div class="pcv-kits-grid" role="radiogroup" aria-label="Starting configuration">
+							<div class="pcv-kits-grid" role="radiogroup" aria-label={i18n.t('pcv.kitsAria')}>
 								<!-- The defaults are a configuration the author built too, so they
 								     take a card like the rest and the picker is complete: there is
 								     always a way back out of a setup. -->
@@ -580,8 +576,8 @@
 									<span class="pcv-kit-mark">
 										{#if !selectedSetup}<Icon name="check" class="w-3 h-3" strokeWidth={2.5} />{/if}
 									</span>
-									<span class="pcv-kit-name">Defaults</span>
-									<span class="pcv-kit-note">Every control exactly as the author made it.</span>
+									<span class="pcv-kit-name">{i18n.t('pcv.kitDefaults')}</span>
+									<span class="pcv-kit-note">{i18n.t('pcv.kitDefaultsNote')}</span>
 								</button>
 								{#each bundles as bundle (bundle.id)}
 									{@const applied = selectedSetup?.id === bundle.id}
@@ -612,7 +608,7 @@
 							<span class="pcv-status-text">
 								{modifiedCount} control{modifiedCount === 1 ? '' : 's'} changed from {selectedSetup ? `“${selectedSetup.name}”` : "the author's defaults"}
 							</span>
-							<button type="button" class="pcv-status-reset" onclick={resetAll}>Reset all</button>
+							<button type="button" class="pcv-status-reset" onclick={resetAll}>{i18n.t('pcv.resetAll')}</button>
 						{:else}
 							<span class="pcv-status-text pcv-status-text--calm">
 								{selectedSetup ? `Every control matches “${selectedSetup.name}”` : "Every control is on the author's defaults"}
@@ -620,7 +616,7 @@
 						{/if}
 						<span class="pcv-status-spacer"></span>
 						{#if totalTokens > 0}
-							<span class="pcv-status-cost" title="What the whole form adds to every prompt">
+							<span class="pcv-status-cost" title={i18n.t('pcv.costTip')}>
 								{totalTokens.toLocaleString()} tokens
 							</span>
 						{/if}
