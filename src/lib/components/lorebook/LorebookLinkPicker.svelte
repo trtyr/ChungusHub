@@ -8,6 +8,7 @@
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import LorebookGlobalBadge from './LorebookGlobalBadge.svelte';
 	import { foldForSearch } from '$lib/components/library/browse';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { lorebookStore } from '$lib/lorebook/store.svelte';
 	import { sortLorebooks } from '$lib/lorebook/types';
 	import { lorebookViewPrefs } from '$lib/stores/lorebookViewPrefs.svelte';
@@ -75,13 +76,13 @@
 		<span class="lbp-empty-icon">
 			<Icon name="bookOpen" class="w-5 h-5" />
 		</span>
-		<p class="lbp-empty-title">No lorebooks yet</p>
+		<p class="lbp-empty-title">{i18n.t('lbv.emptyTitle')}</p>
 		<p class="lbp-empty-text">
-			Lorebooks hold world info that slips into the prompt when its keywords come up.
+			{i18n.t('lbv.emptyText')}
 		</p>
 		<button type="button" class="lbp-empty-cta" onclick={openManager}>
 			<Icon name="plus" class="w-3.5 h-3.5" />
-			Create a lorebook
+			{i18n.t('lbv.emptyCta')}
 		</button>
 	</div>
 {:else}
@@ -93,7 +94,7 @@
 		<input
 			type="text"
 			class="lbp-search-input"
-			placeholder="Search lorebooks…"
+			placeholder={i18n.t('lbv.search')}
 			bind:value={query}
 			onkeydown={handleSearchKeydown}
 			autofocus
@@ -102,7 +103,7 @@
 
 	<div class="lbp-list" role="group" aria-label="Lorebooks to link">
 		{#if visible.length === 0}
-			<p class="lbp-no-results">No lorebooks match “{query}”.</p>
+			<p class="lbp-no-results">{i18n.t('lbk.noMatch', { query })}</p>
 		{:else}
 			{#each visible as book (book.id)}
 				{@const linked = selectedSet.has(book.id)}

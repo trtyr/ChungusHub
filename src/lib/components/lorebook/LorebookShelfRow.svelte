@@ -13,6 +13,7 @@
 	 * and the figure belongs on the page where one book is decided about anyway.
 	 */
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import LibraryEntryMenu from '$lib/components/library/LibraryEntryMenu.svelte';
 	import LorebookGlobalBadge from './LorebookGlobalBadge.svelte';
 	import { imageService } from '$lib/services/imageService';
@@ -135,7 +136,7 @@
 			{#if links > 0}
 				<span class="opacity-60"> · </span>{links} linked
 			{:else if !book.global}
-				<span class="opacity-60"> · </span><span class="italic">Not linked</span>
+				<span class="opacity-60"> · </span><span class="italic">{i18n.t('lbv.notLinked')}</span>
 			{/if}
 		</p>
 	</div>
