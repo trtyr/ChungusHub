@@ -9,6 +9,7 @@
 	 */
 	import { tick } from 'svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import EmptyState from '$lib/components/ui/EmptyState.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
@@ -104,14 +105,15 @@
 	/** The Show filter's three answers: how a book reaches a prompt, with global outranking
 	 *  linked (architecture/lorebook.md). `noun` writes the chips and their screen-reader
 	 *  labels, in the same every-chat vocabulary the rest of the shelf speaks. */
-	const LINK_STATES = [
-		{ id: 'global', label: 'In every chat', noun: 'every-chat books' },
-		{ id: 'linked', label: 'Linked', noun: 'linked books' },
-		{ id: 'unlinked', label: 'Unlinked', noun: 'unlinked books' }
-	] as const;
-	type LinkState = (typeof LINK_STATES)[number]['id'];
+	const LINK_STATE_IDS = ['global', 'linked', 'unlinked'] as const;
+	type LinkState = (typeof LINK_STATE_IDS)[number];
 
 	let hidden = $state<LinkState[]>([]);
+	const LINK_STATES = $derived([
+		{ id: 'global' as LinkState, label: i18n.t('lv2.inEveryChat'), noun: i18n.t('lv2.everyChatNoun') },
+		{ id: 'linked' as LinkState, label: i18n.t('lv2.linked'), noun: i18n.t('lv2.linkedNoun') },
+		{ id: 'unlinked' as LinkState, label: i18n.t('lv2.unlinked'), noun: i18n.t('lv2.unlinkedNoun') }
+	]);
 
 	function toggleLinkState(state: LinkState) {
 		hidden = hidden.includes(state) ? hidden.filter((s) => s !== state) : [...hidden, state];
@@ -296,11 +298,13 @@
 		// their 0 entries" states a loss that is not there.
 		const held =
 			bulkEntryCount > 0
-				? ` and their ${bulkEntryCount} ${bulkEntryCount === 1 ? 'entry' : 'entries'}`
+				? i18n.t('lv2.andEntries', { n: bulkEntryCount })
 				: '';
 		const carried = selected.filter((b) => (links.get(b.id) ?? 0) > 0).length;
-		const bound = carried > 0 ? ` ${carried} of them ${carried === 1 ? 'is' : 'are'} in use.` : '';
-		return `Delete ${n} lorebook${n === 1 ? '' : 's'}${held}?${bound} This cannot be undone.`;
+		const bound = carried > 0 ? i18n.t('lv2.inUse', { n: carried }) : '';
+		return (
+			i18n.t('lbv.deleteBulk', { n }) + held + '?' + bound + ' ' + i18n.t('chat.cannotUndo')
+		);
 	});
 
 	async function confirmBulkDelete() {
@@ -309,9 +313,9 @@
 		if (ids.includes(uiStore.lorebookEditorId ?? '')) uiStore.lorebookEditorId = null;
 		try {
 			await lorebookStore.deleteBooks(ids);
-			toastStore.success(`Deleted ${ids.length} lorebook${ids.length === 1 ? '' : 's'}`);
+			toastStore.success(i18n.t('lv2.deletedToast', { n: ids.length }));
 		} catch (err) {
-			toastStore.failed('delete those lorebooks', err);
+			toastStore.failed(i18n.t('lv2.failDelete'), err);
 		}
 		selectionMode = false;
 		selectedIds = new Set();
@@ -328,8 +332,8 @@
 				class="brw-btn"
 				bind:this={defaultsBack}
 				onclick={() => void setDefaults(false)}
-				aria-label="Back to lorebooks"
-				title="Back (Esc)"
+				aria-label={i18n.t('lv2.back')}
+				title={i18n.t('lv2.backTip')}
 			>
 				<Icon name="chevronLeft" class="w-4 h-4" strokeWidth={2} />
 			</button>
@@ -348,8 +352,8 @@
 						search = (e.target as HTMLInputElement).value;
 						resetPage();
 					}}
-					placeholder="Search {books.length} lorebook{books.length === 1 ? '' : 's'}…"
-					aria-label="Search lorebooks by name, entry title or keyword"
+					placeholder={i18n.t('lv2.searchPlaceholder', { n: books.length })}
+					aria-label={i18n.t('lv2.searchAria')}
 					class="input-base"
 				/>
 			</div>
@@ -364,8 +368,8 @@
 						onclick={toggle}
 						aria-haspopup="true"
 						aria-expanded={isOpen}
-						aria-label="Filter and sort"
-						title="Filter & sort"
+						aria-label={i18n.t('clv.filterSort')}
+						title={i18n.t('clv.filterSort')}
 					>
 						<Icon name="filter" class="w-4 h-4" />
 						{#if hidden.length > 0}
@@ -375,8 +379,8 @@
 				{/snippet}
 
 				<div class="brw-sec">
-					<div class="brw-sec-head"><span class="brw-sec-title">Sort by</span></div>
-					<div class="brw-opts" role="radiogroup" aria-label="Sort lorebooks by">
+					<div class="brw-sec-head"><span class="brw-sec-title">{i18n.t('clv.sortBy')}</span></div>
+					<div class="brw-opts" role="radiogroup" aria-label={i18n.t('lv2.sortAria')}>
 						{#each LOREBOOK_SORT_OPTIONS as option (option.id)}
 							<button
 								type="button"
@@ -396,13 +400,13 @@
 				</div>
 
 				<div class="brw-sec">
-					<div class="brw-sec-head"><span class="brw-sec-title">Show</span></div>
+					<div class="brw-sec-head"><span class="brw-sec-title">{i18n.t('clv.show')}</span></div>
 					<!-- Independent switches rather than one choice: what a reader wants left is any
 					     of the three, and a single "globals only" could not say the other two. -->
 					<div
 						class="brw-opts brw-opts--3"
 						role="group"
-						aria-label="Filter by how a book reaches a chat"
+						aria-label={i18n.t('lv2.filterAria')}
 					>
 						{#each LINK_STATES as state (state.id)}
 							<button
@@ -430,16 +434,16 @@
 						onclick={toggle}
 						aria-haspopup="true"
 						aria-expanded={isOpen}
-						aria-label="View options"
-						title="View options"
+						aria-label={i18n.t('clv.viewOptions')}
+						title={i18n.t('clv.viewOptions')}
 					>
 						<Icon name="sliders" class="w-4 h-4" />
 					</button>
 				{/snippet}
 
 				<div class="brw-sec">
-					<div class="brw-sec-head"><span class="brw-sec-title">Layout</span></div>
-					<div class="brw-opts brw-opts--3" role="group" aria-label="View mode">
+					<div class="brw-sec-head"><span class="brw-sec-title">{i18n.t('clv.layout')}</span></div>
+					<div class="brw-opts brw-opts--3" role="group" aria-label={i18n.t('pv.viewMode')}>
 						<button
 							type="button"
 							class="brw-opt"
@@ -448,7 +452,7 @@
 							aria-pressed={lorebookViewPrefs.viewMode === 'grid'}
 						>
 							<Icon name="grid" class="w-3.5 h-3.5" />
-							Grid
+							{i18n.t('lv2.grid')}
 						</button>
 						<button
 							type="button"
@@ -458,7 +462,7 @@
 							aria-pressed={lorebookViewPrefs.viewMode === 'gallery'}
 						>
 							<Icon name="gallery" class="w-3.5 h-3.5" />
-							Gallery
+							{i18n.t('lv2.gallery')}
 						</button>
 						<button
 							type="button"
@@ -468,7 +472,7 @@
 							aria-pressed={lorebookViewPrefs.viewMode === 'list'}
 						>
 							<Icon name="list" class="w-3.5 h-3.5" />
-							List
+							{i18n.t('lv2.list')}
 						</button>
 					</div>
 				</div>
@@ -476,12 +480,12 @@
 				{#if lorebookViewPrefs.viewMode === 'list'}
 					<div class="brw-sec">
 						<div class="flex items-center justify-between gap-2">
-							<span class="brw-sec-title">Show Covers</span>
+							<span class="brw-sec-title">{i18n.t('lv2.showCovers')}</span>
 							<Toggle
 								size="sm"
 								checked={lorebookViewPrefs.listCovers}
 								onchange={(v) => lorebookViewPrefs.setListCovers(v)}
-								label="Show covers on each row"
+								label={i18n.t('lv2.showCoversTip')}
 							/>
 						</div>
 					</div>
@@ -489,7 +493,7 @@
 
 				{#if lorebookViewPrefs.viewMode === 'grid'}
 					<div class="brw-sec">
-						<div class="brw-sec-head"><span class="brw-sec-title">Card size</span></div>
+						<div class="brw-sec-head"><span class="brw-sec-title">{i18n.t('clv.cardSize')}</span></div>
 						<div class="flex items-center gap-2.5">
 							<Icon name="image" class="w-4 h-4 text-text-muted shrink-0" />
 							<input
@@ -506,14 +510,14 @@
 									apply: (v) => lorebookViewPrefs.setCardSize(v)
 								}}
 								class="brw-range"
-								aria-label="Card size"
+								aria-label={i18n.t('clv.cardSize')}
 							/>
 						</div>
 					</div>
 				{/if}
 
 				<div class="brw-sec">
-					<div class="brw-sec-head"><span class="brw-sec-title">Per page</span></div>
+					<div class="brw-sec-head"><span class="brw-sec-title">{i18n.t('clv.perPage')}</span></div>
 					<div class="brw-opts brw-opts--3">
 						{#each PER_PAGE_OPTIONS as count (count)}
 							<button
@@ -542,8 +546,8 @@
 						onclick={toggle}
 						aria-haspopup="menu"
 						aria-expanded={isOpen}
-						aria-label="More actions"
-						title="More actions"
+						aria-label={i18n.t('clv.more')}
+						title={i18n.t('clv.more')}
 					>
 						<Icon name="dotsVertical" class="w-4 h-4" />
 					</button>
@@ -575,9 +579,9 @@
 				</button>
 			</BrowsePopover>
 
-			<button type="button" class="brw-new" onclick={newBook} title="New lorebook">
+			<button type="button" class="brw-new" onclick={newBook} title={i18n.t('lv2.newBook')}>
 				<Icon name="plus" class="w-4 h-4" />
-				<span class="brw-new-label">New</span>
+				<span class="brw-new-label">{i18n.t('clv.new')}</span>
 			</button>
 		</div>
 	{/if}
@@ -608,7 +612,7 @@
 		<!-- Active filters: a summary line that only exists while something narrows the list -->
 		{#if filtersActive}
 			<div class="brw-chips">
-				<span class="brw-chips-count"><b>{visible.length}</b> of {books.length}</span>
+				<span class="brw-chips-count"><b>{visible.length}</b>{i18n.t('lv2.ofCount', { n: books.length })}</span>
 				{#each LINK_STATES as state (state.id)}
 					{#if hidden.includes(state.id)}
 						<span class="brw-chip">
@@ -646,8 +650,8 @@
 					type="button"
 					class="brw-bulk-x"
 					onclick={toggleSelectionMode}
-					aria-label="Exit selection"
-					title="Exit selection (Esc)"
+					aria-label={i18n.t('clv.exitSelection')}
+					title={i18n.t('clv.exitSelectionTip')}
 				>
 					<Icon name="close" class="w-4 h-4" />
 				</button>
@@ -675,10 +679,10 @@
 					class="brw-bulk-btn"
 					onclick={exportSelection}
 					disabled={selected.length === 0}
-					title="Export as SillyTavern World Info"
+					title={i18n.t('lbv.exportCards')}
 				>
 					<Icon name="download" class="w-3.5 h-3.5" />
-					<span class="brw-bulk-label">Export</span>
+					<span class="brw-bulk-label">{i18n.t('clv.export')}</span>
 				</button>
 				<button
 					type="button"
@@ -687,7 +691,7 @@
 					disabled={selected.length === 0}
 				>
 					<Icon name="trash" class="w-3.5 h-3.5" />
-					<span class="brw-bulk-label">Delete</span>
+					<span class="brw-bulk-label">{i18n.t('clv.delete')}</span>
 				</button>
 			</div>
 		{/if}
@@ -706,13 +710,13 @@
 			<div class="flex items-center justify-center h-full">
 				<div class="flex flex-col items-center gap-3 text-text-muted">
 					<Spinner size="lg" />
-					<span class="text-sm font-ui">Loading lorebooks…</span>
+					<span class="text-sm font-ui">{i18n.t('clv.loading')}</span>
 				</div>
 			</div>
 		{:else if books.length === 0}
 			<div class="grid place-items-center h-full">
-				<EmptyState icon="bookOpen" title="No lorebooks yet">
-					A lorebook holds world facts that are woven into the story when their keywords come up.
+				<EmptyState icon="bookOpen" title={i18n.t('lbp.emptyTitle')}>
+					{i18n.t('lbv.emptyHint')}
 					{#snippet actions()}
 						<Button variant="primary" size="sm" onclick={newBook}>
 							<Icon name="plus" class="w-4 h-4" />
@@ -843,9 +847,9 @@
      question stands would otherwise leave a dialog with a blank message in it. -->
 <ConfirmDialog
 	open={deleteTarget !== null}
-	title="Delete lorebook"
+	title={i18n.t('lbv.deleteTitle')}
 	message={deleteMessage}
-	confirmLabel="Delete"
+	confirmLabel={i18n.t('common.delete')}
 	variant="danger"
 	destructive
 	holdMs={holdMsForBlast(deleteTarget?.entries.length ?? 0)}
@@ -855,9 +859,9 @@
 
 <ConfirmDialog
 	open={bulkDeleteOpen}
-	title="Delete {selected.length} lorebook{selected.length === 1 ? '' : 's'}"
+	title={i18n.t('lbv.deleteBulk', { n: selected.length })}
 	message={bulkDeleteMessage}
-	confirmLabel="Delete {selected.length}"
+	confirmLabel={i18n.t('lbv.deleteBulk', { n: selected.length })}
 	variant="danger"
 	destructive
 	holdMs={holdMsForBlast(bulkBlast)}
