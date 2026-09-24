@@ -9,6 +9,7 @@
 	 * which keeps the window in which another device's write could land on a draft short.
 	 */
 	import { onMount, tick, untrack } from 'svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import {
 		DEFAULT_SUGGESTED_PROMPTS,
@@ -115,8 +116,8 @@
 				bind:value={row.text}
 				onblur={() => void commit()}
 				maxlength={SUGGESTED_PROMPT_MAX_LENGTH}
-				placeholder="What should this one ask for?"
-				aria-label="Suggested prompt {i + 1}"
+				placeholder={i18n.t('asm.sugPlaceholder')}
+				aria-label={i18n.t('asm.sugAria', { n: i + 1 })}
 			/>
 			<div class="sug-actions">
 				<button
@@ -124,7 +125,7 @@
 					class="sug-icon-btn"
 					onclick={() => move(i, -1)}
 					disabled={i === 0}
-					aria-label="Move up"
+					aria-label={i18n.t('asm.moveUp')}
 				>
 					<Icon name="chevronUp" class="w-3.5 h-3.5" />
 				</button>
@@ -133,7 +134,7 @@
 					class="sug-icon-btn"
 					onclick={() => move(i, 1)}
 					disabled={i === rows.length - 1}
-					aria-label="Move down"
+					aria-label={i18n.t('asm.moveDown')}
 				>
 					<Icon name="chevronDown" class="w-3.5 h-3.5" />
 				</button>
@@ -141,7 +142,7 @@
 					type="button"
 					class="sug-icon-btn sug-icon-btn--danger"
 					onclick={() => remove(i)}
-					aria-label="Delete prompt"
+					aria-label={i18n.t('asm.deletePrompt')}
 				>
 					<Icon name="trash" class="w-3.5 h-3.5" />
 				</button>
@@ -162,7 +163,7 @@
 </div>
 
 {#if rows.length === 0}
-	<p class="sug-note">No suggestions, so the assistant's empty screen offers none.</p>
+	<p class="sug-note">{i18n.t('asm.sugNone')}</p>
 {/if}
 
 <div class="sug-toolbar">
