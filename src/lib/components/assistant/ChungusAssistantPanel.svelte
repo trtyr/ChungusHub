@@ -6,6 +6,7 @@
 	 * (context chips + picker + attach menu), AssistantContextMeter (window occupancy).
 	 */
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import AssistantSettingsView from './AssistantSettingsView.svelte';
 	import AssistantTurnTimeline from './AssistantTurnTimeline.svelte';
 	import AssistantHistoryPopover from './AssistantHistoryPopover.svelte';
@@ -128,7 +129,7 @@
 		const bookId = workspaceFocus.lorebookId;
 		if (bookId) {
 			const book = lorebookStore.books.find((b) => b.id === bookId);
-			if (book) return { kind: 'lorebook', refId: book.id, label: book.name.trim() || 'Untitled lorebook' };
+			if (book) return { kind: 'lorebook', refId: book.id, label: book.name.trim() || i18n.t('lbw.untitledLorebook') };
 		}
 		// 4) The active chat as a whole.
 		const chat = chatStore.activeChat;
@@ -244,9 +245,7 @@
 		// depends on its provider/model + the Send images setting, so say so up front
 		// instead of silently dropping them at request time.
 		if (!llmService.sendsImages('assistant')) {
-			toastStore.warning(
-				'The assistant model does not take images, or sending images is off. The picture stays in the transcript but never reaches the assistant.'
-			);
+			toastStore.warning(i18n.t('asm.noImageSupport2'));
 		}
 		// Pin the session at entry: a slow upload must land in the tab it started on,
 		// not whichever tab is active when it finishes. Attaching with no session open
@@ -260,7 +259,7 @@
 				const slot = store.composerFor(sessionId);
 				slot.images = [...slot.images, { path, url }];
 			} catch (error) {
-				toastStore.failed(`attach "${file.name}"`, error);
+				toastStore.failed(i18n.t('chat.failAttach', { name: file.name }), error);
 			} finally {
 				uploadingImages -= 1;
 			}
@@ -297,7 +296,7 @@
 			try {
 				store.addStagedFile(sessionId, await uploadAssistantFile(sessionId, file));
 			} catch (error) {
-				toastStore.failed(`attach "${file.name}"`, error);
+				toastStore.failed(i18n.t('chat.failAttach', { name: file.name }), error);
 			} finally {
 				uploadingFiles -= 1;
 			}
@@ -309,7 +308,7 @@
 		try {
 			await store.discardStagedFile(composerKey, id);
 		} catch (error) {
-			toastStore.failed('remove this file', error);
+			toastStore.failed(i18n.t('asm.failRemoveFile'), error);
 		}
 	}
 
@@ -429,9 +428,9 @@
 		applyingSettings = true;
 		try {
 			await store.applySettings(activeId);
-			toastStore.success('Settings applied to this session');
+			toastStore.success(i18n.t('asm.settingsApplied'));
 		} catch (e) {
-			toastStore.failed('apply the settings', e);
+			toastStore.failed(i18n.t('asm.failApply'), e);
 		} finally {
 			applyingSettings = false;
 		}
@@ -520,7 +519,7 @@
 	{#if dragDepth > 0 && !showSettings && !costNotice}
 		<div class="assistant-drop">
 			<Icon name="document" class="w-6 h-6" />
-			<span>Drop to attach. Pictures are looked at, files are read.</span>
+			<span>{i18n.t('asm.dropAttach')}</span>
 		</div>
 	{/if}
 	{#if costNotice}
@@ -561,7 +560,7 @@
 								bind:value={tabRenameDraft}
 								class="assistant-tab-rename"
 								type="text"
-								aria-label="Session name"
+								aria-label={i18n.t('asm.sessionName')}
 								autofocus
 								onblur={commitTabRename}
 								onkeydown={(e) => handleTabRenameKeydown(e, id)}
@@ -574,20 +573,20 @@
 							class="assistant-tab-label"
 							onclick={() => store.selectTab(id)}
 							ondblclick={() => startTabRename(id)}
-							title={`${waitingTitle(id)}\nDouble-click to rename`}
+							title={`${waitingTitle(id)}\n${i18n.t('asm.dblRename')}`}
 						>
 							{@render tabGlyph()}
 							<span class="assistant-tab-text">{tabTitle(id)}</span>
 						</button>
 					{/if}
-					<button type="button" class="assistant-tab-close" onclick={() => store.closeTab(id)} aria-label="Close tab">
+					<button type="button" class="assistant-tab-close" onclick={() => store.closeTab(id)} aria-label={i18n.t('asm.closeTab')}>
 						<Icon name="x" class="w-3 h-3" />
 					</button>
 				</div>
 			{/each}
 		</div>
 		<div class="assistant-tabbar-actions">
-			<button type="button" class="assistant-icon-btn" onclick={newSession} aria-label="New assistant session" title="New session">
+			<button type="button" class="assistant-icon-btn" onclick={newSession} aria-label={i18n.t('asm.newSessionAria')} title={i18n.t('asm.histNew')}>
 				<Icon name="plus" class="w-4 h-4" />
 			</button>
 			<button
@@ -596,12 +595,12 @@
 				class:assistant-icon-btn--active={showHistory}
 				data-history-toggle
 				onclick={() => (showHistory = !showHistory)}
-				aria-label="Session history"
-				title="History"
+				aria-label={i18n.t('asm.histAria')}
+				title={i18n.t('asm.histTitle')}
 			>
 				<Icon name="chevronDown" class="w-4 h-4" />
 			</button>
-			<button bind:this={settingsButton} type="button" class="assistant-icon-btn" onclick={openSettings} aria-label="Assistant settings" title="Assistant settings">
+			<button bind:this={settingsButton} type="button" class="assistant-icon-btn" onclick={openSettings} aria-label={i18n.t('asm.settingsAria')} title={i18n.t('asm.settingsAria')}>
 				<Icon name="settings" class="w-4 h-4" />
 			</button>
 		</div>
@@ -616,7 +615,7 @@
 			<div class="assistant-empty">
 				<AssistantMascot size={44} />
 				<p class="assistant-empty-title">Chungus Assistant</p>
-				<p class="assistant-empty-hint">Reads and edits your characters, chats, and lorebooks.</p>
+				<p class="assistant-empty-hint">{i18n.t('asm.emptyHint')}</p>
 				{#if suggestions.length > 0}
 					<!-- Unkeyed on purpose: nothing dedupes the stored list, and two rows holding the
 					     same text is the user's business, not a crash. The button that opens the list
@@ -636,7 +635,7 @@
 							onclick={() => (suggestionsOpen = !suggestionsOpen)}
 						>
 							<Icon name={suggestionsOpen ? 'chevronUp' : 'chevronDown'} class="w-3.5 h-3.5" />
-							<span>{suggestionsOpen ? 'Show less' : 'Show more'}</span>
+							<span>{suggestionsOpen ? i18n.t('welcome.showLess') : i18n.t('welcome.showMore')}</span>
 						</button>
 					{/if}
 				{/if}
@@ -663,7 +662,7 @@
 				<span class="assistant-settings-drift-text">
 					Assistant settings changed since this session started, so it still runs on the old ones.
 				</span>
-				<button type="button" onclick={applySettings} disabled={applyingSettings} title="Resends this conversation once, so the turn costs more than usual">
+				<button type="button" onclick={applySettings} disabled={applyingSettings} title={i18n.t('asm.applyTip')}>
 					{applyingSettings ? 'Applying…' : 'Apply'}
 				</button>
 			</div>
@@ -693,20 +692,20 @@
 			<div class="assistant-pending-images">
 				{#each pendingImages as img (img.path)}
 					<div class="assistant-pending-thumb">
-						<img src={img.url} alt="Attached" />
+						<img src={img.url} alt={i18n.t('chat.attached')} />
 						<button
 							type="button"
 							class="assistant-pending-remove"
 							onclick={() => removePendingImage(img.path)}
-							aria-label="Remove image"
-							title="Remove"
+							aria-label={i18n.t('chat.removeImage')}
+							title={i18n.t('common.delete')}
 						>
 							<Icon name="x" class="w-3 h-3" strokeWidth={2.5} />
 						</button>
 					</div>
 				{/each}
 				{#if uploadingImages > 0}
-					<div class="assistant-pending-thumb assistant-pending-uploading" title="Uploading…">
+					<div class="assistant-pending-thumb assistant-pending-uploading" title={i18n.t('chat.uploading')}>
 						<Icon name="refresh" class="w-4 h-4 animate-spin text-text-muted" />
 					</div>
 				{/if}
@@ -727,16 +726,16 @@
 				onkeydown={handleKeydown}
 				onpaste={handlePaste}
 				rows="1"
-				placeholder="Message the Chungus Assistant…"
-				aria-label="Message the Chungus Assistant"
+				placeholder={i18n.t('asm.panelPlaceholder')}
+				aria-label={i18n.t('asm.panelPlaceholder')}
 				class="assistant-textarea"
 			></textarea>
 			{#if runtime.busy}
-				<button type="button" class="assistant-send assistant-stop" onclick={stop} aria-label="Stop the assistant">
+				<button type="button" class="assistant-send assistant-stop" onclick={stop} aria-label={i18n.t('asm.stopAssistant')}>
 					<Icon name="close" class="w-4 h-4" />
 				</button>
 			{:else}
-				<button type="button" class="assistant-send" disabled={!canSend} onclick={send} aria-label="Send message">
+				<button type="button" class="assistant-send" disabled={!canSend} onclick={send} aria-label={i18n.t('chat.sendMessage')}>
 					<Icon name="arrowRight" class="w-4 h-4" />
 				</button>
 			{/if}
