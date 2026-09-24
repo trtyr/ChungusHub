@@ -43,6 +43,7 @@
 	} from '$lib/memory/config';
 	import type { MemoryConfig } from '$lib/memory/types';
 	import { copyText } from '$lib/utils/clipboard';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	/** The host list keys this component on the id, so it remounts per engine. */
 	let { id }: { id: string } = $props();
@@ -121,7 +122,7 @@
 		try {
 			await copyText(token);
 		} catch {
-			toastStore.error('Copy failed. Type the token out instead.');
+			toastStore.error(i18n.t('eng.copyFail'));
 			return;
 		}
 		copied = token;
@@ -196,7 +197,7 @@
 
 	<section class="card">
 		<div class="card-head">
-			<span class="card-title">Model</span>
+			<span class="card-title">{i18n.t('eng.modelTitle')}</span>
 			{#if engine.makesCalls}
 				<button
 					type="button"
@@ -225,12 +226,12 @@
 		     would be unreachable by the very thing anchors exist for. -->
 		<section class="card">
 			<div class="card-head">
-				<span class="card-title">Default placement</span>
+				<span class="card-title">{i18n.t('eng.defaultPlacement')}</span>
 			</div>
 			<div class="card-body">
 				<div class="slider-block">
 					<div class="slider-top">
-						<label for="steering-depth" class="slider-label">Depth</label>
+						<label for="steering-depth" class="slider-label">{i18n.t('eng.depth')}</label>
 						<span class="slider-value">
 							{featurePromptsStore.steeringDefaults.depth === 0
 								? 'after the newest turn'
@@ -249,7 +250,7 @@
 					/>
 				</div>
 				<div class="sub-block">
-					<span class="section-label">Role</span>
+					<span class="section-label">{i18n.t('eng.role')}</span>
 					<PillRow
 						options={STEERING_ROLES.map((role) => ({ value: role, label: role }))}
 						current={featurePromptsStore.steeringDefaults.role}
@@ -273,7 +274,7 @@
 	{#if engine.id === 'memory'}
 		<section class="card">
 			<div class="card-head">
-				<span class="card-title">Starting defaults</span>
+				<span class="card-title">{i18n.t('eng.startingDefaults')}</span>
 			</div>
 			<div class="card-body">
 				{#each MEMORY_CONFIG_FIELDS as f (f.key)}
@@ -323,7 +324,7 @@
 	{#if engine.id === 'sprites'}
 		<section class="card">
 			<div class="card-head">
-				<span class="card-title">Read a reply again</span>
+				<span class="card-title">{i18n.t('eng.rereadTitle')}</span>
 			</div>
 			<div class="card-body">
 				<div class="toggle-row" use:toggleRow>
@@ -348,7 +349,7 @@
 
 	<section class="card">
 		<div class="card-head">
-			<span class="card-title">Prompts</span>
+			<span class="card-title">{i18n.t('eng.prompts')}</span>
 		</div>
 		<div class="prompt-fields">
 			{#each engine.prompts as field (field.key)}
@@ -359,7 +360,7 @@
 						<span class="prompt-label">{field.label}</span>
 						<InfoTip text={field.hint} />
 						{#if isModified(field.key)}
-							<span class="modified-badge" title="Differs from the shipped default">Modified</span>
+							<span class="modified-badge" title={i18n.t('eng.modifiedTip')}>{i18n.t('eng.modified')}</span>
 						{/if}
 						<button
 							type="button"
@@ -388,12 +389,12 @@
 					{/if}
 					{#if keys.length}
 						<div class="keys">
-							<span class="keys-label">Keys</span>
+							<span class="keys-label">{i18n.t('eng.keys')}</span>
 							{#each keys as token (token)}
 								<button
 									type="button"
 									class="key-chip"
-									title="Click to copy"
+									title={i18n.t('eng.clickCopy')}
 									onclick={() => copyKey(token)}
 								>
 									{copied === token ? 'copied' : token}

@@ -2,6 +2,7 @@
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import InfoTip from '$lib/components/ui/InfoTip.svelte';
 	import type { ProviderMeta } from '$lib/services/llm/provider';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import type { ProviderAccount, ProviderName } from '$lib/types/llm';
 	import { formatUsd } from '$lib/utils/modelFormat';
 
@@ -140,7 +141,7 @@
 		</div>
 
 		{#if showRefresh}
-			<button type="button" class="refresh-btn" onclick={onRefresh} title="Refresh connection">
+			<button type="button" class="refresh-btn" onclick={onRefresh} title={i18n.t('hero.refresh')}>
 				<Icon name="refresh" class="w-4 h-4" strokeWidth={1.75} />
 			</button>
 		{/if}
@@ -156,14 +157,14 @@
 			spellcheck="false"
 			autocomplete="off"
 			class="input-base field base-url"
-			aria-label="Server URL"
+			aria-label={i18n.t('hero.serverUrl')}
 		/>
 		<!-- The typed URL didn't serve the API but a probed sibling (its /v1 twin, the stem
 		     of a pasted endpoint URL, a redirect target) proved it does. Shown rather than
 		     applied silently: the correction is a fact discovered from the server, and the
 		     field keeps exactly what was typed. -->
 		{#if resolvedBaseUrl}
-			<p class="resolved-note">Requests go to <code>{resolvedBaseUrl}</code></p>
+			<p class="resolved-note">{i18n.t('hero.requestsGo', { url: resolvedBaseUrl })}</p>
 		{/if}
 	{/if}
 
@@ -175,7 +176,7 @@
 				type={showKey ? 'text' : 'password'}
 				value={apiKey}
 				oninput={(e) => onKeyChange((e.currentTarget as HTMLInputElement).value)}
-				placeholder={meta.requiresApiKey ? `Paste your ${meta.displayName} API key` : 'API key (optional for this server)'}
+				placeholder={meta.requiresApiKey ? i18n.t('hero.keyPlaceholder', { name: meta.displayName }) : i18n.t('hero.keyOptional')}
 				autocomplete="off"
 				data-1p-ignore
 				data-lpignore="true"
@@ -185,7 +186,7 @@
 				type="button"
 				class="eye-btn"
 				onclick={() => (showKey = !showKey)}
-				aria-label={showKey ? 'Hide API key' : 'Show API key'}
+				aria-label={showKey ? i18n.t('hero.hideKey') : i18n.t('hero.showKey')}
 			>
 				<Icon name={showKey ? 'eyeOff' : 'eye'} class="w-5 h-5" strokeWidth={1.75} />
 			</button>
@@ -203,7 +204,7 @@
 		     shouting. But a server that only answers /chat/completions is a real setup, and it
 		     still gets its request, so the way out is stated instead of left to be discovered. -->
 		{#if apiNotFound}
-			<p class="status-hint">Requests still go to this URL as typed, so you can name the model yourself below.</p>
+			<p class="status-hint">{i18n.t('hero.apiNotFound')}</p>
 		{/if}
 	{/if}
 
@@ -215,10 +216,10 @@
 				{#if account.label}
 					<span class="fingerprint">{account.label}</span>
 				{:else}
-					<span class="fingerprint muted">Connected</span>
+					<span class="fingerprint muted">{i18n.t('hero.connected')}</span>
 				{/if}
 				{#if account.isFreeTier}
-					<span class="pill">Free tier <InfoTip text={FREE_TIER_HINT} /></span>
+					<span class="pill">{i18n.t('hero.freeTier')} <InfoTip text={i18n.t('hero.freeTierHint')} /></span>
 				{/if}
 			</div>
 
@@ -233,16 +234,16 @@
 				</div>
 			{:else}
 				<div class="budget-flat">
-					<span class="nocap">No spend cap</span>
-					{#if account.balance != null}<span class="balance">Balance {formatUsd(account.balance)}</span>{/if}
+					<span class="nocap">{i18n.t('hero.noCap')}</span>
+					{#if account.balance != null}<span class="balance">{i18n.t('hero.balance', { n: formatUsd(account.balance) })}</span>{/if}
 				</div>
 			{/if}
 
 			{#if account.usageDaily || account.usageWeekly || account.usageMonthly}
 				<div class="spend">
-					<span class="spend-chip"><b>Today</b> {formatUsd(account.usageDaily)}</span>
-					<span class="spend-chip"><b>Week</b> {formatUsd(account.usageWeekly)}</span>
-					<span class="spend-chip"><b>Month</b> {formatUsd(account.usageMonthly)}</span>
+					<span class="spend-chip"><b>{i18n.t('hero.today')}</b> {formatUsd(account.usageDaily)}</span>
+					<span class="spend-chip"><b>{i18n.t('hero.week')}</b> {formatUsd(account.usageWeekly)}</span>
+					<span class="spend-chip"><b>{i18n.t('hero.month')}</b> {formatUsd(account.usageMonthly)}</span>
 				</div>
 			{/if}
 
@@ -252,7 +253,7 @@
 				</p>
 			{/if}
 			{#if account.expiresAt}
-				<p class="ledger-warn soft">Key expires {expiryLabel(account.expiresAt)}.</p>
+				<p class="ledger-warn soft">{i18n.t('hero.keyExpires', { when: expiryLabel(account.expiresAt) })}</p>
 			{/if}
 		</div>
 	{:else if status === 'valid'}
@@ -402,11 +403,6 @@
 		font-family: var(--font-ui);
 		font-size: 0.68rem;
 		color: var(--color-text-muted);
-	}
-
-	.resolved-note code {
-		font-family: var(--font-mono);
-		word-break: break-all;
 	}
 
 	.key-wrap {
