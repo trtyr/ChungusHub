@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { ComponentProps } from 'svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import type { AssistantToolResult } from '$lib/services/transport';
 	import { richDiff, condenseLines, diffLineCounts, leadWithChange } from '$lib/utils/diff';
@@ -40,7 +41,7 @@
 			type="button"
 			class="idiff-head"
 			onclick={() => (navigable && onNavigate ? onNavigate() : onExpand())}
-			title={navigable ? 'Go to this in the app' : 'Open full diff'}
+			title={navigable ? i18n.t('asm.goToApp') : i18n.t('asm.openDiff')}
 		>
 			<Icon name={icon} class="w-3.5 h-3.5 shrink-0" />
 			<span class="idiff-label">{action.label}</span>
@@ -48,7 +49,7 @@
 			{#if navigable}<Icon name="arrowRight" class="w-3 h-3 shrink-0 idiff-go" />{/if}
 		</button>
 	</div>
-	<button type="button" class="idiff-body" class:idiff-body--clip={overflowing} onclick={onExpand} title="Expand diff" bind:this={bodyEl}>
+	<button type="button" class="idiff-body" class:idiff-body--clip={overflowing} onclick={onExpand} title={i18n.t('asm.expandDiff')} bind:this={bodyEl}>
 		{#each lines as line, i (i)}
 			{#if line.type === 'gap'}
 				<div class="idiff-gap">⋯</div>

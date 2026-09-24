@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Dialog from '$lib/components/ui/Dialog.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import type { AssistantToolResult } from '$lib/services/transport';
 	import { richDiff, condenseLines, diffLineCounts, type DiffLine } from '$lib/utils/diff';
 
@@ -50,7 +51,7 @@
 					type="button"
 					class="diff-gap"
 					onclick={() => (opened = { ...opened, [line.from]: true })}
-					title="Show what is between the changes"
+					title={i18n.t('asm.betweenChanges')}
 				>
 					⋯ {line.count} unchanged line{line.count === 1 ? '' : 's'}
 				</button>
