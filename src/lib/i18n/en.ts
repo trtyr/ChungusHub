@@ -955,6 +955,81 @@ export const en: Record<string, string> = {
 	'chatpg.restoreTitle': 'Restore chat defaults',
 	'chatpg.restoreMsg':
 		'The reading column, story type, message cards, story text and every message detail all go back to the shipped default. Interface settings are left alone. This cannot be undone.',
+	'ce.gone': 'This connection no longer exists.',
+	'ce.nameTitle': 'Name',
+	'ce.nameTip': 'How this connection shows up wherever you assign it.',
+	'ce.namePlaceholder': 'Connection name',
+	'ce.modelTitle': 'Model',
+	'ce.modelTip': "The model this connection runs on, everywhere it's assigned.",
+	'ce.notInList': 'Not in the loaded model list. Sent exactly as typed.',
+	'ce.statContext': 'Context',
+	'ce.statInput': 'Input',
+	'ce.statOutput': 'Output',
+	'ce.statKnowledge': 'Knowledge',
+	'ce.requestTitle': 'Request',
+	'ce.requestTip': 'How the assembled prompt is shaped and delivered to this provider.',
+	'ce.promptShape': 'Prompt shape',
+	'ce.promptShapeTip':
+		'Reshapes the prompt for APIs with strict message rules. Every mode but None starts with the merge shown here.',
+	'ce.placeholderLabel': 'Placeholder user message',
+	'ce.placeholderTip':
+		'Opens the conversation when the chat would otherwise start with the assistant. Blank restores the default.',
+	'ce.caching': 'Caching',
+	'ce.promptCaching': 'Prompt caching',
+	'ce.promptCachingTip':
+		'Reuses the unchanged start of the prompt across turns, so it bills as a cheap cache read instead of full price.',
+	'ce.lifetime': 'Lifetime',
+	'ce.lifetimeTip': 'How long a cached prompt stays warm between turns.',
+	'ce.delivery': 'Delivery',
+	'ce.serviceTier': 'Service tier',
+	'ce.serviceTierTip': 'How the provider prioritizes this request. An unavailable tier falls back to standard.',
+	'ce.contextTip':
+		'How many tokens the whole prompt may use. Outgrow it and the oldest messages are trimmed first, never your preset, characters, lorebooks or memory.',
+	'ce.tokens': 'Tokens',
+	'ce.resetDefault': 'Reset to {n} (default)',
+	'ce.ctxAria': 'Context window in tokens',
+	'ce.typeExact': 'Type an exact token count',
+	'ce.modelMax': 'Model max: {n} tokens.',
+	'ce.responseTitle': 'Response',
+	'ce.responseTip':
+		'Length, streaming, reasoning and images. Only what this provider and model support shows up here.',
+	'ce.maxTokens': 'Max tokens',
+	'ce.maxTokensAria': 'Max response tokens',
+	'ce.outputCap': 'This model caps output at {n} tokens.',
+	'ce.verbosity': 'Verbosity',
+	'ce.verbosityTip':
+		"How expansive replies should be. Models that don't document verbosity may reject the request.",
+	'ce.stream': 'Stream response',
+	'ce.streamTip':
+		"Show the reply as it's written, word by word. Off, the message appears whole once it's finished.",
+	'ce.reasoning': 'Reasoning',
+	'ce.catchThinkingTip':
+		'Catches models that write their thinking into the message as plain text and moves it to the reasoning box.',
+	'ce.reasoningField': 'Reasoning field',
+	'ce.reasoningFieldTip':
+		'Nothing here can check that your server reads it: the field is simply added to the request.',
+	'ce.effort': 'Effort',
+	'ce.effortTip':
+		'How hard the model thinks before replying. Auto leaves it to the provider, Off disables thinking where the API allows it.',
+	'ce.showReasoning': 'Show reasoning',
+	'ce.showReasoningTip':
+		"Return the model's thinking alongside the reply. Off asks the provider not to send it, though the model still thinks.",
+	'ce.images': 'Images',
+	'ce.sendImages': 'Send images',
+	'ce.sendImagesTip':
+		'Send images attached to chat messages along with the prompt. Off keeps them in the chat but out of the request.',
+	'ce.detail': 'Detail',
+	'ce.detailTip': 'How much resolution the model gets from attached images.',
+	'ce.samplingTip':
+		'The sampling values sent with every generation on this connection, and only what it actually sends appears here. Double-click a slider to reset it.',
+	'ce.acceptedBy': 'Accepted by this endpoint',
+	'ce.acceptedTip':
+		'There is no way to ask your server what it accepts, so turn on what it takes. Those become the sliders below, and temperature is always sent.',
+	'ce.nothingDeclared': 'Nothing declared: only temperature is sent.',
+	'ce.modelSuggests': 'This model suggests {n}.',
+	'ce.seed': 'Seed',
+	'ce.seedTip': 'A fixed seed makes the same prompt reproduce the same output. Blank = random each run.',
+	'ce.random': 'random',
 	'storymap.noChatOpen': 'No chat open',
 	'storymap.openChatHint': 'Open a chat to see its story map.',
 	'storymap.noMessages': 'No messages yet',

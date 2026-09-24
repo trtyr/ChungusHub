@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import InfoTip from '$lib/components/ui/InfoTip.svelte';
+import { i18n } from '$lib/i18n/i18n.svelte';
 	import Select from '$lib/components/ui/Select.svelte';
 	import PillRow from '$lib/components/ui/PillRow.svelte';
 	import MockupTip from '$lib/components/mockups/MockupTip.svelte';
@@ -416,7 +417,7 @@
 {/snippet}
 
 {#if !conn || !meta}
-	<p class="missing">This connection no longer exists.</p>
+	<p class="missing">{i18n.t('ce.gone')}</p>
 {:else if uiStore.settingsRoutingModel}
 	<!-- In-place Provider Routing sub-view: replaces the editor body. The back
 	     affordances (drill chip, split back/forward, Escape) step out of it. -->
@@ -426,15 +427,15 @@
 		<!-- Name -->
 		<section class="card" data-setting="connections">
 			<div class="card-head">
-				<span class="card-title">Name</span>
-				<InfoTip text="How this connection shows up wherever you assign it." />
+				<span class="card-title">{i18n.t('ce.nameTitle')}</span>
+				<InfoTip text={i18n.t('ce.nameTip')} />
 			</div>
 			<input
 				type="text"
 				class="input-base name-input"
 				value={conn.name}
 				oninput={(e) => rename(e.currentTarget.value)}
-				placeholder="Connection name"
+				placeholder={i18n.t('ce.namePlaceholder')}
 			/>
 		</section>
 
@@ -459,8 +460,8 @@
 		<!-- Model -->
 		<section class="card" data-setting="primary-model">
 			<div class="card-head">
-				<span class="card-title">Model</span>
-				<InfoTip text="The model this connection runs on, everywhere it's assigned." />
+				<span class="card-title">{i18n.t('ce.modelTitle')}</span>
+				<InfoTip text={i18n.t('ce.modelTip')} />
 			</div>
 
 			<ModelPicker
@@ -476,7 +477,7 @@
 			<!-- Only worth saying when a list exists to contradict it: with no list at all
 			     (a server that serves no /models) there is nothing this could mean. -->
 			{#if conn.model && models.length > 0 && !modelInfo}
-				<p class="mode-hint">Not in the loaded model list. Sent exactly as typed.</p>
+				<p class="mode-hint">{i18n.t('ce.notInList')}</p>
 			{/if}
 
 			{#if modelInfo}
@@ -493,10 +494,10 @@
 					<div class="spec">
 						{#if hasStats}
 							<div class="spec-stats">
-								{#if ctx}<div class="stat"><span class="stat-label">Context</span><span class="stat-value">{ctx}</span></div>{/if}
-								{#if inPrice}<div class="stat"><span class="stat-label">Input</span><span class="stat-value">{inPrice}</span></div>{/if}
-								{#if outPrice}<div class="stat"><span class="stat-label">Output</span><span class="stat-value">{outPrice}</span></div>{/if}
-								{#if cutoff}<div class="stat"><span class="stat-label">Knowledge</span><span class="stat-value">{cutoff}</span></div>{/if}
+								{#if ctx}<div class="stat"><span class="stat-label">{i18n.t('ce.statContext')}</span><span class="stat-value">{ctx}</span></div>{/if}
+								{#if inPrice}<div class="stat"><span class="stat-label">{i18n.t('ce.statInput')}</span><span class="stat-value">{inPrice}</span></div>{/if}
+								{#if outPrice}<div class="stat"><span class="stat-label">{i18n.t('ce.statOutput')}</span><span class="stat-value">{outPrice}</span></div>{/if}
+								{#if cutoff}<div class="stat"><span class="stat-label">{i18n.t('ce.statKnowledge')}</span><span class="stat-value">{cutoff}</span></div>{/if}
 							</div>
 						{/if}
 						{#if hasTags}
@@ -525,9 +526,9 @@
 
 			<div class="req-sec" data-setting="prompt-post-processing">
 				<div class="req-head">
-					<span class="section-label">Prompt shape</span>
+					<span class="section-label">{i18n.t('ce.promptShape')}</span>
 					<MockupTip
-						text="Reshapes the prompt for APIs with strict message rules. Every mode but None starts with the merge shown here."
+						text={i18n.t('ce.promptShapeTip')}
 					>
 						<MergeRolesMockup />
 					</MockupTip>
@@ -544,9 +545,9 @@
 				{#if conn.postProcessing === 'strict'}
 					<div class="placeholder-block">
 						<div class="slider-label-wrap">
-							<label for="prompt-placeholder" class="slider-label">Placeholder user message</label>
+							<label for="prompt-placeholder" class="slider-label">{i18n.t('ce.placeholderLabel')}</label>
 							<InfoTip
-								text="Opens the conversation when the chat would otherwise start with the assistant. Blank restores the default."
+								text={i18n.t('ce.placeholderTip')}
 							/>
 						</div>
 						<input
@@ -562,12 +563,12 @@
 
 			{#if cachingCtl}
 				<div class="req-sec" data-setting="prompt-caching">
-					<span class="section-label">Caching</span>
+					<span class="section-label">{i18n.t('ce.caching')}</span>
 					<div class="toggle-row" use:toggleRow>
 						<div class="slider-label-wrap">
-							<span class="slider-label">Prompt caching</span>
+							<span class="slider-label">{i18n.t('ce.promptCaching')}</span>
 							<InfoTip
-								text="Reuses the unchanged start of the prompt across turns, so it bills as a cheap cache read instead of full price."
+								text={i18n.t('ce.promptCachingTip')}
 							/>
 						</div>
 						{#if cachingCtl.mode === 'explicit'}
@@ -579,9 +580,9 @@
 					{#if cachingCtl.mode === 'explicit' && gen.promptCaching && cachingCtl.ttl}
 						<div class="row-block">
 							<div class="slider-label-wrap">
-								<span class="slider-label">Lifetime</span>
+								<span class="slider-label">{i18n.t('ce.lifetime')}</span>
 								<InfoTip
-									text="How long a cached prompt stays warm between turns."
+									text={i18n.t('ce.lifetimeTip')}
 								/>
 							</div>
 							<PillRow
@@ -597,12 +598,12 @@
 
 			{#if serviceTierEligible(meta.serviceTier, conn.model)}
 				<div class="req-sec">
-					<span class="section-label">Delivery</span>
+					<span class="section-label">{i18n.t('ce.delivery')}</span>
 					<div class="row-block">
 						<div class="slider-label-wrap">
-							<span class="slider-label">Service tier</span>
+							<span class="slider-label">{i18n.t('ce.serviceTier')}</span>
 							<InfoTip
-								text="How the provider prioritizes this request. An unavailable tier falls back to standard."
+								text={i18n.t('ce.serviceTierTip')}
 							/>
 						</div>
 						<PillRow
@@ -621,18 +622,18 @@
 			<div class="card-head">
 				<span class="card-title">Context Window</span>
 				<InfoTip
-					text="How many tokens the whole prompt may use. Outgrow it and the oldest messages are trimmed first, never your preset, characters, lorebooks or memory."
+					text={i18n.t('ce.contextTip')}
 				/>
 			</div>
 			<div class="slider-block">
 				<div class="slider-top">
-					<label for="context-size" class="slider-label">Tokens</label>
+					<label for="context-size" class="slider-label">{i18n.t('ce.tokens')}</label>
 					<div class="value-row">
 						{#if conn.contextSize !== DEFAULT_CONTEXT_SIZE}
 							<button
 								type="button"
 								class="ctx-reset"
-								title="Reset to {DEFAULT_CONTEXT_SIZE.toLocaleString()} (default)"
+								title={i18n.t('ce.resetDefault', { n: DEFAULT_CONTEXT_SIZE.toLocaleString() })}
 								onclick={() => commitContextSize(DEFAULT_CONTEXT_SIZE)}
 							>
 								reset
@@ -643,8 +644,8 @@
 							inputmode="numeric"
 							class="slider-value value-input"
 							class:engaged={conn.contextSize !== DEFAULT_CONTEXT_SIZE}
-							aria-label="Context window in tokens"
-							title="Type an exact token count"
+							aria-label={i18n.t('ce.ctxAria')}
+							title={i18n.t('ce.typeExact')}
 							value={editingField === 'context' ? tokenDraft : conn.contextSize.toLocaleString()}
 							onfocus={() => beginEdit('context', conn!.contextSize)}
 							onblur={() => (editingField = null)}
@@ -671,7 +672,7 @@
 					use:rangeReset={{ defaultValue: ctxDefaultIdx, apply: (i) => commitContextSize(CONTEXT_LADDER[i]) }}
 				/>
 				{#if modelInfo?.contextLength && !ctxOverModelWindow}
-					<span class="slider-note">Model max: {modelInfo.contextLength.toLocaleString()} tokens.</span>
+					<span class="slider-note">{i18n.t('ce.modelMax', { n: modelInfo.contextLength.toLocaleString() })}</span>
 				{/if}
 			</div>
 			{#if contextBudgetDead}
@@ -700,13 +701,13 @@
 			<div class="card-body">
 				<div class="slider-block">
 					<div class="slider-top">
-						<label for="max-tokens" class="slider-label">Max tokens</label>
+						<label for="max-tokens" class="slider-label">{i18n.t('ce.maxTokens')}</label>
 						<input
 							type="text"
 							inputmode="numeric"
 							class="slider-value value-input"
-							aria-label="Max response tokens"
-							title="Type an exact token count"
+							aria-label={i18n.t('ce.maxTokensAria')}
+							title={i18n.t('ce.typeExact')}
 							value={editingField === 'response' ? tokenDraft : gen.maxTokens.toLocaleString()}
 							onfocus={() => beginEdit('response', gen.maxTokens)}
 							onblur={() => (editingField = null)}
@@ -732,17 +733,17 @@
 						use:rangeReset={{ defaultValue: responseDefaultIdx, apply: (i) => updateGen('maxTokens', RESPONSE_LADDER[i]) }}
 					/>
 					{#if maxTokensCeiling && maxTokensCeiling < gen.maxTokens}
-						<span class="slider-note warn">This model caps output at {maxTokensCeiling.toLocaleString()} tokens.</span>
+						<span class="slider-note warn">{i18n.t('ce.outputCap', { n: maxTokensCeiling.toLocaleString() })}</span>
 					{:else if maxTokensCeiling}
-						<span class="slider-note">Model max: {maxTokensCeiling.toLocaleString()} tokens.</span>
+						<span class="slider-note">{i18n.t('ce.modelMax', { n: maxTokensCeiling.toLocaleString() })}</span>
 					{/if}
 				</div>
 
 				{#if showVerbosity}
 					<div class="row-block">
 						<div class="slider-label-wrap">
-							<span class="slider-label">Verbosity</span>
-							<InfoTip text="How expansive replies should be. Models that don't document verbosity may reject the request." />
+							<span class="slider-label">{i18n.t('ce.verbosity')}</span>
+							<InfoTip text={i18n.t('ce.verbosityTip')} />
 						</div>
 						<PillRow
 							options={VERBOSITY_OPTIONS}
@@ -755,21 +756,21 @@
 
 				<div class="toggle-row" use:toggleRow>
 					<div class="slider-label-wrap">
-						<span class="slider-label">Stream response</span>
+						<span class="slider-label">{i18n.t('ce.stream')}</span>
 						<InfoTip
-							text="Show the reply as it's written, word by word. Off, the message appears whole once it's finished."
+							text={i18n.t('ce.streamTip')}
 						/>
 					</div>
 					<Toggle checked={gen.streamResponses} onchange={(v) => updateGen('streamResponses', v)} label="Stream response" />
 				</div>
 
 				<div class="sub">
-					<span class="section-label">Reasoning</span>
+					<span class="section-label">{i18n.t('ce.reasoning')}</span>
 					<div class="toggle-row" use:toggleRow>
 						<div class="slider-label-wrap">
 							<span class="slider-label">Auto-parse reasoning from replies</span>
 							<InfoTip
-								text="Catches models that write their thinking into the message as plain text and moves it to the reasoning box."
+								text={i18n.t('ce.catchThinkingTip')}
 							/>
 						</div>
 						<Toggle checked={gen.parseReasoning} onchange={(v) => updateGen('parseReasoning', v)} label="Auto-parse reasoning" />
@@ -780,9 +781,9 @@
 						     it and the Effort row below follows that exactly. -->
 						<div class="row-block">
 							<div class="slider-label-wrap">
-								<span class="slider-label">Reasoning field</span>
+								<span class="slider-label">{i18n.t('ce.reasoningField')}</span>
 								<InfoTip
-									text="Nothing here can check that your server reads it: the field is simply added to the request."
+									text={i18n.t('ce.reasoningFieldTip')}
 								/>
 							</div>
 							<Select
@@ -799,9 +800,9 @@
 					{#if showEffort}
 						<div class="row-block">
 							<div class="slider-label-wrap">
-								<span class="slider-label">Effort</span>
+								<span class="slider-label">{i18n.t('ce.effort')}</span>
 								<InfoTip
-									text="How hard the model thinks before replying. Auto leaves it to the provider, Off disables thinking where the API allows it."
+									text={i18n.t('ce.effortTip')}
 								/>
 							</div>
 							<PillRow
@@ -815,9 +816,9 @@
 					{#if showShowReasoning}
 						<div class="toggle-row" use:toggleRow>
 							<div class="slider-label-wrap">
-								<span class="slider-label">Show reasoning</span>
+								<span class="slider-label">{i18n.t('ce.showReasoning')}</span>
 								<InfoTip
-									text="Return the model's thinking alongside the reply. Off asks the provider not to send it, though the model still thinks."
+									text={i18n.t('ce.showReasoningTip')}
 								/>
 							</div>
 							<Toggle checked={gen.showReasoning} onchange={(v) => updateGen('showReasoning', v)} label="Show reasoning" />
@@ -827,12 +828,12 @@
 
 				{#if showSendImages}
 					<div class="sub">
-						<span class="section-label">Images</span>
+						<span class="section-label">{i18n.t('ce.images')}</span>
 						<div class="toggle-row" use:toggleRow>
 							<div class="slider-label-wrap">
-								<span class="slider-label">Send images</span>
+								<span class="slider-label">{i18n.t('ce.sendImages')}</span>
 								<InfoTip
-									text="Send images attached to chat messages along with the prompt. Off keeps them in the chat but out of the request."
+									text={i18n.t('ce.sendImagesTip')}
 								/>
 							</div>
 							<Toggle checked={gen.sendImages} onchange={(v) => updateGen('sendImages', v)} label="Send images" />
@@ -840,8 +841,8 @@
 						{#if showImageDetail}
 							<div class="row-block">
 								<div class="slider-label-wrap">
-									<span class="slider-label">Detail</span>
-									<InfoTip text="How much resolution the model gets from attached images." />
+									<span class="slider-label">{i18n.t('ce.detail')}</span>
+									<InfoTip text={i18n.t('ce.detailTip')} />
 								</div>
 								<PillRow
 									options={IMAGE_DETAIL_OPTIONS}
@@ -861,7 +862,7 @@
 			<div class="card-head">
 				<span class="card-title">Sampling Parameters</span>
 				<InfoTip
-					text="The sampling values sent with every generation on this connection, and only what it actually sends appears here. Double-click a slider to reset it."
+					text={i18n.t('ce.samplingTip')}
 				/>
 			</div>
 
@@ -871,9 +872,9 @@
 					     so its owner declares it and the sliders below follow that exactly. -->
 					<div class="declare">
 						<div class="declare-head">
-							<span class="section-label">Accepted by this endpoint</span>
+							<span class="section-label">{i18n.t('ce.acceptedBy')}</span>
 							<InfoTip
-								text="There is no way to ask your server what it accepts, so turn on what it takes. Those become the sliders below, and temperature is always sent."
+								text={i18n.t('ce.acceptedTip')}
 							/>
 							<div class="declare-actions">
 								<button type="button" class="micro-btn" onclick={() => declareAll(true)}>all</button>
