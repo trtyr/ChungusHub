@@ -7,6 +7,7 @@
 	import { viewport } from '$lib/stores/viewport.svelte';
 	import { featurePromptsStore } from '$lib/stores/featurePrompts.svelte';
 	import { memoryStore } from '$lib/memory/store.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	let activeOverlay = $derived(uiStore.activeOverlay);
 	let settingsOpen = $derived(uiStore.settingsOpen);
@@ -37,9 +38,9 @@
 	};
 
 	const NAV: NavItem[] = [
-		{ overlay: 'presetControls', icon: 'sliders', label: 'Preset Controls', title: 'Preset Controls' },
-		{ overlay: 'storymap', icon: 'sitemap', label: 'Story Map', title: 'Story Map' },
-		{ overlay: 'memory', icon: 'brain', label: 'Memory', title: 'Memory' }
+		{ overlay: 'presetControls', icon: 'sliders', label: 'nav.presetControls', title: 'nav.presetControls' },
+		{ overlay: 'storymap', icon: 'sitemap', label: 'nav.storymap', title: 'nav.storymap' },
+		{ overlay: 'memory', icon: 'brain', label: 'nav.memory', title: 'nav.memory' }
 	];
 
 	// One entry a setting can retire: with the Chat Memory engine globally off the panel
@@ -100,8 +101,8 @@
 	// with the button's own name, so the visible word stays part of the accessible one.
 	let memoryStanding = $derived(memoryStore.standing);
 	function titleFor(item: NavItem): string {
-		if (item.overlay !== 'memory' || memoryStanding.kind === 'idle') return item.title;
-		return `${item.title} · ${memoryStanding.label}`;
+		if (item.overlay !== 'memory' || memoryStanding.kind === 'idle') return i18n.t(item.title);
+		return `${i18n.t(item.title)} · ${memoryStanding.label}`;
 	}
 </script>
 
@@ -114,11 +115,11 @@
 					type="button"
 					class="overlay-split-main"
 					class:is-open={settingsOpen}
-					title={settingsOpen ? `Close Settings (${shortcut(',')})` : `Settings (${shortcut(',')})`}
+					title={settingsOpen ? i18n.t('titlebar.closeSettings', { key: shortcut(',') }) : i18n.t('titlebar.openSettings', { key: shortcut(',') })}
 					onclick={() => uiStore.toggleSettings(flush)}
 				>
 					<Icon name="settings" class="w-3.5 h-3.5" />
-					<span>Settings</span>
+					<span>{i18n.t('titlebar.settings')}</span>
 				</button>
 				{#if canDock}
 					<button
@@ -126,7 +127,7 @@
 						class="overlay-split-lock"
 						class:is-locked={settingsLocked}
 						aria-pressed={settingsLocked}
-						title={settingsLocked ? 'Pinned open. Click to unpin' : 'Pin open (ignores click-away and other panels)'}
+						title={settingsLocked ? i18n.t('common.pinned') : i18n.t('common.pinOpen')}
 						onclick={() => uiStore.toggleSettingsLock()}
 					>
 						<Icon name="pin" class="w-4 h-4" />
@@ -150,7 +151,7 @@
 					{:else}
 						<Icon name={item.icon} class="w-3.5 h-3.5" />
 					{/if}
-					<span>{item.label}</span>
+					<span>{i18n.t(item.label)}</span>
 				</button>
 			{/each}
 		</div>
@@ -163,7 +164,7 @@
 						class="overlay-split-lock"
 						class:is-locked={libraryLocked}
 						aria-pressed={libraryLocked}
-						title={libraryLocked ? 'Pinned open. Click to unpin' : 'Pin open (ignores click-away and other panels)'}
+						title={libraryLocked ? i18n.t('common.pinned') : i18n.t('common.pinOpen')}
 						onclick={() => uiStore.toggleLibraryLock()}
 					>
 						<Icon name="pin" class="w-4 h-4" />
@@ -173,11 +174,11 @@
 					type="button"
 					class="overlay-split-main"
 					class:is-open={libraryOpen}
-					title={libraryOpen ? `Close Library (${shortcut('L')})` : `Library (${shortcut('L')})`}
+					title={libraryOpen ? i18n.t('titlebar.closeLibrary', { key: shortcut('L') }) : i18n.t('titlebar.openLibrary', { key: shortcut('L') })}
 					onclick={() => uiStore.toggleLibrary(flush)}
 				>
 					<Icon name="bookOpen" class="w-3.5 h-3.5" />
-					<span>Library</span>
+					<span>{i18n.t('titlebar.library')}</span>
 				</button>
 			</div>
 		</div>

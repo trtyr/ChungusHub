@@ -40,5 +40,18 @@ export const en: Record<string, string> = {
 	'welcome.aboutLabel': 'About you',
 	'common.optional': 'optional',
 	'welcome.aboutPlaceholder': 'Appearance, presence, how you carry yourself…',
-	'welcome.createPersona': 'Create persona'
+	'welcome.createPersona': 'Create persona',
+
+	// layout · TitleBar
+	'nav.presetControls': 'Preset Controls',
+	'nav.storymap': 'Story Map',
+	'nav.memory': 'Memory',
+	'titlebar.settings': 'Settings',
+	'titlebar.closeSettings': 'Close Settings ({key})',
+	'titlebar.openSettings': 'Settings ({key})',
+	'common.pinned': 'Pinned open. Click to unpin',
+	'common.pinOpen': 'Pin open (ignores click-away and other panels)',
+	'titlebar.library': 'Library',
+	'titlebar.closeLibrary': 'Close Library ({key})',
+	'titlebar.openLibrary': 'Library ({key})'
 };

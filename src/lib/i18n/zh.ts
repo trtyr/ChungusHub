@@ -37,5 +37,18 @@ export const zh: Record<string, string> = {
 	'welcome.aboutLabel': '关于你',
 	'common.optional': '可选',
 	'welcome.aboutPlaceholder': '外貌、气质、举手投足的样子…',
-	'welcome.createPersona': '创建用户角色'
+	'welcome.createPersona': '创建用户角色',
+
+	// layout · TitleBar
+	'nav.presetControls': '预设控制',
+	'nav.storymap': '故事地图',
+	'nav.memory': '记忆',
+	'titlebar.settings': '设置',
+	'titlebar.closeSettings': '关闭设置（{key}）',
+	'titlebar.openSettings': '设置（{key}）',
+	'common.pinned': '已固定，点击取消固定',
+	'common.pinOpen': '固定打开（点击其他区域或其他面板不会将其收起）',
+	'titlebar.library': '资料库',
+	'titlebar.closeLibrary': '关闭资料库（{key}）',
+	'titlebar.openLibrary': '资料库（{key}）'
 };
