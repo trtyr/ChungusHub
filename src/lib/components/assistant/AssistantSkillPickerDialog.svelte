@@ -5,6 +5,7 @@
 	 * the caller hands it the rows and the direction, and it answers with the keys left ticked.
 	 */
 	import Dialog from '$lib/components/ui/Dialog.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 
@@ -24,9 +25,9 @@
 	let exporting = $derived(mode === 'export');
 	let note = $derived(
 		mode === 'defaults'
-			? 'The skills ChungusHub ships with, as they were shipped. Whatever you pick joins your list as a new skill; nothing you already have is touched.'
+			? i18n.t('asm.spDefaultsNote')
 			: mode === 'import'
-				? 'Whatever you pick joins your list as a new skill; nothing you already have is touched.'
+				? i18n.t('asm.spImportNote')
 				: ''
 	);
 
@@ -43,7 +44,7 @@
 	}
 </script>
 
-<Dialog {open} onClose={onCancel} title={mode === 'export' ? 'Export skills' : mode === 'import' ? 'Import skills' : 'Default skills'} size="md">
+<Dialog {open} onClose={onCancel} title={mode === 'export' ? i18n.t('asm.spExportTitle') : mode === 'import' ? i18n.t('asm.spImportTitle') : i18n.t('asm.spDefaultsTitle')} size="md">
 	<div class="sp-body">
 		{#if note}
 			<p class="sp-note">{note}</p>
@@ -52,8 +53,8 @@
 		<div class="sp-head">
 			<span class="sp-count">{selected.length} of {rows.length} selected</span>
 			<div class="sp-bulk">
-				<button type="button" class="sp-bulk-btn" onclick={() => (selected = rows.map((r) => r.key))} disabled={selected.length === rows.length}>All</button>
-				<button type="button" class="sp-bulk-btn" onclick={() => (selected = [])} disabled={selected.length === 0}>None</button>
+				<button type="button" class="sp-bulk-btn" onclick={() => (selected = rows.map((r) => r.key))} disabled={selected.length === rows.length}>{i18n.t('asm.spAll')}</button>
+				<button type="button" class="sp-bulk-btn" onclick={() => (selected = [])} disabled={selected.length === 0}>{i18n.t('asm.spNone')}</button>
 			</div>
 		</div>
 
@@ -73,10 +74,10 @@
 		</div>
 
 		<div class="sp-actions">
-			<Button variant="ghost" onclick={onCancel}>Cancel</Button>
+			<Button variant="ghost" onclick={onCancel}>{i18n.t('common.cancel')}</Button>
 			<Button variant="primary" onclick={() => onConfirm(selected)} disabled={selected.length === 0}>
 				<Icon name={exporting ? 'download' : 'plus'} class="w-4 h-4" />
-				{exporting ? 'Export' : 'Add'}
+				{exporting ? i18n.t('asm.spExport') : i18n.t('asm.spAdd')}
 			</Button>
 		</div>
 	</div>
