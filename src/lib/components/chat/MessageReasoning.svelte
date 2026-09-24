@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import { renderMarkdown } from '$lib/utils/markdown';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { renderedHtml } from '$lib/actions/renderedHtml';
 	import { countTokens } from '$lib/tokenizer';
 	import { generalSettingsStore } from '$lib/stores/general-settings.svelte';
@@ -32,9 +33,9 @@
 			name="sparkles"
 			class="w-4 h-4 text-text-muted flex-shrink-0 {isStreaming ? 'animate-pulse' : ''}"
 		/>
-		<span class="reasoning-label">{isStreaming ? 'Thinking' : 'Reasoning'}</span>
+		<span class="reasoning-label">{isStreaming ? i18n.t('chat.thinking') : i18n.t('chat.reasoning')}</span>
 		{#if showTokens}
-			<span class="reasoning-tokens">~{thinkingTokens} tokens</span>
+			<span class="reasoning-tokens">{i18n.t('chat.tokensEstimateLabel', { n: thinkingTokens })}</span>
 		{/if}
 		<Icon
 			name="chevronRight"

@@ -27,6 +27,7 @@
 	import Button from '$lib/components/ui/Button.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import CopyButton from '$lib/components/debug/CopyButton.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import PromptReviewCard from './PromptReviewCard.svelte';
 	import { promptHoldStore } from '$lib/stores/promptHold.svelte';
 	import { viewport } from '$lib/stores/viewport.svelte';
@@ -182,7 +183,7 @@
 			<div class="head">
 				<div class="identity">
 					<Icon name={pending.gate.icon} class="w-4 h-4 shrink-0 text-text-secondary" />
-					<h2 class="title">Review this prompt</h2>
+					<h2 class="title">{i18n.t('chat.reviewPrompt')}</h2>
 					<span class="gate">{pending.gate.name}</span>
 					<span class="spacer"></span>
 					<!-- Grouped so a phone can drop the pair onto its own line whole, the same rule
@@ -194,10 +195,10 @@
 								class:on={mode === 'pretty'}
 								type="button"
 								disabled={mode === 'json' && jsonError !== ''}
-								title={jsonError ? 'Fix the JSON first' : 'Edit message by message'}
+								title={jsonError ? i18n.t('chat.fixJsonFirst') : i18n.t('chat.editByMessage')}
 								onclick={() => (mode = 'pretty')}
 							>
-								Pretty
+								{i18n.t('chat.pretty')}
 							</button>
 							<button class="seg-btn" class:on={mode === 'json'} type="button" onclick={showJson}>
 								JSON
@@ -208,8 +209,8 @@
 								class="fold"
 								type="button"
 								onclick={toggleAll}
-								title={allOpen ? 'Collapse every message' : 'Open every message'}
-								aria-label={allOpen ? 'Collapse every message' : 'Open every message'}
+								title={allOpen ? i18n.t('chat.foldAll') : i18n.t('chat.unfoldAll')}
+								aria-label={allOpen ? i18n.t('chat.foldAll') : i18n.t('chat.unfoldAll')}
 							>
 								<Icon name={allOpen ? 'chevronUp' : 'chevronDown'} class="w-4 h-4" strokeWidth={2} />
 							</button>
@@ -220,15 +221,15 @@
 								type="button"
 								aria-pressed={wrap}
 								onclick={() => (wrap = !wrap)}
-								title={wrap ? 'Let long lines run off the edge' : 'Break long lines to fit'}
+								title={wrap ? i18n.t('chat.wrapOn') : i18n.t('chat.wrapOff')}
 							>
-								Wrap
+								{i18n.t('chat.wrap')}
 							</button>
 						{/if}
 						<CopyButton
-							label={viewport.isMobile ? undefined : 'Copy'}
+							label={viewport.isMobile ? undefined : i18n.t('common.copy')}
 							text={() => promptToJson(messages)}
-							title="Copy the whole request as JSON"
+							title={i18n.t('chat.copyJsonTitle')}
 						/>
 					</div>
 				</div>
@@ -262,7 +263,7 @@
 						class:json--nowrap={!wrap}
 						value={jsonText}
 						spellcheck="false"
-						aria-label="The whole request as JSON"
+						aria-label={i18n.t('chat.jsonAria')}
 						oninput={(e) => readJson(e.currentTarget.value)}
 					></textarea>
 				{/if}
@@ -280,11 +281,11 @@
 				{#if edited}
 					<button class="reset" type="button" onclick={reset}>
 						<Icon name="refresh" class="w-3.5 h-3.5" />
-						Undo my edits
+						{i18n.t('chat.undoEdits')}
 					</button>
 				{/if}
 				<div class="acts">
-					<Button variant="secondary" size="sm" onclick={() => promptHoldStore.cancel()}>Cancel</Button>
+					<Button variant="secondary" size="sm" onclick={() => promptHoldStore.cancel()}>{i18n.t('common.cancel')}</Button>
 					<!-- Deliberately not autofocused: the dialog opens with the keyboard on the head,
 					     so a stray Enter reads the prompt rather than sending it. ⌘/Ctrl+Enter is
 					     the key that sends, from anywhere in here. -->

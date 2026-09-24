@@ -11,6 +11,7 @@
 	import { imageService } from '$lib/services/imageService';
 	import { focusTrap } from '$lib/actions/focusTrap';
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	/** The shape a portrait usually is, held for the frame before the file reports its own. */
 	const FALLBACK_ASPECT = 3 / 4;
@@ -63,7 +64,7 @@
 				type="button"
 				class="portrait-close"
 				onclick={() => portraitViewerStore.close()}
-				aria-label="Close portrait"
+				aria-label={i18n.t('chat.closePortrait')}
 			>
 				<Icon name="close" class="w-4 h-4" strokeWidth={2} />
 			</button>

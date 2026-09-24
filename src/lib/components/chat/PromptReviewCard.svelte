@@ -17,6 +17,7 @@
 	 */
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import { autoResize } from '$lib/actions/autoResize';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { imageService } from '$lib/services/imageService';
 	import { roleColor } from '$lib/debug/format';
 	import type { LLMMessage } from '$lib/types/llm';
@@ -56,7 +57,7 @@
 			<span class="role">{message.role}</span>
 			<span class="num">#{index + 1}</span>
 			{#if images.length}
-				<span class="img-chip" title={`${images.length} attachment(s) on this message`}>
+				<span class="img-chip" title={i18n.t('chat.attachCount', { n: images.length })}>
 					<Icon name="image" class="w-3 h-3 shrink-0" strokeWidth={1.75} />
 					{images.length}
 				</span>
@@ -68,8 +69,8 @@
 			class="drop"
 			type="button"
 			onclick={onRemove}
-			title="Leave this message out of the request"
-			aria-label={`Leave message ${index + 1} out of the request`}
+			title={i18n.t('chat.leaveOut')}
+			aria-label={i18n.t('chat.leaveOutN', { n: index + 1 })}
 		>
 			<Icon name="trash" class="w-3.5 h-3.5" />
 		</button>
@@ -101,7 +102,7 @@
 			class="body"
 			value={message.content}
 			spellcheck="false"
-			aria-label={`Message ${index + 1}, ${message.role}`}
+			aria-label={i18n.t('chat.msgNRole', { n: index + 1, role: message.role === 'user' ? i18n.t('role.you') : i18n.t('role.reply') })}
 			oninput={(e) => onEdit(e.currentTarget.value)}
 			use:autoResize={{ maxHeight: 520, value: message.content }}
 		></textarea>

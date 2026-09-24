@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import { toastStore } from '$lib/stores/toast.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	interface Props {
 		onEdit: () => void;
@@ -27,7 +28,7 @@
 		onCopy,
 		onRegenerate,
 		showRegenerate = false,
-		regenerateLabel = 'Retry',
+		regenerateLabel,
 		onContinue,
 		showContinue = false,
 		onBranch,
@@ -42,7 +43,7 @@
 		try {
 			await onCopy();
 		} catch {
-			toastStore.error('Copy failed. Select the text and copy it by hand.');
+			toastStore.error(i18n.t('chat.copyFailed'));
 			return;
 		}
 		justCopied = true;
@@ -50,13 +51,13 @@
 	}
 </script>
 
-<div class="message-actions" role="toolbar" aria-label="Message actions">
+<div class="message-actions" role="toolbar" aria-label={i18n.t('chat.actionsAria')}>
 	<button
 		type="button"
 		class="action-btn"
 		onclick={onEdit}
-		aria-label="Edit message"
-		title="Edit"
+		aria-label={i18n.t('chat.editMessage')}
+		title={i18n.t('chat.edit')}
 	>
 		<Icon name="edit" class="w-3.5 h-3.5" strokeWidth={1.75} />
 		<span class="action-label">Edit</span>
@@ -66,8 +67,8 @@
 		type="button"
 		class="action-btn"
 		onclick={handleCopy}
-		aria-label="Copy message"
-		title={justCopied ? 'Copied!' : 'Copy'}
+		aria-label={i18n.t('chat.copyMessage')}
+		title={justCopied ? i18n.t('chat.copied') : i18n.t('common.copy')}
 	>
 		<Icon name={justCopied ? 'check' : 'copy'} class="w-3.5 h-3.5" strokeWidth={1.75} />
 		<span class="action-label">{justCopied ? 'Copied' : 'Copy'}</span>
@@ -78,8 +79,8 @@
 			type="button"
 			class="action-btn"
 			onclick={onRegenerate}
-			aria-label={regenerateLabel}
-			title={regenerateLabel}
+			aria-label={regenerateLabel ?? i18n.t('chat.retry')}
+			title={regenerateLabel ?? i18n.t('chat.retry')}
 		>
 			<Icon name="refresh" class="w-3.5 h-3.5" strokeWidth={1.75} />
 			<span class="action-label">{regenerateLabel}</span>
@@ -91,8 +92,8 @@
 			type="button"
 			class="action-btn"
 			onclick={onContinue}
-			aria-label="Continue this reply"
-			title="Continue: extend this reply from where it stopped"
+			aria-label={i18n.t('chat.continueReply')}
+			title={i18n.t('chat.continueTitle')}
 		>
 			<Icon name="feather" class="w-3.5 h-3.5" strokeWidth={1.75} />
 			<span class="action-label">Continue</span>
@@ -104,8 +105,8 @@
 			type="button"
 			class="action-btn"
 			onclick={onBranch}
-			aria-label="Branch this turn"
-			title="Branch: fork this turn into a new take you can rewrite"
+			aria-label={i18n.t('chat.branchTurn')}
+			title={i18n.t('chat.branchTitle')}
 		>
 			<Icon name="branch" class="w-3.5 h-3.5" strokeWidth={1.75} />
 			<span class="action-label">Branch</span>
@@ -116,8 +117,8 @@
 		type="button"
 		class="action-btn action-btn-danger"
 		onclick={onDelete}
-		aria-label="Delete message"
-		title="Delete"
+		aria-label={i18n.t('chat.deleteMessage')}
+		title={i18n.t('common.delete')}
 	>
 		<Icon name="trash" class="w-3.5 h-3.5" strokeWidth={1.75} />
 		<span class="action-label">Delete</span>

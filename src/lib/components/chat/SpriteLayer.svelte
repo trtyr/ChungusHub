@@ -19,6 +19,7 @@
 	 */
 	import { spriteStore } from '$lib/stores/sprites.svelte';
 	import { imageService } from '$lib/services/imageService';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	const path = $derived(spriteStore.spritePath);
 	// The stored file, since sprites are uploaded without a thumbnail (a jpeg thumbnail would
@@ -33,17 +34,17 @@
 	const status = $derived(spriteStore.status);
 	const statusLabel = $derived(
 		{
-			read: 'Sprite is up to date',
-			reading: 'Reading this reply…',
-			failed: 'Could not read this reply. Click to read it again',
-			idle: 'Waiting for a reply to read'
+			read: i18n.t('chat.spriteUpdated'),
+			reading: i18n.t('chat.spriteReading'),
+			failed: i18n.t('chat.spriteFailed'),
+			idle: i18n.t('chat.spriteIdle')
 		}[status]
 	);
 </script>
 
 {#if url}
 	<div class="sprite-layer fade-in">
-		<img src={url} alt={spriteStore.characterName ?? 'Sprite'} class="sprite-image" />
+		<img src={url} alt={spriteStore.characterName ?? i18n.t('chat.spriteAlt')} class="sprite-image" />
 		<!-- The engine's state, in the corner of the picture it produced. Without it a dead
 		     engine looks exactly like a calm one: the face simply holds the last thing it read.
 		     The failed one is a button because that state is the one the reader can end. -->

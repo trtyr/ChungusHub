@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	interface Props {
 		current: number;
@@ -10,14 +11,14 @@
 	let { current, total, onNavigate }: Props = $props();
 </script>
 
-<div class="branch-nav" role="group" aria-label="Response branch navigation">
+<div class="branch-nav" role="group" aria-label={i18n.t('chat.branchNavAria')}>
 	<button
 		type="button"
 		class="branch-btn"
 		disabled={current === 0}
 		onclick={() => onNavigate('prev')}
-		aria-label="Previous branch"
-		title="Previous"
+		aria-label={i18n.t('chat.prevBranch')}
+		title={i18n.t('chat.prev')}
 	>
 		<Icon name="chevronLeft" class="w-3.5 h-3.5" strokeWidth={1.75} />
 	</button>
@@ -29,8 +30,8 @@
 		class="branch-btn"
 		disabled={current === total - 1}
 		onclick={() => onNavigate('next')}
-		aria-label="Next branch"
-		title="Next"
+		aria-label={i18n.t('chat.nextBranch')}
+		title={i18n.t('chat.next')}
 	>
 		<Icon name="chevronRight" class="w-3.5 h-3.5" strokeWidth={1.75} />
 	</button>
