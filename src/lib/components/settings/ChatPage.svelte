@@ -68,85 +68,87 @@
 
 	const pct = (v: number) => `${Math.round(v * 100)}%`;
 
-	const CHAT_STYLES: { value: ChatStyle; label: string; hint: string }[] = [
+	import { i18n } from '$lib/i18n/i18n.svelte';
+
+	const CHAT_STYLES: { value: ChatStyle; label: string; hint: string }[] = $derived([
 		{
 			value: 'bubbles',
-			label: 'Bubbles',
-			hint: 'Cozy chat bubbles, you on the right and them on the left.'
+			label: i18n.t('chatpg.styleBubbles'),
+			hint: i18n.t('chatpg.styleBubblesHint')
 		},
 		{
 			value: 'flat',
-			label: 'Flat',
-			hint: 'The same bubbles, both portraits down the left.'
+			label: i18n.t('chatpg.styleFlat'),
+			hint: i18n.t('chatpg.styleFlatHint')
 		},
 		{
 			value: 'portrait',
-			label: 'Portraits',
-			hint: 'Forum-log cards with large portraits, every turn full width.'
+			label: i18n.t('chatpg.stylePortraits'),
+			hint: i18n.t('chatpg.stylePortraitsHint')
 		},
 		{
 			value: 'manuscript',
-			label: 'Manuscript',
-			hint: 'No cards, no avatars, just prose like a book page.'
+			label: i18n.t('chatpg.styleManuscript'),
+			hint: i18n.t('chatpg.styleManuscriptHint')
 		}
-	];
+	]);
 
-	const PADDING_OPTIONS = [
-		{ value: 'compact', label: 'Compact' },
-		{ value: 'normal', label: 'Normal' },
-		{ value: 'roomy', label: 'Roomy' }
-	];
+	const PADDING_OPTIONS = $derived([
+		{ value: 'compact', label: i18n.t('chatpg.compact') },
+		{ value: 'normal', label: i18n.t('chatpg.normal') },
+		{ value: 'roomy', label: i18n.t('chatpg.roomy') }
+	]);
 
-	const BORDER_OPTIONS = [
-		{ value: 'none', label: 'None', title: 'No outline, the card is pure fill' },
-		{ value: 'hairline', label: 'Hairline', title: 'A single subtle pixel' },
-		{ value: 'bold', label: 'Bold', title: 'Two pixels of the full border color' }
-	];
+	const BORDER_OPTIONS = $derived([
+		{ value: 'none', label: i18n.t('chatpg.none'), title: i18n.t('chatpg.noneBorderTip') },
+		{ value: 'hairline', label: i18n.t('chatpg.hairline'), title: i18n.t('chatpg.hairlineTip') },
+		{ value: 'bold', label: i18n.t('chatpg.borderBold'), title: i18n.t('chatpg.boldTip') }
+	]);
 
-	const SHADOW_OPTIONS = [
-		{ value: 'none', label: 'None' },
-		{ value: 'soft', label: 'Soft' },
-		{ value: 'lifted', label: 'Lifted', title: 'A deeper drop shadow, cards float off the page' }
-	];
+	const SHADOW_OPTIONS = $derived([
+		{ value: 'none', label: i18n.t('chatpg.none') },
+		{ value: 'soft', label: i18n.t('chatpg.soft') },
+		{ value: 'lifted', label: i18n.t('chatpg.lifted'), title: i18n.t('chatpg.liftedTip') }
+	]);
 
-	const SPACING_OPTIONS = [
-		{ value: 'compact', label: 'Compact' },
-		{ value: 'cozy', label: 'Cozy' },
-		{ value: 'roomy', label: 'Roomy' }
-	];
+	const SPACING_OPTIONS = $derived([
+		{ value: 'compact', label: i18n.t('chatpg.compact') },
+		{ value: 'cozy', label: i18n.t('chatpg.cozy') },
+		{ value: 'roomy', label: i18n.t('chatpg.roomy') }
+	]);
 
-	const AVATAR_SHAPES = [
-		{ value: 'portrait', label: 'Portrait', title: 'Tall 2:3 frame' },
-		{ value: 'square', label: 'Square' },
-		{ value: 'circle', label: 'Circle' }
-	];
+	const AVATAR_SHAPES = $derived([
+		{ value: 'portrait', label: i18n.t('chatpg.portraitShape'), title: i18n.t('chatpg.portraitShapeTip') },
+		{ value: 'square', label: i18n.t('chatpg.square') },
+		{ value: 'circle', label: i18n.t('chatpg.circle') }
+	]);
 
-	const SPEAKER_LABELS = [
-		{ value: 'pill', label: 'Pill', title: 'An outlined chip around the name' },
-		{ value: 'plain', label: 'Plain', title: 'Just the name, no chrome' }
-	];
+	const SPEAKER_LABELS = $derived([
+		{ value: 'pill', label: i18n.t('chatpg.pill'), title: i18n.t('chatpg.pillTip') },
+		{ value: 'plain', label: i18n.t('chatpg.plain'), title: i18n.t('chatpg.plainTip') }
+	]);
 
-	const ACTION_OPTIONS = [
-		{ value: 'hover', label: 'On hover' },
-		{ value: 'always', label: 'Always' }
-	];
+	const ACTION_OPTIONS = $derived([
+		{ value: 'hover', label: i18n.t('chatpg.onHover') },
+		{ value: 'always', label: i18n.t('chatpg.always') }
+	]);
 
-	const PAGER_OPTIONS = [
-		{ value: 'always', label: 'Always' },
-		{ value: 'hover', label: 'On hover' }
-	];
+	const PAGER_OPTIONS = $derived([
+		{ value: 'always', label: i18n.t('chatpg.always') },
+		{ value: 'hover', label: i18n.t('chatpg.onHover') }
+	]);
 
-	const TIMESTAMP_FORMATS = [
-		{ value: 'relative', label: 'Relative', title: 'Ticks on its own, like "5 minutes ago"' },
-		{ value: 'short', label: 'Short', title: 'Numeric date and time' },
-		{ value: 'full', label: 'Full', title: 'Spelled-out month, day, year and time' }
-	];
+	const TIMESTAMP_FORMATS = $derived([
+		{ value: 'relative', label: i18n.t('chatpg.relative'), title: i18n.t('chatpg.relativeTip') },
+		{ value: 'short', label: i18n.t('chatpg.short'), title: i18n.t('chatpg.shortTip') },
+		{ value: 'full', label: i18n.t('chatpg.full'), title: i18n.t('chatpg.fullTip') }
+	]);
 
-	const CLOCK_FORMATS = [
-		{ value: 'auto', label: 'Auto', title: "Whatever your language normally uses" },
-		{ value: '12', label: '12-hour' },
-		{ value: '24', label: '24-hour' }
-	];
+	const CLOCK_FORMATS = $derived([
+		{ value: 'auto', label: i18n.t('chatpg.clockAuto'), title: i18n.t('chatpg.clockAutoTip') },
+		{ value: '12', label: i18n.t('chatpg.clock12') },
+		{ value: '24', label: i18n.t('chatpg.clock24') }
+	]);
 
 	// One vocabulary for all three accents, and every option carries the color it means
 	// rather than only naming it: "Default" tells the reader nothing on its own, and the
@@ -155,10 +157,10 @@
 	// by the browser rather than copied here (the quote default comes from presets.ts,
 	// the one place that expression exists).
 	const proseSources = (custom: string, shipped: string) => [
-		{ value: 'off', label: 'Off', swatch: 'var(--color-text-primary)' },
-		{ value: 'default', label: 'Default', swatch: shipped },
-		{ value: 'accent', label: 'Accent', swatch: 'var(--color-accent)' },
-		{ value: 'custom', label: 'Custom', swatch: custom }
+		{ value: 'off', label: i18n.t('chatpg.proseOff'), swatch: 'var(--color-text-primary)' },
+		{ value: 'default', label: i18n.t('chatpg.proseDefault'), swatch: shipped },
+		{ value: 'accent', label: i18n.t('chatpg.proseAccent'), swatch: 'var(--color-accent)' },
+		{ value: 'custom', label: i18n.t('chatpg.proseCustom'), swatch: custom }
 	];
 </script>
 
@@ -172,8 +174,8 @@
 		class:face-italic={t.kind === 'italic'}
 		class:is-active-tint={t.on}
 		aria-pressed={t.on}
-		aria-label={t.kind === 'bold' ? 'Bold' : 'Italic'}
-		title={t.kind === 'bold' ? 'Bold' : 'Italic'}
+		aria-label={t.kind === 'bold' ? i18n.t('chatpg.bold') : i18n.t('chatpg.italic')}
+		title={t.kind === 'bold' ? i18n.t('chatpg.bold') : i18n.t('chatpg.italic')}
 		onclick={() => t.onchange(!t.on)}
 	>
 		{t.kind === 'bold' ? 'B' : 'I'}
@@ -221,7 +223,7 @@
 		<div class="card-head">
 			<span class="card-title">Reading Column</span>
 			<InfoTip
-				text="The band the story is read in: how wide it runs, how far it is shaded away from whatever sits behind it, and the air between turns."
+				text={i18n.t('chatpg.readingTip')}
 			/>
 		</div>
 
@@ -234,7 +236,7 @@
 			{#if !viewport.isMobile}
 				<div class="slider-block">
 					<div class="slider-top">
-						<label for="chat-width" class="slider-label">Chat width</label>
+						<label for="chat-width" class="slider-label">{i18n.t('chatpg.chatWidth')}</label>
 						<span class="slider-value">{pct(appearance.chatWidth)}</span>
 					</div>
 					<input
@@ -257,9 +259,9 @@
 			<div class="slider-block">
 				<div class="slider-top">
 					<div class="slider-label-wrap">
-						<label for="shade-opacity" class="slider-label">Column shade</label>
+						<label for="shade-opacity" class="slider-label">{i18n.t('chatpg.columnShade')}</label>
 						<InfoTip
-							text="How solid the tinted band behind the story reads. At zero the background image shows straight through the text."
+							text={i18n.t('chatpg.columnShadeTip')}
 						/>
 					</div>
 					<span class="slider-value">{pct(appearance.shadeOpacity)}</span>
@@ -281,7 +283,7 @@
 			</div>
 
 			<div class="sub-block">
-				<span class="section-label">Space between messages</span>
+				<span class="section-label">{i18n.t('chatpg.spaceBetween')}</span>
 				<PillRow
 					options={SPACING_OPTIONS}
 					current={appearance.messageSpacing}
@@ -294,13 +296,13 @@
 
 	<section class="card" data-setting="story-type">
 		<div class="card-head">
-			<span class="card-title">Story Type</span>
-			<InfoTip text="Fonts other than the default download the first time you pick them." />
+			<span class="card-title">{i18n.t('chatpg.storyType')}</span>
+			<InfoTip text={i18n.t('chatpg.storyTypeTip')} />
 		</div>
 
 		<div class="card-body">
 			<div class="slider-block">
-				<label for="story-font" class="slider-label">Story font</label>
+				<label for="story-font" class="slider-label">{i18n.t('chatpg.storyFont')}</label>
 				<Select
 					id="story-font"
 					variant="compact"
@@ -316,7 +318,7 @@
 
 			<div class="slider-block">
 				<div class="slider-top">
-					<label for="text-size" class="slider-label">Text size</label>
+					<label for="text-size" class="slider-label">{i18n.t('chatpg.textSize')}</label>
 					<span class="slider-value">{pct(appearance.fontScale)}</span>
 				</div>
 				<input
@@ -337,7 +339,7 @@
 
 			<div class="slider-block">
 				<div class="slider-top">
-					<label for="line-height" class="slider-label">Line height</label>
+					<label for="line-height" class="slider-label">{i18n.t('chatpg.lineHeight')}</label>
 					<span class="slider-value">{appearance.lineHeight.toFixed(2)}</span>
 				</div>
 				<input
@@ -358,7 +360,7 @@
 
 			<div class="slider-block">
 				<div class="slider-top">
-					<label for="paragraph-gap" class="slider-label">Paragraph gap</label>
+					<label for="paragraph-gap" class="slider-label">{i18n.t('chatpg.paragraphGap')}</label>
 					<span class="slider-value">{appearance.paragraphSpacing.toFixed(2)}em</span>
 				</div>
 				<input
@@ -382,10 +384,10 @@
 
 	<section class="card" data-setting="chat-style">
 		<div class="card-head">
-			<span class="card-title">Chat Style</span>
-			<InfoTip text="How a turn renders. It also decides which of the cards below apply." />
+			<span class="card-title">{i18n.t('chatpg.chatStyleTitle')}</span>
+			<InfoTip text={i18n.t('chatpg.chatStyleTip')} />
 		</div>
-		<div class="style-grid" role="radiogroup" aria-label="Chat style">
+		<div class="style-grid" role="radiogroup" aria-label={i18n.t('chatpg.chatStyleAria')}>
 			{#each CHAT_STYLES as style (style.value)}
 				<button
 					type="button"
@@ -442,14 +444,14 @@
 	{:else}
 		<section class="card" data-setting="message-shape">
 			<div class="card-head">
-				<span class="card-title">Message Shape</span>
-				<InfoTip text="The geometry of a message card, before any color lands on it." />
+				<span class="card-title">{i18n.t('chatpg.messageShape')}</span>
+				<InfoTip text={i18n.t('chatpg.messageShapeTip')} />
 			</div>
 
 			<div class="card-body">
 				<div class="slider-block">
 					<div class="slider-top">
-						<label for="bubble-radius" class="slider-label">Card corners</label>
+						<label for="bubble-radius" class="slider-label">{i18n.t('chatpg.cardCorners')}</label>
 						<span class="slider-value">{pct(appearance.bubbleRadius)}</span>
 					</div>
 					<input
@@ -469,7 +471,7 @@
 				</div>
 
 				<div class="sub-block">
-					<span class="section-label">Inner padding</span>
+					<span class="section-label">{i18n.t('chatpg.innerPadding')}</span>
 					<PillRow
 						options={PADDING_OPTIONS}
 						current={appearance.bubblePadding}
@@ -479,7 +481,7 @@
 				</div>
 
 				<div class="sub-block">
-					<span class="section-label">Outline</span>
+					<span class="section-label">{i18n.t('chatpg.outline')}</span>
 					<PillRow
 						options={BORDER_OPTIONS}
 						current={appearance.bubbleBorder}
@@ -489,7 +491,7 @@
 				</div>
 
 				<div class="sub-block">
-					<span class="section-label">Shadow</span>
+					<span class="section-label">{i18n.t('chatpg.shadow')}</span>
 					<PillRow
 						options={SHADOW_OPTIONS}
 						current={appearance.bubbleShadow}
@@ -503,7 +505,7 @@
 				     shadow above it fade along with the fill. -->
 				<div class="slider-block">
 					<div class="slider-top">
-						<label for="bubble-opacity" class="slider-label">Card opacity</label>
+						<label for="bubble-opacity" class="slider-label">{i18n.t('chatpg.cardOpacity')}</label>
 						<span class="slider-value">{pct(appearance.bubbleOpacity)}</span>
 					</div>
 					<input
@@ -530,7 +532,7 @@
 				{#if bubbleLike}
 					<div class="slider-block">
 						<div class="slider-top">
-							<label for="bubble-width" class="slider-label">Card width</label>
+							<label for="bubble-width" class="slider-label">{i18n.t('chatpg.cardWidth')}</label>
 							<span class="slider-value">{pct(appearance.bubbleWidth)}</span>
 						</div>
 						<input
@@ -554,14 +556,14 @@
 
 		<section class="card" data-setting="message-colors">
 			<div class="card-head">
-				<span class="card-title">Message Colors</span>
-				<InfoTip text="Tints mix into the palette's own color instead of replacing it, so a theme switch carries them along and text never lands on an unreadable card." />
+				<span class="card-title">{i18n.t('chatpg.messageColors')}</span>
+				<InfoTip text={i18n.t('chatpg.messageColorsTip')} />
 			</div>
 
 			<div class="card-body">
 				<div class="slider-block">
 					<div class="slider-top">
-						<label for="user-tint" class="slider-label">Your message tint</label>
+						<label for="user-tint" class="slider-label">{i18n.t('chatpg.yourTint')}</label>
 						<!-- Swatch rides the right rail beside the amount, not the end of the
 						     label: label lengths differ, so there it landed at a different x on
 						     every row and read as something dropped in the gap. Here the two
@@ -594,7 +596,7 @@
 
 				<div class="slider-block">
 					<div class="slider-top">
-						<label for="assistant-tint" class="slider-label">Character message tint</label>
+						<label for="assistant-tint" class="slider-label">{i18n.t('chatpg.charTint')}</label>
 						<span class="slider-trailing">
 							<ColorSwatchPicker
 								value={appearance.assistantBubbleTint}
@@ -626,13 +628,13 @@
 
 		<section class="card" data-setting="message-avatars">
 			<div class="card-head">
-				<span class="card-title">Portraits</span>
-				<InfoTip text="The speaker portrait beside each turn. With it off, the message number and generation timer move into the meta row instead of vanishing." />
+				<span class="card-title">{i18n.t('chatpg.portraitsTitle')}</span>
+				<InfoTip text={i18n.t('chatpg.portraitsTip')} />
 			</div>
 
 			<div class="card-body">
 				<div class="toggle-row" use:toggleRow>
-					<span class="slider-label">Show portraits</span>
+					<span class="slider-label">{i18n.t('chatpg.showPortraits')}</span>
 					<Toggle
 						checked={appearance.showAvatars}
 						label="Show portraits"
@@ -644,7 +646,7 @@
 					<!-- The Portraits chat style owns its in-card 2:3 frame; only size applies there. -->
 					{#if bubbleLike}
 						<div class="sub-block">
-							<span class="section-label">Shape</span>
+							<span class="section-label">{i18n.t('chatpg.shape')}</span>
 							<PillRow
 								options={AVATAR_SHAPES}
 								current={appearance.avatarShape}
@@ -656,7 +658,7 @@
 
 					<div class="slider-block">
 						<div class="slider-top">
-							<label for="avatar-size" class="slider-label">Size</label>
+							<label for="avatar-size" class="slider-label">{i18n.t('chatpg.size')}</label>
 							<span class="slider-value">{pct(appearance.avatarSize)}</span>
 						</div>
 						<input
@@ -681,8 +683,8 @@
 
 	<section class="card" data-setting="story-text">
 		<div class="card-head">
-			<span class="card-title">Story Text</span>
-			<InfoTip text="A custom color is used exactly as picked, never mixed into the palette." />
+			<span class="card-title">{i18n.t('chatpg.storyText')}</span>
+			<InfoTip text={i18n.t('chatpg.storyTextTip')} />
 		</div>
 
 		<div class="card-body">
@@ -706,7 +708,7 @@
 
 			<div class="accent-list">
 				{@render proseAccent({
-					label: 'Quoted speech',
+					label: i18n.t('chatpg.quotedSpeech'),
 					live: '--prose-quote-color',
 					source: appearance.quoteColorSource,
 					color: appearance.quoteColor,
@@ -720,7 +722,7 @@
 				})}
 
 				{@render proseAccent({
-					label: 'Emphasis',
+					label: i18n.t('chatpg.emphasis'),
 					live: '--prose-em-color',
 					source: appearance.emphasisColorSource,
 					color: appearance.emphasisColor,
@@ -734,7 +736,7 @@
 				})}
 
 				{@render proseAccent({
-					label: 'Strong text',
+					label: i18n.t('chatpg.strongText'),
 					live: '--prose-strong-color',
 					source: appearance.strongColorSource,
 					color: appearance.strongColor,
@@ -752,7 +754,7 @@
 			     whatever sits behind it, not one run being decorated. -->
 			<div class="slider-block">
 				<div class="slider-top">
-					<label for="prose-shadow" class="slider-label">Text shadow</label>
+					<label for="prose-shadow" class="slider-label">{i18n.t('chatpg.textShadow')}</label>
 					<span class="slider-value">{pct(appearance.proseShadow)}</span>
 				</div>
 				<input
@@ -779,13 +781,13 @@
 
 	<section class="card" data-setting="message-chrome">
 		<div class="card-head">
-			<span class="card-title">Speaker &amp; Controls</span>
-			<InfoTip text="The name above a turn and the controls under it. Manuscript keeps its own small-caps speaker label whatever you pick here." />
+			<span class="card-title">{i18n.t('chatpg.speakerControls')}</span>
+			<InfoTip text={i18n.t('chatpg.speakerControlsTip')} />
 		</div>
 
 		<div class="card-body">
 			<div class="toggle-row" use:toggleRow>
-				<span class="slider-label">Show speaker name</span>
+				<span class="slider-label">{i18n.t('chatpg.showSpeaker')}</span>
 				<Toggle
 					checked={appearance.showSpeakerName}
 					label="Show speaker name"
@@ -795,7 +797,7 @@
 
 			{#if appearance.showSpeakerName}
 				<div class="sub-block">
-					<span class="section-label">Name style</span>
+					<span class="section-label">{i18n.t('chatpg.nameStyle')}</span>
 					<PillRow
 						options={SPEAKER_LABELS}
 						current={appearance.speakerLabel}
@@ -807,7 +809,7 @@
 				<!-- Casing is its own switch, not a third pill: it combines with either
 				     chrome, and an enum made "pill in small caps" unreachable. -->
 				<div class="toggle-row" use:toggleRow>
-					<span class="slider-label">Small caps</span>
+					<span class="slider-label">{i18n.t('chatpg.smallCaps')}</span>
 					<Toggle
 						checked={appearance.speakerCaps}
 						label="Small caps"
@@ -817,7 +819,7 @@
 			{/if}
 
 			<div class="sub-block">
-				<span class="section-label">Message actions</span>
+				<span class="section-label">{i18n.t('chatpg.messageActions')}</span>
 				<PillRow
 					options={ACTION_OPTIONS}
 					current={appearance.messageActions}
@@ -827,7 +829,7 @@
 			</div>
 
 			<div class="toggle-row" use:toggleRow>
-				<span class="slider-label">Compact actions</span>
+				<span class="slider-label">{i18n.t('chatpg.compactActions')}</span>
 				<Toggle
 					checked={appearance.compactActions}
 					label="Compact actions"
@@ -836,7 +838,7 @@
 			</div>
 
 			<div class="toggle-row" use:toggleRow>
-				<span class="slider-label">Keep actions in view</span>
+				<span class="slider-label">{i18n.t('chatpg.keepInView')}</span>
 				<Toggle
 					checked={appearance.floatingActions}
 					label="Keep actions in view"
@@ -845,7 +847,7 @@
 			</div>
 
 			<div class="sub-block">
-				<span class="section-label">Branch arrows</span>
+				<span class="section-label">{i18n.t('chatpg.branchArrows')}</span>
 				<PillRow
 					options={PAGER_OPTIONS}
 					current={appearance.branchPager}
@@ -860,7 +862,7 @@
 			{#if featurePromptsStore.memoryEnabled}
 				<div class="slider-block">
 					<div class="slider-top">
-						<label for="archived-opacity" class="slider-label">Memory ghost fade</label>
+						<label for="archived-opacity" class="slider-label">{i18n.t('chatpg.memoryGhost')}</label>
 						<span class="slider-value">{pct(appearance.archivedOpacity)}</span>
 					</div>
 					<input
@@ -888,14 +890,14 @@
 
 	<section class="card" data-setting="message-details">
 		<div class="card-head">
-			<span class="card-title">Message Details</span>
-			<InfoTip text="Small extras under each turn. Message numbers are positional, so deleting a turn renumbers everything below it." />
+			<span class="card-title">{i18n.t('chatpg.messageDetails')}</span>
+			<InfoTip text={i18n.t('chatpg.messageDetailsTip')} />
 		</div>
 
 		<div class="card-body">
 			<!-- Positional, not stable ids: deleting a turn renumbers everything below it. -->
 			<div class="toggle-row" use:toggleRow>
-				<span class="slider-label">Show message numbers</span>
+				<span class="slider-label">{i18n.t('chatpg.showNumbers')}</span>
 				<Toggle
 					checked={appearance.showMessageNumbers}
 					label="Show message numbers"
@@ -904,7 +906,7 @@
 			</div>
 
 			<div class="toggle-row" use:toggleRow>
-				<span class="slider-label">Show timestamps</span>
+				<span class="slider-label">{i18n.t('chatpg.showTimestamps')}</span>
 				<Toggle
 					checked={appearance.showTimestamps}
 					label="Show timestamps"
@@ -914,7 +916,7 @@
 
 			{#if appearance.showTimestamps}
 				<div class="sub-block">
-					<span class="section-label">Timestamp format</span>
+					<span class="section-label">{i18n.t('chatpg.timestampFormat')}</span>
 					<PillRow
 						options={TIMESTAMP_FORMATS}
 						current={appearance.timestampFormat}
@@ -925,7 +927,7 @@
 
 				{#if appearance.timestampFormat !== 'relative'}
 					<div class="sub-block">
-						<span class="section-label">Clock</span>
+						<span class="section-label">{i18n.t('chatpg.clock')}</span>
 						<PillRow
 							options={CLOCK_FORMATS}
 							current={appearance.clockFormat}
@@ -937,7 +939,7 @@
 			{/if}
 
 			<div class="toggle-row" use:toggleRow>
-				<span class="slider-label">Show model name</span>
+				<span class="slider-label">{i18n.t('chatpg.showModel')}</span>
 				<Toggle
 					checked={appearance.showModelName}
 					label="Show model name"
@@ -946,7 +948,7 @@
 			</div>
 
 			<div class="toggle-row" use:toggleRow>
-				<span class="slider-label">Show token count</span>
+				<span class="slider-label">{i18n.t('chatpg.showTokens')}</span>
 				<Toggle
 					checked={appearance.showTokenCount}
 					label="Show token count"
@@ -955,7 +957,7 @@
 			</div>
 
 			<div class="toggle-row" use:toggleRow>
-				<span class="slider-label">Show reasoning token count</span>
+				<span class="slider-label">{i18n.t('chatpg.showReasoningTokens')}</span>
 				<Toggle
 					checked={appearance.showReasoningTokenCount}
 					label="Show reasoning token count"
@@ -964,7 +966,7 @@
 			</div>
 
 			<div class="toggle-row" use:toggleRow>
-				<span class="slider-label">Show generation time</span>
+				<span class="slider-label">{i18n.t('chatpg.showGenTime')}</span>
 				<Toggle
 					checked={appearance.showGenerationTime}
 					label="Show generation time"
@@ -977,7 +979,7 @@
 	{#if themeStore.isModified('chat')}
 		<div class="page-reset" data-setting="chat-defaults">
 			<button type="button" class="link-btn" onclick={() => (confirmRestore = true)}>
-				Restore defaults
+				{i18n.t('if.restoreConfirm')}
 			</button>
 		</div>
 	{/if}
@@ -985,9 +987,9 @@
 
 <ConfirmDialog
 	open={confirmRestore}
-	title="Restore chat defaults"
-	message="The reading column, story type, message cards, story text and every message detail all go back to the shipped default. Interface settings are left alone. This cannot be undone."
-	confirmLabel="Restore defaults"
+	title={i18n.t('chatpg.restoreTitle')}
+	message={i18n.t('chatpg.restoreMsg')}
+	confirmLabel={i18n.t('if.restoreConfirm')}
 	variant="danger"
 	destructive
 	onConfirm={restoreDefaults}
