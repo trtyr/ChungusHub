@@ -5,6 +5,7 @@
 	import Button from '$lib/components/ui/Button.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import EmptyState from '$lib/components/ui/EmptyState.svelte';
+import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import InfoTip from '$lib/components/ui/InfoTip.svelte';
 	import PillRow from '$lib/components/ui/PillRow.svelte';
@@ -258,11 +259,11 @@
 		<div class="card-head">
 			<span class="card-title">Automatic Backups</span>
 			<InfoTip
-				text="A snapshot of everything you have made: chats, characters, lorebooks, presets and their pictures. One is always taken before the app upgrades its database, whatever this is set to. Your password and device list are never included."
+				text={i18n.t('bk.tip')}
 			/>
 		</div>
 		<div class="toggle-row" use:toggleRow>
-			<span class="toggle-label">Back up on a schedule</span>
+			<span class="toggle-label">{i18n.t('bk.schedule')}</span>
 			<Toggle
 				checked={settings.automatic}
 				onchange={(v) => backupStore.setAutomatic(v)}
@@ -280,7 +281,7 @@
 				/>
 				<div class="steppers">
 					<label class="stepper">
-						<span class="section-label">Keep the last</span>
+						<span class="section-label">{i18n.t('bk.keepLast')}</span>
 						<input
 							type="number"
 							class="input-base stepper-input"
@@ -291,7 +292,7 @@
 						/>
 					</label>
 					<label class="stepper">
-						<span class="section-label">Before upgrades, keep</span>
+						<span class="section-label">{i18n.t('bk.keepBeforeUpgrade')}</span>
 						<input
 							type="number"
 							class="input-base stepper-input"
@@ -308,7 +309,7 @@
 
 	<section class="card" data-setting="backup-history">
 		<div class="card-head">
-			<span class="card-title">History</span>
+			<span class="card-title">{i18n.t('bk.history')}</span>
 			{#if snapshots.length > 1 && !pendingRestoreId}
 				<button type="button" class="link-btn head-action" onclick={() => { selecting = !selecting; selected = new Set(); }}>
 					{selecting ? 'Done' : 'Select'}
@@ -322,7 +323,7 @@
 				class="input-base note"
 				bind:value={label}
 				maxlength="60"
-				placeholder="Optional note"
+				placeholder={i18n.t('bk.notePlaceholder')}
 				disabled={busy || !!job || !!pendingRestoreId}
 			/>
 			<Button size="sm" onclick={runBackup} disabled={busy || !!job || !!pendingRestoreId}>
@@ -349,7 +350,7 @@
 					<button type="button" class="link-btn" onclick={selectAll}>
 						{selected.size === snapshots.length ? 'Clear' : 'All'}
 					</button>
-					<Button size="sm" variant="danger" onclick={() => (bulkDeleteOpen = true)}>Delete</Button>
+					<Button size="sm" variant="danger" onclick={() => (bulkDeleteOpen = true)}>{i18n.t('bk.delete')}</Button>
 				</div>
 			</div>
 		{/if}
@@ -357,7 +358,7 @@
 		{#if !backupStore.loaded}
 			<div class="loading"><Spinner size="sm" /></div>
 		{:else if snapshots.length === 0}
-			<EmptyState icon="archive" title="No backups yet" size="sm">
+			<EmptyState icon="archive" title={i18n.t('bk.emptyTitle')} size="sm">
 				One is taken before the app ever upgrades its database. Take one now if you are about
 				to try something.
 			</EmptyState>
@@ -373,7 +374,7 @@
 									checked={selected.has(s.id)}
 									onchange={() => toggleSelected(s.id)}
 								/>
-								<span class="sr-only">Select the backup from {formatDate(s.createdAt)}</span>
+								<span class="sr-only">{i18n.t('bk.selectAria', { date: formatDate(s.createdAt) })}</span>
 							</label>
 						{:else}
 							<button
@@ -406,7 +407,7 @@
 								<div class="note-line">{s.label}</div>
 							{/if}
 							{#if stale}
-								<div class="warn">Written by a newer version of ChungusHub. Update the app to restore it.</div>
+								<div class="warn">{i18n.t('bk.staleWarn')}</div>
 							{:else if s.warnings.length}
 								{#each s.warnings as warning}
 									<div class="warn">{warning}</div>
@@ -421,10 +422,10 @@
 									class="act"
 									onclick={() => openRestore(s)}
 									disabled={stale || !!job || !!pendingRestoreId}
-									title="Put your data back to this point"
+									title={i18n.t('bk.restoreTitle2')}
 								>
 									<Icon name="refresh" class="w-3.5 h-3.5" strokeWidth={1.75} />
-									<span class="act-label">Restore</span>
+									<span class="act-label">{i18n.t('bk.restore')}</span>
 								</button>
 								<button
 									type="button"
@@ -445,8 +446,8 @@
 
 		{#if backupStore.location}
 			<div class="where">
-				<span class="section-label">Kept in</span>
-				<button type="button" class="path" onclick={copyLocation} title="Copy this path">
+				<span class="section-label">{i18n.t('bk.keptIn')}</span>
+				<button type="button" class="path" onclick={copyLocation} title={i18n.t('ab.copyPath')}>
 					<code>{backupStore.location}</code>
 					<Icon name="copy" class="w-3 h-3" strokeWidth={1.75} />
 				</button>
@@ -461,7 +462,7 @@
 
 <ConfirmDialog
 	open={!!restoreTarget}
-	title="Restore this backup?"
+	title={i18n.t('bk.restoreAsk')}
 	message={restoreMessage}
 	confirmLabel="Restore"
 	variant="danger"
@@ -473,7 +474,7 @@
 
 <ConfirmDialog
 	open={!!deleteTarget}
-	title="Delete this backup?"
+	title={i18n.t('bk.deleteAsk')}
 	message={deleteTarget
 		? `The snapshot from ${formatDate(deleteTarget.createdAt)} goes for good. Your current data is not touched.`
 		: ''}

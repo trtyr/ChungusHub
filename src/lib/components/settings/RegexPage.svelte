@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
+import { i18n } from '$lib/i18n/i18n.svelte';
 	import EmptyState from '$lib/components/ui/EmptyState.svelte';
 	import InfoTip from '$lib/components/ui/InfoTip.svelte';
 	import Toggle from '$lib/components/ui/Toggle.svelte';

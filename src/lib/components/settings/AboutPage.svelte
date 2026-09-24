@@ -2,6 +2,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import Alert from '$lib/components/ui/Alert.svelte';
 	import BrandGlyph from '$lib/components/ui/BrandGlyph.svelte';
+import { i18n } from '$lib/i18n/i18n.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import InfoTip from '$lib/components/ui/InfoTip.svelte';
@@ -256,7 +257,7 @@
 
 	<section class="card">
 		<div class="card-head">
-			<span class="card-title">Updates</span>
+			<span class="card-title">{i18n.t('ab.updates')}</span>
 		</div>
 		<div class="card-body">
 			<p class="note">
@@ -310,7 +311,7 @@
 		<nav class="rows" aria-label="Help and community">
 			<a class="row" href={LINKS.docs} target="_blank" rel="noopener noreferrer">
 				<Icon name="bookOpen" class="w-4 h-4 row-icon" strokeWidth={1.75} />
-				<span class="row-label">Documentation</span>
+				<span class="row-label">{i18n.t('ab.docs')}</span>
 				<Icon name="externalLink" class="w-3.5 h-3.5 row-out" strokeWidth={1.75} />
 			</a>
 
@@ -320,7 +321,7 @@
 			{#if !viewport.isTouch}
 				<button type="button" class="row" onclick={() => shortcutsSheet.toggle()}>
 					<Icon name="keyboard" class="w-4 h-4 row-icon" strokeWidth={1.75} />
-					<span class="row-label">Keyboard shortcuts</span>
+					<span class="row-label">{i18n.t('ab.shortcuts')}</span>
 					<span class="row-value">{MOD_KEY} /</span>
 				</button>
 			{/if}
@@ -347,7 +348,7 @@
 				rel="noopener noreferrer"
 			>
 				<Icon name="annotation" class="w-4 h-4 row-icon" strokeWidth={1.75} />
-				<span class="row-label">Report a bug</span>
+				<span class="row-label">{i18n.t('ab.reportBug')}</span>
 				<Icon name="externalLink" class="w-3.5 h-3.5 row-out" strokeWidth={1.75} />
 			</a>
 		</nav>
@@ -358,14 +359,14 @@
 	     card: the author's voice belongs here and nowhere else in the interface. -->
 	<section class="card">
 		<div class="card-head">
-			<span class="card-title">Reach me</span>
+			<span class="card-title">{i18n.t('ab.reachMe')}</span>
 		</div>
 		<div class="reach">
 			<p class="personal">
 				If you would rather talk to a person, or you simply have an idea to share, I am on
 				Discord: the server above, or straight to me here.
 			</p>
-			<button type="button" class="handle" onclick={copyHandle} title="Copy this handle">
+			<button type="button" class="handle" onclick={copyHandle} title={i18n.t('ab.copyHandle')}>
 				<BrandGlyph name="discord" class="w-3.5 h-3.5 handle-glyph" />
 				<code>{LINKS.discordHandle}</code>
 				<Icon name="copy" class="w-3 h-3" strokeWidth={1.75} />
@@ -375,9 +376,9 @@
 
 	<section class="card">
 		<div class="card-head">
-			<span class="card-title">This install</span>
+			<span class="card-title">{i18n.t('ab.installTitle')}</span>
 			<InfoTip
-				text="What this copy of ChungusHub runs on, and where it keeps everything you write. Copy details puts these lines and your browser on the clipboard, which is what a bug report needs."
+				text={i18n.t('ab.installTip')}
 			/>
 		</div>
 
@@ -397,18 +398,18 @@
 			{/if}
 			<div class="facts">
 				<div class="fact">
-					<span class="fact-label">Build</span>
+					<span class="fact-label">{i18n.t('ab.build')}</span>
 					<span class="fact-value">{buildLabel}</span>
 				</div>
 				<div class="fact">
-					<span class="fact-label">Runs on</span>
+					<span class="fact-label">{i18n.t('ab.runsOn')}</span>
 					<span class="fact-value">{install.runtime} on {install.platform}</span>
 				</div>
 			</div>
 
 			<div class="where">
-				<span class="section-label">Your data</span>
-				<button type="button" class="path" onclick={copyDataDir} title="Copy this path">
+				<span class="section-label">{i18n.t('ab.yourData')}</span>
+				<button type="button" class="path" onclick={copyDataDir} title={i18n.t('ab.copyPath')}>
 					<code>{install.dataDir}</code>
 					<Icon name="copy" class="w-3 h-3" strokeWidth={1.75} />
 				</button>
