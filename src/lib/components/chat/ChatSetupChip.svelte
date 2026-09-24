@@ -35,6 +35,7 @@
 	import { lorebookStore } from '$lib/lorebook/store.svelte';
 	import { sortLorebooks } from '$lib/lorebook/types';
 	import { lorebookViewPrefs } from '$lib/stores/lorebookViewPrefs.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import {
 		chatConnectionClaim,
 		chatConnectionId,
@@ -193,9 +194,9 @@
 	/** Who brings a book if this chat had not, in the words of the door that would take it
 	 *  back off again. Undefined where only this chat carries it. */
 	function heldBy(book: { id: string; global?: boolean }): string | undefined {
-		if (book.global) return 'Every chat';
-		if (characterBookIds.has(book.id)) return 'Character';
-		if (personaBookIds.has(book.id)) return 'Persona';
+		if (book.global) return i18n.t('chat.heldEveryChat');
+		if (characterBookIds.has(book.id)) return i18n.t('role.character');
+		if (personaBookIds.has(book.id)) return i18n.t('setup.persona');
 		return undefined;
 	}
 
@@ -220,58 +221,58 @@
 				id: 'persona',
 				// The word the New Chat Defaults row uses for the same choice over the same
 				// library, so the two lists cannot read as two different things.
-				label: 'Persona',
-				noun: 'personas',
-				value: persona?.identity.name?.trim() || 'No persona',
+				label: i18n.t('setup.persona'),
+				noun: i18n.t('chat.nounPersonas'),
+				value: persona?.identity.name?.trim() || i18n.t('chat.noPersona'),
 				diverged: !!persona && persona.id !== appPersona?.id,
 				lost:
 					claimedPersona !== null && !personas.some((p) => p.id === claimedPersona)
-						? "The persona this chat named is gone. It is playing as the app's."
+						? i18n.t('chat.lostPersona')
 						: null,
 				options: personas.map((p) => ({
 					id: p.id,
-					name: p.identity.name?.trim() || 'Unnamed persona',
+					name: p.identity.name?.trim() || i18n.t('chat.unnamedPersona'),
 					thumb: imageService.thumbnailUrl(p.identity.imageUrl),
 					focus: portraitFocusStyle(p.identity.portraitFocus)
 				})),
 				picked: only(personas.some((p) => p.id === claimedPersona) ? claimedPersona : null),
 				multi: false,
-				app: { label: 'Default', detail: appPersona?.identity.name?.trim() || 'No persona' },
+				app: { label: i18n.t('chat.appDefault'), detail: appPersona?.identity.name?.trim() || i18n.t('chat.noPersona') },
 				faces: true,
 				pick: pickPersona
 			},
 			{
 				id: 'preset',
-				label: 'Preset',
-				noun: 'presets',
+				label: i18n.t('setup.preset'),
+				noun: i18n.t('chat.nounPresets'),
 				// The effective name, so a renamed draft reads here as it does in Preset Controls.
-				value: preset?.name ?? 'No preset',
+				value: preset?.name ?? i18n.t('chat.noPreset'),
 				diverged: livePreset !== null && livePreset !== presetService.getActivePresetId(),
 				lost:
 					claimedPreset !== null && livePreset === null
-						? "The preset this chat named is gone. It is running the app's."
+						? i18n.t('chat.lostPreset')
 						: null,
 				options: presetService.getAllPresets().map((p) => ({ id: p.id, name: p.name })),
 				picked: only(livePreset),
 				multi: false,
-				app: { label: 'Global', detail: appPreset?.name ?? 'No preset' },
+				app: { label: i18n.t('chat.appGlobal'), detail: appPreset?.name ?? i18n.t('chat.noPreset') },
 				faces: false,
 				pick: pickPreset
 			},
 			{
 				id: 'connection',
-				label: 'Connection',
-				noun: 'connections',
-				value: connection?.name ?? 'No connection',
+				label: i18n.t('setup.connection'),
+				noun: i18n.t('chat.nounConnections'),
+				value: connection?.name ?? i18n.t('chat.noConnection'),
 				diverged: liveConnection !== null && liveConnection !== connectionStore.assignmentFor('primary'),
 				lost:
 					claimedConnection !== null && liveConnection === null
-						? "The connection this chat named is gone. It is sending on the app's."
+						? i18n.t('chat.lostConnection')
 						: null,
 				options: connectionStore.list().map((c) => ({ id: c.id, name: c.name })),
 				picked: only(liveConnection),
 				multi: false,
-				app: { label: 'Global', detail: appConnection?.name ?? 'No connection' },
+				app: { label: i18n.t('chat.appGlobal'), detail: appConnection?.name ?? i18n.t('chat.noConnection') },
 				faces: false,
 				pick: pickConnection
 			}
@@ -281,15 +282,15 @@
 		if (versions.length > 0) {
 			list.push({
 				id: 'version',
-				label: 'Version',
-				noun: 'versions',
-				value: versions.find((v) => v.id === pinnedVersionId)?.name ?? 'Unknown',
+				label: i18n.t('setup.version'),
+				noun: i18n.t('chat.nounVersions'),
+				value: versions.find((v) => v.id === pinnedVersionId)?.name ?? i18n.t('chat.unknown'),
 				diverged: !!chat?.characterVersionId && chat.characterVersionId !== versionSeed,
 				// The one claim with no app value to fall back on, so this row says what the
 				// others cannot: the story stops sending until it is repinned, which is the
 				// throw the next send raises (utils/prompt-builder.ts) said before it happens.
 				lost: versionLost
-					? 'The version this chat was pinned to is gone. It cannot send until you pick another.'
+					? i18n.t('chat.lostVersion')
 					: null,
 				options: versions.map((v) => ({ id: v.id, name: v.name })),
 				picked: only(pinnedVersionId),
@@ -307,17 +308,17 @@
 		if (books.length > 0) {
 			list.push({
 				id: 'lorebook',
-				label: 'Lorebooks',
-				noun: 'lorebooks',
+				label: i18n.t('setup.lorebooks'),
+				noun: i18n.t('chat.nounLorebooks'),
 				// What the story really plays with, cards and globals included and mutes taken
 				// out, since that is what "in force" means on every other row here. One book is
 				// named; several are counted, because a row that listed them would wrap.
 				value:
 					booksInPlay.length === 0
-						? 'No lorebooks'
+						? i18n.t('chat.noLorebooks')
 						: booksInPlay.length === 1
-							? booksInPlay[0].name.trim() || 'Untitled lorebook'
-							: `${booksInPlay.length} books`,
+							? booksInPlay[0].name.trim() || i18n.t('chat.untitledLorebook')
+							: i18n.t('chat.nBooks', { n: booksInPlay.length }),
 				// Only what THIS chat decided, in either direction: the star says the story broke
 				// away, and a book its character carries is what every chat with that character
 				// gets. A mute counts, since leaving a book out is as much a break as adding one.
@@ -329,7 +330,7 @@
 				lost: null,
 				options: sortLorebooks(books, lorebookViewPrefs.order).map((book) => ({
 					id: book.id,
-					name: book.name.trim() || 'Untitled lorebook',
+					name: book.name.trim() || i18n.t('chat.untitledLorebook'),
 					held: heldBy(book),
 					muted: isMuted(book)
 				})),
@@ -366,8 +367,8 @@
 	// The chip's own label names the two things a reader tracks turn to turn. It is
 	// deliberately NOT derived from `categories`: a label that grew a segment per category
 	// would push the composer's own controls off a narrow screen the moment one landed.
-	let personaName = $derived(persona?.identity.name?.trim() || 'You');
-	let modelName = $derived(connection?.model.split('/').pop() || 'No model');
+	let personaName = $derived(persona?.identity.name?.trim() || i18n.t('role.you'));
+	let modelName = $derived(connection?.model.split('/').pop() || i18n.t('chat.noModel'));
 	// The face, not a settings glyph: who the story is played by is what a reader tracks
 	// turn to turn, and a portrait says it before the name beside it is read.
 	let personaThumb = $derived(imageService.thumbnailUrl(persona?.identity.imageUrl));
@@ -422,7 +423,7 @@
 		try {
 			await chatStore.updateChatFeatureState(chat.id, { persona: id });
 		} catch (error) {
-			toastStore.failed('change who you play as in this chat', error);
+			toastStore.failed(i18n.t('chat.failPersona'), error);
 		} finally {
 			busy = false;
 		}
@@ -436,7 +437,7 @@
 		try {
 			await chatStore.updateChatFeatureState(chat.id, { preset: id });
 		} catch (error) {
-			toastStore.failed('change the preset this chat is built from', error);
+			toastStore.failed(i18n.t('chat.failPreset'), error);
 		} finally {
 			busy = false;
 		}
@@ -450,7 +451,7 @@
 		try {
 			await chatStore.updateChatFeatureState(chat.id, { connection: id });
 		} catch (error) {
-			toastStore.failed('change the connection this chat sends on', error);
+			toastStore.failed(i18n.t('chat.failConnection'), error);
 		} finally {
 			busy = false;
 		}
@@ -478,7 +479,7 @@
 				await chatStore.toggleChatLorebook(chat.id, bookId);
 			}
 		} catch (error) {
-			toastStore.failed('change the lorebooks this chat carries', error);
+			toastStore.failed(i18n.t('chat.failLorebook'), error);
 		}
 	}
 
@@ -490,7 +491,7 @@
 		try {
 			await chatStore.setChatCharacterVersion(chat.id, versionId);
 		} catch (error) {
-			toastStore.failed('switch this chat to that version', error);
+			toastStore.failed(i18n.t('chat.failVersion'), error);
 		} finally {
 			busy = false;
 		}
@@ -508,7 +509,7 @@
 			onclick={() => (open ? close() : (open = true))}
 			aria-haspopup="menu"
 			aria-expanded={open}
-			title={`Playing as ${personaName} on ${modelName}`}
+			title={i18n.t('chat.playingAs', { persona: personaName, model: modelName })}
 		>
 			<span class="setup-chip-face">
 				{#if personaThumb}
@@ -526,7 +527,7 @@
 				     and the way back out. -->
 				<div class="setup-head" class:is-root={!active}>
 					{#if active}
-						<button type="button" class="setup-back" onclick={goBack} aria-label="Back">
+						<button type="button" class="setup-back" onclick={goBack} aria-label={i18n.t('common.back')}>
 							<Icon name="chevronLeft" class="w-3.5 h-3.5" />
 						</button>
 						<span class="setup-head-label">{active.label}</span>
@@ -534,8 +535,8 @@
 						<!-- Setup, never "Overrides": most rows on most chats are following the app,
 						     and a title naming them an override describes the state the panel is
 						     usually not in. -->
-						<span class="setup-head-label">Chat Setup</span>
-						<InfoTip text="Anything set here applies to this chat only. The rest follows the app." />
+						<span class="setup-head-label">{i18n.t('chat.chatSetup')}</span>
+						<InfoTip text={i18n.t('chat.chatSetupTip')} />
 					{/if}
 				</div>
 
@@ -557,7 +558,7 @@
 							     first item in the list it opens. -->
 							<OverrideMark
 								overridden={category.diverged}
-								label="Set for this chat, so the app's has no say here"
+								label={i18n.t('chat.overriddenLabel')}
 							/>
 							<Icon name="chevronRight" class="w-3.5 h-3.5 setup-summary-chevron" />
 						</button>
@@ -575,8 +576,8 @@
 								<input
 									type="text"
 									bind:value={query}
-									placeholder="Search {active.options.length} {active.noun}…"
-									aria-label="Search {active.noun}"
+									placeholder={i18n.t('chat.searchN', { n: active.options.length, noun: active.noun })}
+									aria-label={i18n.t('chat.searchNoun', { noun: active.noun })}
 									class="input-base"
 								/>
 							</div>
@@ -613,7 +614,7 @@
 
 					<div class="setup-list" class:is-grid={asFaces}>
 						{#if shown.length === 0}
-							<p class="setup-note">Nothing matches that</p>
+							<p class="setup-note">{i18n.t('chat.nothingMatches')}</p>
 						{:else if asFaces}
 							<div class="setup-grid">
 								{#each shown as option (option.id)}
@@ -675,7 +676,7 @@
 									     whoever brings it: the struck name already says the rest, and two
 									     words here would squeeze the name they are about. -->
 									{#if option.muted}
-										<span class="setup-held">Muted</span>
+										<span class="setup-held">{i18n.t('chat.muted')}</span>
 									{:else if option.held}
 										<span class="setup-held">{option.held}</span>
 									{/if}
