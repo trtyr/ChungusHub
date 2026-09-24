@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
+import { i18n } from '$lib/i18n/i18n.svelte';
 
 	interface Props {
 		page: number;
@@ -25,13 +26,13 @@
 	});
 </script>
 
-<nav class="pager" aria-label="Pagination">
+<nav class="pager" aria-label={i18n.t('pager.aria')}>
 	<button
 		type="button"
 		class="pager-btn"
 		disabled={page <= 1}
 		onclick={() => onPage(page - 1)}
-		aria-label="Previous page"
+		aria-label={i18n.t('pager.prev')}
 	>
 		<Icon name="chevronLeft" class="w-3.5 h-3.5" />
 	</button>
@@ -55,7 +56,7 @@
 		class="pager-btn"
 		disabled={page >= totalPages}
 		onclick={() => onPage(page + 1)}
-		aria-label="Next page"
+		aria-label={i18n.t('pager.next')}
 	>
 		<Icon name="chevronRight" class="w-3.5 h-3.5" />
 	</button>

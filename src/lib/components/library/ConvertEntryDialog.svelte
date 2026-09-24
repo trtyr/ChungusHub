@@ -8,6 +8,7 @@
 	 * out afterwards what was dropped.
 	 */
 	import Dialog from '$lib/components/ui/Dialog.svelte';
+import { i18n } from '$lib/i18n/i18n.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import { characterLibraryStore } from '$lib/stores/characterLibrary.svelte';
@@ -56,7 +57,7 @@
 <Dialog
 	{open}
 	{onClose}
-	title={toPersona ? 'Save as persona' : 'Save as character'}
+	title={toPersona ? i18n.t('conv.toPersona') : i18n.t('conv.toCharacter')}
 	size="lg"
 >
 	<div class="flex flex-col gap-4">
@@ -73,8 +74,8 @@
 				id="convert-description"
 				bind:value={description}
 				placeholder={toPersona
-					? 'Who you are: appearance, presence, how you carry yourself, how you speak…'
-					: 'Who the character is: appearance, presence, how they carry themselves…'}
+					? i18n.t('conv.personaPlaceholder')
+					: i18n.t('conv.characterPlaceholder')}
 				class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm placeholder:text-text-muted resize-none min-h-[16rem] max-h-[26rem] overflow-y-auto"
 			></textarea>
 		</div>
@@ -88,10 +89,10 @@
 		{/if}
 
 		<div class="flex gap-3 justify-end pt-1">
-			<Button variant="ghost" onclick={onClose} disabled={busy}>Cancel</Button>
+			<Button variant="ghost" onclick={onClose} disabled={busy}>{i18n.t('common.cancel')}</Button>
 			<Button variant="primary" onclick={handleConvert} disabled={busy}>
 				<Icon name={toPersona ? 'user' : 'users'} class="w-4 h-4" />
-				Create {targetLabel}
+				{i18n.t('conv.create', { label: targetLabel })}
 			</Button>
 		</div>
 	</div>

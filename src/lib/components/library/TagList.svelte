@@ -3,6 +3,8 @@
 	// fit, collapse the rest into a "+N" badge, and only truncate letters when even
 	// one chip can't fit. Widths are measured from an off-screen mirror so the
 	// decision is based on real rendered sizes, not a hardcoded chip count.
+	import { i18n } from '$lib/i18n/i18n.svelte';
+
 	interface Props {
 		tags: string[];
 		/** 'overlay' is for chips drawn over a portrait, where the surface tokens have no
@@ -92,7 +94,7 @@
 			<button
 				type="button"
 				class="{chipClass} {sizing} {pressClass}"
-				title={`Filter by "${tag}"`}
+				title={i18n.t('tag.filterBy', { tag })}
 				onclick={(e) => {
 					e.stopPropagation();
 					onTagClick(tag);

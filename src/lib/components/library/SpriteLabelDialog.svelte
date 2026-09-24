@@ -5,6 +5,7 @@
 	 * label is legal.
 	 */
 	import Dialog from '$lib/components/ui/Dialog.svelte';
+import { i18n } from '$lib/i18n/i18n.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import { SPRITE_LABEL_SUGGESTIONS, normalizeSpriteLabel } from '$lib/utils/sprites';
 
@@ -38,7 +39,7 @@
 	}
 </script>
 
-<Dialog {open} onClose={onCancel} title="Rename this sprite" size="sm">
+<Dialog {open} onClose={onCancel} title={i18n.t('spr.renameTitle')} size="sm">
 	<div class="space-y-3">
 		<input
 			type="text"
@@ -55,7 +56,7 @@
 		/>
 
 		{#if collides}
-			<p class="text-xs font-ui text-error">Another sprite is already “{clean}”.</p>
+			<p class="text-xs font-ui text-error">{i18n.t('spr.collides', { clean })}</p>
 		{:else}
 			<p class="text-xs font-ui text-text-muted">
 				This is what the engine answers with to choose this sprite.
@@ -79,8 +80,8 @@
 		</div>
 
 		<div class="flex gap-3 justify-end pt-1">
-			<Button variant="ghost" onclick={onCancel}>Cancel</Button>
-			<Button variant="primary" onclick={submit} disabled={!clean || collides}>Save</Button>
+			<Button variant="ghost" onclick={onCancel}>{i18n.t('common.cancel')}</Button>
+			<Button variant="primary" onclick={submit} disabled={!clean || collides}>{i18n.t('common.save')}</Button>
 		</div>
 	</div>
 </Dialog>

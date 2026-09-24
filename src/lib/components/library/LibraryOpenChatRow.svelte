@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
+import { i18n } from '$lib/i18n/i18n.svelte';
 	import { imageService } from '$lib/services/imageService';
 	import { portraitFocusStyle } from '$lib/utils/portrait-focus';
 	import type { LibraryEntry } from '$lib/types/library';
@@ -25,8 +26,8 @@
 	type="button"
 	class="brw-now"
 	onclick={() => onOpen(entry.id)}
-	aria-label="Open {name} in the Library editor"
-	title="Open this {entry.type} in the Library editor"
+	aria-label={i18n.t('lib.openInEditorAria', { name })}
+	title={i18n.t('lib.openTypeTitle', { type: entry.type === 'persona' ? i18n.t('lib.typePersona') : i18n.t('lib.typeCharacter') })}
 >
 	<span class="brw-now-face">
 		{#if face}
