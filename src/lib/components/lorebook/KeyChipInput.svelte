@@ -13,6 +13,7 @@
 	 */
 	import { scale } from 'svelte/transition';
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Toggle from '$lib/components/ui/Toggle.svelte';
 	import { anchorTo } from '$lib/actions/anchorTo';
 	import {
@@ -48,8 +49,8 @@
 		rules,
 		onRulesChange,
 		defaults,
-		placeholder = 'Add keyword…',
-		ariaLabel = 'Keywords'
+		placeholder,
+		ariaLabel
 	}: Props = $props();
 
 	let draft = $state('');
@@ -175,7 +176,7 @@
 	});
 </script>
 
-<label class="input-base flex flex-wrap items-center gap-1.5 px-2.5 py-2 cursor-text" aria-label={ariaLabel}>
+<label class="input-base flex flex-wrap items-center gap-1.5 px-2.5 py-2 cursor-text" aria-label={ariaLabel ?? i18n.t('lb.keywords')}>
 	{#each keys as key, i (key + '|' + i)}
 		<span
 			in:scale={{ duration: reduce ? 0 : 120, start: 0.85 }}
@@ -186,8 +187,8 @@
 				type="button"
 				class="chip-key font-mono text-xs"
 				aria-expanded={openKey === key}
-				aria-label={`Matching for ${key}`}
-				title={isBroken(key) ? 'This pattern does not compile, so it never matches.' : 'How this key matches'}
+				aria-label={i18n.t('lb.matchingFor', { key })}
+				title={isBroken(key) ? i18n.t('lb.brokenPattern') : i18n.t('lb.howKeyMatches')}
 				onclick={(e) => {
 					e.preventDefault();
 					e.stopPropagation();
@@ -207,7 +208,7 @@
 					e.stopPropagation();
 					remove(i);
 				}}
-				aria-label={`Remove ${key}`}
+				aria-label={i18n.t('lb.removeKey', { key })}
 			>
 				<Icon name="x" class="w-3 h-3" />
 			</button>
@@ -219,7 +220,7 @@
 		onkeydown={onKeydown}
 		onpaste={onPaste}
 		onblur={() => commit(draft)}
-		placeholder={keys.length ? '' : placeholder}
+		placeholder={keys.length ? '' : (placeholder ?? i18n.t('lb.addKeyword'))}
 		class="flex-1 min-w-[6rem] bg-transparent border-0 outline-none text-sm font-ui text-text-primary placeholder:text-text-muted"
 	/>
 </label>
@@ -232,11 +233,11 @@
 		{#if regex}
 			<p class="kp-note">
 				{compileRegexKey(regex)
-					? 'A pattern matches on its own terms: the flags after the last slash decide case, and the entry’s switches have no say.'
-					: 'This pattern does not compile, so the key never matches. Fix it or drop the slashes.'}
+					? i18n.t('lb.regexNoteOk')
+					: i18n.t('lb.regexNoteBroken')}
 			</p>
 		{:else}
-			<div class="kp-modes" role="radiogroup" aria-label="How this key matches">
+			<div class="kp-modes" role="radiogroup" aria-label={i18n.t('lb.howKeyMatches')}>
 				{#each LOREBOOK_KEY_MODES as mode (mode.id)}
 					<button
 						type="button"
@@ -248,16 +249,16 @@
 						onclick={() => setRule(key, { mode: mode.id === inherited.mode ? undefined : mode.id })}
 					>
 						{mode.label}
-						{#if mode.id === inherited.mode}<span class="kp-inherit">entry</span>{/if}
+						{#if mode.id === inherited.mode}<span class="kp-inherit">{i18n.t('lb.entryTag')}</span>{/if}
 					</button>
 				{/each}
 			</div>
 			<p class="kp-note">{LOREBOOK_KEY_MODES.find((m) => m.id === effective.mode)?.hint}</p>
 			<div class="kp-row">
-				<span class="kp-row-name">Case-sensitive</span>
+				<span class="kp-row-name">{i18n.t('lb.caseSensitive')}</span>
 				<Toggle
 					checked={effective.caseSensitive}
-					label="Case-sensitive"
+					label={i18n.t('lb.caseSensitive')}
 					onchange={(next) =>
 						setRule(key, { caseSensitive: next === inherited.caseSensitive ? undefined : next })}
 				/>

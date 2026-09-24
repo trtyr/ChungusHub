@@ -6,6 +6,7 @@
 	 * real answer is what the Test scan strip is for (architecture/lorebook.md).
 	 */
 	import { countTokens } from '$lib/tokenizer';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { llmService } from '$lib/services/llm/provider';
 	import { partitionEntries, type Lorebook } from '$lib/lorebook/types';
 
@@ -17,9 +18,9 @@
 	 *  3 keyword" says the same number twice. */
 	let composition = $derived(
 		[
-			{ label: 'always active', count: parts.alwaysActive.length },
-			{ label: 'keyword', count: parts.keyword.length },
-			{ label: 'off', count: parts.disabled.length }
+			{ label: i18n.t('lb.alwaysActive'), count: parts.alwaysActive.length },
+			{ label: i18n.t('lb.keywords'), count: parts.keyword.length },
+			{ label: i18n.t('lb.off'), count: parts.disabled.length }
 		].filter((part) => part.count > 0)
 	);
 
@@ -56,7 +57,7 @@
 <div class="editor-stats">
 	<span class="editor-stat">
 		<b>{num(book.entries.length)}</b>
-		{book.entries.length === 1 ? 'entry' : 'entries'}
+		{i18n.t('lb.entriesN', { n: book.entries.length })}
 	</span>
 	{#if composition.length > 1}
 		{#each composition as part (part.label)}
@@ -64,12 +65,12 @@
 		{/each}
 	{/if}
 	{#if keys > 0}
-		<span class="editor-stat"><b>{num(keys)}</b> {keys === 1 ? 'keyword' : 'keywords'}</span>
+		<span class="editor-stat"><b>{num(keys)}</b> {i18n.t('lb.keywordsN', { n: keys })}</span>
 	{/if}
 	<span
 		class="editor-stat"
-		title="Every enabled entry firing at once. What a turn really spends is decided by the scan."
+		title={i18n.t('lb.statsTip')}
 	>
-		<b>~{num(tokens)}</b> tokens
+		<b>{i18n.t('lb.tokensN', { n: tokens })}</b>
 	</span>
 </div>
