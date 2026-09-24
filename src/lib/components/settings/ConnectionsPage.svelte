@@ -28,6 +28,7 @@
 	import { uiStore } from '$lib/stores/ui.svelte';
 	import { type Connection, type ProviderName } from '$lib/types/llm';
 	import { flashTarget } from '$lib/utils/flash-target';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { ENGINES } from '$lib/engines/registry';
 
 	const connections = $derived(connectionStore.connections);
@@ -57,8 +58,8 @@
 	// The two points the user talks to directly, slightly emphasized: the story and
 	// the assistant. Everything else is machinery the app runs on their behalf.
 	const KEY_POINTS: RoutePoint[] = [
-		{ id: 'primary', label: 'Primary', icon: 'chat' },
-		{ id: 'assistant', label: 'Assistant', icon: 'annotation' }
+		{ id: 'primary', label: i18n.t('conn.pointPrimary'), icon: 'chat' },
+		{ id: 'assistant', label: i18n.t('conn.pointAssistant'), icon: 'annotation' }
 	];
 
 	// Every calling engine, registry order. Steering makes no call and is
@@ -78,7 +79,7 @@
 	}
 
 	function modelShort(model: string): string {
-		return model ? (model.split('/').pop() ?? model) : 'No model';
+		return model ? (model.split('/').pop() ?? model) : i18n.t('conn.noModel');
 	}
 
 	/** Pill/option text: the pick and its consequence in one string. */
@@ -152,18 +153,18 @@
 	<div class="connections">
 		{#if storyConnection}
 			<ChatOverrideNotice
-				subject="Primary routing"
+				subject={i18n.t('conn.subjectPrimary')}
 				using={storyConnection.name}
-				instead={connectionStore.connectionFor('primary')?.name ?? 'No connection'}
+				instead={connectionStore.connectionFor('primary')?.name ?? i18n.t('conn.noConnection')}
 			/>
 		{/if}
 
 		<!-- Model routing: which connection serves each calling point -->
 		<section class="card" data-setting="model-routing">
 			<div class="card-head">
-				<span class="card-title">Model routing</span>
+				<span class="card-title">{i18n.t('conn.routingTitle')}</span>
 				<InfoTip
-					text="Every part of the app that calls a model, and the connection it rides. Point any row somewhere else whenever you like."
+					text={i18n.t('conn.routingTip')}
 				/>
 			</div>
 
@@ -181,9 +182,9 @@
 		<!-- Connection list -->
 		<section class="card" data-setting="connections">
 			<div class="card-head">
-				<span class="card-title">Connections</span>
+				<span class="card-title">{i18n.t('conn.connsTitle')}</span>
 				<InfoTip
-					text="One complete way to reach a model: provider, key, model and its settings, saved under a name. Keep as many as you like."
+					text={i18n.t('conn.connsTip')}
 				/>
 				<button type="button" class="new-btn" onclick={newConnection}>
 					<Icon name="plus" class="w-3.5 h-3.5" strokeWidth={2} />
@@ -202,7 +203,7 @@
 								{#if points.length}
 									<div class="conn-points">
 										{#if points.length === ASSIGNMENT_IDS.length}
-											<span class="point-chip">Everything</span>
+											<span class="point-chip">{i18n.t('conn.everything')}</span>
 										{:else}
 											{#each points as p (p)}
 												<span class="point-chip">{POINT_LABELS[p] ?? p}</span>
@@ -214,15 +215,15 @@
 							<Icon name="chevronRight" class="w-4 h-4 conn-chev" strokeWidth={2} />
 						</button>
 						<div class="conn-actions">
-							<button type="button" class="icon-btn" title="Duplicate" aria-label="Duplicate" onclick={() => duplicate(c.id)}>
+							<button type="button" class="icon-btn" title={i18n.t('conn.duplicate')} aria-label={i18n.t('conn.duplicate')} onclick={() => duplicate(c.id)}>
 								<Icon name="copy" class="w-4 h-4" strokeWidth={1.75} />
 							</button>
 							{#if connections.length > 1}
 								<button
 									type="button"
 									class="icon-btn danger"
-									title="Delete"
-									aria-label="Delete"
+									title={i18n.t('common.delete')}
+									aria-label={i18n.t('common.delete')}
 									onclick={() => (confirmingDelete = c.id)}
 								>
 									<Icon name="trash" class="w-4 h-4" strokeWidth={1.75} />
@@ -242,7 +243,7 @@
 					aria-expanded={expanded}
 				>
 					<Icon name={expanded ? 'chevronUp' : 'chevronDown'} class="w-3.5 h-3.5" />
-					<span>{expanded ? 'Show less' : `Show ${hiddenCount} more`}</span>
+					<span>{expanded ? i18n.t('welcome.showLess') : i18n.t('conn.showMoreN', { n: hiddenCount })}</span>
 				</button>
 			{/if}
 		</section>
@@ -250,9 +251,9 @@
 
 	<ConfirmDialog
 		open={!!confirmingDelete}
-		title="Delete connection"
-		message="Anything routed to it moves to another connection, and its saved API key is removed."
-		confirmLabel="Delete"
+		title={i18n.t('conn.deleteConnTitle')}
+		message={i18n.t('conn.deleteConnMsg')}
+		confirmLabel={i18n.t('common.delete')}
 		variant="danger"
 		destructive
 		onConfirm={confirmDelete}

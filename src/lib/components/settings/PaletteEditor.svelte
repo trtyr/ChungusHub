@@ -30,6 +30,7 @@
 	import { themeStore } from '$lib/stores/theme.svelte';
 	import { DEFAULT_APPEARANCE, type PaletteColorKey } from '$lib/themes/presets';
 	import { readContrast, type ContrastCheck } from '$lib/utils/contrast';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import type { PaletteMode } from '$lib/types/theme';
 
 	interface Props {
@@ -64,40 +65,40 @@
 	);
 
 	/** What each color actually paints, said in the reader's terms rather than the token's. */
-	const COLOR_LABELS: Record<PaletteColorKey, string> = {
-		bgPrimary: 'Workspace',
-		bgSecondary: 'Panels',
-		bgTertiary: 'Raised rows',
-		bgElevated: 'Menus',
-		cardBg: 'Cards',
-		inputBg: 'Inputs',
-		textPrimary: 'Text',
-		textSecondary: 'Secondary text',
-		textMuted: 'Muted text',
-		border: 'Borders',
-		borderSubtle: 'Faint borders',
-		userBubble: 'Your turn',
-		assistantBubble: 'Their turn',
-		error: 'Error',
-		success: 'Success',
-		warning: 'Warning'
-	};
+	const COLOR_LABELS: Record<PaletteColorKey, string> = $derived({
+		bgPrimary: i18n.t('pal.colorWorkspace'),
+		bgSecondary: i18n.t('pal.colorPanels'),
+		bgTertiary: i18n.t('pal.colorRaisedRows'),
+		bgElevated: i18n.t('pal.colorMenus'),
+		cardBg: i18n.t('pal.colorCards'),
+		inputBg: i18n.t('pal.colorInputs'),
+		textPrimary: i18n.t('pal.colorText'),
+		textSecondary: i18n.t('pal.colorTextSecondary'),
+		textMuted: i18n.t('pal.colorTextMuted'),
+		border: i18n.t('pal.colorBorders'),
+		borderSubtle: i18n.t('pal.colorBorderSubtle'),
+		userBubble: i18n.t('pal.colorYourTurn'),
+		assistantBubble: i18n.t('pal.colorTheirTurn'),
+		error: i18n.t('pal.colorError'),
+		success: i18n.t('pal.colorSuccess'),
+		warning: i18n.t('pal.colorWarning')
+	});
 
-	const GROUPS: { label: string; keys: PaletteColorKey[] }[] = [
+	const GROUPS: { label: string; keys: PaletteColorKey[] }[] = $derived([
 		{
-			label: 'Surfaces',
+			label: i18n.t('pal.groupSurfaces'),
 			keys: ['bgPrimary', 'bgSecondary', 'bgTertiary', 'bgElevated', 'cardBg', 'inputBg']
 		},
-		{ label: 'Text', keys: ['textPrimary', 'textSecondary', 'textMuted'] },
-		{ label: 'Lines', keys: ['border', 'borderSubtle'] },
-		{ label: 'Story turns', keys: ['userBubble', 'assistantBubble'] },
-		{ label: 'Status', keys: ['error', 'success', 'warning'] }
-	];
+		{ label: i18n.t('pal.groupText'), keys: ['textPrimary', 'textSecondary', 'textMuted'] },
+		{ label: i18n.t('pal.groupLines'), keys: ['border', 'borderSubtle'] },
+		{ label: i18n.t('pal.groupStoryTurns'), keys: ['userBubble', 'assistantBubble'] },
+		{ label: i18n.t('pal.groupStatus'), keys: ['error', 'success', 'warning'] }
+	]);
 
-	const MODES: { value: PaletteMode; label: string }[] = [
-		{ value: 'dark', label: 'Dark' },
-		{ value: 'light', label: 'Light' }
-	];
+	const MODES: { value: PaletteMode; label: string }[] = $derived([
+		{ value: 'dark', label: i18n.t('pal.modeDark') },
+		{ value: 'light', label: i18n.t('pal.modeLight') }
+	]);
 
 	/**
 	 * What gets measured. Body-sized text owes 4.5:1; muted text is supporting copy and
@@ -108,12 +109,12 @@
 		if (!palette) return [];
 		const c = palette.colors;
 		const checks: ContrastCheck[] = [
-			{ label: 'Text on the workspace', ink: c.textPrimary, surface: c.bgPrimary, floor: 4.5 },
-			{ label: 'Secondary text', ink: c.textSecondary, surface: c.bgPrimary, floor: 4.5 },
-			{ label: 'Muted text', ink: c.textMuted, surface: c.bgPrimary, floor: 3 },
-			{ label: 'Text on panels', ink: c.textPrimary, surface: c.bgSecondary, floor: 4.5 },
-			{ label: 'Text on your turn', ink: c.textPrimary, surface: c.userBubble, floor: 4.5 },
-			{ label: 'Text on their turn', ink: c.textPrimary, surface: c.assistantBubble, floor: 4.5 }
+			{ label: i18n.t('pal.contrastWorkspace'), ink: c.textPrimary, surface: c.bgPrimary, floor: 4.5 },
+			{ label: i18n.t('pal.contrastSecondary'), ink: c.textSecondary, surface: c.bgPrimary, floor: 4.5 },
+			{ label: i18n.t('pal.contrastMuted'), ink: c.textMuted, surface: c.bgPrimary, floor: 3 },
+			{ label: i18n.t('pal.contrastPanels'), ink: c.textPrimary, surface: c.bgSecondary, floor: 4.5 },
+			{ label: i18n.t('pal.contrastYour'), ink: c.textPrimary, surface: c.userBubble, floor: 4.5 },
+			{ label: i18n.t('pal.contrastTheir'), ink: c.textPrimary, surface: c.assistantBubble, floor: 4.5 }
 		];
 		return checks.map(readContrast);
 	});
@@ -142,7 +143,7 @@
 		if (themeStore.appearance.palette === paletteId) {
 			parts.push(`The app is wearing it, so it goes back to ${fallbackName} on screen.`);
 		}
-		parts.push('This cannot be undone.');
+		parts.push(i18n.t('chat.cannotUndo'));
 		return parts.join(' ');
 	});
 
@@ -186,15 +187,15 @@
 {#if palette}
 	<section class="card" data-setting="palette-editor">
 		<div class="card-head">
-			<span class="card-title">Editing {palette.name}</span>
+			<span class="card-title">{i18n.t('pal.editing', { name: palette.name })}</span>
 			<InfoTip
-				text="Changes land on the app as you pick them. Every other color in the interface is worked out from these."
+				text={i18n.t('pal.tip')}
 			/>
 		</div>
 
 		<div class="card-body">
 			<label class="field">
-				<span class="section-label">Name</span>
+				<span class="section-label">{i18n.t('pal.nameLabel')}</span>
 				<input
 					class="input-base name-input"
 					type="text"
@@ -204,8 +205,8 @@
 			</label>
 
 			<div class="field">
-				<span class="section-label">Treat these colors as</span>
-				<div class="seg-pills" role="radiogroup" aria-label="Treat these colors as">
+				<span class="section-label">{i18n.t('pal.treatAs')}</span>
+				<div class="seg-pills" role="radiogroup" aria-label={i18n.t('pal.treatAs')}>
 					{#each MODES as mode (mode.value)}
 						<button
 							type="button"
@@ -275,7 +276,7 @@
 
 			<div class="editor-actions">
 				{#if forkedFrom}
-					<Button variant="ghost" size="lg" class="flex-1" onclick={cancelFork}>Cancel</Button>
+					<Button variant="ghost" size="lg" class="flex-1" onclick={cancelFork}>{i18n.t('common.cancel')}</Button>
 				{:else}
 					<Button
 						variant="ghost"
@@ -296,16 +297,16 @@
 						Discard changes
 					</Button>
 				{/if}
-				<Button variant="primary" size="lg" class="flex-1" onclick={onclose}>Done</Button>
+				<Button variant="primary" size="lg" class="flex-1" onclick={onclose}>{i18n.t('common.close')}</Button>
 			</div>
 		</div>
 	</section>
 
 	<ConfirmDialog
 		open={confirmDelete}
-		title="Delete palette"
+		title={i18n.t('pal.deleteTitle')}
 		message={deleteMessage}
-		confirmLabel="Delete"
+		confirmLabel={i18n.t('common.delete')}
 		variant="danger"
 		destructive
 		onConfirm={removePalette}
