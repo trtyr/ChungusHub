@@ -76,5 +76,29 @@ export const zh: Record<string, string> = {
 	'welcome.showMore': '展开更多',
 	'welcome.emptyChats': '还没有聊天',
 	'common.community': '社区',
-	'welcome.asPersona': '扮演：{name}'
+	'welcome.asPersona': '扮演：{name}',
+
+	// storymap · Inspector
+	'storymap.inspAria': '回合详情',
+	'storymap.turn': '回合 {n}',
+	'storymap.youAreHere': '你在这里',
+	'storymap.canon': '正典',
+	'storymap.inMemory': '已入记忆',
+	'common.closeDetails': '关闭详情',
+	'storymap.variantOf': '变体 {n} / {total}',
+	'storymap.images': '{n} 张图片',
+	'storymap.branchesBelow': '下方 {n} 条分支',
+	'storymap.tokens': '{n} token',
+	'storymap.openInChat': '在聊天中打开',
+	'storymap.canonClearTitle': '清除正典标记',
+	'storymap.canonSetTitle': '将此时间线定为正典',
+	'storymap.canonUnset': '取消正典',
+	'storymap.canonMake': '设为正典',
+	'storymap.compareTitle': '将此分支与另一条分支对比',
+	'storymap.compare': '对比…',
+	'storymap.branchName': '分支名',
+	'storymap.branchNamePlaceholder': '例如：黑暗结局',
+	'storymap.branchColor': '分支颜色',
+	'common.save': '保存',
+	'common.remove': '移除'
 };

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { BRANCH_COLORS } from '$lib/utils/branch-labels';
 	import type { StoryMapNode } from '$lib/utils/story-map-layout';
 	import type { BranchLabel } from '$lib/types/chat';
@@ -60,14 +61,14 @@
 	}
 </script>
 
-<aside class="insp surface-float panel-scroll" role="region" aria-label="Turn details">
+<aside class="insp surface-float panel-scroll" role="region" aria-label={i18n.t('storymap.inspAria')}>
 	<header class="insp-head">
 		<span class="insp-role insp-role--{node.role}">{roleName}</span>
-		<span class="insp-turn">Turn {node.depth + 1}</span>
-		{#if node.isActiveLeaf}<span class="insp-tag insp-tag--active">You are here</span>{/if}
-		{#if node.isCanonLeaf}<span class="insp-tag insp-tag--canon">Canon</span>{/if}
-		{#if archived}<span class="insp-tag insp-tag--memory">In memory</span>{/if}
-		<button type="button" class="insp-x" aria-label="Close details" onclick={onClose}>
+		<span class="insp-turn">{i18n.t('storymap.turn', { n: node.depth + 1 })}</span>
+		{#if node.isActiveLeaf}<span class="insp-tag insp-tag--active">{i18n.t('storymap.youAreHere')}</span>{/if}
+		{#if node.isCanonLeaf}<span class="insp-tag insp-tag--canon">{i18n.t('storymap.canon')}</span>{/if}
+		{#if archived}<span class="insp-tag insp-tag--memory">{i18n.t('storymap.inMemory')}</span>{/if}
+		<button type="button" class="insp-x" aria-label={i18n.t('common.closeDetails')} onclick={onClose}>
 			<Icon name="close" class="w-4 h-4" />
 		</button>
 	</header>
@@ -76,18 +77,18 @@
 
 	<div class="insp-meta">
 		<span class="insp-chip">{timeText}</span>
-		{#if node.siblingCount > 1}<span class="insp-chip">Variant {node.siblingIndex + 1} of {node.siblingCount}</span>{/if}
+		{#if node.siblingCount > 1}<span class="insp-chip">{i18n.t('storymap.variantOf', { n: node.siblingIndex + 1, total: node.siblingCount })}</span>{/if}
 		{#if node.attachmentCount > 0}
-			<span class="insp-chip">{node.attachmentCount} image{node.attachmentCount === 1 ? '' : 's'}</span>
+			<span class="insp-chip">{i18n.t('storymap.images', { n: node.attachmentCount, s: node.attachmentCount === 1 ? '' : 's' })}</span>
 		{/if}
-		{#if node.childCount > 1}<span class="insp-chip">{node.childCount} branches below</span>{/if}
+		{#if node.childCount > 1}<span class="insp-chip">{i18n.t('storymap.branchesBelow', { n: node.childCount })}</span>{/if}
 		{#if node.model}<span class="insp-chip insp-chip--trunc" title={node.model}>{node.model}</span>{/if}
-		{#if node.tokensCompletion}<span class="insp-chip">{node.tokensCompletion.toLocaleString()} tokens</span>{/if}
+		{#if node.tokensCompletion}<span class="insp-chip">{i18n.t('storymap.tokens', { n: node.tokensCompletion.toLocaleString() })}</span>{/if}
 	</div>
 
 	<div class="insp-actions">
 		<button type="button" class="insp-btn insp-btn--primary" onclick={onJump}>
-			<Icon name="chat" class="w-4 h-4" /> Open in chat
+			<Icon name="chat" class="w-4 h-4" /> {i18n.t('storymap.openInChat')}
 		</button>
 		<div class="insp-action-row">
 			<button
@@ -95,33 +96,33 @@
 				class="insp-btn insp-btn--half"
 				class:insp-btn--canon={node.isCanonLeaf}
 				onclick={onToggleCanon}
-				title={node.isCanonLeaf ? 'Clear the canon mark' : 'Bless this timeline as the real story'}
+				title={node.isCanonLeaf ? i18n.t('storymap.canonClearTitle') : i18n.t('storymap.canonSetTitle')}
 			>
-				<Icon name="crown" class="w-4 h-4" /> {node.isCanonLeaf ? 'Unset canon' : 'Make canon'}
+				<Icon name="crown" class="w-4 h-4" /> {node.isCanonLeaf ? i18n.t('storymap.canonUnset') : i18n.t('storymap.canonMake')}
 			</button>
 			<button
 				type="button"
 				class="insp-btn insp-btn--half"
 				onclick={onStartCompare}
-				title="Compare this branch against another"
+				title={i18n.t('storymap.compareTitle')}
 			>
-				<Icon name="columns" class="w-4 h-4" /> Compare…
+				<Icon name="columns" class="w-4 h-4" /> {i18n.t('storymap.compare')}
 			</button>
 		</div>
 	</div>
 
 	<div class="insp-label">
-		<label class="insp-label-title" for="branch-name">Branch name</label>
+		<label class="insp-label-title" for="branch-name">{i18n.t('storymap.branchName')}</label>
 		<input
 			id="branch-name"
 			class="insp-input"
 			type="text"
 			maxlength="40"
-			placeholder="e.g. Dark ending"
+			placeholder={i18n.t('storymap.branchNamePlaceholder')}
 			bind:value={labelName}
 			onkeydown={(e) => e.key === 'Enter' && saveLabel()}
 		/>
-		<div class="insp-swatches" aria-label="Branch color">
+		<div class="insp-swatches" aria-label={i18n.t('storymap.branchColor')}>
 			{#each BRANCH_COLORS as c (c.key)}
 				<button
 					type="button"
@@ -137,11 +138,11 @@
 		</div>
 		<div class="insp-label-actions">
 			<button type="button" class="insp-btn insp-btn--primary" onclick={saveLabel}>
-				<Icon name="check" class="w-4 h-4" /> Save
+				<Icon name="check" class="w-4 h-4" /> {i18n.t('common.save')}
 			</button>
 			{#if node.label}
 				<button type="button" class="insp-btn insp-btn--danger" onclick={removeLabel}>
-					<Icon name="trash" class="w-4 h-4" /> Remove
+					<Icon name="trash" class="w-4 h-4" /> {i18n.t('common.remove')}
 				</button>
 			{/if}
 		</div>

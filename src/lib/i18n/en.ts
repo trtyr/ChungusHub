@@ -81,5 +81,29 @@ export const en: Record<string, string> = {
 	'welcome.showMore': 'Show more',
 	'welcome.emptyChats': 'No chats yet',
 	'common.community': 'Community',
-	'welcome.asPersona': 'as {name}'
+	'welcome.asPersona': 'as {name}',
+
+	// storymap · Inspector
+	'storymap.inspAria': 'Turn details',
+	'storymap.turn': 'Turn {n}',
+	'storymap.youAreHere': 'You are here',
+	'storymap.canon': 'Canon',
+	'storymap.inMemory': 'In memory',
+	'common.closeDetails': 'Close details',
+	'storymap.variantOf': 'Variant {n} of {total}',
+	'storymap.images': '{n} image{s}',
+	'storymap.branchesBelow': '{n} branches below',
+	'storymap.tokens': '{n} tokens',
+	'storymap.openInChat': 'Open in chat',
+	'storymap.canonClearTitle': 'Clear the canon mark',
+	'storymap.canonSetTitle': 'Bless this timeline as the real story',
+	'storymap.canonUnset': 'Unset canon',
+	'storymap.canonMake': 'Make canon',
+	'storymap.compareTitle': 'Compare this branch against another',
+	'storymap.compare': 'Compare…',
+	'storymap.branchName': 'Branch name',
+	'storymap.branchNamePlaceholder': 'e.g. Dark ending',
+	'storymap.branchColor': 'Branch color',
+	'common.save': 'Save',
+	'common.remove': 'Remove'
 };
