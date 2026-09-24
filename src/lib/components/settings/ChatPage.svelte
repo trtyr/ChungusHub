@@ -221,7 +221,7 @@
 <div class="chat-page">
 	<section class="card" data-setting="reading-column">
 		<div class="card-head">
-			<span class="card-title">Reading Column</span>
+			<span class="card-title">{i18n.t('chatpg.readingColumn')}</span>
 			<InfoTip
 				text={i18n.t('chatpg.readingTip')}
 			/>

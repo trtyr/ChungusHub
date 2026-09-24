@@ -257,7 +257,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 
 	<section class="card" data-setting="automatic-backups">
 		<div class="card-head">
-			<span class="card-title">Automatic Backups</span>
+			<span class="card-title">{i18n.t('bk.autoTitle')}</span>
 			<InfoTip
 				text={i18n.t('bk.tip')}
 			/>

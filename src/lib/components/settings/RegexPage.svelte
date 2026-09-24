@@ -179,7 +179,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 <section class="card rx-card space-y-3" data-setting="regex-rules">
 	<header class="rx-header">
 		<div class="rx-title">
-			<span class="card-title">Regex Rules</span>
+			<span class="card-title">{i18n.t('rx.title')}</span>
 			<InfoTip
 				text={i18n.t('rx.tip')}
 			/>
@@ -227,7 +227,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					</button>
 				{/snippet}
 			</EmptyState>
-			<p class="rx-empty-hint">SillyTavern regex scripts import as-is.</p>
+			<p class="rx-empty-hint">{i18n.t('rx.stImport')}</p>
 		</div>
 	{:else}
 		<div
@@ -328,7 +328,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		<div class="rx-carried">
 			<div class="rx-carried-head">
 				<Icon name="sliders" class="w-3.5 h-3.5 flex-shrink-0" strokeWidth={1.5} />
-				<span class="rx-carried-title">From “{carriedFrom}”</span>
+				<span class="rx-carried-title">{i18n.t('rx.from', { name: carriedFrom })}</span>
 				<InfoTip
 					text={i18n.t('rx.presetTip')}
 				/>

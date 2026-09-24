@@ -556,7 +556,7 @@
 
 	<section class="card" data-setting="ambient-effects">
 		<div class="card-head">
-			<span class="card-title">Ambient Effects</span>
+			<span class="card-title">{i18n.t('if.ambient')}</span>
 			<InfoTip
 				text={i18n.t('if.ambientTip')}
 			/>

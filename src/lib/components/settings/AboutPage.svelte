@@ -306,9 +306,9 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 
 	<section class="card">
 		<div class="card-head">
-			<span class="card-title">Help &amp; community</span>
+			<span class="card-title">{i18n.t('ab.helpCommunity')}</span>
 		</div>
-		<nav class="rows" aria-label="Help and community">
+		<nav class="rows" aria-label={i18n.t('ab.helpAria')}>
 			<a class="row" href={LINKS.docs} target="_blank" rel="noopener noreferrer">
 				<Icon name="bookOpen" class="w-4 h-4 row-icon" strokeWidth={1.75} />
 				<span class="row-label">{i18n.t('ab.docs')}</span>

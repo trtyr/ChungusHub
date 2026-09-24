@@ -574,7 +574,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						{#if cachingCtl.mode === 'explicit'}
 							<Toggle checked={gen.promptCaching} onchange={(v) => updateGen('promptCaching', v)} label="Prompt caching" />
 						{:else}
-							<span class="caching-auto-note">Automatic, always on</span>
+							<span class="caching-auto-note">{i18n.t('ce.autoAlways')}</span>
 						{/if}
 					</div>
 					{#if cachingCtl.mode === 'explicit' && gen.promptCaching && cachingCtl.ttl}
@@ -620,7 +620,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		<!-- Context window -->
 		<section class="card" data-setting="context-size">
 			<div class="card-head">
-				<span class="card-title">Context Window</span>
+				<span class="card-title">{i18n.t('ce.contextWindowTitle')}</span>
 				<InfoTip
 					text={i18n.t('ce.contextTip')}
 				/>
@@ -768,7 +768,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					<span class="section-label">{i18n.t('ce.reasoning')}</span>
 					<div class="toggle-row" use:toggleRow>
 						<div class="slider-label-wrap">
-							<span class="slider-label">Auto-parse reasoning from replies</span>
+							<span class="slider-label">{i18n.t('ce.autoParse')}</span>
 							<InfoTip
 								text={i18n.t('ce.catchThinkingTip')}
 							/>
@@ -944,7 +944,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 							type="number"
 							class="input-base seed-input"
 							value={gen.seed ?? ''}
-							placeholder="random"
+							placeholder={i18n.t('ce.random')}
 							oninput={(e) => {
 								const v = e.currentTarget.value.trim();
 								const n = parseInt(v);

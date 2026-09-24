@@ -332,7 +332,7 @@
 						text={i18n.t('sec.networkTip')}
 					/>
 				</div>
-				<p class="card-sub">Whether ChungusHub exists on your network at all.</p>
+				<p class="card-sub">{i18n.t('sec.networkSub')}</p>
 			</div>
 		</header>
 
@@ -381,7 +381,7 @@
 			<div class="card-body">
 				<div class="row" use:toggleRow>
 					<div class="row-copy">
-						<span class="row-label">Require approval</span>
+						<span class="row-label">{i18n.t('sec.requireApproval')}</span>
 						{#if !allowlistEnabled}
 							<span class="row-desc row-desc-warn">
 								Approval is off, anyone on your network can connect.
