@@ -2,6 +2,7 @@
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import type { ModelInfo } from '$lib/types/llm';
 	import { formatPricePerMillion, formatContext, modelVendor, vendorLabel } from '$lib/utils/modelFormat';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	type SortMode = 'relevance' | 'name' | 'priceAsc' | 'contextDesc' | 'newest';
 
@@ -39,13 +40,13 @@
 	let dropdownEl = $state<HTMLDivElement | null>(null);
 	let listEl = $state<HTMLDivElement | null>(null);
 
-	const SORTS: { mode: SortMode; label: string }[] = [
-		{ mode: 'relevance', label: 'Default' },
-		{ mode: 'name', label: 'Name' },
-		{ mode: 'priceAsc', label: 'Price' },
-		{ mode: 'contextDesc', label: 'Context' },
-		{ mode: 'newest', label: 'New' }
-	];
+	const SORTS: { mode: SortMode; label: string }[] = $derived([
+		{ mode: 'relevance', label: i18n.t('mp.sortsDefault') },
+		{ mode: 'name', label: i18n.t('mp.sortName') },
+		{ mode: 'priceAsc', label: i18n.t('mp.sortPrice') },
+		{ mode: 'contextDesc', label: i18n.t('mp.sortContext') },
+		{ mode: 'newest', label: i18n.t('mp.sortNew') }
+	]);
 
 	function matchesSearch(m: ModelInfo, query: string): boolean {
 		const haystack = `${m.id} ${m.name ?? ''}`.toLowerCase();
@@ -217,7 +218,7 @@
 				type="text"
 				class="input-base search-input"
 				class:has-routing-btn={!!onConfigureRouting && !!value}
-				placeholder={loading ? 'Loading models…' : value && !open ? '' : 'Search or type a model id…'}
+				placeholder={loading ? i18n.t('mp.loading') : value && !open ? '' : i18n.t('mp.searchOrType')}
 				value={open ? search : ''}
 				disabled={loading}
 				onfocus={() => {
@@ -249,10 +250,10 @@
 				class="routing-btn"
 				class:active={hasRouting}
 				onclick={() => onConfigureRouting?.(value)}
-				title="Configure provider routing for this model"
+				title={i18n.t('mp.routingTitle')}
 			>
 				<Icon name="radar" class="w-4 h-4" strokeWidth={1.75} />
-				<span>Routing</span>
+				<span>{i18n.t('mp.routing')}</span>
 			</button>
 		{/if}
 	</div>
@@ -277,7 +278,7 @@
 					class="group-toggle"
 					class:active={grouped}
 					onclick={() => (grouped = !grouped)}
-					title="Group by vendor"
+					title={i18n.t('mp.groupByVendor')}
 				>
 					<Icon name="folder" class="w-3.5 h-3.5" strokeWidth={1.75} />
 					Group
@@ -325,16 +326,16 @@
 										<Icon name="pin" class="meta-route" strokeWidth={2.25} />
 									{/if}
 									{#if b.vision}
-										<span class="badge badge-icon" title="Vision"><Icon name="image" class="w-3 h-3" strokeWidth={2} /></span>
+										<span class="badge badge-icon" title={i18n.t('mp.badgeVision')}><Icon name="image" class="w-3 h-3" strokeWidth={2} /></span>
 									{/if}
 									{#if b.tools}
-										<span class="badge badge-icon" title="Tools"><Icon name="wrench" class="w-3 h-3" strokeWidth={2} /></span>
+										<span class="badge badge-icon" title={i18n.t('mp.badgeTools')}><Icon name="wrench" class="w-3 h-3" strokeWidth={2} /></span>
 									{/if}
 									{#if b.reasoning}
-										<span class="badge badge-icon badge-reason" title="Reasoning model"><Icon name="sparkles" class="w-3 h-3" strokeWidth={2} /></span>
+										<span class="badge badge-icon badge-reason" title={i18n.t('mp.badgeReasoning')}><Icon name="sparkles" class="w-3 h-3" strokeWidth={2} /></span>
 									{/if}
 									{#if b.moderated}
-										<span class="badge badge-icon" title="Moderated by the default route"><Icon name="lock" class="w-3 h-3" strokeWidth={2} /></span>
+										<span class="badge badge-icon" title={i18n.t('mp.badgeModerated')}><Icon name="lock" class="w-3 h-3" strokeWidth={2} /></span>
 									{/if}
 									{#if b.ctx}
 										<span class="badge">{b.ctx}</span>
