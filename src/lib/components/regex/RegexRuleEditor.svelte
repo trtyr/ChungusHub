@@ -18,6 +18,7 @@
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import {
 		depthInverted,
@@ -50,23 +51,23 @@
 
 	let mirrorEl = $state<HTMLDivElement | null>(null);
 
-	const FLAG_OPTIONS: { flag: string; hint: string }[] = [
-		{ flag: 'g', hint: 'Replace every match, not just the first' },
-		{ flag: 'i', hint: 'Ignore case' },
-		{ flag: 'm', hint: '^ and $ match at every line break' },
-		{ flag: 's', hint: 'Dot also matches newlines' },
-		{ flag: 'u', hint: 'Unicode mode, enables \\p{...} classes' }
-	];
+	const FLAG_OPTIONS = $derived([
+		{ flag: 'g', hint: i18n.t('rxe.flagG') },
+		{ flag: 'i', hint: i18n.t('rxe.flagI') },
+		{ flag: 'm', hint: i18n.t('rxe.flagM') },
+		{ flag: 's', hint: i18n.t('rxe.flagS') },
+		{ flag: 'u', hint: i18n.t('rxe.flagU') }
+	]);
 
-	const ROLE_OPTIONS: { role: RegexRuleRole; label: string; icon: 'user' | 'sparkles' }[] = [
-		{ role: 'user', label: 'Your messages', icon: 'user' },
-		{ role: 'assistant', label: 'AI replies', icon: 'sparkles' }
-	];
+	const ROLE_OPTIONS = $derived([
+		{ role: 'user' as RegexRuleRole, label: i18n.t('rxe.roleUser'), icon: 'user' as const },
+		{ role: 'assistant' as RegexRuleRole, label: i18n.t('rxe.roleAssistant'), icon: 'sparkles' as const }
+	]);
 
-	const SCOPE_OPTIONS: { scope: RegexRuleScope; label: string; icon: 'eye' | 'upload'; hint: string }[] = [
-		{ scope: 'display', label: 'Chat display', icon: 'eye', hint: 'What you read in the transcript' },
-		{ scope: 'prompt', label: 'Outgoing prompt', icon: 'upload', hint: 'What the model receives as history' }
-	];
+	const SCOPE_OPTIONS = $derived([
+		{ scope: 'display' as RegexRuleScope, label: i18n.t('rxe.scopeDisplay'), icon: 'eye' as const, hint: i18n.t('rxe.scopeDisplayHint') },
+		{ scope: 'prompt' as RegexRuleScope, label: i18n.t('rxe.scopePrompt'), icon: 'upload' as const, hint: i18n.t('rxe.scopePromptHint') }
+	]);
 
 	/** Toggle membership while keeping the canonical order stable. */
 	function toggled<T>(list: T[], item: T, order: readonly T[]): T[] {
@@ -157,7 +158,7 @@
 <div class="rx-editor" class:is-readonly={readonly}>
 	<div class="rx-editor-grid">
 		<label class="rx-field">
-			<span class="section-label">Name</span>
+			<span class="section-label">{i18n.t('pal.nameLabel')}</span>
 			<input
 				class="rx-input"
 				type="text"
@@ -168,32 +169,32 @@
 		</label>
 
 		<label class="rx-field">
-			<span class="section-label">Description</span>
+			<span class="section-label">{i18n.t('rxe.desc')}</span>
 			<input
 				class="rx-input"
 				type="text"
 				{readonly}
-				placeholder="Optional note shown under the name"
+				placeholder={i18n.t('rxe.descPlaceholder')}
 				value={rule.description}
 				oninput={(e) => onPatch?.({ description: e.currentTarget.value })}
 			/>
 		</label>
 
 		<div class="rx-field rx-span">
-			<span class="section-label">Find</span>
+			<span class="section-label">{i18n.t('rxe.find')}</span>
 			<div class="rx-refield" class:rx-refield-bad={!!error}>
 				<span class="rx-slash" aria-hidden="true">/</span>
 				<input
 					class="rx-pattern"
 					type="text"
-					placeholder="pattern, e.g. \bvery\b"
+					placeholder={i18n.t('rxe.findPlaceholder')}
 					{readonly}
 					spellcheck="false"
 					value={rule.pattern}
 					oninput={(e) => onPatch?.({ pattern: e.currentTarget.value })}
 				/>
 				<span class="rx-slash" aria-hidden="true">/</span>
-				<div class="rx-flags" role="group" aria-label="Regex flags">
+				<div class="rx-flags" role="group" aria-label={i18n.t('rxe.flagsAria')}>
 					{#each FLAG_OPTIONS as opt (opt.flag)}
 						<button
 							type="button"
@@ -215,13 +216,13 @@
 		</div>
 
 		<label class="rx-field rx-span">
-			<span class="section-label">Replace with</span>
+			<span class="section-label">{i18n.t('rxe.replaceWith')}</span>
 			<!-- A textarea, not an <input>: replacements may contain real line breaks (the
 			     blank-line default does), which a single-line input silently mangles on edit. -->
 			<textarea
 				class="rx-input rx-mono rx-repl"
 				rows="1"
-				placeholder="$& = whole match, $1 = first group, empty removes the match"
+				placeholder={i18n.t('rxe.replacePlaceholder')}
 				{readonly}
 				spellcheck="false"
 				value={rule.replacement}
@@ -230,8 +231,8 @@
 		</label>
 
 		<div class="rx-field">
-			<span class="section-label">Apply to</span>
-			<div class="rx-chips" role="group" aria-label="Which messages">
+			<span class="section-label">{i18n.t('rxe.applyTo')}</span>
+			<div class="rx-chips" role="group" aria-label={i18n.t('rxe.whichMessages')}>
 				{#each ROLE_OPTIONS as opt (opt.role)}
 					<button
 						type="button"
@@ -247,13 +248,13 @@
 				{/each}
 			</div>
 			{#if rule.targets.length === 0}
-				<span class="rx-warn">Nothing selected, the rule is inert.</span>
+				<span class="rx-warn">{i18n.t('rxe.inert')}</span>
 			{/if}
 		</div>
 
 		<div class="rx-field">
-			<span class="section-label">Rewrite</span>
-			<div class="rx-chips" role="group" aria-label="Where the rewrite happens">
+			<span class="section-label">{i18n.t('rxe.rewrite')}</span>
+			<div class="rx-chips" role="group" aria-label={i18n.t('rxe.whereRewrite')}>
 				{#each SCOPE_OPTIONS as opt (opt.scope)}
 					<button
 						type="button"
@@ -270,7 +271,7 @@
 				{/each}
 			</div>
 			{#if rule.scopes.length === 0}
-				<span class="rx-warn">Nothing selected, the rule is inert.</span>
+				<span class="rx-warn">{i18n.t('rxe.inert')}</span>
 			{/if}
 		</div>
 
@@ -279,10 +280,10 @@
 		     as "every turn"; the phrase beside them is what turns two bare numbers into
 		     something you can picture, and it is the same one the rule lists show. -->
 		<div class="rx-field rx-span">
-			<span class="section-label">How far back</span>
+			<span class="section-label">{i18n.t('rxe.howFarBack')}</span>
 			<div class="rx-depth">
 				<label class="rx-depth-box">
-					<span>From</span>
+					<span>{i18n.t('rxe.from')}</span>
 					<input
 						class="rx-input rx-depth-input"
 						type="number"
@@ -295,13 +296,13 @@
 					/>
 				</label>
 				<label class="rx-depth-box">
-					<span>To</span>
+					<span>{i18n.t('rxe.to')}</span>
 					<input
 						class="rx-input rx-depth-input"
 						type="number"
 						min="0"
 						step="1"
-						placeholder="any"
+						placeholder={i18n.t('rxe.any')}
 						{readonly}
 						value={rule.maxDepth ?? ''}
 						oninput={(e) => patchDepth('maxDepth', e.currentTarget.value)}
@@ -309,13 +310,13 @@
 				</label>
 				<span class="rx-depth-reach" class:rx-depth-bad={inverted}>{depthReach ?? 'every turn'}</span>
 			</div>
-			<span class="rx-note">Turns counted back from the newest one, which is 0.</span>
+			<span class="rx-note">{i18n.t('rxe.backNote')}</span>
 		</div>
 	</div>
 
 	<div class="rx-try">
 		<div class="rx-try-head">
-			<span class="section-label">Try it</span>
+			<span class="section-label">{i18n.t('rxe.tryIt')}</span>
 			{#if lastReply}
 				<button type="button" class="rx-borrow" onclick={() => (sampleText = lastReply)}>
 					<Icon name="sparkles" class="w-3 h-3" />
@@ -336,7 +337,7 @@
 		</div>
 		<div class="rx-try-grid">
 			<div class="rx-try-pane">
-				<span class="rx-try-label">Sample</span>
+				<span class="rx-try-label">{i18n.t('rxe.sample')}</span>
 				<div class="rx-sample-wrap">
 					<!-- Highlight layer: same text metrics as the textarea, transparent ink, only
 					     the <mark> backgrounds paint. Kept in one template line so pre-wrap sees
@@ -354,14 +355,14 @@
 				</div>
 			</div>
 			<div class="rx-try-pane">
-				<span class="rx-try-label">Result</span>
+				<span class="rx-try-label">{i18n.t('rxe.result')}</span>
 				<div class="rx-test-out" class:rx-test-quiet={testOutput === null || testOutput === sampleText}>
 					{#if testOutput === null}
-						<span class="rx-test-note">Fix the pattern to see the result.</span>
+						<span class="rx-test-note">{i18n.t('rxe.fixPattern')}</span>
 					{:else if matchInfo && matchInfo.count === 0}
-						<span class="rx-test-note">No match, the sample passes through unchanged.</span>
+						<span class="rx-test-note">{i18n.t('rxe.noMatch')}</span>
 					{:else if testOutput === sampleText}
-						<span class="rx-test-note">Matched, but the replacement reads identical.</span>
+						<span class="rx-test-note">{i18n.t('rxe.identical')}</span>
 					{:else}
 						{testOutput}
 					{/if}
