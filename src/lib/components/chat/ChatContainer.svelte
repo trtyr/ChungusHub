@@ -11,6 +11,7 @@
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import EmptyState from '$lib/components/ui/EmptyState.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import type { MessageAttachment } from '$lib/types/chat';
 
 	let chatState = $derived(chatStore.currentChatState);
@@ -166,13 +167,12 @@
 		</div>
 	{:else}
 		<div class="chat-empty-wrap">
-			<EmptyState icon="bookOpen" title="No chat open">
-				Pick a character and a persona, and the story starts from their first
-				message.
+			<EmptyState icon="bookOpen" title={i18n.t('storymap.noChatOpen')}>
+				{i18n.t('chat.emptyPickPersona')}
 				{#snippet actions()}
 					<Button variant="primary" size="sm" onclick={handleNewChat}>
 						<Icon name="plus" class="w-4 h-4" />
-						New chat
+						{i18n.t('welcome.newChat')}
 					</Button>
 				{/snippet}
 			</EmptyState>

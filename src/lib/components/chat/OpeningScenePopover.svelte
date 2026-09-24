@@ -14,6 +14,7 @@
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import { autoResize } from '$lib/actions/autoResize';
 	import { viewport } from '$lib/stores/viewport.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	interface Props {
 		open: boolean;
@@ -68,7 +69,7 @@
 		onkeydown={handleEscape}
 		role="button"
 		tabindex="-1"
-		aria-label="Close"
+		aria-label={i18n.t('common.close')}
 	></div>
 	<div class="opening-panel surface-float slide-up align-{align}" style="box-shadow: var(--shadow-md);">
 		<textarea
@@ -78,8 +79,8 @@
 			bind:value={direction}
 			use:autoResize={{ maxHeight: 140, value: direction, grip: false }}
 			onkeydown={handleKeydown}
-			aria-label="Direction for the opening scene"
-			placeholder="Direction for the scene…"
+			aria-label={i18n.t('chat.openingAria')}
+			placeholder={i18n.t('chat.openingPlaceholder')}
 		></textarea>
 		<button type="button" class="opening-go" onclick={submit}>
 			<Icon name="sparkles" class="w-3.5 h-3.5" strokeWidth={1.75} />

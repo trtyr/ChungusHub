@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Dialog from '$lib/components/ui/Dialog.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import { characterLibraryStore } from '$lib/stores/characterLibrary.svelte';
 	import { messageStore } from '$lib/stores/messages.svelte';
@@ -42,25 +43,22 @@
 	}
 </script>
 
-<Dialog {open} {onClose} title="Relabel your messages" size="md">
+<Dialog {open} {onClose} title={i18n.t('chat.relabelDialogTitle')} size="md">
 	<!-- The wording carries the whole weight here: the composer's persona button is centimetres
 	     away and also opens a persona list, so this copy has to say what only this one does.
 	     Hence the last sentence, which draws the line the other control sits on. -->
 	<p class="lede font-ui">
-		Every message you have sent in this chat is relabelled to the persona you pick, name and
-		portrait. Handy for imported or older chats that show a plain “You”. It changes nothing
-		outside this chat, and nothing about who you play as next.
+		{i18n.t('chat.personaLede')}
 	</p>
 	<!-- Rebinding changes the name on the turns, not the text of the summaries already written
 	     from them: memory only invalidates a summary when a turn's own content changes. Saying
 	     so here is the whole fix: reaping every episode on a rename would charge a full re-read
 	     for a label. -->
 	<p class="lede font-ui">
-		Summaries already written keep the old name until they are replaced. Use Forget and
-		rebuild in the Memory panel if you want them rewritten with the new one.
+		{i18n.t('chat.personaSummaries')}
 	</p>
 
-	<div class="persona-list" role="radiogroup" aria-label="Persona for your messages">
+	<div class="persona-list" role="radiogroup" aria-label={i18n.t('chat.personaListAria')}>
 		<button
 			type="button"
 			role="radio"
@@ -73,7 +71,7 @@
 			<span class="persona-avatar persona-avatar--none" aria-hidden="true">
 				<Icon name="user" class="w-4 h-4" />
 			</span>
-			<span class="persona-name">None <span class="persona-hint">(shown as “You”)</span></span>
+			<span class="persona-name">{i18n.t('chat.personaNone')} <span class="persona-hint">{i18n.t('chat.shownAsYou')}</span></span>
 			{#if currentPersonaId === null}
 				<span class="persona-check"><Icon name="check" class="w-3.5 h-3.5" /></span>
 			{/if}
@@ -110,7 +108,7 @@
 		{/each}
 
 		{#if personas.length === 0}
-			<p class="empty font-ui">No personas in your library yet. Create one from the Personas tab.</p>
+			<p class="empty font-ui">{i18n.t('chat.personaEmpty')}</p>
 		{/if}
 	</div>
 </Dialog>

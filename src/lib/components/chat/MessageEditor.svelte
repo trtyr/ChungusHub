@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { tick } from 'svelte';
 	import type { EditAction } from '$lib/types/chat';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	interface Props {
 		initialContent: string;
@@ -84,7 +85,7 @@
 <div class="space-y-3">
 	{#if isBranch}
 		<p class="text-xs font-ui text-text-muted">
-			Writing a new branch from this {role === 'user' ? 'turn' : 'reply'}. The original stays where it is.
+			{i18n.t('chat.branchFrom', { noun: role === 'user' ? i18n.t('chat.nounTurn') : i18n.t('chat.nounReply') })}
 		</p>
 	{/if}
 
@@ -96,7 +97,7 @@
 		class="w-full font-body text-text-primary resize-none overflow-hidden border border-text-muted/30 outline-none placeholder:text-text-muted"
 		class:opacity-70={locked}
 		style="font-size: inherit; line-height: 1.55; padding: 0.5rem; background: rgb(0 0 0 / 0.3);"
-		placeholder="Enter your message…"
+		placeholder={i18n.t('chat.typePlaceholder')}
 	></textarea>
 
 	<div class="flex justify-end">
@@ -115,7 +116,7 @@
 				onclick={handleSaveClick}
 				disabled={content.trim() === '' || locked}
 			>
-				{isBranch ? 'Create branch' : 'Save'}
+				{isBranch ? i18n.t('chat.createBranch') : i18n.t('common.save')}
 			</button>
 		</div>
 	</div>

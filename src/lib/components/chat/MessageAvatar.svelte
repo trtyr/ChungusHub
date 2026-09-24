@@ -4,6 +4,7 @@
 	import { portraitViewerStore } from '$lib/stores/portraitViewer.svelte';
 	import { formatDuration } from '$lib/utils/time-format.svelte';
 	import { portraitFocusStyle, type PortraitFocus } from '$lib/utils/portrait-focus';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	interface Props {
 		role: 'user' | 'assistant' | 'system';
@@ -79,7 +80,7 @@
 		<div class="avatar-ordinal">#{ordinal}</div>
 	{/if}
 	{#if durationLabel}
-		<div class="avatar-duration" title="Generation time">{durationLabel}</div>
+		<div class="avatar-duration" title={i18n.t('chat.genTime')}>{durationLabel}</div>
 	{/if}
 </div>
 
