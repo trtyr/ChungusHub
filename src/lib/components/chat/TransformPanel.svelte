@@ -37,6 +37,7 @@
 	import { countMessages, tokenCalibration } from '$lib/tokenizer';
 	import { diffWords } from '$lib/utils/text-diff';
 	import type { ImpersonatePerspective, Message } from '$lib/types/chat';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	interface Props {
 		kind: 'spellcheck' | 'impersonate';
@@ -76,14 +77,14 @@
 	// active persona's own name in the third, so the pick needs no explaining.
 	let speaker = $derived(openChatSetup.persona?.identity.name?.trim() ?? '');
 	let perspectiveOptions = $derived([
-		{ value: 'first', label: 'First person', title: 'Written as "I reach for the letter"' },
-		{ value: 'second', label: 'Second person', title: 'Written as "You reach for the letter"' },
+		{ value: 'first', label: i18n.t('chat.perspectiveFirst'), title: i18n.t('chat.perspectiveFirstTitle') },
+		{ value: 'second', label: i18n.t('chat.perspectiveSecond'), title: i18n.t('chat.perspectiveSecondTitle') },
 		{
 			value: 'third',
-			label: 'Third person',
+			label: i18n.t('chat.perspectiveThird'),
 			title: speaker
-				? `Written as "${speaker} reaches for the letter"`
-				: 'Written as "they reach for the letter"'
+				? i18n.t('chat.perspectiveThirdNamedTitle', { name: speaker })
+				: i18n.t('chat.perspectiveThirdTitle')
 		}
 	]);
 
@@ -120,27 +121,27 @@
 	// One muted line in the head, saying whatever the phase makes worth saying: the price
 	// before a call, the size of the change after one.
 	let headNote = $derived.by(() => {
-		if (phase === 'setup') return estimatedTokens > 0 ? `~${estimatedTokens.toLocaleString()} tokens` : '';
+		if (phase === 'setup') return estimatedTokens > 0 ? i18n.t('chat.tokensEstimate', { n: estimatedTokens.toLocaleString() }) : '';
 		if (phase !== 'ready' || kind !== 'spellcheck') return '';
-		if (unchanged) return 'nothing to change';
-		return `${fixCount} ${fixCount === 1 ? 'fix' : 'fixes'}`;
+		if (unchanged) return i18n.t('chat.nothingToChange');
+		return i18n.t('chat.fixCount', { n: fixCount });
 	});
 
 	// A held request has not been made yet, so the strip says what is actually happening
 	// rather than claiming work that is still waiting on a press.
 	let runningNote = $derived(
 		promptHoldStore.holding
-			? 'Waiting for your review…'
+			? i18n.t('chat.waitingReview')
 			: kind === 'spellcheck'
-				? 'Correcting your draft…'
-				: 'Ghostwriting your message…'
+				? i18n.t('chat.correctingDraft')
+				: i18n.t('chat.ghostwriting')
 	);
 
 	let staleResult = $derived(kind === 'impersonate' && perspective !== ranPerspective);
 	let rewriteTitle = $derived.by(() => {
-		if (kind === 'spellcheck') return 'Check the draft again';
-		const picked = perspectiveOptions.find((o) => o.value === perspective)?.label ?? 'first person';
-		return staleResult ? `Write it again in ${picked.toLowerCase()}` : 'Write another take';
+		if (kind === 'spellcheck') return i18n.t('chat.recheckDraft');
+		const picked = perspectiveOptions.find((o) => o.value === perspective)?.label ?? i18n.t('chat.perspectiveFirst');
+		return staleResult ? i18n.t('chat.rewriteIn', { p: picked }) : i18n.t('chat.writeAnother');
 	});
 
 	async function run(): Promise<void> {
@@ -224,7 +225,7 @@
 		{#if headNote}
 			<span
 				class="head-note font-ui"
-				title={phase === 'setup' && engineModel ? `Estimated for ${engineModel}` : undefined}
+				title={phase === 'setup' && engineModel ? i18n.t('chat.estimatedFor', { model: engineModel }) : undefined}
 			>
 				{headNote}
 			</span>
@@ -232,8 +233,8 @@
 		<button
 			type="button"
 			class="head-close"
-			aria-label="Close and keep the draft"
-			title="Keep the draft as it is (Esc)"
+			aria-label={i18n.t('chat.closeKeepDraft')}
+			title={i18n.t('chat.keepDraftEsc')}
 			onclick={close}
 		>
 			<Icon name="close" class="w-4 h-4" />
@@ -268,27 +269,27 @@
 	<div class="foot">
 		{#if kind === 'impersonate'}
 			<div class="opts" class:opts--inert={phase === 'running'} inert={phase === 'running'}>
-				<span class="opts-label font-ui">Perspective</span>
+				<span class="opts-label font-ui">{i18n.t('chat.perspectiveLabel')}</span>
 				<PillRow
 					options={perspectiveOptions}
 					current={perspective}
 					onpick={pickPerspective}
-					label="Perspective"
+					label={i18n.t('chat.perspectiveLabel')}
 				/>
 			</div>
 		{/if}
 
 		<div class="acts">
 			{#if phase === 'running'}
-				<Button variant="secondary" size="sm" onclick={stop}>Stop</Button>
+				<Button variant="secondary" size="sm" onclick={stop}>{i18n.t('common.stop')}</Button>
 			{:else if phase === 'setup'}
 				<!-- svelte-ignore a11y_autofocus -->
 				<Button variant="primary" size="sm" autofocus onclick={() => void run()}>
-					{kind === 'spellcheck' ? 'Check the draft' : 'Ghostwrite'}
+					{kind === 'spellcheck' ? i18n.t('chat.checkDraft') : i18n.t('chat.ghostwrite')}
 				</Button>
 			{:else if phase === 'error'}
 				<!-- svelte-ignore a11y_autofocus -->
-				<Button variant="primary" size="sm" autofocus onclick={() => void run()}>Try again</Button>
+				<Button variant="primary" size="sm" autofocus onclick={() => void run()}>{i18n.t('chat.tryAgain')}</Button>
 			{:else}
 				<button
 					type="button"
@@ -302,10 +303,10 @@
 				</button>
 				{#if unchanged}
 					<!-- svelte-ignore a11y_autofocus -->
-					<Button variant="primary" size="sm" autofocus onclick={close}>Close</Button>
+					<Button variant="primary" size="sm" autofocus onclick={close}>{i18n.t('common.close')}</Button>
 				{:else}
 					<!-- svelte-ignore a11y_autofocus -->
-					<Button variant="primary" size="sm" autofocus onclick={() => onApprove(proposed)}>Use it</Button>
+					<Button variant="primary" size="sm" autofocus onclick={() => onApprove(proposed)}>{i18n.t('chat.useIt')}</Button>
 				{/if}
 			{/if}
 		</div>
