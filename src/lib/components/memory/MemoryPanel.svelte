@@ -12,6 +12,7 @@
 	 * switch while the panel is already open.
 	 */
 	import EmptyState from '$lib/components/ui/EmptyState.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Toggle from '$lib/components/ui/Toggle.svelte';
 	import MemoryView from '$lib/components/memory/MemoryView.svelte';
 	import { chatStore } from '$lib/stores/chat.svelte';
@@ -35,7 +36,7 @@
 
 <div class="memory-panel">
 	<header class="overlay-header overlay-header--stacked">
-		<h2 class="overlay-title">Memory</h2>
+		<h2 class="overlay-title">{i18n.t('mem.title')}</h2>
 		<!-- The switch is about the chat the line names, so it rides it. -->
 		<div class="overlay-crumb">
 			{#if chat}
@@ -44,21 +45,21 @@
 					<span
 						class="mp-toggle"
 						title={memoryStore.enabled
-							? 'Disable memory for this chat'
-							: 'Enable memory for this chat'}
+							? i18n.t('mem.disableForChat')
+							: i18n.t('mem.enableForChat')}
 					>
 						<Toggle
 							size="sm"
 							checked={memoryStore.enabled}
 							onchange={() => void memoryView?.requestToggle()}
 							label={memoryStore.enabled
-								? 'Disable memory for this chat'
-								: 'Enable memory for this chat'}
+								? i18n.t('mem.disableForChat')
+								: i18n.t('mem.enableForChat')}
 						/>
 					</span>
 				{/if}
 			{:else}
-				<span class="overlay-facts">No chat open</span>
+				<span class="overlay-facts">{i18n.t('storymap.noChatOpen')}</span>
 			{/if}
 		</div>
 	</header>
@@ -68,7 +69,7 @@
 			<!-- No chat open: one shared empty state so it reads identically
 			     to the memory sub-view's own empty. -->
 			<div class="mp-empty">
-				<EmptyState icon="brain" size="sm">Open a chat to manage its memory.</EmptyState>
+				<EmptyState icon="brain" size="sm">{i18n.t('mem.openChatHint')}</EmptyState>
 			</div>
 		{:else}
 			<div class="mp-pane">
@@ -76,12 +77,11 @@
 					<MemoryView bind:this={memoryView} />
 				{:else}
 					<div class="mp-off">
-						<EmptyState icon="brain" size="sm" title="Chat Memory is off">
-							With the engine off, no chat summarizes its older turns, so there is nothing
-							for this panel to show.
+						<EmptyState icon="brain" size="sm" title={i18n.t('mem.offTitle')}>
+							{i18n.t('mem.offBody')}
 							{#snippet actions()}
 								<button type="button" class="mp-off-btn" onclick={openMemorySettings}>
-									Turn on in Settings
+									{i18n.t('mem.turnOnSettings')}
 								</button>
 							{/snippet}
 						</EmptyState>

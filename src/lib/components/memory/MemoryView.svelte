@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import EmptyState from '$lib/components/ui/EmptyState.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
@@ -68,9 +69,9 @@
 	 *  the number switches unit, so the label switches with it rather than putting a count of
 	 *  merges behind the word "waiting". */
 	let summariseLabel = $derived.by(() => {
-		if (!behind) return 'Summarize waiting';
-		if (pending > 0) return `Summarize waiting (${pending})`;
-		return `Merge older summaries (${owedMerges})`;
+		if (!behind) return i18n.t('mem.waiting');
+		if (pending > 0) return i18n.t('mem.waitingN', { n: pending });
+		return i18n.t('mem.mergeN', { n: owedMerges });
 	});
 
 	// Oldest first: the episode list is the story in order, and reading it top-down should
