@@ -13,20 +13,21 @@
 	import { toggleRow } from '$lib/actions/toggleRow';
 	import { imageService } from '$lib/services/imageService';
 	import { failureText } from '$lib/stores/toast.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	let promptDebugPanel = $derived(advancedSettingsStore.promptDebugPanel);
 	let logCount = $derived(promptLogStore.entries.length);
 
-	const RUNGS = [
-		{ value: 'hold', label: 'Ask and hold', title: 'A big loss needs a press and hold' },
-		{ value: 'ask', label: 'Ask once', title: 'Every delete asks, nothing needs holding' },
-		{ value: 'off', label: 'Do not ask', title: 'Deletes happen immediately' }
-	];
+	const RUNGS = $derived([
+		{ value: 'hold', label: i18n.t('adv.rungHold'), title: i18n.t('adv.rungHoldTitle') },
+		{ value: 'ask', label: i18n.t('adv.rungAsk'), title: i18n.t('adv.rungAskTitle') },
+		{ value: 'off', label: i18n.t('adv.rungOff'), title: i18n.t('adv.rungOffTitle') }
+	]);
 
-	const LENGTHS = [
+	const LENGTHS = $derived([
 		...WINDOW_CHOICES.map((c) => ({ value: String(c.ms), label: c.label })),
-		{ value: 'kept', label: 'Until I turn it back on' }
-	];
+		{ value: 'kept', label: i18n.t('adv.keptLength') }
+	]);
 
 	let rung = $derived(deleteGuard.rung);
 	let length = $derived(deleteGuard.timed ? String(deleteGuard.windowMs) : 'kept');
@@ -59,7 +60,7 @@
 	let rebuildFailure = $state('');
 
 	function pictures(n: number): string {
-		return `${n} picture${n === 1 ? '' : 's'}`;
+		return i18n.t('adv.nPictures', { n });
 	}
 
 	/**
@@ -93,16 +94,16 @@
 				rebuildReached++;
 			}
 			if (failed > 0) {
-				rebuildFailure = failureText(`rebuild ${failed} of ${pictures(rebuildTotal)}`, firstCause);
+				rebuildFailure = failureText(i18n.t('adv.failRebuild', { n: failed, p: pictures(rebuildTotal) }), firstCause);
 			}
 			const rebuilt = rebuildTotal - failed;
 			if (rebuilt > 0) {
-				rebuildSummary = `Rebuilt ${pictures(rebuilt)}. Reload the app to draw them.`;
+				rebuildSummary = i18n.t('adv.rebuilt', { n: pictures(rebuilt) });
 			} else if (rebuildTotal === 0) {
-				rebuildSummary = 'There are no stored pictures.';
+				rebuildSummary = i18n.t('adv.noPictures');
 			}
 		} catch (error) {
-			rebuildFailure = failureText('rebuild the thumbnails', error);
+			rebuildFailure = failureText(i18n.t('adv.failRebuildAll'), error);
 		} finally {
 			rebuilding = false;
 		}
@@ -112,17 +113,17 @@
 <div class="adv">
 	<section class="card" data-setting="delete-confirmations">
 		<div class="card-head">
-			<span class="card-title">Delete confirmations</span>
+			<span class="card-title">{i18n.t('adv.deleteTitle')}</span>
 			<InfoTip
-				text="How hard a delete is to fire. Nothing in this app can be undone once it is gone, so the default asks before every delete and makes a big one wait for a press and hold. Lowering this starts as a window that puts itself back, since most reasons to lower it last a few minutes. While it is lowered a row at the top of the app says so."
+				text={i18n.t('adv.deleteTip')}
 			/>
 		</div>
 		<div class="card-body">
-			<PillRow options={RUNGS} current={rung} onpick={pickRung} label="Delete confirmations" />
+			<PillRow options={RUNGS} current={rung} onpick={pickRung} label={i18n.t('adv.deleteTitle')} />
 			{#if rung !== 'hold'}
 				<div class="len">
-					<span class="section-label">For how long</span>
-					<PillRow options={LENGTHS} current={length} onpick={pickLength} label="How long" />
+					<span class="section-label">{i18n.t('adv.forHowLong')}</span>
+					<PillRow options={LENGTHS} current={length} onpick={pickLength} label={i18n.t('adv.howLong')} />
 				</div>
 			{/if}
 		</div>
@@ -130,17 +131,17 @@
 
 	<section class="card" data-setting="prompt-debug-panel">
 		<div class="card-head">
-			<span class="card-title">Prompt Debug Panel</span>
+			<span class="card-title">{i18n.t('adv.debugTitle')}</span>
 			<InfoTip
-				text="Logs every prompt the app sends into a panel you open from a handle on the right edge of the chat. Logs survive a refresh and only the panel's Clear button wipes them."
+				text={i18n.t('adv.debugTip')}
 			/>
 		</div>
 		<div class="toggle-row" use:toggleRow>
-			<span class="toggle-label">Enable prompt logging &amp; debug panel</span>
+			<span class="toggle-label">{i18n.t('adv.debugToggle')}</span>
 			<Toggle
 				checked={promptDebugPanel}
 				onchange={(v) => advancedSettingsStore.setPromptDebugPanel(v)}
-				label="Enable prompt logging & debug panel"
+				label={i18n.t('adv.debugToggle')}
 			/>
 		</div>
 		{#if promptDebugPanel}
@@ -158,9 +159,9 @@
 	     of a request: that one shows what was sent, this one shows what is about to be. -->
 	<section class="card" data-setting="prompt-review">
 		<div class="card-head">
-			<span class="card-title">Prompt Review</span>
+			<span class="card-title">{i18n.t('adv.reviewTitle')}</span>
 			<InfoTip
-				text="Holds the chosen requests and shows you the whole prompt before it goes out, to read or to edit. Edits apply to that one request; nothing in your chat, your preset or your lorebook changes."
+				text={i18n.t('adv.reviewTip')}
 			/>
 		</div>
 		<div class="card-body">
@@ -173,7 +174,7 @@
 					<Toggle
 						checked={promptHoldStore.armed(gate.id)}
 						onchange={(v) => promptHoldStore.setGate(gate.id, v)}
-						label={`Hold ${gate.name} for review`}
+						label={i18n.t('adv.holdForReview', { name: gate.name })}
 					/>
 				</div>
 			{/each}
@@ -186,21 +187,21 @@
 	     reaches it without re-uploading each picture by hand. -->
 	<section class="card" data-setting="thumbnails">
 		<div class="card-head">
-			<span class="card-title">Thumbnails</span>
+			<span class="card-title">{i18n.t('adv.thumbsTitle')}</span>
 			<InfoTip
-				text="Re-encodes the small copy of every stored picture. Reload the app afterwards to see them."
+				text={i18n.t('adv.thumbsTip')}
 			/>
 		</div>
 		<div class="card-body">
 			{#if rebuilding}
 				<p class="rebuild-progress">
 					<Spinner size="sm" />
-					Rebuilding, {rebuildReached} of {rebuildTotal}…
+					{i18n.t('adv.rebuilding', { done: rebuildReached, total: rebuildTotal })}
 				</p>
 			{:else}
 				<button type="button" class="card-btn" onclick={rebuildThumbnails}>
 					<Icon name="refresh" class="w-3.5 h-3.5" strokeWidth={1.75} />
-					Rebuild thumbnails
+					{i18n.t('adv.rebuildBtn')}
 				</button>
 			{/if}
 			{#if rebuildSummary}

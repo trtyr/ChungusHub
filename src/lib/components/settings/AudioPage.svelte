@@ -14,11 +14,12 @@
 	import Slider from '$lib/components/ui/Slider.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import { toggleRow } from '$lib/actions/toggleRow';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
-	const TIMING_OPTIONS: { value: SoundTiming; label: string; title: string }[] = [
-		{ value: 'away', label: 'Only when away', title: 'Nothing plays while this window has focus.' },
-		{ value: 'always', label: 'Always', title: 'Plays even while you are looking at the app.' }
-	];
+	const TIMING_OPTIONS: { value: SoundTiming; label: string; title: string }[] = $derived([
+		{ value: 'away', label: i18n.t('audio.timingAway'), title: i18n.t('audio.timingAwayTitle') },
+		{ value: 'always', label: i18n.t('audio.timingAlways'), title: i18n.t('audio.timingAlwaysTitle') }
+	]);
 
 	const DEFAULT_VOLUME = 0.6;
 
@@ -68,42 +69,42 @@
 <div class="audio">
 	<section class="card" data-setting="notification-sounds">
 		<div class="card-head">
-			<span class="card-title">Notification Sounds</span>
+			<span class="card-title">{i18n.t('audio.title')}</span>
 			<InfoTip
-				text="A short tone when the app stops waiting for something: a reply written, an assistant turn ended, a question it needs answered. Each event picks its own tone below."
+				text={i18n.t('audio.tip')}
 			/>
 		</div>
 		<div class="toggle-row" use:toggleRow>
-			<span class="slider-label">Play a sound when it's your turn again</span>
+			<span class="slider-label">{i18n.t('audio.turnLabel')}</span>
 			<Toggle
 				checked={enabled}
 				onchange={(v) => audioSettingsStore.setEnabled(v)}
-				label="Play a sound when it's your turn again"
+				label={i18n.t('audio.turnLabel')}
 			/>
 		</div>
 
 		{#if enabled}
 			<div class="sub">
 				<div class="row-block">
-					<span class="slider-label">When to play</span>
+					<span class="slider-label">{i18n.t('audio.timing')}</span>
 					<PillRow
 						options={TIMING_OPTIONS}
 						current={timing}
 						onpick={(v) => audioSettingsStore.setTiming(v as SoundTiming)}
-						label="When to play"
+						label={i18n.t('audio.timing')}
 					/>
 				</div>
 				<div class="row-block">
-					<span class="slider-label">Volume</span>
+					<span class="slider-label">{i18n.t('audio.volume')}</span>
 					<Slider
 						value={volume}
 						min={0}
 						max={1}
 						step={0.01}
 						defaultValue={DEFAULT_VOLUME}
-						format={(v) => (Math.round(v * 100) === 0 ? 'Muted' : `${Math.round(v * 100)}%`)}
+						format={(v) => (Math.round(v * 100) === 0 ? i18n.t('audio.muted') : `${Math.round(v * 100)}%`)}
 						oninput={handleVolume}
-						label="Volume"
+						label={i18n.t('audio.volume')}
 					/>
 				</div>
 				<!-- Said on the page rather than hidden in a tooltip: it decides whether the
@@ -120,8 +121,8 @@
 	{#if enabled}
 		<section class="card" data-setting="sound-events">
 			<div class="card-head">
-				<span class="card-title">Events</span>
-				<InfoTip text="Open an event to hear the tones. Tapping one plays it and assigns it." />
+				<span class="card-title">{i18n.t('audio.events')}</span>
+				<InfoTip text={i18n.t('audio.eventsTip')} />
 			</div>
 
 			{#each SOUND_EVENTS as event (event.id)}
@@ -139,13 +140,13 @@
 							<span class="event-desc">{event.description}</span>
 						</span>
 						<span class="event-tone" class:is-silent={current === null}>
-							{current ? toneLabel(current) : 'None'}
+							{current ? toneLabel(current) : i18n.t('audio.none')}
 						</span>
 						<Icon name="chevronDown" class="event-chev" />
 					</button>
 
 					{#if open}
-						<div class="tones" role="radiogroup" aria-label="{event.label}: tone">
+						<div class="tones" role="radiogroup" aria-label={i18n.t('audio.toneAria', { label: event.label })}>
 							<button
 								type="button"
 								class="tone"
@@ -176,7 +177,7 @@
 			<!-- The switch above says on while nothing can play, which is the one state on this
 			     page a reader could sit in wondering what is broken. -->
 			{#if allSilent}
-				<p class="note">Every event is set to None, so the app stays quiet.</p>
+				<p class="note">{i18n.t('audio.quietNote')}</p>
 			{/if}
 		</section>
 	{/if}
