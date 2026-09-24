@@ -6,6 +6,7 @@
 	 * always "all" and they download bundled in one `.zip`.
 	 */
 	import Dialog from '$lib/components/ui/Dialog.svelte';
+import { i18n } from '$lib/i18n/i18n.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import { toastStore } from '$lib/stores/toast.svelte';
@@ -68,11 +69,11 @@
 	}
 </script>
 
-<Dialog {open} {onClose} title={single ? 'Export character' : `Export ${targets.length} characters`} size="sm">
+<Dialog {open} {onClose} title={single ? i18n.t('ex.exportOne') : i18n.t('ex.exportN', { n: targets.length })} size="sm">
 	<div class="flex flex-col gap-5">
 		<!-- Format -->
 		<div class="flex flex-col gap-2">
-			<span class="ex-label">Format</span>
+			<span class="ex-label">{i18n.t('ex.format')}</span>
 			<div class="ex-segment">
 				<button
 					type="button"
@@ -104,14 +105,14 @@
 			<!-- Version picker: versioned characters only -->
 			{#if single.versions.length > 0}
 				<div class="flex flex-col gap-2">
-					<span class="ex-label">Version</span>
+					<span class="ex-label">{i18n.t('ex.version')}</span>
 					<div class="flex flex-col gap-1">
 						<label class="ex-radio" class:is-active={versionSel === 'all'}>
 							<input type="radio" name="version" value="all" bind:group={versionSel} />
 							<span class="ex-radio-body">
-								<span class="ex-radio-name">All versions</span>
+								<span class="ex-radio-name">{i18n.t('ex.allVersions')}</span>
 								<span class="ex-radio-note">
-									SillyTavern reads the active version; every version is kept for re-import.
+								{i18n.t('ex.allVersionsNote')}
 								</span>
 							</span>
 						</label>
@@ -121,7 +122,7 @@
 								<input type="radio" name="version" value={version.id} bind:group={versionSel} />
 								<span class="ex-radio-body">
 									<span class="ex-radio-name">
-										{version.name}{#if isActive}<span class="ex-radio-tag">active</span>{/if}
+										{version.name}{#if isActive}<span class="ex-radio-tag">{i18n.t('ex.active')}</span>{/if}
 									</span>
 								</span>
 							</label>
@@ -131,20 +132,19 @@
 			{/if}
 		{:else}
 			<p class="ex-hint">
-				{targets.length} characters download as one <b>.zip</b>. Each keeps its latest version on
-				the surface and every version embedded for re-import.
-			</p>
+					{i18n.t('ex.multiHint', { n: targets.length })}
+				</p>
 		{/if}
 
 		{#if hasGallery}
 			<label class="ex-radio" class:is-active={includeGallery}>
 				<input type="checkbox" bind:checked={includeGallery} />
 				<span class="ex-radio-body">
-					<span class="ex-radio-name">Include gallery images</span>
+					<span class="ex-radio-name">{i18n.t('ex.includeGallery')}</span>
 					<span class="ex-radio-note">
 						{single
-							? 'Downloads as a .zip: the card plus a gallery folder beside it.'
-							: "Each character's gallery rides in its own folder inside the .zip."}
+							? i18n.t('ex.galleryNoteOne')
+							: i18n.t('ex.galleryNoteMulti')}
 					</span>
 				</span>
 			</label>
@@ -154,20 +154,19 @@
 			<label class="ex-radio" class:is-active={includeSprites}>
 				<input type="checkbox" bind:checked={includeSprites} />
 				<span class="ex-radio-body">
-					<span class="ex-radio-name">Include sprites</span>
+					<span class="ex-radio-name">{i18n.t('ex.includeSprites')}</span>
 					<span class="ex-radio-note">
-						A folder named after the card, one picture per label. SillyTavern reads it as
-						that character's sprites, and so does this app.
+						{i18n.t('ex.spritesNote')}
 					</span>
 				</span>
 			</label>
 		{/if}
 
 		<div class="flex gap-3 justify-end pt-1">
-			<Button variant="ghost" onclick={onClose} disabled={busy}>Cancel</Button>
+			<Button variant="ghost" onclick={onClose} disabled={busy}>{i18n.t('common.cancel')}</Button>
 			<Button variant="primary" onclick={handleExport} disabled={busy}>
 				<Icon name="download" class="w-4 h-4" />
-				Export
+				{i18n.t('ex.export')}
 			</Button>
 		</div>
 	</div>

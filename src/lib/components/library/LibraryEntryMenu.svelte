@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
+import { i18n } from '$lib/i18n/i18n.svelte';
 	import { toastStore } from '$lib/stores/toast.svelte';
 	import { CONVERT_ACTION } from '$lib/utils/entry-conversion';
 	import type { LibraryEntryType } from '$lib/types/library';
@@ -30,7 +31,7 @@
 		triggerClass?: string;
 	}
 
-	let { entryType, isFavorite = false, onToggleFavorite, onDuplicate, onConvert, onDelete, deleteBlockedReason, onExport, exportLabel = 'Export…', triggerClass = '' }: Props = $props();
+	let { entryType, isFavorite = false, onToggleFavorite, onDuplicate, onConvert, onDelete, deleteBlockedReason, onExport, exportLabel = undefined, triggerClass = '' }: Props = $props();
 
 	let open = $state(false);
 	let triggerRef = $state<HTMLButtonElement | null>(null);
@@ -125,10 +126,10 @@
 	type="button"
 	onclick={openMenu}
 	class={triggerClass}
-	aria-label="More actions"
+	aria-label={i18n.t('menu.more')}
 	aria-haspopup="menu"
 	aria-expanded={open}
-	title="More actions"
+	title={i18n.t('menu.more')}
 >
 	<Icon name="dotsVertical" class="w-3.5 h-3.5" />
 </button>
@@ -149,7 +150,7 @@
 				class="w-full flex items-center gap-2.5 px-3 py-1.5 text-xs font-ui text-text-secondary hover:bg-bg-tertiary hover:text-text-primary transition-colors"
 			>
 				<Icon name="heart" class="w-3.5 h-3.5 {isFavorite ? 'fill-current text-red-400' : ''}" />
-				{isFavorite ? 'Unfavorite' : 'Favorite'}
+				{isFavorite ? i18n.t('menu.unfavorite') : i18n.t('menu.favorite')}
 			</button>
 			<div class="my-1 border-t border-border-subtle"></div>
 		{/if}
@@ -161,7 +162,7 @@
 				class="w-full flex items-center gap-2.5 px-3 py-1.5 text-xs font-ui text-text-secondary hover:bg-bg-tertiary hover:text-text-primary transition-colors"
 			>
 				<Icon name="copy" class="w-3.5 h-3.5" />
-				Duplicate
+				{i18n.t('menu.duplicate')}
 			</button>
 		{/if}
 		{#if onConvert && entryType}
@@ -183,7 +184,7 @@
 				class="w-full flex items-center gap-2.5 px-3 py-1.5 text-xs font-ui text-text-secondary hover:bg-bg-tertiary hover:text-text-primary transition-colors"
 			>
 				<Icon name="download" class="w-3.5 h-3.5" />
-				{exportLabel}
+				{exportLabel ?? i18n.t('ex.export')}
 			</button>
 		{/if}
 		<button

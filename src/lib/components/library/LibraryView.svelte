@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon, { type IconName } from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { uiStore } from '$lib/stores/ui.svelte';
 	import { characterLibraryStore } from '$lib/stores/characterLibrary.svelte';
 	import { lorebookStore } from '$lib/lorebook/store.svelte';
@@ -49,8 +50,8 @@
 				type="button"
 				class="library-flow-cancel"
 				onclick={() => uiStore.clearNewChat()}
-				aria-label="Cancel new chat"
-				title="Cancel new chat"
+				aria-label={i18n.t('lv.cancelNewChat')}
+				title={i18n.t('lv.cancelNewChat')}
 			>
 				<Icon name="close" class="w-3.5 h-3.5" />
 			</button>
@@ -58,7 +59,7 @@
 	{/if}
 
 	<div class="library-switch">
-		<div class="library-tabs" role="tablist" aria-label="Library sections">
+		<div class="library-tabs" role="tablist" aria-label={i18n.t('lv.sectionsAria')}>
 			{#each TABS as item (item.id)}
 				<button
 					type="button"

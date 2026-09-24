@@ -8,6 +8,7 @@
 	 * glyph in one corner means one thing in both grids.
 	 */
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import { toastStore } from '$lib/stores/toast.svelte';
 	import { imageService, imageRejectionReason } from '$lib/services/imageService';
@@ -125,7 +126,7 @@
 			tabindex="0"
 			onclick={() => onEditLabel(sprite.path, sprite.label)}
 			onkeydown={(e) => e.key === 'Enter' && onEditLabel(sprite.path, sprite.label)}
-			aria-label="Rename {sprite.label}"
+			aria-label={i18n.t('cs.renameAria', { name: sprite.label })}
 		>
 			<img
 				src={imageService.thumbnailUrl(sprite.path)}
@@ -135,13 +136,13 @@
 			/>
 			<div class="sprite-label">{sprite.label}</div>
 			{#if sprite.path === defaultSprite}
-				<div class="sprite-badge" title="Shown until the engine reads a reply">Default</div>
+				<div class="sprite-badge" title={i18n.t('cs.defaultBadgeTip')}>{i18n.t('cs.defaultBadge')}</div>
 			{:else}
 				<button
 					type="button"
 					class="sprite-action absolute top-1 left-1 p-1 rounded-full bg-black/50 text-white/80 opacity-0 group-hover/tile:opacity-100 focus-visible:opacity-100 transition-opacity hover:bg-accent hover:text-white"
 					onclick={(e) => handleSetDefault(e, sprite)}
-					aria-label="Make {sprite.label} the default"
+					aria-label={i18n.t('cs.makeDefaultAria', { name: sprite.label })}
 				>
 					<Icon name="star" class="w-3.5 h-3.5" />
 				</button>
@@ -150,7 +151,7 @@
 				type="button"
 				class="sprite-action absolute top-1 right-1 p-1 rounded-full bg-black/50 text-white/80 opacity-0 group-hover/tile:opacity-100 focus-visible:opacity-100 transition-opacity hover:bg-error hover:text-white"
 				onclick={(e) => handleRemove(e, sprite)}
-				aria-label="Remove {sprite.label}"
+				aria-label={i18n.t('cs.removeAria', { name: sprite.label })}
 			>
 				<Icon name="close" class="w-3.5 h-3.5" />
 			</button>
@@ -162,13 +163,13 @@
 		onclick={() => fileInputRef?.click()}
 		disabled={uploading}
 		class="aspect-[3/4] rounded-[var(--radius-md)] border border-dashed border-border flex flex-col items-center justify-center gap-1 text-text-muted hover:text-accent hover:border-accent/50 transition-colors"
-		aria-label="Add sprites"
+		aria-label={i18n.t('cs.addSprites')}
 	>
 		{#if uploading}
 			<Spinner size="md" />
 		{:else}
 			<Icon name="plus" class="w-5 h-5" />
-			<span class="text-xs font-ui">Add</span>
+			<span class="text-xs font-ui">{i18n.t('gal.add')}</span>
 		{/if}
 	</button>
 </div>

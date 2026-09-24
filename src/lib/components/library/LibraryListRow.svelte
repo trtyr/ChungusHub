@@ -2,6 +2,7 @@
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import LibraryEntryMenu from './LibraryEntryMenu.svelte';
 	import TagList from './TagList.svelte';
+import { i18n } from '$lib/i18n/i18n.svelte';
 	import { imageService } from '$lib/services/imageService';
 	import { portraitFocusStyle } from '$lib/utils/portrait-focus';
 	import type { LibraryEntry } from '$lib/types/library';
@@ -191,7 +192,7 @@
 	{#if !selectionMode}
 		<!-- Read-only favorited indicator; the toggle now lives in the ⋮ menu -->
 		{#if entry.isFavorite}
-			<Icon name="heart" class="shrink-0 w-4 h-4 text-error fill-current" aria-label="Favorited" />
+			<Icon name="heart" class="shrink-0 w-4 h-4 text-error fill-current" aria-label={i18n.t('lr.favorited')} />
 		{/if}
 
 		<!-- Actions: revealed on hover (pointer devices), always shown on touch -->
@@ -200,8 +201,8 @@
 				type="button"
 				onclick={(e) => { stop(e); onEdit(entry.id); }}
 				class="icon-btn !w-8 !h-8 !rounded-[var(--radius-md)] text-text-muted hover:!bg-bg-tertiary hover:!text-text-primary"
-				aria-label="Edit"
-				title="Edit"
+				aria-label={i18n.t('chatpg.edit')}
+				title={i18n.t('chatpg.edit')}
 			>
 				<Icon name="pencil" class="w-4 h-4" />
 			</button>
