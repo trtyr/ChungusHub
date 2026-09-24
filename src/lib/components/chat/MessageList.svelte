@@ -17,6 +17,7 @@
 	import { toastStore } from '$lib/stores/toast.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	interface Props {
 		messages: Message[];
@@ -210,9 +211,11 @@
 	let nextChunk = $derived(Math.min(pageSize, windowStart));
 	// The count is the point of the marker: it is the only thing on screen saying how much
 	// story sits above, in either mode.
-	let earlierLabel = $derived(`${windowStart} earlier ${windowStart === 1 ? 'turn' : 'turns'}`);
+	let earlierLabel = $derived(i18n.t('chat.earlierLabel', { n: windowStart }));
 	let loadLabel = $derived(
-		nextChunk < windowStart ? `Load ${nextChunk} of ${earlierLabel}` : `Load ${earlierLabel}`
+		nextChunk < windowStart
+			? i18n.t('chat.loadSome', { n: nextChunk, label: earlierLabel })
+			: i18n.t('chat.loadAll', { label: earlierLabel })
 	);
 	// A momentum scroll fires many events over one gesture; without this it would spend
 	// several pages before the first correction has landed.
@@ -525,7 +528,7 @@
 	bind:this={listElement}
 	class="message-list panel-scroll"
 	role="log"
-	aria-label="Chat messages"
+	aria-label={i18n.t('chat.messagesAria')}
 	aria-live="polite"
 	onscroll={updateNearBottom}
 >
@@ -542,12 +545,12 @@
 				<div class="message-empty-icon">
 					<Icon name="bookOpen" class="w-8 h-8 text-accent" strokeWidth={1.5} />
 				</div>
-				<h3 class="message-empty-title">Begin your story</h3>
+				<h3 class="message-empty-title">{i18n.t('chat.beginStory')}</h3>
 				<p class="message-empty-copy">
 					{#if featurePromptsStore.openingSceneEnabled}
-						Write your first action or let the AI set the scene
+						{i18n.t('chat.beginHintScene')}
 					{:else}
-						Write your first action to begin
+						{i18n.t('chat.beginHint')}
 					{/if}
 				</p>
 				{#if featurePromptsStore.openingSceneEnabled}
@@ -560,7 +563,7 @@
 							disabled={messageStore.isStreaming}
 						>
 							<Icon name="bookOpen" class="w-4 h-4" />
-							Generate an opening scene
+							{i18n.t('chat.generateOpening')}
 						</Button>
 						<OpeningScenePopover
 							open={openingPopoverOpen}
@@ -600,7 +603,7 @@
 							<span class="memory-boundary-line"></span>
 							<span class="memory-boundary-label">
 								<Icon name="brain" class="w-3 h-3" />
-								Earlier turns are in memory
+								{i18n.t('chat.earlierInMemory')}
 							</span>
 							<span class="memory-boundary-line"></span>
 						</div>
@@ -641,10 +644,10 @@
 		type="button"
 		class="jump-to-latest surface-float shadow-md"
 		onclick={jumpToLatest}
-		aria-label="Jump to latest message"
+		aria-label={i18n.t('chat.jumpLatest')}
 	>
 		<Icon name="chevronDown" class="w-3.5 h-3.5" />
-		{#if hasUnseen}<span>New</span>{/if}
+		{#if hasUnseen}<span>{i18n.t('chat.newBadge')}</span>{/if}
 	</button>
 {/if}
 </div>
