@@ -8,6 +8,7 @@
 	 * Presentation only. It never scans, and it never reaches a store.
 	 */
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import {
 		LOREBOOK_SCAN_FIELDS,
 		lorebookWasInjected,
@@ -96,7 +97,7 @@
 	<!-- Only the tester can land here: the chat hides its pill when a trace is empty, and a
 	     scanned book always records every entry it holds. So the one true reading is a book
 	     with nothing in it. -->
-	<p class="lt-empty">This book has no entries, so a scan has nothing to report.</p>
+	<p class="lt-empty">{i18n.t('lbtrace.empty')}</p>
 {:else}
 	<p class="lt-summary">{summary}</p>
 

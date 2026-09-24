@@ -16,6 +16,7 @@
 	 * The panel stays open across presses: binding a book to three chats is a run of them.
 	 */
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { foldForSearch } from '$lib/components/library/browse';
 	import { characterLibraryStore } from '$lib/stores/characterLibrary.svelte';
 	import { chatStore } from '$lib/stores/chat.svelte';
@@ -142,8 +143,8 @@
 			<input
 				type="text"
 				bind:value={query}
-				placeholder="Search characters and chats…"
-				aria-label="Search what this lorebook can be bound to"
+				placeholder={i18n.t('lbp.search')}
+				aria-label={i18n.t('lbp.searchAria')}
 				class="input-base"
 			/>
 		</div>
@@ -152,7 +153,7 @@
 
 <div class="bp-list">
 	{#if shown.length === 0}
-		<p class="bp-note">Nothing matches that</p>
+		<p class="bp-note">{i18n.t('chat.nothingMatches')}</p>
 	{:else}
 		{#each shown as group (group.id)}
 			<p class="section-label bp-group">{group.label}</p>

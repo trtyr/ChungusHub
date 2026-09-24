@@ -6,6 +6,7 @@
 	 * the list, and no book can be minted here (architecture/lorebook.md).
 	 */
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import LorebookGlobalBadge from './LorebookGlobalBadge.svelte';
 	import { foldForSearch } from '$lib/components/library/browse';
 	import { lorebookStore } from '$lib/lorebook/store.svelte';
@@ -62,8 +63,8 @@
 			type="text"
 			bind:value={query}
 			onkeydown={onSearchKeydown}
-			placeholder="Search lorebooks…"
-			aria-label="Search lorebooks"
+			placeholder={i18n.t('ltp.search')}
+			aria-label={i18n.t('ltp.searchAria')}
 			class="input-base"
 		/>
 	</div>
@@ -86,7 +87,7 @@
 
 <div class="lbt-list">
 	{#if visible.length === 0}
-		<p class="lbt-note">No lorebooks match “{query}”.</p>
+		<p class="lbt-note">{i18n.t('ltp.noMatch', { query })}</p>
 	{:else}
 		{#each visible as book (book.id)}
 			<button type="button" class="lbt-row" onclick={() => onPick(book.id)}>
