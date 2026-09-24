@@ -7,6 +7,7 @@
 	 * stories replayable.
 	 */
 	import Icon from '$lib/components/ui/Icon.svelte';
+import { i18n } from '$lib/i18n/i18n.svelte';
 	import { characterLibraryStore } from '$lib/stores/characterLibrary.svelte';
 	import { chatStore } from '$lib/stores/chat.svelte';
 	import { toastStore } from '$lib/stores/toast.svelte';
@@ -159,7 +160,7 @@
 		class:is-open={open}
 		aria-haspopup="menu"
 		aria-expanded={open}
-		title={activeVersion ? `Version: ${activeVersion.name}` : 'Versions'}
+		title={activeVersion ? i18n.t('vm.versionPrefix', { name: activeVersion.name }) : i18n.t('vm.versions')}
 	>
 		<Icon name="branch" class="w-3.5 h-3.5" />
 		<span class="version-chip-label">{activeVersion ? activeVersion.name : 'Versions'}</span>
@@ -197,11 +198,11 @@
 											renamingId = null;
 										}
 									}}
-									placeholder="Version name"
+									placeholder={i18n.t('vm.namePlaceholder')}
 									maxlength="60"
 									autofocus
 								/>
-								<button type="button" class="version-action" title="Save name" onclick={handleRename}>
+								<button type="button" class="version-action" title={i18n.t('vm.saveName')} onclick={handleRename}>
 									<Icon name="check" class="w-3.5 h-3.5" />
 								</button>
 							{:else}
@@ -210,14 +211,14 @@
 									class="version-pick"
 									disabled={busy}
 									onclick={() => handleSwitch(version.id)}
-									title={isActive ? 'Currently editing' : `Switch to "${version.name}"`}
+									title={isActive ? i18n.t('vm.currentlyEditing') : i18n.t('vm.switchTo', { name: version.name })}
 								>
 									<span class="version-check" class:is-visible={isActive}>
 										<Icon name="check" class="w-3.5 h-3.5" />
 									</span>
 									<span class="version-name">{version.name}</span>
 									{#if version.id === defaultVersionId}
-										<span class="version-default">Default</span>
+										<span class="version-default">{i18n.t('vm.default')}</span>
 									{/if}
 									{#if pinned > 0}
 										<span class="version-usage">{pinned} chat{pinned === 1 ? '' : 's'}</span>
@@ -226,7 +227,7 @@
 								<button
 									type="button"
 									class="version-action"
-									title="Rename"
+									title={i18n.t('vm.rename')}
 									onclick={() => startRename(version.id, version.name)}
 								>
 									<Icon name="pencil" class="w-3.5 h-3.5" />
@@ -237,7 +238,7 @@
 										class="version-action"
 										class:is-confirming={confirmingDeleteId === version.id}
 										title={pinned > 0
-											? `${pinned} chat${pinned === 1 ? ' is' : 's are'} pinned to this version`
+										? i18n.t('vm.pinnedN', { n: pinned })
 											: confirmingDeleteId === version.id
 												? 'Click again to delete'
 												: 'Delete version'}
@@ -270,14 +271,14 @@
 								newName = '';
 							}
 						}}
-						placeholder='Name it: "pirate", "calmer", …'
+						placeholder={i18n.t('vm.newPlaceholder')}
 						maxlength="60"
 						autofocus
 					/>
 					<button
 						type="button"
 						class="version-action"
-						title="Create version"
+						title={i18n.t('vm.create')}
 						disabled={!newName.trim() || busy}
 						onclick={handleCreate}
 					>

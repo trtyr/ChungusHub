@@ -8,6 +8,7 @@
 	 */
 	import type { Snippet } from 'svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
+import { i18n } from '$lib/i18n/i18n.svelte';
 	import LorebookLinkPicker from '$lib/components/lorebook/LorebookLinkPicker.svelte';
 	import { lorebookStore } from '$lib/lorebook/store.svelte';
 	import { toastStore } from '$lib/stores/toast.svelte';
@@ -134,16 +135,16 @@
 		<h2 class="editor-header-name" class:is-untitled={!name && isNew}>{name || fallbackName}</h2>
 		{@render badge?.()}
 		{#if isNew}
-			<span class="edh-pill">New</span>
+			<span class="edh-pill">{i18n.t('eh.new')}</span>
 		{:else if saving}
 			<span class="edh-status" role="status" aria-label="Saving">
 				<span class="edh-status-dot"></span>
-				<span class="edh-status-text">Saving…</span>
+				<span class="edh-status-text">{i18n.t('eh.saving')}</span>
 			</span>
 		{:else if savedFlash}
 			<span class="edh-status is-saved" role="status" aria-label="Saved">
 				<Icon name="check" class="w-3.5 h-3.5" />
-				<span class="edh-status-text">Saved</span>
+				<span class="edh-status-text">{i18n.t('eh.saved')}</span>
 			</span>
 		{/if}
 	</div>
@@ -163,10 +164,10 @@
 				onclick={() => (lorebookOpen = !lorebookOpen)}
 				aria-haspopup="dialog"
 				aria-expanded={lorebookOpen}
-				title="Linked lorebooks"
+				title={i18n.t('eh.linkedLorebooks')}
 			>
 				<Icon name="bookOpen" class="w-4 h-4" />
-				<span class="edh-chip-label">Lorebooks</span>
+				<span class="edh-chip-label">{i18n.t('eh.lorebooks')}</span>
 				{#if lorebookCount > 0}
 					<span class="edh-chip-count">{lorebookCount}</span>
 				{/if}
@@ -174,7 +175,7 @@
 			{#if lorebookOpen}
 				<div class="edh-popover surface-float" role="dialog" aria-label="Linked lorebooks">
 					<div class="edh-popover-head">
-						<p class="edh-popover-title">Lorebooks</p>
+						<p class="edh-popover-title">{i18n.t('eh.lorebooks')}</p>
 					</div>
 					<LorebookLinkPicker
 						selected={lorebookIds}
@@ -202,7 +203,7 @@
 				onclick={onToggleFavorite}
 				aria-label={isFavorite ? 'Unfavorite' : 'Favorite'}
 				aria-pressed={isFavorite}
-				title={isFavorite ? 'Unfavorite' : 'Favorite'}
+				title={isFavorite ? i18n.t('eh.unfavorite') : i18n.t('eh.favorite')}
 			>
 				<Icon name="heart" class="w-4 h-4 {isFavorite ? 'fill-current' : ''}" />
 			</button>
@@ -215,8 +216,8 @@
 					onclick={() => (menuOpen = !menuOpen)}
 					aria-haspopup="menu"
 					aria-expanded={menuOpen}
-					aria-label="More actions"
-					title="More actions"
+					aria-label={i18n.t('eh.more')}
+					title={i18n.t('eh.more')}
 				>
 					<Icon name="dotsVertical" class="w-4 h-4" />
 				</button>
@@ -262,8 +263,8 @@
 				type="button"
 				class="editor-header-btn"
 				onclick={onClose}
-				aria-label="Close editor"
-				title="Close"
+				aria-label={i18n.t('eh.closeEditor')}
+				title={i18n.t('eh.close')}
 			>
 				<Icon name="close" class="w-[1.15rem] h-[1.15rem]" />
 			</button>

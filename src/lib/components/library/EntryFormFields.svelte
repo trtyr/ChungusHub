@@ -4,6 +4,7 @@
 	import { imageService, imageRejectionReason } from '$lib/services/imageService';
 	import { toastStore } from '$lib/stores/toast.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
+import { i18n } from '$lib/i18n/i18n.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import AlternateGreetingsModal from './AlternateGreetingsModal.svelte';
 	import CharacterGallery from './CharacterGallery.svelte';
