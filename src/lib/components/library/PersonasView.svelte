@@ -264,8 +264,8 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				type="text"
 				value={searchQuery}
 				oninput={handleSearchInput}
-				placeholder="Search {personas.length} persona{personas.length === 1 ? '' : 's'}…"
-				aria-label="Search personas"
+				placeholder={i18n.t('pv.searchPlaceholder', { n: personas.length })}
+				aria-label={i18n.t('pv.searchAria')}
 				class="input-base"
 			/>
 		</div>
@@ -280,8 +280,8 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					onclick={toggle}
 					aria-haspopup="true"
 					aria-expanded={open}
-					aria-label="Filter and sort"
-					title="Filter & sort"
+					aria-label={i18n.t('pv.filterSort')}
+					title={i18n.t('pv.filterSort')}
 				>
 					<Icon name="filter" class="w-4 h-4" />
 					{#if activeFilterCount > 0}
@@ -292,7 +292,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 
 			<div class="brw-sec">
 				<div class="brw-sec-head">
-					<span class="brw-sec-title">Sort by</span>
+					<span class="brw-sec-title">{i18n.t('pv.sortBy')}</span>
 				</div>
 				<div class="brw-opts">
 					{#each SORT_OPTIONS as opt}
@@ -310,7 +310,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 
 			<div class="brw-sec">
 				<div class="brw-sec-head">
-					<span class="brw-sec-title">Show</span>
+					<span class="brw-sec-title">{i18n.t('pv.show')}</span>
 				</div>
 				<button
 					type="button"
@@ -335,8 +335,8 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					onclick={toggle}
 					aria-haspopup="true"
 					aria-expanded={open}
-					aria-label="View options"
-					title="View options"
+					aria-label={i18n.t('pv.viewOptions')}
+					title={i18n.t('pv.viewOptions')}
 				>
 					<Icon name="sliders" class="w-4 h-4" />
 				</button>
@@ -344,7 +344,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 
 			<div class="brw-sec">
 				<div class="brw-sec-head">
-					<span class="brw-sec-title">Layout</span>
+					<span class="brw-sec-title">{i18n.t('pv.layout')}</span>
 				</div>
 				<div class="brw-opts brw-opts--3" role="group" aria-label="View mode">
 					<button
@@ -397,7 +397,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			{#if viewMode === 'grid'}
 				<div class="brw-sec">
 					<div class="brw-sec-head">
-						<span class="brw-sec-title">Card size</span>
+						<span class="brw-sec-title">{i18n.t('pv.cardSize')}</span>
 					</div>
 					<div class="flex items-center gap-2.5">
 						<Icon name="image" class="w-4 h-4 text-text-muted shrink-0" />
@@ -417,7 +417,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 
 			<div class="brw-sec">
 				<div class="brw-sec-head">
-					<span class="brw-sec-title">Per page</span>
+					<span class="brw-sec-title">{i18n.t('pv.perPage')}</span>
 				</div>
 				<div class="brw-opts brw-opts--3">
 					{#each PER_PAGE_OPTIONS as count}
@@ -434,9 +434,9 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			</div>
 		</BrowsePopover>
 
-		<button type="button" class="brw-new" onclick={handleCreateNew} title="New persona">
+		<button type="button" class="brw-new" onclick={handleCreateNew} title={i18n.t('pv.newPersona')}>
 			<Icon name="plus" class="w-4 h-4" />
-			<span class="brw-new-label">New</span>
+			<span class="brw-new-label">{i18n.t('pv.new')}</span>
 		</button>
 	</div>
 
@@ -453,7 +453,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					</button>
 				</span>
 			{/if}
-			<button type="button" class="brw-chips-clear" onclick={clearAllFilters}>Clear</button>
+			<button type="button" class="brw-chips-clear" onclick={clearAllFilters}>{i18n.t('pv.clear')}</button>
 		</div>
 	{/if}
 
@@ -463,15 +463,15 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			<div class="flex items-center justify-center h-full">
 				<div class="flex flex-col items-center gap-3 text-text-muted">
 					<Spinner size="lg" />
-					<span class="text-sm font-ui">Loading personas…</span>
+					<span class="text-sm font-ui">{i18n.t('pv.loading')}</span>
 				</div>
 			</div>
 		<!-- No empty state for an empty library: the app keeps at least one persona
 		     (architecture/library.md), so the only way this list runs out is a filter. -->
 		{:else if filtersActive && processedEntries.length === 0}
 			<div class="grid place-items-center h-full">
-				<EmptyState icon="search" size="sm" title="No matches">
-					No personas match your current filters.
+				<EmptyState icon="search" size="sm" title={i18n.t('pv.noMatches')}>
+					{i18n.t('pv.noMatchesHint')}
 					{#snippet actions()}
 						<Button variant="ghost" size="sm" onclick={clearAllFilters}>
 							Clear all filters
@@ -552,7 +552,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 
 <ConfirmDialog
 	open={deleteTargetId !== null}
-	title="Delete from Library"
+	title={i18n.t('pv.deleteTitle')}
 	message={deleteTargetMessage}
 	confirmLabel="Delete"
 	variant="danger"

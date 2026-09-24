@@ -419,7 +419,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			{#if field.seedsChat}
 				<span
 					class="inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-ui font-medium rounded-[var(--radius-sm)] bg-accent/15 text-accent shrink-0"
-					title="This becomes the chat's opening message, so it reaches the AI as context. It doesn't need a preset macro."
+					title={i18n.t('ef.openingTip')}
 				>
 					<Icon name="chat" class="w-3 h-3" />
 					Opening message
@@ -502,7 +502,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		type="button"
 		class="shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--radius-sm)] text-[11px] font-ui font-medium border border-border text-text-muted hover:text-accent hover:border-accent/50 transition-colors"
 		onclick={() => (showGreetingsModal = true)}
-		title="Manage alternate greetings"
+		title={i18n.t('ef.manageGreetings')}
 	>
 		<Icon name="chat" class="w-3 h-3" />
 		Alternate greetings{greetings.length ? ` · ${greetings.length}` : ''}
@@ -538,7 +538,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				<div
 					class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover/portrait:opacity-100 transition-opacity flex items-end justify-center pb-2.5"
 				>
-					<span class="text-white/90 text-xs font-ui">Change photo</span>
+					<span class="text-white/90 text-xs font-ui">{i18n.t('ef.changePhoto')}</span>
 				</div>
 				<button
 					type="button"
@@ -552,8 +552,8 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					type="button"
 					class="portrait-overlay-action absolute bottom-1.5 right-1.5 p-1 rounded-full bg-black/50 text-white/80 hover:bg-black/75 hover:text-white"
 					onclick={handleAdjustFraming}
-					aria-label="Adjust framing"
-					title="Adjust framing"
+					aria-label={i18n.t('ef.adjustFraming')}
+					title={i18n.t('ef.adjustFraming')}
 				>
 					<Icon name="crop" class="w-3.5 h-3.5" />
 				</button>
@@ -562,7 +562,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					class="w-full h-full flex flex-col items-center justify-center text-text-muted group-hover/portrait:text-accent transition-colors gap-1.5"
 				>
 					<Icon name="image" class="w-7 h-7" />
-					<span class="text-xs font-ui">Add photo</span>
+					<span class="text-xs font-ui">{i18n.t('ef.addPhoto')}</span>
 				</div>
 			{/if}
 		</div>
@@ -624,7 +624,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						bind:value={newTagInput}
 						onkeydown={handleTagInputKeydown}
 						onblur={submitTag}
-						placeholder="New tag…"
+						placeholder={i18n.t('ef.newTag')}
 						class="input-base px-2.5 py-1 text-sm font-ui w-24"
 					/>
 				{:else}
