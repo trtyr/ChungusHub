@@ -53,6 +53,7 @@
 		type CommandDef,
 		type CommandHost
 	} from '$lib/commands/registry';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	interface Props {
 		/** `onCommit` fires once the send is certain to proceed, which is what empties the box. */
@@ -98,10 +99,10 @@
 	let generatingLine = $derived.by(() => {
 		if (generatingSince === null) return '';
 		const minutes = Math.floor(Math.max(0, relativeClock.now - generatingSince) / 60_000);
-		if (minutes < 1) return 'A reply is generating for this chat.';
-		if (minutes < 60) return `A reply has been generating for ${minutes} minute${minutes === 1 ? '' : 's'}.`;
+		if (minutes < 1) return i18n.t('chat.genNow');
+		if (minutes < 60) return i18n.t('chat.genMinutes', { n: minutes });
 		const hours = Math.floor(minutes / 60);
-		return `A reply has been generating for ${hours} hour${hours === 1 ? '' : 's'}.`;
+		return i18n.t('chat.genHours', { n: hours });
 	});
 
 	let content = $state('');
@@ -205,10 +206,10 @@
 	let activeSteering = $derived(steeringStore.activeFor(steeringTarget));
 	let steeringActive = $derived(activeSteering.length > 0);
 	let steeringTitle = $derived.by(() => {
-		if (activeSteering.length === 0) return 'Steering: guide the next reply';
+		if (activeSteering.length === 0) return i18n.t('chat.steeringHint');
 		const first = noteLabel(activeSteering[0]);
-		if (activeSteering.length === 1) return `Steering: ${first}`;
-		return `Steering: ${first} (+${activeSteering.length - 1} more)`;
+		if (activeSteering.length === 1) return i18n.t('chat.steeringWith', { first });
+		return i18n.t('chat.steeringMore', { first, n: activeSteering.length - 1 });
 	});
 
 	// The meter's steering input, resolved through the SAME pure resolver prompt-builder
@@ -443,10 +444,10 @@
 
 	let regenerateLastHint = $derived(
 		!canRegenerateLast
-			? 'The newest turn must be a reply, or a turn of yours with no reply yet'
+			? i18n.t('chat.retryGateHint')
 			: lastTurn?.role === 'user'
-				? 'Generate a reply to your last turn'
-				: 'Delete the last reply and generate a new one'
+				? i18n.t('chat.retryGenHint')
+				: i18n.t('chat.retryRedoHint')
 	);
 
 	// Swipe is the same act with the non-destructive action ('branch' keeps what is there and
@@ -677,7 +678,7 @@
 			}
 			duplicateTarget = { chat, footprint };
 		} catch (error) {
-			toastStore.failed(`duplicate "${chat.title}"`, error);
+			toastStore.failed(i18n.t('chat.failDuplicate', { title: chat.title }), error);
 		} finally {
 			// Released here so the dialog's own buttons are live; the copy re-raises it.
 			duplicating = false;
@@ -690,9 +691,9 @@
 			const newChatId = await chatStore.duplicateChat(chat.id, { includeMemory });
 			duplicateTarget = null;
 			await chatStore.selectChat(newChatId);
-			toastStore.success(includeMemory ? 'Chat duplicated with its memory' : 'Chat duplicated');
+			toastStore.success(includeMemory ? i18n.t('chat.duplicatedWithMemory') : i18n.t('chat.duplicated'));
 		} catch (error) {
-			toastStore.failed(`duplicate "${chat.title}"`, error);
+			toastStore.failed(i18n.t('chat.failDuplicate', { title: chat.title }), error);
 		} finally {
 			duplicating = false;
 		}
@@ -724,9 +725,7 @@
 		// depends on the provider/model + the Send images setting, so say so up front
 		// instead of silently dropping them at generation time.
 		if (!llmService.sendsImages()) {
-			toastStore.warning(
-				'This model does not take images, or sending images is off. The picture stays in the chat but never reaches the model.'
-			);
+			toastStore.warning(i18n.t('chat.noImageSupport'));
 		}
 		uploadingImages += images.length;
 		for (const file of images) {
@@ -735,7 +734,7 @@
 				const url = imageService.thumbnailUrl(path) ?? (await imageService.getImageUrl(path)) ?? '';
 				pendingImages = [...pendingImages, { path, url }];
 			} catch (error) {
-				toastStore.failed(`attach "${file.name}"`, error);
+				toastStore.failed(i18n.t('chat.failAttach', { name: file.name }), error);
 			} finally {
 				uploadingImages -= 1;
 			}
@@ -787,7 +786,7 @@
 		e.preventDefault();
 		const images = dropped.filter(isImageFile);
 		for (const file of dropped.filter((f) => !isImageFile(f))) {
-			toastStore.error(`"${file.name}" is not a picture. Attach a file to the Chungus Assistant instead, which can read it.`);
+			toastStore.error(i18n.t('chat.notAnImage', { name: file.name }));
 		}
 		if (images.length) void attachImageFiles(images);
 	}
@@ -1052,7 +1051,7 @@
 			role="presentation"
 		>
 			{#if dragDepth > 0}
-				<div class="composer-drop">Drop a picture to attach it</div>
+				<div class="composer-drop">{i18n.t('chat.dropHint')}</div>
 			{/if}
 
 			<!-- What "/" turned the box into. The list is its own surface; the mode, the gates
@@ -1069,20 +1068,20 @@
 				<div class="attach-strip">
 					{#each pendingImages as img (img.path)}
 						<div class="attach-thumb">
-							<img src={img.url} alt="Attached" />
+							<img src={img.url} alt={i18n.t('chat.attached')} />
 							<button
 								type="button"
 								class="attach-remove"
 								onclick={() => removePendingImage(img.path)}
-								aria-label="Remove image"
-								title="Remove"
+								aria-label={i18n.t('chat.removeImage')}
+								title={i18n.t('common.remove')}
 							>
 								<Icon name="x" class="w-3 h-3" strokeWidth={2.5} />
 							</button>
 						</div>
 					{/each}
 					{#if uploadingImages > 0}
-						<div class="attach-thumb attach-uploading" title="Uploading…">
+						<div class="attach-thumb attach-uploading" title={i18n.t('chat.uploading')}>
 							<Icon name="refresh" class="w-4 h-4 animate-spin text-text-muted" />
 						</div>
 					{/if}
@@ -1095,7 +1094,7 @@
 					onkeydown={handleKeydown}
 					oninput={handleComposerInput}
 					onpaste={handlePaste}
-				placeholder="Type your message…"
+				placeholder={i18n.t('chat.typePlaceholder')}
 				disabled={draftLocked || transformOpen}
 					rows="1"
 					class="composer-textarea bg-transparent font-body text-text-primary resize-none
@@ -1111,8 +1110,8 @@
 							type="button"
 							onclick={onCancel}
 							class="icon-btn text-error hover:bg-error/10"
-							aria-label="Stop generating"
-							title="Stop"
+							aria-label={i18n.t('chat.stopGenerating')}
+							title={i18n.t('common.stop')}
 						>
 							<Icon name="stop" class="w-5 h-5" />
 						</button>
@@ -1129,8 +1128,8 @@
 						       disabled:opacity-30 disabled:cursor-not-allowed
 						       transition-all duration-150"
 						style="box-shadow: var(--shadow-sm);"
-							aria-label={commandOpen ? 'Run command' : 'Send message'}
-							title={commandOpen ? 'Run command' : 'Send'}
+							aria-label={commandOpen ? i18n.t('chat.runCommand') : i18n.t('chat.sendMessage')}
+							title={commandOpen ? i18n.t('chat.runCommand') : i18n.t('chat.send')}
 						>
 							<Icon name="arrowRight" class="w-4 h-4" strokeWidth={2.5} />
 						</button>
@@ -1146,8 +1145,8 @@
 							onclick={() => (menuOpen = !menuOpen)}
 							class="composer-icon-btn"
 							class:composer-icon-btn--active={menuOpen}
-							aria-label="Insert options"
-							title="Insert options"
+							aria-label={i18n.t('chat.insertOptions')}
+							title={i18n.t('chat.insertOptions')}
 						>
 							<Icon name="menu" class="w-4 h-4" />
 						</button>
@@ -1158,7 +1157,7 @@
 								type="button"
 								class="fixed inset-0 z-10"
 								onclick={() => (menuOpen = false)}
-								aria-label="Close menu"
+								aria-label={i18n.t('common.closeMenu')}
 							></button>
 
 							<!-- Dropdown menu. The engine entries wear their engine's own registry
@@ -1168,16 +1167,16 @@
 							<div class="composer-dropdown absolute bottom-full left-0 mb-2 z-20 surface-float rounded-lg shadow-md py-1 min-w-[210px]">
 								<button type="button" class="composer-menu-item" onclick={handleGoHome}>
 									<Icon name="home" class="w-4 h-4" />
-									Home
+									{i18n.t('chat.menuHome')}
 								</button>
 								<button
 									type="button"
 									class="composer-menu-item"
-									title="Browse and search this character's chats"
+									title={i18n.t('chat.menuChatsTitle')}
 									onclick={handleOpenChats}
 								>
 									<Icon name="chat" class="w-4 h-4" />
-									Chats
+									{i18n.t('welcome.chats')}
 								</button>
 								<!-- Directly under Chats: this is that panel's own New chat button
 								     surfaced as a shortcut, so it reads as one beside the row that
@@ -1188,29 +1187,29 @@
 									disabled={!activeCharacterEntry}
 									title={activeCharacterEntry
 										? undefined
-										: "This story's character is gone from the library"}
+										: i18n.t('chat.charGone')}
 									onclick={handleNewChat}
 								>
 									<Icon name="plus" class="w-4 h-4" />
-									New chat
+									{i18n.t('welcome.newChat')}
 								</button>
 								<button
 									type="button"
 									class="composer-menu-item"
-									title="Search this story's messages"
+									title={i18n.t('chat.findMenuTitle')}
 									onclick={handleFindInChat}
 								>
 									<Icon name="search" class="w-4 h-4" />
-									Find in chat…
+									{i18n.t('chat.findMenuItem')}
 								</button>
 								<button
 									type="button"
 									class="composer-menu-item"
-									title="Everything you have written here, counted"
+									title={i18n.t('chat.statsMenuTitle')}
 									onclick={handleOpenStats}
 								>
 									<Icon name="chart" class="w-4 h-4" />
-									Your stats
+									{i18n.t('welcome.yourStats')}
 								</button>
 								<div class="composer-menu-sep"></div>
 								<button
@@ -1219,7 +1218,7 @@
 									onclick={() => handleInsertDummy('user')}
 								>
 									<Icon name="user" class="w-4 h-4" />
-									Insert user message
+									{i18n.t('chat.insertUser')}
 								</button>
 								<button
 									type="button"
@@ -1227,7 +1226,7 @@
 									onclick={() => handleInsertDummy('assistant')}
 								>
 									<Icon name="sparkles" class="w-4 h-4" />
-									Insert LLM message
+									{i18n.t('chat.insertLLM')}
 								</button>
 								{#if featurePromptsStore.spellcheckEnabled || featurePromptsStore.impersonateEnabled}
 									<div class="composer-menu-sep"></div>
@@ -1237,14 +1236,14 @@
 											class="composer-menu-item"
 											disabled={isStreaming || transformOpen || !content.trim()}
 											title={transformOpen
-												? 'Finish the one already open first'
+												? i18n.t('chat.finishFirst')
 												: content.trim()
-													? 'Fix spelling and grammar, then review the changes before they apply'
-													: 'Type a draft first'}
+													? i18n.t('chat.spellcheckTitle')
+													: i18n.t('chat.typeDraftFirst')}
 											onclick={() => startTransform('spellcheck')}
 										>
 											<Icon name="checkCircle" class="w-4 h-4" />
-											Spellcheck draft
+											{i18n.t('chat.menuSpellcheck')}
 										</button>
 									{/if}
 									{#if featurePromptsStore.impersonateEnabled}
@@ -1253,14 +1252,14 @@
 											class="composer-menu-item"
 											disabled={isStreaming || transformOpen || !content.trim()}
 											title={transformOpen
-												? 'Finish the one already open first'
+												? i18n.t('chat.finishFirst')
 												: content.trim()
-													? 'Expand the draft into a full in-character message, then review it'
-													: 'Type a draft first'}
+													? i18n.t('chat.impersonateTitle')
+													: i18n.t('chat.typeDraftFirst')}
 											onclick={() => startTransform('impersonate')}
 										>
 											<Icon name="mask" class="w-4 h-4" />
-											Impersonate draft
+											{i18n.t('chat.menuImpersonate')}
 										</button>
 									{/if}
 								{/if}
@@ -1268,11 +1267,11 @@
 								<button
 									type="button"
 									class="composer-menu-item"
-									title="Show every message you have sent in this chat as a different persona"
+									title={i18n.t('chat.relabelTitle')}
 									onclick={openPersonaDialog}
 								>
 									<Icon name="tag" class="w-4 h-4" />
-									Relabel your messages…
+									{i18n.t('chat.relabel')}
 								</button>
 							</div>
 						{/if}
@@ -1285,8 +1284,8 @@
 							class="composer-icon-btn"
 							class:composer-icon-btn--active={attachOpen}
 							disabled={isStreaming}
-							aria-label="Attach"
-							title="Attach"
+							aria-label={i18n.t('chat.attach')}
+							title={i18n.t('chat.attach')}
 							aria-haspopup="menu"
 							aria-expanded={attachOpen}
 						>
@@ -1299,7 +1298,7 @@
 								type="button"
 								class="fixed inset-0 z-10"
 								onclick={() => (attachOpen = false)}
-								aria-label="Close menu"
+								aria-label={i18n.t('common.closeMenu')}
 							></button>
 
 							<!-- The Insert menu's recipe, down to the width: the two triggers sit side
@@ -1309,11 +1308,11 @@
 								<button
 									type="button"
 									class="composer-menu-item"
-									title="PNG, JPEG, WebP or GIF"
+									title={i18n.t('chat.imageTypes')}
 									onclick={pickImage}
 								>
 									<Icon name="image" class="w-4 h-4" />
-									Image…
+									{i18n.t('chat.menuImage')}
 								</button>
 							</div>
 						{/if}
@@ -1338,7 +1337,7 @@
 								onclick={toggleSteering}
 								class="composer-icon-btn steering-trigger"
 								class:steering-trigger--active={steeringActive}
-								aria-label="Steering"
+								aria-label={i18n.t('chat.steeringTitle')}
 								aria-expanded={steeringOpen}
 								title={steeringTitle}
 							>
@@ -1355,7 +1354,7 @@
 									type="button"
 									class="fixed inset-0 z-10"
 									onclick={closeSteering}
-									aria-label="Close steering"
+									aria-label={i18n.t('chat.closeSteering')}
 								></button>
 
 								<div class="absolute bottom-full left-0 mb-2 z-20">
@@ -1385,15 +1384,15 @@
 								type="button"
 								class="token-trigger"
 								class:is-trimmed={trimmedMessages > 0 || overBudget}
-								aria-label="Show token usage breakdown"
+								aria-label={i18n.t('chat.tokenAria')}
 								aria-expanded={tokenPopupPinned}
 								onclick={() => (tokenPopupPinned = !tokenPopupPinned)}
 							>
 								{#if inputTokens > 0}
-									<span>{inputTokens} input</span>
+									<span>{i18n.t('chat.tokensInput', { n: inputTokens })}</span>
 								{/if}
 								{#if totalContextTokens > 0}
-									<span>~{totalContextTokens.toLocaleString()} total</span>
+									<span>{i18n.t('chat.tokensTotal', { n: totalContextTokens.toLocaleString() })}</span>
 								{/if}
 								<!-- Trimming drops the OLDEST live turns, and turns that are live are by
 								     definition not covered by a memory summary, so a silent trim is the one
@@ -1403,8 +1402,8 @@
 									<span
 										class="inline-flex"
 										title={overBudget
-											? 'Prompt exceeds the context size even with all history trimmed'
-											: `${trimmedMessages} older ${trimmedMessages === 1 ? 'message is' : 'messages are'} being dropped to fit the context size`}
+											? i18n.t('chat.overBudgetTitle')
+											: i18n.t('chat.trimTitle', { n: trimmedMessages })}
 									>
 										<Icon name="warning" class="w-3 h-3" />
 									</span>
@@ -1423,8 +1422,8 @@
 									onpointerleave={tokenHoverOut}
 								>
 									<div class="token-popup-head">
-										<span class="token-popup-title">Prompt tokens</span>
-										<span class="token-popup-tag">estimate</span>
+										<span class="token-popup-title">{i18n.t('chat.promptTokens')}</span>
+										<span class="token-popup-tag">{i18n.t('chat.estimate')}</span>
 									</div>
 
 									<div class="token-bar">
@@ -1443,56 +1442,56 @@
 									</div>
 
 									<div class="token-rows">
-										<div class="token-row" title="System instructions & format from your preset">
+										<div class="token-row" title={i18n.t('chat.rowPresetTitle')}>
 											<span class="token-dot bg-accent"></span>
-											<span class="token-row-name">Preset</span>
+											<span class="token-row-name">{i18n.t('setup.preset')}</span>
 											<span class="token-row-val">{presetTokens.toLocaleString()}</span>
 										</div>
-										<div class="token-row" title="Persona, characters, lorebook, steering & preset controls">
+										<div class="token-row" title={i18n.t('chat.rowContextTitle')}>
 											<span class="token-dot bg-orange-400"></span>
-											<span class="token-row-name">Context</span>
+											<span class="token-row-name">{i18n.t('chat.rowContext')}</span>
 											<span class="token-row-val">{contextTokens.toLocaleString()}</span>
 										</div>
 										{#if memoryTokens > 0}
-											<div class="token-row" title="Chat memory recall: the scene summaries in play on this branch">
+											<div class="token-row" title={i18n.t('chat.rowMemoryTitle')}>
 												<span class="token-dot bg-violet-400"></span>
-												<span class="token-row-name">Memory</span>
+												<span class="token-row-name">{i18n.t('chat.rowMemory')}</span>
 												<span class="token-row-val">{memoryTokens.toLocaleString()}</span>
 											</div>
 										{/if}
-										<div class="token-row" title="Conversation history included in the prompt">
+										<div class="token-row" title={i18n.t('chat.rowChatTitle')}>
 											<span class="token-dot bg-emerald-500"></span>
-											<span class="token-row-name">Chat</span>
+											<span class="token-row-name">{i18n.t('chat.rowChat')}</span>
 											<span class="token-row-val">{chatTokens.toLocaleString()}</span>
 										</div>
 									</div>
 
 									{#if trimmedMessages > 0}
-										<div class="token-trim" title="Oldest chat turns dropped so the prompt fits the context size set on the Connection page">
+										<div class="token-trim" title={i18n.t('chat.trimPopupTitle')}>
 											<Icon name="warning" class="w-3 h-3" strokeWidth={2} />
-											{trimmedMessages} older {trimmedMessages === 1 ? 'message' : 'messages'} trimmed to fit the context size
+											{i18n.t('chat.trimmed', { n: trimmedMessages })}
 										</div>
 									{/if}
 									{#if overBudget}
 										<div class="token-trim over">
 											<Icon name="warning" class="w-3 h-3" strokeWidth={2} />
-											Prompt exceeds the context size even with all history trimmed
+											{i18n.t('chat.overBudgetTitle')}
 										</div>
 									{/if}
 
 									<div class="token-total">
-										<span>Total context</span>
+										<span>{i18n.t('chat.totalContext')}</span>
 										<span class="token-total-val">~{totalContextTokens.toLocaleString()}</span>
 									</div>
 									{#if inputTokens > 0}
 										<div class="token-total token-total-sub">
-											<span>+ your message</span>
+											<span>{i18n.t('chat.plusYours')}</span>
 											<span>{inputTokens.toLocaleString()}</span>
 										</div>
 									{/if}
 
 									<div class="token-foot">
-										{#if modelLabel}Estimated for <b>{modelLabel}</b>, auto-calibrated from real usage.{:else}Estimate: calibrates from real usage.{/if}
+										{#if modelLabel}{i18n.t('chat.footFor', { model: modelLabel })}{:else}{i18n.t('chat.footPlain')}{/if}
 									</div>
 								</div>
 							{/if}

@@ -4,6 +4,7 @@ import { db } from '$lib/services/database';
 import { chatStore } from './chat.svelte';
 import { toastStore } from './toast.svelte';
 import { llmService } from '$lib/services/llm/provider';
+import { i18n } from '$lib/i18n/i18n.svelte';
 import { notifySound } from '$lib/services/notificationSound';
 import { findActivePath, findDeepestLeafFromNode } from '$lib/utils/message-tree';
 import { buildPromptMessages, type BuiltPrompt, type PromptBuildContext } from '$lib/utils/prompt-builder';
@@ -1008,7 +1009,7 @@ class MessageStore {
 				// Same re-read as generateResponse: the scene is the server's to write, so a
 				// break here does not mean none landed.
 				await this.refreshAfterFailure(state.chat.id);
-				toastStore.failed('generate the opening scene', error);
+				toastStore.failed(i18n.t('chat.failOpening'), error);
 			}
 		} finally {
 			chatStore.endStream();
