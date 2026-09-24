@@ -45,10 +45,11 @@
 	import { personaStore } from '$lib/stores/persona.svelte';
 	import { generalSettingsStore } from '$lib/stores/general-settings.svelte';
 	import { failureText } from '$lib/stores/toast.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	const TITLES: Record<Step, string> = {
-		hello: 'Welcome to ChungusHub',
-		persona: 'Who are you?'
+		hello: 'welcome.title.hello',
+		persona: 'welcome.title.persona'
 	};
 
 	let name = $state('');
@@ -105,15 +106,13 @@
 	}
 </script>
 
-<Dialog {open} onClose={close} title={TITLES[step]} {dismissible} size="lg">
+<Dialog {open} onClose={close} title={i18n.t(TITLES[step])} {dismissible} size="lg">
 	{#if step === 'hello'}
 		<div class="wd-hello">
 			<img class="wd-mascot" src="/mark.svg" alt="" />
 
 			<p class="wd-lede">
-				Thank you for trying ChungusHub out. I started building it only for myself, and it
-				grew big enough that sharing it seemed like the better idea: maybe a few people
-				like me will enjoy it too.
+				{i18n.t('welcome.lede')}
 			</p>
 
 			<!-- Named rather than wired to a button: the next step is the persona form, and a
@@ -121,34 +120,32 @@
 			<p class="wd-note">
 				<span class="wd-note-icon"><Icon name="download" class="w-4 h-4" strokeWidth={1.75} /></span>
 				<span>
-					Bringing a SillyTavern setup with you? Settings → Import reads a whole folder
-					in one pass: characters, personas, lorebooks, chats and backgrounds.
+					{i18n.t('welcome.importNote')}
 				</span>
 			</p>
 		</div>
 
 		<div class="wd-foot">
 			<Button variant="primary" onclick={leaveHello}>
-				Get started
+				{i18n.t('welcome.getStarted')}
 				<Icon name="arrowRight" class="w-4 h-4" />
 			</Button>
 		</div>
 	{:else}
 		<div class="wd-form">
 			<p class="wd-lede">
-				A persona is you in the story. Name one now and every chat starts with it;
-				you can write more in the Library later.
+				{i18n.t('welcome.personaLede')}
 			</p>
 
 			<label class="wd-field">
-				<span class="wd-label">Name</span>
+				<span class="wd-label">{i18n.t('welcome.nameLabel')}</span>
 				<!-- svelte-ignore a11y_autofocus -- the step exists to be typed into -->
 				<input
 					class="input-base wd-input"
 					bind:value={name}
 					autofocus
 					maxlength="60"
-					placeholder="What the story calls you"
+					placeholder={i18n.t('welcome.namePlaceholder')}
 					onkeydown={(e) => {
 						if (e.key === 'Enter') createPersona();
 					}}
@@ -156,12 +153,12 @@
 			</label>
 
 			<label class="wd-field">
-				<span class="wd-label">About you <span class="wd-optional">optional</span></span>
+				<span class="wd-label">{i18n.t('welcome.aboutLabel')} <span class="wd-optional">{i18n.t('common.optional')}</span></span>
 				<textarea
 					class="input-base wd-input wd-textarea"
 					bind:value={description}
 					rows="3"
-					placeholder="Appearance, presence, how you carry yourself…"
+					placeholder={i18n.t('welcome.aboutPlaceholder')}
 				></textarea>
 			</label>
 
@@ -173,7 +170,7 @@
 				{#if saving}
 					<Spinner size="sm" />
 				{/if}
-				Create persona
+				{i18n.t('welcome.createPersona')}
 			</Button>
 		</div>
 	{/if}

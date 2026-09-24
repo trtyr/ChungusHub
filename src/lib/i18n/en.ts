@@ -23,5 +23,22 @@ export const en: Record<string, string> = {
 	'guard.underMinute': 'under a minute left',
 	'guard.restore': 'Turn back on',
 	'guard.dismissAria': 'Dismiss',
-	'guard.dismissTitle': 'Dismiss until this is turned on again'
+	'guard.dismissTitle': 'Dismiss until this is turned on again',
+
+	// layout · WelcomeDialog
+	'welcome.title.hello': 'Welcome to ChungusHub',
+	'welcome.title.persona': 'Who are you?',
+	'welcome.lede':
+		'Thank you for trying ChungusHub out. I started building it only for myself, and it grew big enough that sharing it seemed like the better idea: maybe a few people like me will enjoy it too.',
+	'welcome.importNote':
+		'Bringing a SillyTavern setup with you? Settings → Import reads a whole folder in one pass: characters, personas, lorebooks, chats and backgrounds.',
+	'welcome.getStarted': 'Get started',
+	'welcome.personaLede':
+		'A persona is you in the story. Name one now and every chat starts with it; you can write more in the Library later.',
+	'welcome.nameLabel': 'Name',
+	'welcome.namePlaceholder': 'What the story calls you',
+	'welcome.aboutLabel': 'About you',
+	'common.optional': 'optional',
+	'welcome.aboutPlaceholder': 'Appearance, presence, how you carry yourself…',
+	'welcome.createPersona': 'Create persona'
 };
