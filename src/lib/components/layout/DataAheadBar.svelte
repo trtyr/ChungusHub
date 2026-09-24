@@ -21,14 +21,15 @@
 
 <script lang="ts">
 	import { slide } from 'svelte/transition';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 </script>
 
 {#if ahead}
 	<div class="ahead-bar font-ui" role="status" transition:slide={{ duration: 180 }}>
 		<Icon name="warning" class="w-4 h-4 shrink-0" strokeWidth={1.75} />
-		<span>This data was last used by a newer ChungusHub. Writing with this older one can damage it.</span>
-		<span class="ahead-fix">Update this copy.</span>
+		<span>{i18n.t('dataahead.message')}</span>
+		<span class="ahead-fix">{i18n.t('dataahead.update')}</span>
 	</div>
 {/if}
 

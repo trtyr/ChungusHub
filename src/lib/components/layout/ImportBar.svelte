@@ -19,6 +19,7 @@
 	 * picks up what is left.
 	 */
 	import { slide } from 'svelte/transition';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import { importRun } from '$lib/stores/import-run.svelte';
 
@@ -28,13 +29,13 @@
 {#if importRun.running}
 	<div class="import-bar font-ui" role="status" transition:slide={{ duration: 180 }}>
 		<Spinner size="sm" />
-		<span class="import-message">Importing SillyTavern data</span>
+		<span class="import-message">{i18n.t('import.running')}</span>
 		{#if progress}
 			<span class="import-step">
 				{progress.phase}{progress.total > 1 ? ` ${progress.done + 1} / ${progress.total}` : ''}
 			</span>
 		{/if}
-		<button type="button" class="import-stop" onclick={() => importRun.stop()}>Stop</button>
+		<button type="button" class="import-stop" onclick={() => importRun.stop()}>{i18n.t('common.stop')}</button>
 	</div>
 {/if}
 

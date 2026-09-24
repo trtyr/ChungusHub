@@ -14,6 +14,7 @@
 	 * a reasonable thing to tell a warning, "never again" is not.
 	 */
 	import { slide } from 'svelte/transition';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import { deleteGuard } from '$lib/stores/delete-guard.svelte';
 
@@ -30,7 +31,7 @@
 	let left = $derived.by(() => {
 		if (!deleteGuard.timed) return null;
 		const mins = Math.ceil(deleteGuard.remaining / 60_000);
-		return mins <= 1 ? 'under a minute left' : `${mins} minutes left`;
+		return mins <= 1 ? i18n.t('guard.underMinute') : i18n.t('guard.minutesLeft', { mins });
 	});
 </script>
 
@@ -42,14 +43,14 @@
 			<span class="guard-left">{left}</span>
 		{/if}
 		<button type="button" class="guard-action" onclick={() => deleteGuard.restore()}>
-			Turn back on
+			{i18n.t('guard.restore')}
 		</button>
 		<button
 			type="button"
 			class="guard-dismiss"
 			onclick={() => deleteGuard.dismissBar()}
-			aria-label="Dismiss"
-			title="Dismiss until this is turned on again"
+			aria-label={i18n.t('guard.dismissAria')}
+			title={i18n.t('guard.dismissTitle')}
 		>
 			<Icon name="close" class="w-3.5 h-3.5" />
 		</button>

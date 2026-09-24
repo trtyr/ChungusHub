@@ -7,5 +7,21 @@
  */
 export const en: Record<string, string> = {
 	'connection.lost': 'No connection to the server. Nothing you write now is being saved.',
-	'connection.retrying': 'Reconnecting…'
+	'connection.retrying': 'Reconnecting…',
+
+	// layout · DataAheadBar
+	'dataahead.message':
+		'This data was last used by a newer ChungusHub. Writing with this older one can damage it.',
+	'dataahead.update': 'Update this copy.',
+
+	// layout · ImportBar
+	'import.running': 'Importing SillyTavern data',
+	'common.stop': 'Stop',
+
+	// layout · DeleteGuardBar
+	'guard.minutesLeft': '{mins} minutes left',
+	'guard.underMinute': 'under a minute left',
+	'guard.restore': 'Turn back on',
+	'guard.dismissAria': 'Dismiss',
+	'guard.dismissTitle': 'Dismiss until this is turned on again'
 };
