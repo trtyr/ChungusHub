@@ -14,6 +14,7 @@
 	 * failed image.
 	 */
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import { APPROVAL_MODES, approvalModeInfo, type ApprovalModeInfo } from '$lib/config/assistant-approval';
 	import { attachmentKindIcon } from '$lib/config/assistant-icons';
@@ -165,17 +166,17 @@
 			class="assistant-add-btn"
 			class:assistant-add-btn--active={showPicker}
 			onclick={() => (showPicker = !showPicker)}
-			aria-label="Attach a chat or character"
-			title="Attach a chat or character"
+			aria-label={i18n.t('asm.attachAria')}
+			title={i18n.t('asm.attachAria')}
 		>
 			<Icon name="plus" class="w-3.5 h-3.5" />
-			<span>Add</span>
+			<span>{i18n.t('pcf.add')}</span>
 		</button>
 		{#if showPicker}
 			<div class="assistant-picker surface-float">
 				<input
 					class="assistant-picker-search"
-					placeholder="Attach a chat or character…"
+					placeholder={i18n.t('asm.attachPlaceholder')}
 					bind:value={pickerQuery}
 					onkeydown={(e) => {
 						if (e.key === 'Escape') {
@@ -188,7 +189,7 @@
 				/>
 				<div class="assistant-picker-list">
 					{#if pickerItems.length === 0}
-						<div class="assistant-picker-empty">Nothing to add.</div>
+						<div class="assistant-picker-empty">{i18n.t('asm.attachNothing')}</div>
 					{:else}
 						{#each pickerItems.slice(0, 40) as item (attachmentKey(item))}
 							<button type="button" class="assistant-picker-item" onclick={() => addItem(item)}>
@@ -215,8 +216,8 @@
 			class:assistant-attach-btn--active={showAttach}
 			onclick={() => (showAttach = !showAttach)}
 			disabled={busy}
-			aria-label="Attach"
-			title="Attach"
+			aria-label={i18n.t('asm.attachBtn')}
+			title={i18n.t('asm.attachBtn')}
 			aria-haspopup="menu"
 			aria-expanded={showAttach}
 		>
@@ -224,13 +225,13 @@
 		</button>
 		{#if showAttach}
 			<div class="assistant-attach-menu surface-float">
-				<button type="button" class="assistant-picker-item" title="PNG, JPEG, WebP or GIF" onclick={pickImage}>
+				<button type="button" class="assistant-picker-item" title={i18n.t('chat.imageTypes')} onclick={pickImage}>
 					<Icon name="image" class="w-3.5 h-3.5 shrink-0" />
-					<span class="assistant-picker-item-label">Image…</span>
+					<span class="assistant-picker-item-label">{i18n.t('chat.menuImage')}</span>
 				</button>
-				<button type="button" class="assistant-picker-item" title="Text the assistant reads: notes, JSON, a character card" onclick={pickDocument}>
+				<button type="button" class="assistant-picker-item" title={i18n.t('asm.fileTypes')} onclick={pickDocument}>
 					<Icon name="document" class="w-3.5 h-3.5 shrink-0" />
-					<span class="assistant-picker-item-label">File…</span>
+					<span class="assistant-picker-item-label">{i18n.t('asm.fileMenu')}</span>
 				</button>
 			</div>
 		{/if}
@@ -239,7 +240,7 @@
 		<span class="assistant-chip assistant-chip--manual" title={att.label}>
 			<Icon name={attachmentIcon(att)} class="w-3 h-3 shrink-0" />
 			<span class="assistant-chip-label">{att.label}</span>
-			<button type="button" class="assistant-chip-btn assistant-chip-btn--remove" onclick={() => onRemoveManual(att)} aria-label="Remove from context">
+			<button type="button" class="assistant-chip-btn assistant-chip-btn--remove" onclick={() => onRemoveManual(att)} aria-label={i18n.t('asm.removeFromCtx')}>
 				<Icon name="close" class="w-3 h-3" />
 			</button>
 		</span>
@@ -251,7 +252,7 @@
 		<span class="assistant-chip assistant-chip--manual" title={fileTitle(file)}>
 			<Icon name="document" class="w-3 h-3 shrink-0" />
 			<button type="button" class="assistant-chip-label assistant-chip-open" onclick={() => onOpenFile(file)}>{file.name}</button>
-			<button type="button" class="assistant-chip-btn assistant-chip-btn--remove" onclick={() => onRemoveFile(file.id)} aria-label="Remove this file">
+			<button type="button" class="assistant-chip-btn assistant-chip-btn--remove" onclick={() => onRemoveFile(file.id)} aria-label={i18n.t('asm.removeFile')}>
 				<Icon name="close" class="w-3 h-3" />
 			</button>
 		</span>
@@ -264,10 +265,10 @@
 			class:assistant-chip--selection={autoAttachment.kind === 'selection'}
 			onclick={onToggleAuto}
 			title={autoOff
-				? `${autoAttachment.label} · muted, click to attach`
+				? i18n.t('asm.autoMuted', { label: autoAttachment.label })
 				: autoAttachment.kind === 'selection'
-					? `Highlighted in chat, the assistant's target. Click to mute.`
-					: `${autoAttachment.label} · open now, auto-attached, click to mute`}
+					? i18n.t('asm.autoSelection')
+					: i18n.t('asm.autoOpen', { label: autoAttachment.label })}
 		>
 			<Icon name={attachmentIcon(autoAttachment)} class="w-3 h-3 shrink-0" />
 			<span class="assistant-chip-label">{autoAttachment.label}</span>
@@ -282,7 +283,7 @@
 			class:assistant-approval-pill--critical={!!current.badge}
 			class:assistant-approval-pill--active={showApproval}
 			onclick={() => (showApproval = !showApproval)}
-			title="What this tab reviews before the assistant acts"
+			title={i18n.t('asm.reviewTip')}
 			aria-haspopup="menu"
 			aria-expanded={showApproval}
 		>
