@@ -8,6 +8,7 @@
 	 * and `search_file` speak, which is what lets a person check a line the assistant quoted.
 	 */
 	import Dialog from '$lib/components/ui/Dialog.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { readFileLines, type AssistantFile } from '$lib/services/assistantFilesService';
 	import { fileKindLabel } from '$shared/assistant-files';
 	import { toastStore } from '$lib/stores/toast.svelte';
@@ -64,7 +65,7 @@
 	{#if failed}
 		<p class="file-failed">{failed}</p>
 	{:else if total === 0 && !loading}
-		<p class="file-meta">This file has no lines.</p>
+		<p class="file-meta">{i18n.t('asm.noLines')}</p>
 	{:else}
 		<div class="file-body">
 			{#each lines as line, i (i)}
@@ -76,7 +77,7 @@
 		</div>
 		{#if remaining > 0}
 			<button type="button" class="file-more" disabled={loading} onclick={() => file && loadMore(file.id, shown + 1)}>
-				{loading ? 'Reading…' : `Show more (${remaining} line${remaining === 1 ? '' : 's'} left)`}
+				{loading ? i18n.t('asm.reading') : i18n.t('asm.showMoreLines', { n: remaining })}
 			</button>
 		{/if}
 	{/if}
