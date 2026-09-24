@@ -23,6 +23,7 @@
 	 * arrives as a fresh instance with nothing decided.
 	 */
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import AssistantDiffInline from './AssistantDiffInline.svelte';
 	import AssistantDiffModal from './AssistantDiffModal.svelte';
 	import { toolIcon } from '$lib/config/assistant-icons';
@@ -142,8 +143,8 @@
 		class="apv-btn apv-btn--yes"
 		disabled={sent}
 		onclick={() => decide(indexes, true)}
-		title="Let this run"
-		aria-label="Approve {what}"
+		title={i18n.t('asm.apLetRun')}
+		aria-label={i18n.t('asm.apApprove', { what })}
 	>
 		<Icon name="check" class="w-3.5 h-3.5" strokeWidth={2.5} />
 	</button>
@@ -152,8 +153,8 @@
 		class="apv-btn apv-btn--no"
 		disabled={sent}
 		onclick={() => decide(indexes, false)}
-		title="Drop this, the turn carries on without it"
-		aria-label="Refuse {what}"
+		title={i18n.t('asm.apDrop')}
+		aria-label={i18n.t('asm.apRefuse', { what })}
 	>
 		<Icon name="close" class="w-3.5 h-3.5" strokeWidth={2.5} />
 	</button>
@@ -181,7 +182,7 @@
 				{#if call.act}<span class="apv-act">{call.act}</span>{/if}
 			{/if}
 			{#if call.target}
-				<button type="button" class="apv-label apv-label--go" onclick={() => call.target && void goToTarget(call.target)} title="Look at this in the app">
+				<button type="button" class="apv-label apv-label--go" onclick={() => call.target && void goToTarget(call.target)} title={i18n.t('asm.goToApp')}>
 					<span class="apv-label-text">{call.label}</span>
 					<Icon name="arrowRight" class="w-3 h-3 shrink-0 apv-go" />
 				</button>
@@ -202,7 +203,7 @@
 		{@render notes(call.notes)}
 		{#if call.diff}
 			{#if folded}
-				<button type="button" class="apv-snippet" onclick={() => (activeDiff = diffAction(call))} title="Read all of it">
+				<button type="button" class="apv-snippet" onclick={() => (activeDiff = diffAction(call))} title={i18n.t('asm.apReadAll')}>
 					{snippet(call)}
 				</button>
 			{:else}
@@ -214,11 +215,11 @@
 	</div>
 {/snippet}
 
-<section class="apv" aria-label="Calls waiting for your approval">
+<section class="apv" aria-label={i18n.t('asm.apAria')}>
 	<header class="apv-head">
 		<Icon name="shield" class="w-3.5 h-3.5 shrink-0" />
 		<span class="apv-title" aria-live="polite">
-			{calls.length === 1 ? 'The assistant wants to run this' : `The assistant wants to run ${calls.length} calls`}
+			{calls.length === 1 ? i18n.t('asm.apWantsOne') : i18n.t('asm.apWantsN', { n: calls.length })}
 		</span>
 	</header>
 
@@ -263,8 +264,8 @@
 
 	{#if calls.length > 1}
 		<footer class="apv-foot">
-			<button type="button" class="apv-bulk apv-bulk--no" disabled={sent} onclick={() => respond([])}>Refuse all</button>
-			<button type="button" class="apv-bulk apv-bulk--yes" disabled={sent} onclick={() => respond(allIndexes)}>Approve all</button>
+			<button type="button" class="apv-bulk apv-bulk--no" disabled={sent} onclick={() => respond([])}>{i18n.t('asm.apRefuseAll')}</button>
+			<button type="button" class="apv-bulk apv-bulk--yes" disabled={sent} onclick={() => respond(allIndexes)}>{i18n.t('asm.apApproveAll')}</button>
 		</footer>
 	{/if}
 </section>
