@@ -20,6 +20,7 @@
 	import { slide } from 'svelte/transition';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import { isReachable, onReachabilityChange } from '$lib/services/transport';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	let reachable = $state(true);
 
@@ -34,8 +35,8 @@
 {#if !reachable}
 	<div class="conn-bar font-ui" role="status" transition:slide={{ duration: 180 }}>
 		<Icon name="cloud" class="w-4 h-4 shrink-0" strokeWidth={1.75} />
-		<span class="conn-message">No connection to the server. Nothing you write now is being saved.</span>
-		<span class="conn-retry">Reconnecting…</span>
+		<span class="conn-message">{i18n.t('connection.lost')}</span>
+		<span class="conn-retry">{i18n.t('connection.retrying')}</span>
 	</div>
 {/if}
 

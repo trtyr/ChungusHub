@@ -37,6 +37,7 @@
 	import { rangeReset } from '$lib/actions/rangeReset';
 	import { toggleRow } from '$lib/actions/toggleRow';
 	import type { ContrastLevel, GlassLevel, PaletteMode } from '$lib/types/theme';
+	import { i18n, type Lang } from '$lib/i18n/i18n.svelte';
 
 	const CONTRAST_OPTIONS: { value: ContrastLevel; label: string }[] = [
 		{ value: 'soft', label: 'Soft' },
@@ -330,6 +331,28 @@
 					{#each themeStore.uiFonts as font (font.id)}
 						<option value={font.id}>{font.label}</option>
 					{/each}
+				</Select>
+			</div>
+		</div>
+	</section>
+
+	<section class="card" data-setting="interface-language">
+		<div class="card-head">
+			<span class="card-title">Language / 语言</span>
+			<InfoTip text="UI language. Synced across your devices like every other setting." />
+		</div>
+		<div class="card-body">
+			<div class="slider-block">
+				<label for="interface-language" class="slider-label">语言 / Language</label>
+				<Select
+					id="interface-language"
+					variant="compact"
+					class="w-full"
+					value={i18n.lang}
+					onchange={(e) => i18n.setLang((e.target as HTMLSelectElement).value as Lang)}
+				>
+					<option value="zh">简体中文</option>
+					<option value="en">English</option>
 				</Select>
 			</div>
 		</div>
