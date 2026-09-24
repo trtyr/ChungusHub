@@ -12,15 +12,17 @@
 	import { MOD_KEY } from '$lib/components/ui/ShortcutsSheet.svelte';
 	import { toggleRow } from '$lib/actions/toggleRow';
 
-	const SCOPE_OPTIONS: { value: InputHistoryScope; label: string }[] = [
-		{ value: 'global', label: 'All chats' },
-		{ value: 'chat', label: 'Current chat only' }
-	];
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
-	const LOAD_MODE_OPTIONS: { value: TranscriptLoadMode; label: string }[] = [
-		{ value: 'scroll', label: 'As I scroll back' },
-		{ value: 'button', label: 'With a button' }
-	];
+	const SCOPE_OPTIONS: { value: InputHistoryScope; label: string }[] = $derived([
+		{ value: 'global', label: i18n.t('gen.scopeAll') },
+		{ value: 'chat', label: i18n.t('gen.scopeChat') }
+	]);
+
+	const LOAD_MODE_OPTIONS: { value: TranscriptLoadMode; label: string }[] = $derived([
+		{ value: 'scroll', label: i18n.t('gen.loadScroll') },
+		{ value: 'button', label: i18n.t('gen.loadButton') }
+	]);
 
 	let saveDrafts = $derived(generalSettingsStore.saveDrafts);
 	let inputHistory = $derived(generalSettingsStore.inputHistory);
@@ -71,13 +73,13 @@
 <div class="general">
 	<section class="card" data-setting="message-drafts">
 		<div class="card-head">
-			<span class="card-title">Message Drafts</span>
+			<span class="card-title">{i18n.t('gen.draftsTitle')}</span>
 			<InfoTip
-				text="Unsent text in the chat box is kept per chat and synced across your devices until you send it or clear it."
+				text={i18n.t('gen.draftsTip')}
 			/>
 		</div>
 		<div class="toggle-row" use:toggleRow>
-			<span class="slider-label">Save unsent drafts</span>
+			<span class="slider-label">{i18n.t('gen.draftsToggle')}</span>
 			<Toggle
 				checked={saveDrafts}
 				onchange={(v) => generalSettingsStore.setSaveDrafts(v)}
@@ -88,13 +90,13 @@
 
 	<section class="card" data-setting="input-history">
 		<div class="card-head">
-			<span class="card-title">Input History</span>
+			<span class="card-title">{i18n.t('gen.historyTitle')}</span>
 			<InfoTip
-				text="With the chat box empty, ↑ and ↓ step through messages you've already sent. Keyboard only, and entries outlive the messages and chats they came from."
+				text={i18n.t('gen.historyTip')}
 			/>
 		</div>
 		<div class="toggle-row" use:toggleRow>
-			<span class="slider-label">Recall sent messages with ↑ / ↓</span>
+			<span class="slider-label">{i18n.t('gen.historyToggle')}</span>
 			<Toggle
 				checked={inputHistory}
 				onchange={(v) => generalSettingsStore.setInputHistory(v)}
@@ -104,9 +106,9 @@
 
 		{#if inputHistory}
 			<div class="sub">
-				<span class="section-label">Recall</span>
+				<span class="section-label">{i18n.t('gen.recall')}</span>
 				<div class="row-block">
-					<span class="slider-label">Recall from</span>
+					<span class="slider-label">{i18n.t('gen.recallFrom')}</span>
 					<PillRow
 						options={SCOPE_OPTIONS}
 						current={historyScope}
@@ -115,7 +117,7 @@
 					/>
 				</div>
 				<div class="row-block">
-					<label for="history-limit" class="slider-label">Max entries kept</label>
+					<label for="history-limit" class="slider-label">{i18n.t('gen.maxEntries')}</label>
 					<input
 						id="history-limit"
 						class="input-base limit-input"
@@ -145,13 +147,13 @@
 
 	<section class="card" data-setting="reasoning">
 		<div class="card-head">
-			<span class="card-title">Reasoning</span>
+			<span class="card-title">{i18n.t('gen.reasoningTitle')}</span>
 			<InfoTip
-				text="A reasoning model's thinking lives in a collapsible box above the message, never in the story and never sent back with later prompts."
+				text={i18n.t('gen.reasoningTip')}
 			/>
 		</div>
 		<div class="toggle-row" use:toggleRow>
-			<span class="slider-label">Auto-expand the reasoning box</span>
+			<span class="slider-label">{i18n.t('gen.reasoningToggle')}</span>
 			<Toggle
 				checked={autoExpandReasoning}
 				onchange={(v) => generalSettingsStore.setAutoExpandReasoning(v)}
@@ -162,13 +164,13 @@
 
 	<section class="card" data-setting="long-chats">
 		<div class="card-head">
-			<span class="card-title">Long Chats</span>
+			<span class="card-title">{i18n.t('gen.longChatsTitle')}</span>
 			<InfoTip
-				text="A chat opens on its newest turns instead of drawing its whole branch at once, which is what makes a long story slow to open and slow to stream on an older machine. Nothing is hidden from search: find in chat covers the whole branch and loads back to whatever it lands on, and the story map and the chats panel are never limited."
+				text={i18n.t('gen.longChatsTip')}
 			/>
 		</div>
 		<div class="toggle-row" use:toggleRow>
-			<span class="slider-label">Load long chats in parts</span>
+			<span class="slider-label">{i18n.t('gen.longChatsToggle')}</span>
 			<Toggle
 				checked={transcriptPaging}
 				onchange={(v) => generalSettingsStore.setTranscriptPaging(v)}
@@ -178,9 +180,9 @@
 
 		{#if transcriptPaging}
 			<div class="sub">
-				<span class="section-label">Loading</span>
+				<span class="section-label">{i18n.t('gen.loading')}</span>
 				<div class="row-block">
-					<label for="transcript-page-size" class="slider-label">Turns per load</label>
+					<label for="transcript-page-size" class="slider-label">{i18n.t('gen.turnsPerLoad')}</label>
 					<input
 						id="transcript-page-size"
 						class="input-base limit-input"
@@ -192,7 +194,7 @@
 					/>
 				</div>
 				<div class="row-block">
-					<span class="slider-label">Earlier turns arrive</span>
+					<span class="slider-label">{i18n.t('gen.earlierArrive')}</span>
 					<PillRow
 						options={LOAD_MODE_OPTIONS}
 						current={transcriptLoadMode}
@@ -206,13 +208,13 @@
 
 	<section class="card" data-setting="autoscroll">
 		<div class="card-head">
-			<span class="card-title">Autoscroll</span>
+			<span class="card-title">{i18n.t('gen.autoscrollTitle')}</span>
 			<InfoTip
-				text="Scrolling up stops it at any time. Off, the chat shows a reply starting and then stays where you are, and the arrow at the bottom of the chat takes you to the newest text."
+				text={i18n.t('gen.autoscrollTip')}
 			/>
 		</div>
 		<div class="toggle-row" use:toggleRow>
-			<span class="slider-label">Follow replies as they stream</span>
+			<span class="slider-label">{i18n.t('gen.autoscrollToggle')}</span>
 			<Toggle
 				checked={followStream}
 				onchange={(v) => generalSettingsStore.setFollowStream(v)}
@@ -223,13 +225,13 @@
 
 	<section class="card" data-setting="assistant-button">
 		<div class="card-head">
-			<span class="card-title">Chungus Assistant</span>
+			<span class="card-title">{i18n.t('gen.assistantTitle')}</span>
 			<InfoTip
-				text="The floating assistant button in the corner of the workspace. Hidden, {MOD_KEY}+J still opens the panel and turn activity announces itself inside it instead."
+				text={i18n.t('gen.assistantTip', { mod: MOD_KEY })}
 			/>
 		</div>
 		<div class="toggle-row" use:toggleRow>
-			<span class="slider-label">Floating assistant button</span>
+			<span class="slider-label">{i18n.t('gen.assistantToggle')}</span>
 			<Toggle
 				checked={assistantLauncher}
 				onchange={(v) => generalSettingsStore.setAssistantLauncher(v)}
@@ -240,13 +242,13 @@
 
 	<section class="card" data-setting="library-open-chat">
 		<div class="card-head">
-			<span class="card-title">Library</span>
+			<span class="card-title">{i18n.t('gen.libraryTitle')}</span>
 			<InfoTip
-				text="A row above the browse bar on the Characters and Personas shelves: the character the open chat plays, and the persona it is played as. One press opens that entry, and the shelf under it is left exactly as it was."
+				text={i18n.t('gen.libraryTip')}
 			/>
 		</div>
 		<div class="toggle-row" use:toggleRow>
-			<span class="slider-label">Show the open chat's character and persona</span>
+			<span class="slider-label">{i18n.t('gen.libraryToggle')}</span>
 			<Toggle
 				checked={libraryOpenChatRow}
 				onchange={(v) => generalSettingsStore.setLibraryOpenChatRow(v)}
@@ -257,13 +259,13 @@
 
 	<section class="card" data-setting="story-map-scroll">
 		<div class="card-head">
-			<span class="card-title">Story Map</span>
+			<span class="card-title">{i18n.t('gen.storymapTitle')}</span>
 			<InfoTip
-				text="Zooming moves to {MOD_KEY}+scroll. A trackpad pinch zooms either way."
+				text={i18n.t('gen.storymapTip', { mod: MOD_KEY })}
 			/>
 		</div>
 		<div class="toggle-row" use:toggleRow>
-			<span class="slider-label">Scroll moves the map instead of zooming</span>
+			<span class="slider-label">{i18n.t('gen.storymapToggle')}</span>
 			<Toggle
 				checked={storyMapWheelPans}
 				onchange={(v) => generalSettingsStore.setStoryMapWheelPans(v)}
@@ -278,13 +280,13 @@
 		{#if viewport.canDockSettings}
 			<section class="card" data-setting="split-view">
 				<div class="card-head">
-					<span class="card-title">Settings Panel</span>
+					<span class="card-title">{i18n.t('gen.panelTitle')}</span>
 					<InfoTip
-						text="On wide screens the section list stays docked and pages open in a panel beside it. Off keeps the phone-style drill-down."
+						text={i18n.t('gen.panelTip')}
 					/>
 				</div>
 				<div class="toggle-row" use:toggleRow>
-					<span class="slider-label">Split view on wide screens</span>
+					<span class="slider-label">{i18n.t('gen.panelToggle')}</span>
 					<Toggle
 						checked={settingsSplitView}
 						onchange={(v) => generalSettingsStore.setSettingsSplitView(v)}
