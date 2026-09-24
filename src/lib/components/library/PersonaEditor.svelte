@@ -300,7 +300,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						tabindex="0"
 						onclick={handleImageClick}
 						onkeydown={(e) => e.key === 'Enter' && handleImageClick()}
-						aria-label="Change persona image"
+						aria-label={i18n.t('pe.changePersonaImage')}
 						aria-disabled={imageLoading}
 					>
 						{#if imageLoading}
@@ -321,7 +321,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 								type="button"
 								class="portrait-overlay-action absolute top-1.5 right-1.5 p-1 rounded-full bg-black/50 text-white/80 hover:bg-error hover:text-white"
 								onclick={handleImageRemove}
-								aria-label="Remove image"
+								aria-label={i18n.t('gal.removeImage')}
 							>
 								<Icon name="close" class="w-3.5 h-3.5" />
 							</button>

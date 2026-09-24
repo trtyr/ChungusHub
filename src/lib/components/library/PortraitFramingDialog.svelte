@@ -211,7 +211,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			class:dragging
 			style="height: {STAGE_HEIGHT}px;"
 			role="application"
-			aria-label="Drag the picture to aim the frame"
+			aria-label={i18n.t('pf.dragTip')}
 			tabindex="0"
 			onpointerdown={handlePointerDown}
 			onpointermove={handlePointerMove}

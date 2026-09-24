@@ -488,7 +488,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		variant="compact"
 		value={spriteSortPref.order}
 		onchange={(e) => spriteSortPref.set(e.currentTarget.value as SpriteSort)}
-		aria-label="Sort sprites"
+		aria-label={i18n.t('ef.sortSprites')}
 	>
 		{#each SPRITE_SORT_OPTIONS as option (option.id)}
 			<option value={option.id}>{option.label}</option>
@@ -521,7 +521,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			tabindex="0"
 			onclick={handleImageClick}
 			onkeydown={(e) => e.key === 'Enter' && handleImageClick()}
-			aria-label="Change character image"
+			aria-label={i18n.t('ef.changeCharImage')}
 			aria-disabled={imageLoading}
 		>
 			{#if imageLoading}
@@ -544,7 +544,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					type="button"
 					class="portrait-overlay-action absolute top-1.5 right-1.5 p-1 rounded-full bg-black/50 text-white/80 hover:bg-error hover:text-white"
 					onclick={handleRemoveImageInternal}
-					aria-label="Remove image"
+					aria-label={i18n.t('gal.removeImage')}
 				>
 					<Icon name="close" class="w-3.5 h-3.5" />
 				</button>
@@ -610,7 +610,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 								type="button"
 								onclick={() => removeTag(tag)}
 								class="p-0.5 hover:bg-accent/20 rounded transition-colors"
-								aria-label="Remove tag"
+								aria-label={i18n.t('ef.removeTag')}
 							>
 								<Icon name="close" class="w-3 h-3" />
 							</button>

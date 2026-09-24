@@ -736,7 +736,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						<div class="brw-sec-head">
 							<span class="brw-sec-title">{i18n.t('clv.tags')}</span>
 							{#if selectedTags.length > 1}
-								<div class="brw-mini-seg" role="group" aria-label="Tag match mode">
+								<div class="brw-mini-seg" role="group" aria-label={i18n.t('clv.tagMatchMode')}>
 									<button
 										type="button"
 										class:is-active={tagFilterMode === 'any'}
@@ -853,7 +853,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				{#if viewMode === 'list'}
 					<div class="brw-sec space-y-2.5">
 						<div class="flex items-center justify-between gap-2">
-							<span class="brw-sec-title">Show Portraits</span>
+							<span class="brw-sec-title">{i18n.t('clv.showPortraits')}</span>
 							<Toggle
 								size="sm"
 								checked={listPortraits}
@@ -862,7 +862,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 							/>
 						</div>
 						<div class="flex items-center justify-between gap-2">
-							<span class="brw-sec-title">Show Tags</span>
+							<span class="brw-sec-title">{i18n.t('clv.showTags')}</span>
 							<Toggle
 								size="sm"
 								checked={listTags}
@@ -888,7 +888,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 								oninput={handleCardSizeChange}
 								use:rangeReset={{ defaultValue: BROWSE_DEFAULTS.cardSize, apply: (v) => libraryViewPrefs.setCardSize(v) }}
 								class="brw-range"
-								aria-label="Card size"
+								aria-label={i18n.t('clv.cardSize')}
 							/>
 						</div>
 					</div>
@@ -987,7 +987,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					<span class="brw-chip">
 						<Icon name="heart" class="w-2.5 h-2.5 fill-current" />
 						Favorites
-						<button type="button" class="brw-chip-x" onclick={toggleFavoritesOnly} aria-label="Remove favorites filter">
+						<button type="button" class="brw-chip-x" onclick={toggleFavoritesOnly} aria-label={i18n.t('clv.removeFavFilter')}>
 							<Icon name="close" class="w-2.5 h-2.5" />
 						</button>
 					</span>
@@ -1154,7 +1154,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	{/if}
 
 	<!-- Browse area -->
-	<div id="library-panel" role="region" aria-label="Characters" class="brw-content">
+	<div id="library-panel" role="region" aria-label={i18n.t('clv.charactersRegion')} class="brw-content">
 		{#if characterLibraryStore.loading}
 			<div class="flex items-center justify-center h-full">
 				<div class="flex flex-col items-center gap-3 text-text-muted">

@@ -137,12 +137,12 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		{#if isNew}
 			<span class="edh-pill">{i18n.t('eh.new')}</span>
 		{:else if saving}
-			<span class="edh-status" role="status" aria-label="Saving">
+			<span class="edh-status" role="status" aria-label={i18n.t('eh.savingAria')}>
 				<span class="edh-status-dot"></span>
 				<span class="edh-status-text">{i18n.t('eh.saving')}</span>
 			</span>
 		{:else if savedFlash}
-			<span class="edh-status is-saved" role="status" aria-label="Saved">
+			<span class="edh-status is-saved" role="status" aria-label={i18n.t('eh.savedAria')}>
 				<Icon name="check" class="w-3.5 h-3.5" />
 				<span class="edh-status-text">{i18n.t('eh.saved')}</span>
 			</span>
@@ -173,7 +173,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				{/if}
 			</button>
 			{#if lorebookOpen}
-				<div class="edh-popover surface-float" role="dialog" aria-label="Linked lorebooks">
+				<div class="edh-popover surface-float" role="dialog" aria-label={i18n.t('eh.linkedLorebooks')}>
 					<div class="edh-popover-head">
 						<p class="edh-popover-title">{i18n.t('eh.lorebooks')}</p>
 					</div>
