@@ -9,6 +9,7 @@
 	 * disagree about whether a card is open.
 	 */
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import CopyButton from './CopyButton.svelte';
 	import { imageService } from '$lib/services/imageService';
 	import { messageTokens, roleColor } from '$lib/debug/format';
@@ -59,21 +60,21 @@
 			{#if message.name}<span class="wire">{message.name}</span>{/if}
 			{#if message.tool_call_id}<span class="wire dim">{message.tool_call_id}</span>{/if}
 			{#if images.length}
-				<span class="img-chip" title={`${images.length} image attachment(s) sent with this message`}>
+				<span class="img-chip" title={i18n.t('dbg.imagesSent', { n: images.length })}>
 					<Icon name="image" class="w-3 h-3 shrink-0" strokeWidth={1.75} />
 					{images.length}
 				</span>
 			{/if}
 			<span class="meta">{lineCount.toLocaleString()} ln · ~{tokens.toLocaleString()} tok</span>
 		</button>
-		<CopyButton quiet text={() => content} title="Copy this message's text" />
+		<CopyButton quiet text={() => content} title={i18n.t('dbg.copyMsgText')} />
 	</div>
 
 	{#if !collapsed}
 		{#if images.length}
 			<div class="images">
 				{#each images as path (path)}
-					<button class="shot" type="button" onclick={() => onViewImage(path)} title={`${path} (click to view full size)`}>
+					<button class="shot" type="button" onclick={() => onViewImage(path)} title={i18n.t('dbg.clickView', { path })}>
 						{#if previewFailed.includes(path)}
 							<span class="shot-fallback"><Icon name="image" class="w-4 h-4" strokeWidth={1.5} /></span>
 						{:else}
