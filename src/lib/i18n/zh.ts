@@ -100,5 +100,22 @@ export const zh: Record<string, string> = {
 	'storymap.branchNamePlaceholder': '例如：黑暗结局',
 	'storymap.branchColor': '分支颜色',
 	'common.save': '保存',
-	'common.remove': '移除'
+	'common.remove': '移除',
+
+	// storymap · BranchCompareModal
+	'storymap.compareBranches': '对比分支',
+	'storymap.viewMode': '视图模式',
+	'storymap.tabDiff': '差异',
+	'storymap.tabRead': '阅读',
+	'common.close': '关闭',
+	'storymap.turnCount': '{n} 个回合',
+	'storymap.sameBranch': '这两个点在同一条分支上，没有可对比的内容。',
+	'storymap.divergedAfter': '第 {n} 回合后分叉',
+	'storymap.separateRoots': '不同起点，没有共同历史',
+	'storymap.noTurnHere': '此分支没有对应回合',
+	'storymap.branchA': '分支 A',
+	'storymap.branchB': '分支 B',
+	'role.you': '你',
+	'role.story': '故事',
+	'role.system': '系统'
 };

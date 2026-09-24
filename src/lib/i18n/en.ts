@@ -105,5 +105,22 @@ export const en: Record<string, string> = {
 	'storymap.branchNamePlaceholder': 'e.g. Dark ending',
 	'storymap.branchColor': 'Branch color',
 	'common.save': 'Save',
-	'common.remove': 'Remove'
+	'common.remove': 'Remove',
+
+	// storymap · BranchCompareModal
+	'storymap.compareBranches': 'Compare branches',
+	'storymap.viewMode': 'View mode',
+	'storymap.tabDiff': 'Diff',
+	'storymap.tabRead': 'Read',
+	'common.close': 'Close',
+	'storymap.turnCount': '{n} turn{s}',
+	'storymap.sameBranch': 'These two points are on the same branch, so there is nothing to compare.',
+	'storymap.divergedAfter': 'Diverged after turn {n}',
+	'storymap.separateRoots': 'Separate roots, no shared history',
+	'storymap.noTurnHere': 'no turn on this branch',
+	'storymap.branchA': 'Branch A',
+	'storymap.branchB': 'Branch B',
+	'role.you': 'You',
+	'role.story': 'Story',
+	'role.system': 'System'
 };

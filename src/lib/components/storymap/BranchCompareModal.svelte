@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { fade, fly } from 'svelte/transition';
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { focusTrap } from '$lib/actions/focusTrap';
 	import { chatStore } from '$lib/stores/chat.svelte';
 	import { findActivePath } from '$lib/utils/message-tree';
@@ -61,8 +62,8 @@
 		}
 		return { name: fallback, color: null };
 	}
-	let infoA = $derived(branchInfo(tailA, 'Branch A'));
-	let infoB = $derived(branchInfo(tailB, 'Branch B'));
+	let infoA = $derived(branchInfo(tailA, i18n.t('storymap.branchA')));
+	let infoB = $derived(branchInfo(tailB, i18n.t('storymap.branchB')));
 
 	function leftLines(diff: DiffLine[]): DiffLine[] {
 		return diff.filter((l) => l.type === 'same' || l.type === 'del');
@@ -79,7 +80,11 @@
 	}
 
 	function roleLabel(m: Message): string {
-		return m.role === 'user' ? 'You' : m.role === 'assistant' ? 'Story' : 'System';
+		return m.role === 'user'
+			? i18n.t('role.you')
+			: m.role === 'assistant'
+				? i18n.t('role.story')
+				: i18n.t('role.system');
 	}
 
 	function handleKeydown(e: KeyboardEvent) {
@@ -121,7 +126,7 @@
 	class="cmp-backdrop panel-scroll"
 	role="dialog"
 	aria-modal="true"
-	aria-label="Compare branches"
+	aria-label={i18n.t('storymap.compareBranches')}
 	tabindex="-1"
 	use:focusTrap
 	onclick={handleBackdrop}
@@ -132,10 +137,10 @@
 		<header class="cmp-head">
 			<div class="cmp-title">
 				<Icon name="columns" class="w-5 h-5" />
-				<h2>Compare branches</h2>
+				<h2>{i18n.t('storymap.compareBranches')}</h2>
 			</div>
 
-			<div class="cmp-modes" role="tablist" aria-label="View mode">
+			<div class="cmp-modes" role="tablist" aria-label={i18n.t('storymap.viewMode')}>
 				<button
 					type="button"
 					role="tab"
@@ -144,7 +149,7 @@
 					class:is-on={mode === 'diff'}
 					onclick={() => (mode = 'diff')}
 				>
-					Diff
+					{i18n.t('storymap.tabDiff')}
 				</button>
 				<button
 					type="button"
@@ -154,11 +159,11 @@
 					class:is-on={mode === 'read'}
 					onclick={() => (mode = 'read')}
 				>
-					Read
+					{i18n.t('storymap.tabRead')}
 				</button>
 			</div>
 
-			<button type="button" class="cmp-x" title="Close" onclick={onClose}>
+			<button type="button" class="cmp-x" title={i18n.t('common.close')} onclick={onClose}>
 				<Icon name="close" class="w-5 h-5" />
 			</button>
 		</header>
@@ -167,13 +172,13 @@
 			<div class="cmp-branch cmp-branch--a">
 				{#if infoA.color}<span class="cmp-dot" style="background: {branchColorHex(infoA.color)};"></span>{/if}
 				<span class="cmp-branch-name">{infoA.name}</span>
-				<span class="cmp-branch-count">{tailA.length} turn{tailA.length === 1 ? '' : 's'}</span>
+				<span class="cmp-branch-count">{i18n.t('storymap.turnCount', { n: tailA.length, s: tailA.length === 1 ? '' : 's' })}</span>
 			</div>
 			<div class="cmp-vs">vs</div>
 			<div class="cmp-branch cmp-branch--b">
 				{#if infoB.color}<span class="cmp-dot" style="background: {branchColorHex(infoB.color)};"></span>{/if}
 				<span class="cmp-branch-name">{infoB.name}</span>
-				<span class="cmp-branch-count">{tailB.length} turn{tailB.length === 1 ? '' : 's'}</span>
+				<span class="cmp-branch-count">{i18n.t('storymap.turnCount', { n: tailB.length, s: tailB.length === 1 ? '' : 's' })}</span>
 			</div>
 		</div>
 
@@ -181,18 +186,18 @@
 			{#if sameBranch}
 				<div class="cmp-empty">
 					<Icon name="columns" class="w-8 h-8 opacity-40" />
-					<p>These two points are on the same branch, so there is nothing to compare.</p>
+					<p>{i18n.t('storymap.sameBranch')}</p>
 				</div>
 			{:else}
 				{#if forkNode}
 					<div class="cmp-fork">
 						<Icon name="sitemap" class="w-3.5 h-3.5" />
-						<span>Diverged after turn {commonLen} · <em>{roleLabel(forkNode)}</em></span>
+						<span>{i18n.t('storymap.divergedAfter', { n: commonLen })} · <em>{roleLabel(forkNode)}</em></span>
 					</div>
 				{:else}
 					<div class="cmp-fork">
 						<Icon name="sitemap" class="w-3.5 h-3.5" />
-						<span>Separate roots, no shared history</span>
+						<span>{i18n.t('storymap.separateRoots')}</span>
 					</div>
 				{/if}
 
@@ -231,7 +236,7 @@
 									</div>
 								{/if}
 							{:else}
-								<div class="cmp-cell-missing">no turn on this branch</div>
+								<div class="cmp-cell-missing">{i18n.t('storymap.noTurnHere')}</div>
 							{/if}
 						</div>
 
@@ -268,7 +273,7 @@
 									</div>
 								{/if}
 							{:else}
-								<div class="cmp-cell-missing">no turn on this branch</div>
+								<div class="cmp-cell-missing">{i18n.t('storymap.noTurnHere')}</div>
 							{/if}
 						</div>
 					</div>
