@@ -50,5 +50,17 @@ export const zh: Record<string, string> = {
 	'common.pinOpen': '固定打开（点击其他区域或其他面板不会将其收起）',
 	'titlebar.library': '资料库',
 	'titlebar.closeLibrary': '关闭资料库（{key}）',
-	'titlebar.openLibrary': '资料库（{key}）'
+	'titlebar.openLibrary': '资料库（{key}）',
+
+	// layout · AppShell 启动状态卡
+	'launch.unreachableTitle': '无法连接服务器',
+	'launch.unreachableCopy': '请确认 ChungusHub 仍在运行，并保持本页打开。正在重试…',
+	'launch.waitingTitle': '正在等待服务器',
+	'launch.waitingCopy': '启动中。本页会自动打开。',
+	'launch.preparingTitle': '正在准备工作区',
+	'launch.preparingCopy': '正在加载聊天、预设、服务商与界面状态。',
+	'launch.errorTitle': '初始化出错',
+	'launch.retry': '重试启动',
+	'launch.deniedTitle': '访问被拒绝',
+	'launch.deniedCopy': '此设备不在白名单中。请主机在 设置 → 安全 里放行其 IP。'
 };

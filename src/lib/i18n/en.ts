@@ -53,5 +53,19 @@ export const en: Record<string, string> = {
 	'common.pinOpen': 'Pin open (ignores click-away and other panels)',
 	'titlebar.library': 'Library',
 	'titlebar.closeLibrary': 'Close Library ({key})',
-	'titlebar.openLibrary': 'Library ({key})'
+	'titlebar.openLibrary': 'Library ({key})',
+
+	// layout · AppShell boot state cards
+	'launch.unreachableTitle': "Can't reach the server",
+	'launch.unreachableCopy':
+		'Make sure ChungusHub is still running, then leave this page open. Retrying…',
+	'launch.waitingTitle': 'Waiting for the server',
+	'launch.waitingCopy': 'Starting up. This page opens on its own.',
+	'launch.preparingTitle': 'Preparing workspace',
+	'launch.preparingCopy': 'Loading chats, presets, providers, and UI state.',
+	'launch.errorTitle': 'Initialization error',
+	'launch.retry': 'Retry launch',
+	'launch.deniedTitle': 'Access denied',
+	'launch.deniedCopy':
+		"This device isn't on the allowlist. Ask the host to allow its IP from Settings → Security."
 };

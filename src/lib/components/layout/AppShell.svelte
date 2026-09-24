@@ -49,6 +49,7 @@
 	import { backupStore } from '$lib/stores/backups.svelte';
 	import { initSync } from '$lib/services/sync';
 	import { onMount } from 'svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	type Phase = 'loading' | 'ready' | 'error' | 'denied' | 'maintenance';
 
@@ -66,14 +67,14 @@
 	const launch = $derived(
 		waiting === 'unreachable'
 			? {
-					title: "Can't reach the server",
-					copy: 'Make sure ChungusHub is still running, then leave this page open. Retrying…'
+					title: i18n.t('launch.unreachableTitle'),
+					copy: i18n.t('launch.unreachableCopy')
 				}
 			: waiting === 'connecting'
-				? { title: 'Waiting for the server', copy: 'Starting up. This page opens on its own.' }
+				? { title: i18n.t('launch.waitingTitle'), copy: i18n.t('launch.waitingCopy') }
 				: {
-						title: 'Preparing workspace',
-						copy: 'Loading chats, presets, providers, and UI state.'
+						title: i18n.t('launch.preparingTitle'),
+						copy: i18n.t('launch.preparingCopy')
 					}
 	);
 
@@ -274,13 +275,13 @@
 				<div class="state-icon state-icon-error">
 					<span>!</span>
 				</div>
-				<h1 class="state-title text-error">Initialization error</h1>
+				<h1 class="state-title text-error">{i18n.t('launch.errorTitle')}</h1>
 				<p class="state-copy">{error}</p>
 				<button
 					class="state-action"
 					onclick={() => window.location.reload()}
 				>
-					Retry launch
+					{i18n.t('launch.retry')}
 				</button>
 			</div>
 		</div>
@@ -290,10 +291,9 @@
 				<div class="state-icon state-icon-error">
 					<span>!</span>
 				</div>
-				<h1 class="state-title text-error">Access denied</h1>
+				<h1 class="state-title text-error">{i18n.t('launch.deniedTitle')}</h1>
 				<p class="state-copy">
-					This device isn't on the allowlist. Ask the host to allow its IP from
-					Settings → Security.
+					{i18n.t('launch.deniedCopy')}
 				</p>
 			</div>
 		</div>
