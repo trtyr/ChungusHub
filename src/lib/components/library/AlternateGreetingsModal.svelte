@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Dialog from '$lib/components/ui/Dialog.svelte';
+import { i18n } from '$lib/i18n/i18n.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import { autoResize } from '$lib/actions/autoResize';
@@ -54,14 +55,14 @@
 	}
 </script>
 
-<Dialog {open} {onClose} title="Alternate greetings" size="xl">
+<Dialog {open} {onClose} title={i18n.t('alt.title')} size="xl">
 	<div class="space-y-4">
 		<!-- Primary First Message, for reference -->
 		<div class="rounded-[var(--radius-lg)] border border-border-subtle bg-bg-secondary/40 px-3 py-2.5">
 			<div class="flex items-center gap-1.5 mb-1">
 				<Icon name="user" class="w-3.5 h-3.5 text-accent" />
-				<span class="text-xs font-ui font-semibold uppercase tracking-wide text-accent">First Message</span>
-				<span class="text-[10px] font-ui px-1.5 py-0.5 rounded-full bg-accent/15 text-accent">Primary</span>
+				<span class="text-xs font-ui font-semibold uppercase tracking-wide text-accent">{i18n.t('alt.firstMessage')}</span>
+				<span class="text-[10px] font-ui px-1.5 py-0.5 rounded-full bg-accent/15 text-accent">{i18n.t('alt.primary')}</span>
 			</div>
 			<p class="text-sm font-ui text-text-secondary truncate">{preview(firstMessage)}</p>
 		</div>
@@ -71,12 +72,12 @@
 			{#each greetings as greeting, i (i)}
 				<div class="rounded-[var(--radius-lg)] border border-border-subtle bg-bg-secondary/40">
 					<div class="flex items-center gap-2 px-3 pt-2.5 pb-1">
-						<span class="flex-1 text-sm font-ui font-medium text-text-primary">Greeting {i + 1}</span>
+						<span class="flex-1 text-sm font-ui font-medium text-text-primary">{i18n.t('alt.greetingN', { n: i + 1 })}</span>
 						<button
 							type="button"
 							class="inline-flex items-center gap-1 px-2 py-1 text-xs font-ui rounded-[var(--radius-md)] text-text-muted hover:text-accent hover:bg-accent/10 transition-colors"
 							onclick={() => onMakeFirst(i)}
-							title="Swap this greeting with the primary First Message"
+							title={i18n.t('alt.swapTip')}
 						>
 							<Icon name="arrowLeft" class="w-3.5 h-3.5" />
 							Make first message
@@ -85,8 +86,8 @@
 							type="button"
 							class="icon-btn !w-7 !h-7 !rounded-[var(--radius-sm)] hover:text-error hover:bg-error/10 {armedIndex === i ? '!text-error !bg-error/10' : ''}"
 							onclick={() => removeGreeting(i)}
-							aria-label={armedIndex === i ? 'Press again to delete' : 'Delete greeting'}
-							title={armedIndex === i ? 'Press again to delete' : 'Delete greeting'}
+							aria-label={armedIndex === i ? i18n.t('alt.pressAgain') : i18n.t('alt.deleteGreeting')}
+							title={armedIndex === i ? i18n.t('alt.pressAgain') : i18n.t('alt.deleteGreeting')}
 						>
 							<Icon name="close" class="w-4 h-4" />
 						</button>
@@ -96,7 +97,7 @@
 							use:autoResize={{ maxHeight: 260, value: greeting }}
 							value={greeting}
 							oninput={(e) => updateGreeting(i, (e.target as HTMLTextAreaElement).value)}
-							placeholder="An alternate opening message…"
+							placeholder={i18n.t('alt.placeholder')}
 							class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm placeholder:text-text-muted resize-none min-h-[4rem]"
 						></textarea>
 					</div>
@@ -106,9 +107,9 @@
 			{#if greetings.length === 0}
 				<div class="text-center py-8 border border-dashed border-border rounded-[var(--radius-lg)]">
 					<Icon name="chat" class="w-8 h-8 mx-auto mb-2 text-text-muted" />
-					<p class="text-sm font-ui text-text-secondary">No alternate greetings yet</p>
+					<p class="text-sm font-ui text-text-secondary">{i18n.t('alt.empty')}</p>
 					<p class="text-xs font-ui text-text-muted mt-1 opacity-70">
-						Add a few opening variants to swipe between in chat.
+						{i18n.t('alt.emptyHint')}
 					</p>
 				</div>
 			{/if}
@@ -117,9 +118,9 @@
 		<div class="flex items-center justify-between pt-1">
 			<Button variant="ghost" size="sm" class="!border !border-dashed !border-border" onclick={addGreeting}>
 				<Icon name="plus" class="w-4 h-4" />
-				Add greeting
+				{i18n.t('alt.add')}
 			</Button>
-			<Button variant="primary" size="sm" onclick={onClose}>Done</Button>
+			<Button variant="primary" size="sm" onclick={onClose}>{i18n.t('alt.done')}</Button>
 		</div>
 	</div>
 </Dialog>

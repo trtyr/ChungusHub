@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
+import { i18n } from '$lib/i18n/i18n.svelte';
 	import LibraryEntryMenu from './LibraryEntryMenu.svelte';
 	import { imageService } from '$lib/services/imageService';
 	import { portraitFocusAim } from '$lib/utils/portrait-focus';
@@ -141,8 +142,8 @@
 					type="button"
 					onclick={handleEdit}
 					class="icon-btn !w-7 !h-7 !rounded-[var(--radius-md)] !bg-black/55 !text-white/90 hover:!bg-bg-tertiary hover:!text-text-primary"
-					aria-label="Edit"
-					title="Edit"
+					aria-label={i18n.t('chatpg.edit')}
+					title={i18n.t('chatpg.edit')}
 				>
 					<Icon name="pencil" class="w-3.5 h-3.5" />
 				</button>

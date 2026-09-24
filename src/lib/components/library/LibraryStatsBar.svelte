@@ -26,6 +26,7 @@
 	import { chatPersonaClaim, personaEntryFor } from '$lib/utils/chat-setup';
 	import { extractMacroNames, resolveMacroValues, type MacroContext } from '$lib/macros';
 	import { PERMANENT_TRAITS, BLOB_MACRO, type LibraryEntry } from '$lib/types/library';
+import { i18n } from '$lib/i18n/i18n.svelte';
 	import type { ChatListStats } from '$lib/types/chat';
 
 	let { entry }: { entry: LibraryEntry } = $props();
@@ -148,43 +149,43 @@
 	<span
 		class="editor-stat"
 		title={isPersona
-			? 'Chats that named this persona, plus every chat following the default while this is it.'
+			? i18n.t('stats.chatsTipPersona')
 			: undefined}
 	>
 		<b>{num(chats.length)}</b>
-		{chats.length === 1 ? 'chat' : 'chats'}
+		{i18n.t('stats.chat')}
 	</span>
 	{#if messages > 0}
 		<span
 			class="editor-stat"
-			title="Counted on the branch each chat is open at. {num(messagesTotal)} in total, every branch and swipe included."
+			title={i18n.t('stats.messagesTip', { n: num(messagesTotal) })}
 		>
 			<b>{num(messages)}</b>
-			{messages === 1 ? 'message' : 'messages'}
+			{i18n.t('stats.message')}
 		</span>
 	{/if}
 	{#if versions > 0}
-		<span class="editor-stat"><b>{num(versions)}</b> {versions === 1 ? 'version' : 'versions'}</span>
+		<span class="editor-stat"><b>{num(versions)}</b> {i18n.t('stats.versionsN', { n: versions })}</span>
 	{/if}
 	{#if greetings > 0}
-		<span class="editor-stat"><b>{num(greetings)}</b> alternate {greetings === 1 ? 'greeting' : 'greetings'}</span>
+		<span class="editor-stat"><b>{num(greetings)}</b> {i18n.t('stats.greetingsN', { n: greetings })}</span>
 	{/if}
 	{#if images > 0}
-		<span class="editor-stat"><b>{num(images)}</b> gallery {images === 1 ? 'image' : 'images'}</span>
+		<span class="editor-stat"><b>{num(images)}</b> {i18n.t('stats.imagesN', { n: images })}</span>
 	{/if}
 	{#if sprites > 0}
-		<span class="editor-stat"><b>{num(sprites)}</b> {sprites === 1 ? 'sprite' : 'sprites'}</span>
+		<span class="editor-stat"><b>{num(sprites)}</b> {i18n.t('stats.sprite')}</span>
 	{/if}
 	<span
 		class="editor-stat"
 		title={isPersona
-			? 'Counted with the tokenizer of the model you generate with.'
-			: 'Every field of this version, counted with the tokenizer of the model you generate with.'}
+			? i18n.t('stats.tokensTipPersona')
+			: i18n.t('stats.tokensTipCard')}
 	>
 		<b>{num(cardTokens)}</b>
-		{isPersona ? 'tokens in the description' : 'tokens on the card'}
+		{isPersona ? i18n.t('stats.descTokens') : i18n.t('stats.cardTokens')}
 	</span>
-	<span class="editor-stat" title="What the active preset actually places in the prompt. Fields no macro reaches cost nothing.">
-		<b>{num(promptTokens)}</b> in the prompt
+	<span class="editor-stat" title={i18n.t('stats.promptTip')}>
+		<b>{num(promptTokens)}</b> {i18n.t('stats.inPrompt')}
 	</span>
 </div>

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
+import { i18n } from '$lib/i18n/i18n.svelte';
 	import LibraryEntryMenu from './LibraryEntryMenu.svelte';
 	import TagList from './TagList.svelte';
 	import { imageService } from '$lib/services/imageService';
@@ -146,8 +147,8 @@
 				type="button"
 				onclick={(e) => { stop(e); onEdit(entry.id); }}
 				class="icon-btn !w-8 !h-8 !rounded-[var(--radius-md)] !bg-black/45 backdrop-blur-sm !text-white/90 hover:!bg-black/70 hover:!text-white"
-				aria-label="Edit"
-				title="Edit"
+				aria-label={i18n.t('chatpg.edit')}
+				title={i18n.t('chatpg.edit')}
 			>
 				<Icon name="pencil" class="w-4 h-4" />
 			</button>

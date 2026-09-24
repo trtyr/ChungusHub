@@ -6,6 +6,7 @@
 	 * removal here can never take a sprite's file with it.
 	 */
 	import Icon from '$lib/components/ui/Icon.svelte';
+import { i18n } from '$lib/i18n/i18n.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import ImageLightbox from '$lib/components/ui/ImageLightbox.svelte';
 	import { toastStore } from '$lib/stores/toast.svelte';
@@ -78,7 +79,7 @@
 			tabindex="0"
 			onclick={() => (viewerIndex = i)}
 			onkeydown={(e) => e.key === 'Enter' && (viewerIndex = i)}
-			aria-label="View image"
+			aria-label={i18n.t('gal.viewImage')}
 		>
 			<img
 				src={imageService.thumbnailUrl(path)}
@@ -90,7 +91,7 @@
 				type="button"
 				class="tile-action absolute top-1 right-1 p-1 rounded-full bg-black/50 text-white/80 opacity-0 group-hover/tile:opacity-100 focus-visible:opacity-100 transition-opacity hover:bg-error hover:text-white"
 				onclick={(e) => handleRemove(e, path)}
-				aria-label="Remove image"
+				aria-label={i18n.t('gal.removeImage')}
 			>
 				<Icon name="close" class="w-3.5 h-3.5" />
 			</button>
@@ -102,13 +103,13 @@
 		onclick={() => fileInputRef?.click()}
 		disabled={uploading}
 		class="aspect-square rounded-[var(--radius-md)] border border-dashed border-border flex flex-col items-center justify-center gap-1 text-text-muted hover:text-accent hover:border-accent/50 transition-colors"
-		aria-label="Add images"
+		aria-label={i18n.t('gal.addImages')}
 	>
 		{#if uploading}
 			<Spinner size="md" />
 		{:else}
 			<Icon name="plus" class="w-5 h-5" />
-			<span class="text-xs font-ui">Add</span>
+			<span class="text-xs font-ui">{i18n.t('gal.add')}</span>
 		{/if}
 	</button>
 </div>
