@@ -37,6 +37,7 @@
 		MAX_MATCHES
 	} from '$lib/utils/chat-search';
 	import type { Message } from '$lib/types/chat';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	interface Props {
 		/** The message-list scroller: both the search root and what we scroll to a hit. */
@@ -72,9 +73,9 @@
 	// searchable by the name actually on screen (architecture/chat-sessions.md coupling 6).
 	let selfRefChar = $derived(
 		characterLibraryStore.entries.find((e) => e.id === chatStore.activeChat?.characterId)?.identity
-			.name || 'Character'
+			.name || i18n.t('role.character')
 	);
-	let selfRefUser = $derived(openChatSetup.persona?.identity.name || 'You');
+	let selfRefUser = $derived(openChatSetup.persona?.identity.name || i18n.t('role.you'));
 
 	let branchHits = $derived.by(() => {
 		const regex = buildSearchRegex(chatSearch.query, {
@@ -106,9 +107,9 @@
 		if (matches.length) return `${current + 1} / ${matches.length}${capped ? '+' : ''}`;
 		// Until the scan behind the window has come back, any verdict would be a claim about
 		// turns the search has not reached yet.
-		if (!earlierChecked) return 'Searching…';
+		if (!earlierChecked) return i18n.t('chat.searching');
 		// "No matches" would be a lie while the branch list holds some; say where they aren't.
-		return branchHits.length ? 'None on this branch' : 'No matches';
+		return branchHits.length ? i18n.t('chat.noneOnBranch') : i18n.t('chat.noMatches');
 	});
 
 	// ===== Reaching past the transcript window =====
@@ -352,7 +353,7 @@
 	}
 </script>
 
-<div class="find-bar surface-float shadow-md fade-in" role="search" aria-label="Find in chat">
+<div class="find-bar surface-float shadow-md fade-in" role="search" aria-label={i18n.t('chat.findInChat')}>
 	<div class="find-row">
 		<Icon name="search" class="w-4 h-4 shrink-0 text-text-muted" />
 		<input
@@ -360,8 +361,8 @@
 			bind:value={chatSearch.query}
 			type="text"
 			class="find-input"
-			placeholder="Find in this chat…"
-			aria-label="Find in this chat"
+			placeholder={i18n.t('chat.findPlaceholder')}
+			aria-label={i18n.t('chat.findInChat')}
 			autocomplete="off"
 			spellcheck="false"
 			onkeydown={onKeydown}
@@ -380,8 +381,8 @@
 			type="button"
 			class="find-btn"
 			disabled={!matches.length}
-			aria-label="Previous match"
-			title="Previous match (Shift+Enter)"
+			aria-label={i18n.t('storymap.prevMatch')}
+			title={i18n.t('chat.prevMatchKey')}
 			onclick={() => go(-1)}
 		>
 			<Icon name="chevronUp" class="w-4 h-4" />
@@ -390,8 +391,8 @@
 			type="button"
 			class="find-btn"
 			disabled={!matches.length}
-			aria-label="Next match"
-			title="Next match (Enter)"
+			aria-label={i18n.t('storymap.nextMatch')}
+			title={i18n.t('chat.nextMatchKey')}
 			onclick={() => go(1)}
 		>
 			<Icon name="chevronDown" class="w-4 h-4" />
@@ -399,8 +400,8 @@
 		<button
 			type="button"
 			class="find-btn"
-			aria-label="Close search"
-			title="Close (Esc)"
+			aria-label={i18n.t('storymap.closeSearch')}
+			title={i18n.t('chat.closeEsc')}
 			onclick={close}
 		>
 			<Icon name="close" class="w-4 h-4" />
@@ -413,23 +414,23 @@
 			class="find-pill"
 			class:find-pill--on={chatSearch.matchCase}
 			aria-pressed={chatSearch.matchCase}
-			title="Distinguish upper and lower case"
+			title={i18n.t('chat.matchCaseTitle')}
 			onclick={() => (chatSearch.matchCase = !chatSearch.matchCase)}
 		>
-			Match case
+			{i18n.t('chat.matchCase')}
 		</button>
 		<button
 			type="button"
 			class="find-pill"
 			class:find-pill--on={chatSearch.wholeWord}
 			aria-pressed={chatSearch.wholeWord}
-			title="Only match complete words"
+			title={i18n.t('chat.wholeWordTitle')}
 			onclick={() => (chatSearch.wholeWord = !chatSearch.wholeWord)}
 		>
-			Whole words
+			{i18n.t('chat.wholeWords')}
 		</button>
 		{#if !canHighlight}
-			<span class="find-note">Highlighting needs a newer browser. Hits still scroll into view.</span>
+			<span class="find-note">{i18n.t('chat.highlightNote')}</span>
 		{/if}
 
 		{#if branchHits.length}
@@ -437,14 +438,14 @@
 				type="button"
 				class="find-branch-toggle"
 				aria-expanded={branchListOpen}
-				title="Turns on swipes, alternates and forks that aren't in view"
+				title={i18n.t('chat.branchToggleTitle')}
 				onclick={() => (branchListOpen = !branchListOpen)}
 			>
 				<Icon
 					name="chevronRight"
 					class="w-3 h-3 transition-transform {branchListOpen ? 'rotate-90' : ''}"
 				/>
-				{branchHits.length}{branchHits.length >= MAX_BRANCH_HITS ? '+' : ''} on other branches
+				{branchHits.length}{branchHits.length >= MAX_BRANCH_HITS ? '+' : ''}{i18n.t('chat.onOtherBranches')}
 			</button>
 		{/if}
 	</div>
@@ -460,7 +461,7 @@
 								{label.name}
 							</span>
 						{:else}
-							<span class="find-branch-role">{hit.role === 'user' ? 'You' : hit.role === 'assistant' ? 'Reply' : hit.role}</span>
+							<span class="find-branch-role">{hit.role === 'user' ? i18n.t('role.you') : hit.role === 'assistant' ? i18n.t('role.reply') : hit.role}</span>
 						{/if}
 						<span class="find-branch-snippet">{hit.snippet}</span>
 						{#if hit.count > 1}<span class="find-branch-count">{hit.count}</span>{/if}
