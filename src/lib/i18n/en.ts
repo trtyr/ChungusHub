@@ -1554,6 +1554,7 @@ export const en: Record<string, string> = {
 	'pcv.carriedOne': 'This preset ships 1 find & replace rule, and it rewrites what is sent to the model.',
 	'pcv.carriedAll': 'This preset ships {n} find & replace rules, and all of them rewrite what is sent to the model.',
 	'dbg.copyFailed': 'Copy failed: {why}',
+	'dbg.copyToolJson': 'Copy this tool definition as JSON',
 	'dbg.failed': 'failed',
 	'pcv.carriedSome': 'This preset ships {n} find & replace rules, and {m} of them rewrite what is sent to the model.',
 	'storymap.noChatOpen': 'No chat open',

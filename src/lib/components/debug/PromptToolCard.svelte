@@ -7,6 +7,7 @@
 	 * full description and the exact JSON Schema the model received.
 	 */
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import CopyButton from './CopyButton.svelte';
 	import { roleColor, toolTokens } from '$lib/debug/format';
 
@@ -46,7 +47,7 @@
 			{#if collapsed && shape.description}<span class="summary">{shape.description}</span>{/if}
 			<span class="meta">~{tokens.toLocaleString()} tok</span>
 		</button>
-		<CopyButton quiet text={json} title="Copy this tool definition as JSON" />
+		<CopyButton quiet text={json} title={i18n.t('dbg.copyToolJson')} />
 	</div>
 
 	{#if !collapsed}

@@ -1458,6 +1458,7 @@ export const zh: Record<string, string> = {
 	'pcv.carriedOne': '此预设自带 1 条查找替换规则，它会改写发送给模型的内容。',
 	'pcv.carriedAll': '此预设自带 {n} 条查找替换规则，全部都会改写发送给模型的内容。',
 	'dbg.copyFailed': '复制失败：{why}',
+	'dbg.copyToolJson': '复制此工具定义为 JSON',
 	'dbg.failed': '失败',
 	'pcv.carriedSome': '此预设自带 {n} 条查找替换规则，其中 {m} 条会改写发送给模型的内容。',
 	'storymap.noChatOpen': '未打开聊天',
