@@ -359,9 +359,8 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			<div class="loading"><Spinner size="sm" /></div>
 		{:else if snapshots.length === 0}
 			<EmptyState icon="archive" title={i18n.t('bk.emptyTitle')} size="sm">
-				One is taken before the app ever upgrades its database. Take one now if you are about
-				to try something.
-			</EmptyState>
+				{i18n.t('bk.emptyHint')}
+		</EmptyState>
 		{:else}
 			<ul class="list">
 				{#each snapshots as s (s.id)}
@@ -383,8 +382,8 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 								class:on={s.pinned}
 								onclick={() => togglePin(s)}
 								disabled={!!pendingRestoreId}
-								title={s.pinned ? 'Pinned: never removed automatically' : 'Pin so it is never removed automatically'}
-								aria-label={s.pinned ? 'Unpin this backup' : 'Pin this backup'}
+								title={s.pinned ? i18n.t('bk.pinned') : i18n.t('bk.pin')}
+							aria-label={s.pinned ? i18n.t('bk.unpin') : i18n.t('bk.pin')}
 								aria-pressed={s.pinned}
 							>
 								<Icon name="star" class="w-3.5 h-3.5" strokeWidth={1.75} />
@@ -432,8 +431,8 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 									class="act danger"
 									onclick={() => (deleteTarget = s)}
 									disabled={!!job || !!pendingRestoreId}
-									aria-label="Delete this backup"
-									title="Delete this backup"
+									aria-label={i18n.t('bk.deleteOne')}
+									title={i18n.t('bk.deleteOne')}
 								>
 									<Icon name="trash" class="w-3.5 h-3.5" strokeWidth={1.75} />
 								</button>
@@ -464,7 +463,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	open={!!restoreTarget}
 	title={i18n.t('bk.restoreAsk')}
 	message={restoreMessage}
-	confirmLabel="Restore"
+	confirmLabel={i18n.t('bk.restore')}
 	variant="danger"
 	destructive
 	holdMs={restoreHold}
@@ -487,9 +486,9 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 
 <ConfirmDialog
 	open={bulkDeleteOpen}
-	title="Delete these backups?"
-	message={`${selected.size} snapshot${selected.size === 1 ? '' : 's'} go for good. Your current data is not touched.`}
-	confirmLabel="Delete"
+	title={i18n.t('bk.deleteBulk')}
+	message={i18n.t('bk.bulkMsg', { n: selected.size })}
+	confirmLabel={i18n.t('bk.delete')}
 	variant="danger"
 	destructive
 	holdMs={holdMsForBlast(bulkBlast)}

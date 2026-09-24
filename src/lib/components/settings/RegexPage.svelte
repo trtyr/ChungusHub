@@ -181,36 +181,36 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		<div class="rx-title">
 			<span class="card-title">Regex Rules</span>
 			<InfoTip
-				text="The saved messages are never modified, so switching a rule off restores the original text instantly. SillyTavern regex scripts import directly."
+				text={i18n.t('rx.tip')}
 			/>
 			{#if list.length > 0}
-				<span class="rx-count" title="Enabled rules">{activeCount}/{list.length} on</span>
+				<span class="rx-count" title={i18n.t('rx.enabledRules')}>{i18n.t('rx.onCount', { on: activeCount, n: list.length })}</span>
 			{/if}
 		</div>
 		<div class="rx-tools">
-			<button type="button" class="rx-btn" onclick={handleRestore} title="Replace the current rules with the shipped starter pack">
+			<button type="button" class="rx-btn" onclick={handleRestore} title={i18n.t('rx.restoreTip')}>
 				<Icon name="refresh" class="w-3.5 h-3.5" />
-				<span class="rx-btn-label">Restore defaults</span>
+				<span class="rx-btn-label">{i18n.t('rx.restoreBtn')}</span>
 			</button>
-			<button type="button" class="rx-btn" onclick={openImport} title="Import rules or SillyTavern regex scripts">
+			<button type="button" class="rx-btn" onclick={openImport} title={i18n.t('rx.importTip')}>
 				<Icon name="upload" class="w-3.5 h-3.5" />
-				<span class="rx-btn-label">Import</span>
+				<span class="rx-btn-label">{i18n.t('rx.importBtn')}</span>
 			</button>
-			<button type="button" class="rx-btn" onclick={exportAll} disabled={list.length === 0} title="Download every rule as JSON">
+			<button type="button" class="rx-btn" onclick={exportAll} disabled={list.length === 0} title={i18n.t('rx.exportTip')}>
 				<Icon name="download" class="w-3.5 h-3.5" />
-				<span class="rx-btn-label">Export</span>
+				<span class="rx-btn-label">{i18n.t('rx.exportBtn')}</span>
 			</button>
 			<button type="button" class="rx-btn rx-btn-primary" onclick={handleAdd}>
 				<Icon name="plus" class="w-3.5 h-3.5" />
-				<span class="rx-btn-label">New rule</span>
+				<span class="rx-btn-label">{i18n.t('rx.newRule')}</span>
 			</button>
 		</div>
 	</header>
 
 	{#if list.length === 0}
 		<div class="rx-empty">
-			<EmptyState icon="filter" size="sm" title="No rules yet">
-				Find & replace over chat text as it flows: what you read, what the model reads, or both.
+			<EmptyState icon="filter" size="sm" title={i18n.t('rx.emptyTitle')}>
+				{i18n.t('rx.emptyHint')}
 				The saved messages are never touched.
 				{#snippet actions()}
 					<button type="button" class="rx-btn rx-btn-primary" onclick={handleAdd}>
@@ -243,7 +243,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				<div class="rx-rule" class:rx-rule-open={expanded} class:rx-rule-off={!rule.enabled}>
 					<div class="rx-row">
 						<!-- svelte-ignore a11y_no_static_element_interactions -->
-						<span class="rx-grip" use:dragHandle aria-label="Drag to reorder" title="Drag to reorder">
+						<span class="rx-grip" use:dragHandle aria-label={i18n.t('rx.dragAria')} title={i18n.t('rx.dragTip')}>
 							<Icon name="menu" class="w-4 h-4" strokeWidth={1.5} />
 						</span>
 						<Toggle
@@ -296,9 +296,9 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 											<Icon name="copy" class="w-3.5 h-3.5" />
 											Duplicate
 										</button>
-										<button type="button" class="rx-btn" onclick={() => exportOne(rule)} title="Download this rule as JSON">
+										<button type="button" class="rx-btn" onclick={() => exportOne(rule)} title={i18n.t('rx.exportTip')}>
 											<Icon name="download" class="w-3.5 h-3.5" />
-											Export
+											{i18n.t('rx.exportBtn')}
 										</button>
 									</div>
 									<button type="button" class="rx-btn rx-btn-danger" onclick={() => (deleteTarget = rule)}>
@@ -330,9 +330,9 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				<Icon name="sliders" class="w-3.5 h-3.5 flex-shrink-0" strokeWidth={1.5} />
 				<span class="rx-carried-title">From “{carriedFrom}”</span>
 				<InfoTip
-					text="These belong to the active preset, not to you. They run after your own rules and leave when you switch presets. Switch one off and it stays off for you; the rule itself is the author's, so copy it to change it."
+					text={i18n.t('rx.presetTip')}
 				/>
-				<span class="rx-carried-count">{carriedActive}/{carried.length} on</span>
+				<span class="rx-carried-count">{i18n.t('rx.onCount', { on: carriedActive, n: carried.length })}</span>
 			</div>
 			<div class="rx-carried-list">
 				{#each carried as rule (rule.id)}
@@ -402,9 +402,9 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 
 <ConfirmDialog
 	open={confirmRestore}
-	title="Restore default rules"
-	message={`Replace all ${list.length} rule${list.length === 1 ? '' : 's'} with the shipped starter pack? Every one goes, including rules you created. Export first if you might want them back.`}
-	confirmLabel="Restore defaults"
+	title={i18n.t('rx.restoreAsk')}
+	message={i18n.t('rx.restoreMsg', { n: list.length })}
+	confirmLabel={i18n.t('rx.restoreBtn')}
 	variant="danger"
 	destructive
 	holdMs={holdMsForBlast(list.length)}
@@ -414,9 +414,9 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 
 <ConfirmDialog
 	open={deleteTarget !== null}
-	title="Delete rule"
-	message={`Delete "${deleteTarget?.name}"? This cannot be undone. Export it first if you might want it back.`}
-	confirmLabel="Delete"
+	title={i18n.t('rx.deleteAsk')}
+	message={i18n.t('rx.deleteMsg', { name: deleteTarget?.name ?? '' })}
+	confirmLabel={i18n.t('common.delete')}
 	variant="danger"
 	destructive
 	onConfirm={confirmDelete}
