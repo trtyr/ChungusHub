@@ -20,6 +20,7 @@
 	 * settings/InterfacePage.svelte, which also carries data-setting="ambient-effects".
 	 */
 	import type { AmbientEffect, AmbientType } from '$lib/types/ambient';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import {
 		AMBIENT_EFFECTS,
 		AMBIENT_LABELS,
@@ -117,8 +118,8 @@
 	<div class="stage" class:stage-unset={active.length === 0}>
 		{#if active.length === 0}
 			<div class="stage-invite">
-				<span class="stage-invite-title">Still air</span>
-				<span class="stage-invite-hint">Pick an effect below to set the scene.</span>
+				<span class="stage-invite-title">{i18n.t('amb.stageTitle')}</span>
+				<span class="stage-invite-hint">{i18n.t('amb.stageHint')}</span>
 			</div>
 		{:else}
 			{#if backgroundUrl}
@@ -133,8 +134,8 @@
 				<AmbientCanvas {config} placement="under" />
 			{/if}
 			<div class="stage-chat" aria-hidden="true">
-				<div class="stage-bubble stage-bubble-user">The storm rolled in just after dusk.</div>
-				<div class="stage-bubble">She watched the first drops streak the glass.</div>
+				<div class="stage-bubble stage-bubble-user">{i18n.t('amb.bubbleUser')}</div>
+				<div class="stage-bubble">{i18n.t('amb.bubbleReply')}</div>
 			</div>
 			{#if stageOver.length > 0}
 				<AmbientCanvas {config} placement="over" />
@@ -148,14 +149,14 @@
 		{#each SHELVES as shelf (shelf.id)}
 			<div class="shelf">
 				<span class="section-label">{shelf.label}</span>
-				<div class="shelf-pills" role="group" aria-label="{shelf.label} effects">
+				<div class="shelf-pills" role="group" aria-label={i18n.t('amb.effectsAria', { label: shelf.label })}>
 					{#each effectsOn(shelf.id) as type (type)}
 						<button
 							type="button"
 							class="fx-pill"
 							class:is-active-tint={isOn(type)}
 							aria-pressed={isOn(type)}
-							title={AMBIENT_DESCRIPTIONS[type]}
+							title={i18n.t(AMBIENT_DESCRIPTIONS[type])}
 							onclick={() => toggleEffect(type)}
 						>
 							{AMBIENT_LABELS[type]}
@@ -169,7 +170,7 @@
 	{#if active.length > 0}
 		<!-- The mix: one row per active effect, its own settings folded inside. -->
 		<div class="mix">
-			<span class="section-label">In the mix</span>
+			<span class="section-label">{i18n.t('amb.inMix')}</span>
 			{#each active as type (type)}
 				{@const open = expanded.includes(type)}
 				<div class="fx-row" class:fx-row-open={open}>
@@ -186,8 +187,8 @@
 						<button
 							type="button"
 							class="fx-remove"
-							aria-label="Remove {AMBIENT_LABELS[type]}"
-							title="Remove from the mix"
+							aria-label={i18n.t('amb.removeAria', { label: i18n.t(AMBIENT_LABELS[type]) })}
+							title={i18n.t('amb.removeFromMix')}
 							onclick={() => toggleEffect(type)}
 						>
 							<Icon name="x" class="w-3.5 h-3.5" />
