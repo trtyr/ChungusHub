@@ -67,5 +67,19 @@ export const en: Record<string, string> = {
 	'launch.retry': 'Retry launch',
 	'launch.deniedTitle': 'Access denied',
 	'launch.deniedCopy':
-		"This device isn't on the allowlist. Ask the host to allow its IP from Settings → Security."
+		"This device isn't on the allowlist. Ask the host to allow its IP from Settings → Security.",
+
+	// layout · WelcomeView landing
+	'welcome.eyebrow': 'Story Workspace',
+	'welcome.newChat': 'New chat',
+	'welcome.chats': 'Chats',
+	'welcome.yourStats': 'Your stats',
+	'welcome.recentAria': 'Recent chats',
+	'welcome.continue': 'Continue',
+	'welcome.allChats': 'All chats',
+	'welcome.showLess': 'Show less',
+	'welcome.showMore': 'Show more',
+	'welcome.emptyChats': 'No chats yet',
+	'common.community': 'Community',
+	'welcome.asPersona': 'as {name}'
 };

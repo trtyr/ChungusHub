@@ -62,5 +62,19 @@ export const zh: Record<string, string> = {
 	'launch.errorTitle': '初始化出错',
 	'launch.retry': '重试启动',
 	'launch.deniedTitle': '访问被拒绝',
-	'launch.deniedCopy': '此设备不在白名单中。请主机在 设置 → 安全 里放行其 IP。'
+	'launch.deniedCopy': '此设备不在白名单中。请主机在 设置 → 安全 里放行其 IP。',
+
+	// layout · WelcomeView 落地页
+	'welcome.eyebrow': '故事工作区',
+	'welcome.newChat': '新聊天',
+	'welcome.chats': '聊天',
+	'welcome.yourStats': '你的统计',
+	'welcome.recentAria': '最近的聊天',
+	'welcome.continue': '继续',
+	'welcome.allChats': '全部聊天',
+	'welcome.showLess': '收起',
+	'welcome.showMore': '展开更多',
+	'welcome.emptyChats': '还没有聊天',
+	'common.community': '社区',
+	'welcome.asPersona': '扮演：{name}'
 };

@@ -9,6 +9,7 @@
 	import { chatCastStore } from '$lib/stores/chatCast.svelte';
 	import { uiStore } from '$lib/stores/ui.svelte';
 	import { lorebookStore } from '$lib/lorebook/store.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	let chats = $derived(chatStore.sortedChats);
 	// Only chats that have actually been written in are worth resuming: a fresh
@@ -92,7 +93,7 @@
 
 				<p class="eyebrow">
 					<span class="eyebrow-rule" aria-hidden="true"></span>
-					<span>Story Workspace</span>
+					<span>{i18n.t('welcome.eyebrow')}</span>
 					<span class="eyebrow-rule" aria-hidden="true"></span>
 				</p>
 				<h1 class="brand">ChungusHub</h1>
@@ -101,32 +102,32 @@
 			<div class="actions">
 				<button type="button" class="action action-primary" onclick={newChat}>
 					<Icon name="plus" class="w-4 h-4" />
-					<span>New chat</span>
+					<span>{i18n.t('welcome.newChat')}</span>
 					<kbd class="action-kbd action-kbd-primary">{modKey} N</kbd>
 				</button>
 				<button type="button" class="action action-ghost" onclick={openChats}>
 					<Icon name="chat" class="w-4 h-4" />
-					<span>Chats</span>
+					<span>{i18n.t('welcome.chats')}</span>
 					<kbd class="action-kbd">{modKey} K</kbd>
 				</button>
 				<button type="button" class="action action-ghost" onclick={toggleLibrary}>
 					<Icon name="bookOpen" class="w-4 h-4" />
-					<span>Library</span>
+					<span>{i18n.t('titlebar.library')}</span>
 					<kbd class="action-kbd">{modKey} L</kbd>
 				</button>
 				<button type="button" class="action action-ghost" onclick={openStats}>
 					<Icon name="chart" class="w-4 h-4" />
-					<span>Your stats</span>
+					<span>{i18n.t('welcome.yourStats')}</span>
 				</button>
 			</div>
 
 			{#if recent.length}
-				<section class="recent" aria-label="Recent chats">
+				<section class="recent" aria-label={i18n.t('welcome.recentAria')}>
 					<div class="section-head">
-						<h2 class="section-title">Continue</h2>
+						<h2 class="section-title">{i18n.t('welcome.continue')}</h2>
 						<span class="section-rule" aria-hidden="true"></span>
 						<button type="button" class="section-link" onclick={openChats}>
-							All chats
+							{i18n.t('welcome.allChats')}
 						</button>
 					</div>
 
@@ -145,7 +146,7 @@
 								<div class="recent-text">
 									<span class="recent-title">{chat.title}</span>
 									<span class="recent-meta">
-										{formatRelativeTime(chat.updatedAt)}{#if persona}<span class="recent-meta-sep" aria-hidden="true">·</span>as {persona.name}{/if}
+										{formatRelativeTime(chat.updatedAt)}{#if persona}<span class="recent-meta-sep" aria-hidden="true">·</span>{i18n.t('welcome.asPersona', { name: persona.name })}{/if}
 									</span>
 								</div>
 								<Icon name="arrowRight" class="w-4 h-4 recent-arrow" />
@@ -156,13 +157,13 @@
 					{#if resumable.length > 3}
 						<button type="button" class="recent-expand" onclick={toggleExpand}>
 							<Icon name={expanded ? 'chevronUp' : 'chevronDown'} class="w-3.5 h-3.5" />
-							<span>{expanded ? 'Show less' : 'Show more'}</span>
+							<span>{expanded ? i18n.t('welcome.showLess') : i18n.t('welcome.showMore')}</span>
 						</button>
 					{/if}
 				</section>
 			{:else}
-				<section class="empty" aria-label="No chats yet">
-					<p class="empty-text">No chats yet</p>
+				<section class="empty" aria-label={i18n.t('welcome.emptyChats')}>
+					<p class="empty-text">{i18n.t('welcome.emptyChats')}</p>
 				</section>
 			{/if}
 		</div>
@@ -171,7 +172,7 @@
 		     as the measure of how much room an expanded recent list may fill. -->
 		<div class="welcome-grow" bind:clientHeight={spareHeight} aria-hidden="true"></div>
 
-		<nav class="socials" aria-label="Community">
+		<nav class="socials" aria-label={i18n.t('common.community')}>
 			{#each socials as s (s.key)}
 				<a
 					class="social-link"
