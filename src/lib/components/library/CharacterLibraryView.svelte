@@ -12,6 +12,7 @@
 	import { lorebookStore } from '$lib/lorebook/store.svelte';
 	import { generalSettingsStore } from '$lib/stores/general-settings.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
+import { i18n } from '$lib/i18n/i18n.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import EmptyState from '$lib/components/ui/EmptyState.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
@@ -670,8 +671,8 @@
 					type="text"
 					value={searchQuery}
 					oninput={handleSearchInput}
-					placeholder="Search {sectionEntries.length} character{sectionEntries.length === 1 ? '' : 's'}…"
-					aria-label="Search characters"
+					placeholder={i18n.t('clv.searchPlaceholder', { n: sectionEntries.length })}
+					aria-label={i18n.t('clv.searchAria')}
 					class="input-base"
 				/>
 			</div>
@@ -686,8 +687,8 @@
 						onclick={toggle}
 						aria-haspopup="true"
 						aria-expanded={open}
-						aria-label="Filter and sort"
-						title="Filter & sort"
+						aria-label={i18n.t('clv.filterSort')}
+						title={i18n.t('clv.filterSort')}
 					>
 						<Icon name="filter" class="w-4 h-4" />
 						{#if activeFilterCount > 0}
@@ -698,7 +699,7 @@
 
 				<div class="brw-sec">
 					<div class="brw-sec-head">
-						<span class="brw-sec-title">Sort by</span>
+						<span class="brw-sec-title">{i18n.t('clv.sortBy')}</span>
 					</div>
 					<div class="brw-opts">
 						{#each CHARACTER_SORT_OPTIONS as opt}
@@ -716,7 +717,7 @@
 
 				<div class="brw-sec">
 					<div class="brw-sec-head">
-						<span class="brw-sec-title">Show</span>
+						<span class="brw-sec-title">{i18n.t('clv.show')}</span>
 					</div>
 					<button
 						type="button"
@@ -733,14 +734,14 @@
 				{#if availableTags.length > 0}
 					<div class="brw-sec">
 						<div class="brw-sec-head">
-							<span class="brw-sec-title">Tags</span>
+							<span class="brw-sec-title">{i18n.t('clv.tags')}</span>
 							{#if selectedTags.length > 1}
 								<div class="brw-mini-seg" role="group" aria-label="Tag match mode">
 									<button
 										type="button"
 										class:is-active={tagFilterMode === 'any'}
 										onclick={() => { tagFilterMode = 'any'; currentPage = 1; }}
-										title="Entries with any selected tag"
+										title={i18n.t('clv.anyTags')}
 									>
 										ANY
 									</button>
@@ -748,7 +749,7 @@
 										type="button"
 										class:is-active={tagFilterMode === 'all'}
 										onclick={() => { tagFilterMode = 'all'; currentPage = 1; }}
-										title="Entries with all selected tags"
+										title={i18n.t('clv.allTags')}
 									>
 										ALL
 									</button>
@@ -760,9 +761,9 @@
 								type="text"
 								bind:value={tagSearchQuery}
 								onkeydown={handleTagInputKeydown}
-								placeholder="Find a tag…"
+								placeholder={i18n.t('clv.findTag')}
 								role="combobox"
-								aria-label="Find a tag"
+								aria-label={i18n.t('clv.findTag')}
 								aria-autocomplete="list"
 								aria-expanded="true"
 								aria-controls="tag-filter-options"
@@ -787,7 +788,7 @@
 									<span class="brw-tag-count">{count}</span>
 								</button>
 							{:else}
-								<p class="px-1 py-1.5 text-xs font-ui text-text-muted">No tags match.</p>
+								<p class="px-1 py-1.5 text-xs font-ui text-text-muted">{i18n.t('clv.noTagMatch')}</p>
 							{/each}
 						</div>
 					</div>
@@ -804,8 +805,8 @@
 						onclick={toggle}
 						aria-haspopup="true"
 						aria-expanded={open}
-						aria-label="View options"
-						title="View options"
+						aria-label={i18n.t('clv.viewOptions')}
+						title={i18n.t('clv.viewOptions')}
 					>
 						<Icon name="sliders" class="w-4 h-4" />
 					</button>
@@ -813,9 +814,9 @@
 
 				<div class="brw-sec">
 					<div class="brw-sec-head">
-						<span class="brw-sec-title">Layout</span>
+						<span class="brw-sec-title">{i18n.t('clv.layout')}</span>
 					</div>
-					<div class="brw-opts brw-opts--3" role="group" aria-label="View mode">
+					<div class="brw-opts brw-opts--3" role="group" aria-label={i18n.t('clv.viewOptions')}>
 						<button
 							type="button"
 							class="brw-opt"
@@ -875,7 +876,7 @@
 				{#if viewMode === 'grid'}
 					<div class="brw-sec">
 						<div class="brw-sec-head">
-							<span class="brw-sec-title">Card size</span>
+							<span class="brw-sec-title">{i18n.t('clv.cardSize')}</span>
 						</div>
 						<div class="flex items-center gap-2.5">
 							<Icon name="image" class="w-4 h-4 text-text-muted shrink-0" />
@@ -895,7 +896,7 @@
 
 				<div class="brw-sec">
 					<div class="brw-sec-head">
-						<span class="brw-sec-title">Per page</span>
+						<span class="brw-sec-title">{i18n.t('clv.perPage')}</span>
 					</div>
 					<div class="brw-opts brw-opts--3">
 						{#each PER_PAGE_OPTIONS as count}
@@ -922,8 +923,8 @@
 						onclick={toggle}
 						aria-haspopup="menu"
 						aria-expanded={open}
-						aria-label="More actions"
-						title="More actions"
+						aria-label={i18n.t('clv.more')}
+						title={i18n.t('clv.more')}
 					>
 						{#if importing}
 							<Spinner size="sm" />
@@ -954,9 +955,9 @@
 				</button>
 			</BrowsePopover>
 
-			<button type="button" class="brw-new" onclick={handleCreateNew} title="New character">
+			<button type="button" class="brw-new" onclick={handleCreateNew} title={i18n.t('clv.newCharacter')}>
 				<Icon name="plus" class="w-4 h-4" />
-				<span class="brw-new-label">New</span>
+				<span class="brw-new-label">{i18n.t('clv.new')}</span>
 			</button>
 		</div>
 
@@ -969,7 +970,7 @@
 						type="button"
 						class="brw-chip-mode"
 						onclick={() => { tagFilterMode = tagFilterMode === 'any' ? 'all' : 'any'; currentPage = 1; }}
-						title={tagFilterMode === 'any' ? 'Showing entries with ANY selected tag. Click for ALL' : 'Showing entries with ALL selected tags. Click for ANY'}
+						title={tagFilterMode === 'any' ? i18n.t('clv.anyShowing') : i18n.t('clv.allShowing')}
 					>
 						{tagFilterMode === 'any' ? 'any of' : 'all of'}
 					</button>
@@ -991,7 +992,7 @@
 						</button>
 					</span>
 				{/if}
-				<button type="button" class="brw-chips-clear" onclick={clearAllFilters}>Clear</button>
+				<button type="button" class="brw-chips-clear" onclick={clearAllFilters}>{i18n.t('clv.clear')}</button>
 			</div>
 		{/if}
 
@@ -1004,8 +1005,8 @@
 					type="button"
 					class="brw-bulk-x"
 					onclick={toggleSelectionMode}
-					aria-label="Exit selection"
-					title="Exit selection (Esc)"
+					aria-label={i18n.t('clv.exitSelection')}
+					title={i18n.t('clv.exitSelectionTip')}
 				>
 					<Icon name="close" class="w-4 h-4" />
 				</button>
@@ -1037,10 +1038,10 @@
 							disabled={selectedCount === 0}
 							aria-haspopup="menu"
 							aria-expanded={open}
-							title="Favorite"
+							title={i18n.t('clv.favorite')}
 						>
 							<Icon name="heart" class="w-3.5 h-3.5" />
-							<span class="brw-bulk-label">Favorite</span>
+							<span class="brw-bulk-label">{i18n.t('clv.favorite')}</span>
 							<Icon name="chevronDown" class="w-3 h-3" />
 						</button>
 					{/snippet}
@@ -1073,15 +1074,15 @@
 							disabled={selectedCount === 0}
 							aria-haspopup="true"
 							aria-expanded={open}
-							title="Tags"
+							title={i18n.t('clv.bulkTags')}
 						>
 							<Icon name="tag" class="w-3.5 h-3.5" />
-							<span class="brw-bulk-label">Tags</span>
+							<span class="brw-bulk-label">{i18n.t('clv.bulkTags')}</span>
 						</button>
 					{/snippet}
 					<div class="brw-sec">
 						<div class="brw-sec-head">
-							<span class="brw-sec-title">Add tags</span>
+							<span class="brw-sec-title">{i18n.t('clv.addTags')}</span>
 						</div>
 						<div class="flex items-center gap-1.5">
 							<!-- svelte-ignore a11y_autofocus -->
@@ -1089,7 +1090,7 @@
 								type="text"
 								bind:value={addTagsValue}
 								onkeydown={handleAddTagsKeydown}
-								placeholder="tag1, tag2, …"
+								placeholder={i18n.t('clv.tagsPlaceholder')}
 								autofocus
 								class="input-base flex-1 min-w-0 px-2.5 py-1.5 text-xs font-ui text-text-primary placeholder:text-text-muted"
 							/>
@@ -1106,10 +1107,10 @@
 					</div>
 					<div class="brw-sec">
 						<div class="brw-sec-head">
-							<span class="brw-sec-title">On selection: click to remove</span>
+							<span class="brw-sec-title">{i18n.t('clv.onSelection')}</span>
 						</div>
 						{#if selectionTagUnion.length === 0}
-							<p class="px-1 py-1 text-xs font-ui text-text-muted">No tags on the selection.</p>
+							<p class="px-1 py-1 text-xs font-ui text-text-muted">{i18n.t('clv.noTagsOnSelection')}</p>
 						{:else}
 							<div class="brw-tag-list">
 								{#each selectionTagUnion as tag}
@@ -1117,7 +1118,7 @@
 										type="button"
 										class="brw-tag-row"
 										onclick={() => removeBulkTag(tag)}
-										title={`Remove "${tag}" from the selection`}
+										title={i18n.t('clv.removeTagFrom', { tag })}
 									>
 										<span class="brw-tag-name">{tag}</span>
 										<Icon name="close" class="w-3 h-3 shrink-0 text-text-muted" />
@@ -1133,10 +1134,10 @@
 					class="brw-bulk-btn"
 					onclick={exportSelection}
 					disabled={selectedCount === 0}
-					title="Export as SillyTavern cards"
+					title={i18n.t('clv.exportCards')}
 				>
 					<Icon name="download" class="w-3.5 h-3.5" />
-					<span class="brw-bulk-label">Export</span>
+					<span class="brw-bulk-label">{i18n.t('clv.export')}</span>
 				</button>
 
 				<button
@@ -1146,7 +1147,7 @@
 					disabled={selectedCount === 0}
 				>
 					<Icon name="trash" class="w-3.5 h-3.5" />
-					<span class="brw-bulk-label">Delete</span>
+					<span class="brw-bulk-label">{i18n.t('clv.delete')}</span>
 				</button>
 			</div>
 		{/if}
@@ -1158,13 +1159,13 @@
 			<div class="flex items-center justify-center h-full">
 				<div class="flex flex-col items-center gap-3 text-text-muted">
 					<Spinner size="lg" />
-					<span class="text-sm font-ui">Loading library…</span>
+					<span class="text-sm font-ui">{i18n.t('clv.loading')}</span>
 				</div>
 			</div>
 		{:else if sectionEntries.length === 0}
 			<div class="grid place-items-center h-full">
-				<EmptyState icon="users" title="No characters yet">
-					Characters you write or import live here, ready to reuse in any chat.
+				<EmptyState icon="users" title={i18n.t('clv.noCharacters')}>
+					{i18n.t('clv.noCharactersHint')}
 					{#snippet actions()}
 						<Button variant="primary" size="sm" onclick={handleCreateNew}>
 							<Icon name="plus" class="w-4 h-4" />
@@ -1183,8 +1184,8 @@
 			</div>
 		{:else if processedEntries.length === 0}
 			<div class="grid place-items-center h-full">
-				<EmptyState icon="search" size="sm" title="No matches">
-					No characters match your current filters.
+				<EmptyState icon="search" size="sm" title={i18n.t('clv.noMatches')}>
+					{i18n.t('clv.noMatchesHint')}
 					{#snippet actions()}
 						<Button variant="ghost" size="sm" onclick={clearAllFilters}>
 							Clear all filters
@@ -1283,9 +1284,9 @@
 
 <ConfirmDialog
 	open={deleteTargetId !== null}
-	title="Delete from library"
+	title={i18n.t('clv.deleteTitle')}
 	message={deleteTargetMessage}
-	confirmLabel="Delete"
+	confirmLabel={i18n.t('common.delete')}
 	variant="danger"
 	destructive
 	onConfirm={confirmDelete}
@@ -1302,9 +1303,9 @@
 
 <ConfirmDialog
 	open={bulkDeleteOpen}
-	title="Delete {selectedCount} character{selectedCount === 1 ? '' : 's'}"
+	title={i18n.t('clv.deleteBulk', { n: selectedCount })}
 	message={bulkDeleteMessage}
-	confirmLabel="Delete {selectedCount}"
+	confirmLabel={i18n.t('clv.deleteBulk', { n: selectedCount })}
 	variant="danger"
 	destructive
 	holdMs={holdMsForBlast(selectedCount)}
@@ -1315,7 +1316,7 @@
 <Dialog
 	open={lorebookPromptOpen}
 	onClose={cancelImport}
-	title="Import embedded lorebooks?"
+	title={i18n.t('clv.importLorebooks')}
 	size="lg"
 >
 	<div class="space-y-4">
@@ -1353,9 +1354,9 @@
 		</ul>
 
 		<div class="flex justify-end gap-2 pt-1">
-			<Button variant="ghost" onclick={cancelImport}>Cancel</Button>
-			<Button variant="secondary" onclick={importCharactersOnly}>Characters only</Button>
-			<Button variant="primary" onclick={() => finalizeImport(pendingImports)}>Import</Button>
+			<Button variant="ghost" onclick={cancelImport}>{i18n.t('common.cancel')}</Button>
+			<Button variant="secondary" onclick={importCharactersOnly}>{i18n.t('clv.charactersOnly')}</Button>
+			<Button variant="primary" onclick={() => finalizeImport(pendingImports)}>{i18n.t('clv.import')}</Button>
 		</div>
 	</div>
 </Dialog>
