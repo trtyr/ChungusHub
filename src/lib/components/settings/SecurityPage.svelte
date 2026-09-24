@@ -22,6 +22,7 @@
 	import MockupTip from '$lib/components/mockups/MockupTip.svelte';
 	import IpAllowlistMockup from '$lib/components/mockups/IpAllowlistMockup.svelte';
 	import { toggleRow } from '$lib/actions/toggleRow';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	const MIN_PASSWORD_LENGTH = 4;
 
@@ -326,9 +327,9 @@
 		<header class="card-head">
 			<div class="card-heading">
 				<div class="title-row">
-					<h3 class="card-title">Network Access</h3>
+					<h3 class="card-title">{i18n.t('sec.networkTitle')}</h3>
 					<InfoTip
-						text="Off is not a block: the app's port is closed, so there is nothing on the network to find. This computer is never affected, though flipping the switch reopens the port and the app reconnects."
+						text={i18n.t('sec.networkTip')}
 					/>
 				</div>
 				<p class="card-sub">Whether ChungusHub exists on your network at all.</p>
@@ -338,12 +339,12 @@
 		<div class="card-body">
 			<div class="row" use:toggleRow>
 				<div class="row-copy">
-					<span class="row-label">Open on the network</span>
+					<span class="row-label">{i18n.t('sec.openNetwork')}</span>
 					<span class="row-desc">
 						{#if networkEnabled}
-							Other devices can reach the app. Which ones is decided below.
+							{i18n.t('sec.openOn')}
 						{:else}
-							The app runs for this computer alone.
+							{i18n.t('sec.openOff')}
 						{/if}
 					</span>
 				</div>
@@ -366,14 +367,14 @@
 			<header class="card-head">
 				<div class="card-heading">
 					<div class="title-row">
-						<h3 class="card-title">Device Access</h3>
+						<h3 class="card-title">{i18n.t('sec.deviceTitle')}</h3>
 						<MockupTip
-							text="Every device on your network has its own address. An unapproved one lands on a waiting page and shows up here, ready for a single Allow."
+							text={i18n.t('sec.deviceTip')}
 						>
 							<IpAllowlistMockup />
 						</MockupTip>
 					</div>
-					<p class="card-sub">Choose which devices on your network can open ChungusHub.</p>
+					<p class="card-sub">{i18n.t('sec.allowSub')}</p>
 				</div>
 			</header>
 
@@ -398,7 +399,7 @@
 				{#if allowlistEnabled}
 					{#if recent.length}
 						<div class="group" transition:slide={{ duration: 160 }}>
-							<span class="section-label group-label">Waiting to connect</span>
+							<span class="section-label group-label">{i18n.t('sec.waiting')}</span>
 							{#each recent as attempt (attempt.ip)}
 								<div class="row wait-row" transition:slide={{ duration: 160 }}>
 									<span class="pulse-dot"></span>
@@ -420,19 +421,19 @@
 					{/if}
 
 					<div class="group">
-						<span class="section-label group-label">Allowed devices</span>
+						<span class="section-label group-label">{i18n.t('sec.allowedDevices')}</span>
 
 						<div class="row">
 							<span
 								class="device-dot"
 								class:is-you={isHostDevice}
 								class:is-online={hostOnline}
-								title={hostOnline ? 'Connected right now' : undefined}
+								title={hostOnline ? i18n.t('sec.connectedNow') : undefined}
 							></span>
 							<div class="row-copy">
 								<span class="row-ip">127.0.0.1</span>
 								<span class="row-desc">
-									{isHostDevice ? 'This device' : 'The computer running ChungusHub'}, always allowed
+									{isHostDevice ? i18n.t('sec.thisDevice') : i18n.t('sec.hostDevice')}{i18n.t('sec.alwaysAllowed')}
 								</span>
 							</div>
 						</div>
@@ -443,12 +444,12 @@
 									class="device-dot"
 									class:is-you={ip === yourIp}
 									class:is-online={online.includes(ip)}
-									title={online.includes(ip) ? 'Connected right now' : undefined}
+									title={online.includes(ip) ? i18n.t('sec.connectedNow') : undefined}
 								></span>
 								<div class="row-copy">
 									<span class="row-ip">{ip}</span>
 									{#if ip === yourIp}
-										<span class="row-desc">This device</span>
+										<span class="row-desc">{i18n.t('sec.thisDevice')}</span>
 									{/if}
 								</div>
 								<button
@@ -456,7 +457,7 @@
 									type="button"
 									onclick={() => requestRemove(ip)}
 									disabled={busy}
-									aria-label={`Remove ${ip}`}
+									aria-label={i18n.t('sec.removeAria', { ip })}
 								>
 									<Icon name="trash" class="w-3.5 h-3.5" />
 								</button>
@@ -490,7 +491,7 @@
 									class="input-base ip-input"
 									type="text"
 									bind:value={newIp}
-									placeholder="e.g. 192.168.1.23"
+									placeholder={i18n.t('sec.ipPlaceholder')}
 									autocomplete="off"
 									spellcheck="false"
 									use:focusOnMount
@@ -513,12 +514,12 @@
 			<header class="card-head">
 				<div class="card-heading">
 					<div class="title-row">
-						<h3 class="card-title">Password Lock</h3>
+						<h3 class="card-title">{i18n.t('sec.passwordTitle')}</h3>
 						<InfoTip
-							text="This computer is never asked, only your other devices are. Locked out? Delete security.json in your data folder."
+							text={i18n.t('sec.passwordTip')}
 						/>
 					</div>
-					<p class="card-sub">Other devices must enter a password before they can use the app.</p>
+					<p class="card-sub">{i18n.t('sec.passwordSub')}</p>
 				</div>
 			</header>
 
@@ -527,7 +528,7 @@
 					<!-- No password yet: the setup form is the whole card. Nothing to
 					     toggle, nothing to change. Create one and the lock is on. -->
 					<div class="group">
-						<span class="row-label">Set a password</span>
+						<span class="row-label">{i18n.t('sec.setPassword')}</span>
 						<form
 							class="pw-form"
 							onsubmit={(e) => {
@@ -540,7 +541,7 @@
 									class="input-base text-input"
 									type={showPassword ? 'text' : 'password'}
 									bind:value={newPassword}
-									placeholder="At least {MIN_PASSWORD_LENGTH} characters"
+									placeholder={i18n.t('sec.pwPlaceholder', { n: MIN_PASSWORD_LENGTH })}
 									autocomplete="new-password"
 									spellcheck="false"
 								/>
@@ -548,7 +549,7 @@
 									class="eye-btn"
 									type="button"
 									onclick={() => (showPassword = !showPassword)}
-									aria-label={showPassword ? 'Hide password' : 'Show password'}
+									aria-label={showPassword ? i18n.t('pw.hide') : i18n.t('pw.show')}
 									tabindex="-1"
 								>
 									<Icon name={showPassword ? 'eyeOff' : 'eye'} class="w-4 h-4" />
@@ -563,32 +564,31 @@
 					<!-- Password exists: an on/off switch, the idle window, a folded change form. -->
 					<div class="row" use:toggleRow>
 						<div class="row-copy">
-							<span class="row-label">Require password</span>
+							<span class="row-label">{i18n.t('sec.requirePassword')}</span>
 							<span class="row-desc">
 								{#if passwordEnabled}
-									Other devices need the password to connect.
+									{i18n.t('sec.requireOn')}
 								{:else}
-									The password is saved but not required.
+									{i18n.t('sec.requireOff')}
 								{/if}
 							</span>
 						</div>
 						<Toggle
 							checked={passwordEnabled}
 							disabled={securityBusy}
-							label="Require password"
+							label={i18n.t('sec.requirePassword')}
 							onchange={togglePassword}
 						/>
 					</div>
 
 					<div class="group">
-						<span class="row-label">Ask again when idle</span>
+						<span class="row-label">{i18n.t('sec.askWhenIdle')}</span>
 						<span class="row-desc">
 							{#if idleMinutes === 0}
-								Other devices stay unlocked until the password changes.
-							{:else}
-								A device left alone this long is asked for the password again. Set 0 to stop
-								asking.
-							{/if}
+									{i18n.t('sec.idleOff')}
+								{:else}
+									{i18n.t('sec.idleOn')}
+								{/if}
 						</span>
 						<form
 							class="pw-form"
@@ -604,9 +604,9 @@
 								bind:value={idleInput}
 								autocomplete="off"
 								spellcheck="false"
-								aria-label="Minutes before an idle device is asked again"
+								aria-label={i18n.t('sec.idleAria')}
 							/>
-							<span class="idle-unit">minutes</span>
+							<span class="idle-unit">{i18n.t('sec.minutes')}</span>
 							<button
 								class="primary-btn idle-save"
 								type="submit"
@@ -637,7 +637,7 @@
 										class="input-base text-input"
 										type={showPassword ? 'text' : 'password'}
 										bind:value={newPassword}
-										placeholder="New password ({MIN_PASSWORD_LENGTH}+ characters)"
+										placeholder={i18n.t('sec.newPwPlaceholder', { n: MIN_PASSWORD_LENGTH })}
 										autocomplete="new-password"
 										spellcheck="false"
 										use:focusOnMount
@@ -646,18 +646,18 @@
 										class="eye-btn"
 										type="button"
 										onclick={() => (showPassword = !showPassword)}
-										aria-label={showPassword ? 'Hide password' : 'Show password'}
+										aria-label={showPassword ? i18n.t('pw.hide') : i18n.t('pw.show')}
 										tabindex="-1"
 									>
 										<Icon name={showPassword ? 'eyeOff' : 'eye'} class="w-4 h-4" />
 									</button>
 								</div>
-								<button class="ghost-btn" type="button" onclick={cancelChange}>Cancel</button>
+								<button class="ghost-btn" type="button" onclick={cancelChange}>{i18n.t('common.cancel')}</button>
 								<button class="primary-btn" type="submit" disabled={securityBusy || !passwordValid}>
-									Update
+									{i18n.t('sec.update')}
 								</button>
 							</form>
-							<span class="row-desc pw-lead">Changing it signs every other device out.</span>
+							<span class="row-desc pw-lead">{i18n.t('sec.changeLead')}</span>
 						{/if}
 					</div>
 				{/if}
@@ -675,9 +675,9 @@
 	 survive an impatient afternoon of deleting things. -->
 <ConfirmDialog
 	open={networkOffOpen}
-	title="Shut out the device you are on?"
-	message={`Switching this off closes the port for every device on the network at once. Turning it back on takes the computer ChungusHub runs on: flip the switch there, or set "networkAccessEnabled" to true in security.json in your data folder.`}
-	confirmLabel="Switch off anyway"
+	title={i18n.t('sec.denyTitle')}
+	message={i18n.t('sec.denyMsg')}
+	confirmLabel={i18n.t('sec.denyConfirm')}
 	variant="danger"
 	onConfirm={confirmNetworkOff}
 	onCancel={() => (networkOffOpen = false)}
@@ -685,18 +685,18 @@
 
 <ConfirmDialog
 	open={lockoutOpen}
-	title="This device is not approved yet"
-	message={`This device (${yourIp}) is not on the list. Switching approval on now would shut it out, and letting it back in takes another device that is already approved.`}
-	confirmLabel="Approve and switch on"
+	title={i18n.t('sec.lockoutTitle')}
+	message={i18n.t('sec.lockoutMsg', { ip: yourIp ?? '' })}
+	confirmLabel={i18n.t('sec.lockoutConfirm')}
 	onConfirm={allowSelfAndEnable}
 	onCancel={() => (lockoutOpen = false)}
 />
 
 <ConfirmDialog
 	open={removeSelfIp !== null}
-	title="Remove the device you are on?"
-	message={`${removeSelfIp} is the device reading this. Removing it closes ChungusHub here, and opening it again takes another approved device or the computer ChungusHub runs on.`}
-	confirmLabel="Remove anyway"
+	title={i18n.t('sec.removeSelfTitle')}
+	message={i18n.t('sec.removeSelfMsg', { ip: removeSelfIp ?? '' })}
+	confirmLabel={i18n.t('sec.removeSelfConfirm')}
 	variant="danger"
 	onConfirm={confirmRemoveSelf}
 	onCancel={() => (removeSelfIp = null)}
