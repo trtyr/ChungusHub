@@ -7,6 +7,7 @@
 	 * budget-capped one.
 	 */
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import ImageLightbox from '$lib/components/ui/ImageLightbox.svelte';
 	import AssistantThinking from './AssistantThinking.svelte';
 	import AssistantDiffInline from './AssistantDiffInline.svelte';
@@ -83,11 +84,11 @@
 	 *  is written nowhere else on the screen, so this is what the tooltip is for; the chip's
 	 *  own hover already says it is pressable. */
 	const MODE_HINTS: Record<SentAttachmentMode, string> = {
-		full: 'Sent in full. The assistant holds this content and will not read it again.',
-		clipped: 'The highlight was longer than the limit, so it went clipped.',
-		pointer: 'Only a pointer went. The assistant reads the content with a tool when it needs it.',
-		oversize: 'Too long to include, so only a pointer went. The assistant reads it with a tool.',
-		known: 'This conversation already held it unchanged, so it was not sent again.'
+		full: 'asm.attFull',
+		clipped: 'asm.attClipped',
+		pointer: 'asm.attPointer',
+		oversize: 'asm.attOversize',
+		known: 'asm.attKnown'
 	};
 
 	/** Same routing table as every other assistant surface (assistant-targets.ts); a
@@ -214,7 +215,7 @@
 		<div class="assistant-step">
 			<div class="assistant-action-row">
 				{#if isNavigable(tool)}
-					<button type="button" class="assistant-action assistant-action--nav" onclick={() => navigateToTool(tool)} title="Go to this in the app">
+					<button type="button" class="assistant-action assistant-action--nav" onclick={() => navigateToTool(tool)} title={i18n.t('asm.goToApp')}>
 						<Icon name={toolIcon(tool)} class="w-3.5 h-3.5 shrink-0 assistant-action-icon" />
 						<span class="assistant-action-navlabel">{tool.label}</span>
 						<Icon name="arrowRight" class="w-3 h-3 shrink-0 assistant-action-go" />
@@ -230,8 +231,8 @@
 						type="button"
 						class="assistant-expand-btn"
 						onclick={() => (openDetails[detailKey] = !open)}
-						title={open ? 'Hide call details' : 'Show what this call sent and returned'}
-						aria-label="Toggle call details"
+						title={open ? i18n.t('asm.ttHideDetails') : i18n.t('asm.ttShowDetails')}
+						aria-label={i18n.t('asm.ttToggleDetails')}
 						aria-expanded={open}
 					>
 						<Icon name={open ? 'chevronDown' : 'chevronRight'} class="w-3 h-3" />
@@ -266,7 +267,7 @@
 					class="assistant-batch-head"
 					onclick={() => (openBatches[batchKey] = !open)}
 					aria-expanded={open}
-					title={open ? 'Collapse this batch' : 'Expand to see each action'}
+					title={open ? i18n.t('asm.ttCollapseBatch') : i18n.t('asm.ttExpandBatch')}
 				>
 					<Icon name={open ? 'chevronDown' : 'chevronRight'} class="w-3.5 h-3.5 shrink-0" />
 					<span class="assistant-batch-count">{unit.items.length} actions</span>
@@ -310,8 +311,8 @@
 								type="button"
 								class="assistant-sent-chip assistant-sent-chip--{att.mode}"
 								onclick={() => goToAttachment(att)}
-								title={MODE_HINTS[att.mode]}
-								aria-label="{att.label}, {MODE_TAGS[att.mode]}. Go to this in the app."
+								title={i18n.t(MODE_HINTS[att.mode])}
+								aria-label={`${att.label}, ${MODE_TAGS[att.mode]}. ${i18n.t('asm.goToApp')}`}
 							>
 								<Icon name={attachmentKindIcon(att.kind, att.entryType)} class="w-3 h-3 shrink-0" />
 								<span class="assistant-sent-chip-label">{att.label}</span>
@@ -330,8 +331,8 @@
 								type="button"
 								class="assistant-sent-chip assistant-sent-chip--pointer"
 								onclick={() => onOpenFile(file)}
-								title="{fileKindLabel(file.kind)} · {file.lines} lines · ~{file.tokenEstimate} tokens"
-								aria-label="{file.name}, attached file. Open it."
+								title={`${fileKindLabel(file.kind)} · ${i18n.t('lb.entriesN', { n: file.lines })} · ${i18n.t('pcf.tokensN', { n: '~' + file.tokenEstimate })}`}
+								aria-label={`${file.name}, ${i18n.t('asm.ttOpenFile')}`}
 							>
 								<Icon name="document" class="w-3 h-3 shrink-0" />
 								<span class="assistant-sent-chip-label">{file.name}</span>
@@ -348,9 +349,9 @@
 									type="button"
 									class="assistant-msg-image"
 									onclick={() => openImage(message.id, i)}
-									title="View full size"
+									title={i18n.t('chat.viewFullSize')}
 								>
-									<img src={imageService.thumbnailUrl(path)} alt="Attachment" loading="lazy" />
+									<img src={imageService.thumbnailUrl(path)} alt={i18n.t('chat.attachment')} loading="lazy" />
 								</button>
 							{/each}
 						</div>
@@ -386,7 +387,7 @@
 {/each}
 
 {#if activeId && !runtime.busy && store.canContinue(activeId)}
-	<button type="button" class="assistant-retry-btn" onclick={onContinue} title="The last turn stopped at its budget, resume the unfinished work">
+	<button type="button" class="assistant-retry-btn" onclick={onContinue} title={i18n.t('asm.ttResume')}>
 		<Icon name="arrowRight" class="w-3.5 h-3.5" />
 		Continue
 	</button>
@@ -433,7 +434,7 @@
 <ImageLightbox
 	images={roster.images}
 	bind:index={viewerIndex}
-	alt="Assistant attachment"
+	alt={i18n.t('asm.ttAssistantAttachment')}
 	countLabel="Attachment"
 	onClose={() => (viewerIndex = null)}
 />

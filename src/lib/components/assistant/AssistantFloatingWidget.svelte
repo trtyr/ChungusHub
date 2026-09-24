@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import ChungusAssistantPanel from './ChungusAssistantPanel.svelte';
 	import AssistantMascot from './AssistantMascot.svelte';
 	import { uiStore } from '$lib/stores/ui.svelte';
@@ -515,7 +516,7 @@
 			<button
 				type="button"
 				class="assistant-widget-min"
-				title="Minimize"
+				title={i18n.t('asm.minimize')}
 				onclick={() => uiStore.closeAssistant()}
 			>
 				<Icon name="minimize" class="w-4 h-4" />
@@ -550,12 +551,12 @@
 		class:is-done={!busy && !waiting && notify}
 		style={launcherStyle}
 		title={waiting
-			? 'Chungus Assistant · waiting for your approval'
+			? i18n.t('asm.launchWaiting')
 			: busy
-				? 'Chungus Assistant · working…'
+				? i18n.t('asm.launchWorking')
 				: notify
-					? 'Chungus Assistant · finished'
-					: 'Chungus Assistant'}
+					? i18n.t('asm.launchDone')
+					: i18n.t('asm.launchIdle')}
 		onpointerdown={onLauncherPointerDown}
 		onpointermove={onLauncherPointerMove}
 		onpointerup={onLauncherPointerUp}
