@@ -11,6 +11,7 @@
 	import { QUANTIZATION_LEVELS, isRoutingEmpty, type ModelEndpoint, type RoutingConfig } from '$lib/types/llm';
 	import { formatPricePerMillion, formatContext } from '$lib/utils/modelFormat';
 	import { toggleRow } from '$lib/actions/toggleRow';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	interface Props {
 		/** The connection whose OpenRouter routing (for its single model) is being edited. */
@@ -395,22 +396,22 @@
 			{@const pin = priceShort(row.promptPrice)}
 			{@const pout = priceShort(row.price)}
 			<div class="prov-badges">
-				{#if h}<span class="hdot hdot-{h}" title={h === 'ok' ? 'Healthy' : h === 'warn' ? 'Degraded' : 'Down / unstable'}></span>{/if}
+				{#if h}<span class="hdot hdot-{h}" title={h === 'ok' ? i18n.t('pr.hOk') : h === 'warn' ? i18n.t('pr.hWarn') : i18n.t('pr.hDown')}></span>{/if}
 				{#if pin || pout}
-					<span class="badge badge-price" title="Price per 1M tokens (input · output)">
-						{#if pin}<span class="badge-lbl">in</span>{pin}{/if}{#if pin && pout}<span class="badge-sep">·</span>{/if}{#if pout}<span class="badge-lbl">out</span>{pout}{/if}
+					<span class="badge badge-price" title={i18n.t('pr.priceTip')}>
+						{#if pin}<span class="badge-lbl">{i18n.t('pr.in')}</span>{pin}{/if}{#if pin && pout}<span class="badge-sep">·</span>{/if}{#if pout}<span class="badge-lbl">{i18n.t('pr.out')}</span>{pout}{/if}
 					</span>
 				{/if}
 				{#if formatContext(row.contextLength)}<span class="badge"><span class="badge-lbl">ctx</span>{formatContext(row.contextLength)}</span>{/if}
 				{#each row.quants as q (q)}<span class="badge badge-quant">{q}</span>{/each}
-				{#if latencyLabel(row.latencyP50)}<span class="badge" title="Latency, time to first token (p50)"><span class="badge-lbl">lat</span>{latencyLabel(row.latencyP50)}</span>{/if}
-				{#if throughputLabel(row.throughputP50)}<span class="badge" title="Throughput, p50">{throughputLabel(row.throughputP50)}</span>{/if}
-				{#if row.uptime != null}<span class="badge" title="Uptime, last 30m"><span class="badge-lbl">up</span>{row.uptime.toFixed(1)}%</span>{/if}
+				{#if latencyLabel(row.latencyP50)}<span class="badge" title={i18n.t('pr.latTip')}><span class="badge-lbl">{i18n.t('pr.lat')}</span>{latencyLabel(row.latencyP50)}</span>{/if}
+				{#if throughputLabel(row.throughputP50)}<span class="badge" title={i18n.t('pr.throughputTip')}>{throughputLabel(row.throughputP50)}</span>{/if}
+				{#if row.uptime != null}<span class="badge" title={i18n.t('pr.uptimeTip')}><span class="badge-lbl">{i18n.t('pr.up')}</span>{row.uptime.toFixed(1)}%</span>{/if}
 			</div>
 		{/snippet}
 
 		{#if loading}
-			<div class="status">Loading provider endpoints…</div>
+			<div class="status">{i18n.t('pr.loading')}</div>
 		{:else}
 			{#if error}
 				<div class="status error">{error}</div>
@@ -418,16 +419,16 @@
 
 			<!-- Providers -->
 			<section class="card">
-				<span class="card-title">Providers</span>
+				<span class="card-title">{i18n.t('pr.providersTitle')}</span>
 
 				<!-- Preferred -->
 				<div class="block">
 					<div class="block-head">
-						<span class="section-label">Preferred</span>
-						<InfoTip text="Tried top to bottom, in the order you set with the arrows. Empty lets OpenRouter choose." />
+						<span class="section-label">{i18n.t('pr.preferred')}</span>
+						<InfoTip text={i18n.t('pr.preferredTip')} />
 					</div>
 					{#if selectedRows.length === 0}
-						<div class="empty-pick">No providers pinned, so OpenRouter load-balances across all of them.</div>
+						<div class="empty-pick">{i18n.t('pr.nonePinned')}</div>
 					{:else}
 						<ul class="picked">
 							{#each selectedRows as row, i (row.tag)}
@@ -437,18 +438,18 @@
 									<div class="prov-main">
 										<span class="prov-name">
 											{row.providerName}
-											{#if pinReason}<span class="pin-warn" title="This pin conflicts with your current filters, so OpenRouter will skip it">⚠ {pinReason}</span>{/if}
+											{#if pinReason}<span class="pin-warn" title={i18n.t('pr.pinConflict')}>⚠ {pinReason}</span>{/if}
 										</span>
 										{@render provBadges(row)}
 									</div>
 									<div class="row-actions">
-										<button type="button" class="icon-act" disabled={i === 0} onclick={() => move(row.tag, -1)} title="Move up">
+										<button type="button" class="icon-act" disabled={i === 0} onclick={() => move(row.tag, -1)} title={i18n.t('pr.moveUp')}>
 											<Icon name="chevronUp" class="w-4 h-4" />
 										</button>
-										<button type="button" class="icon-act" disabled={i === selectedRows.length - 1} onclick={() => move(row.tag, 1)} title="Move down">
+										<button type="button" class="icon-act" disabled={i === selectedRows.length - 1} onclick={() => move(row.tag, 1)} title={i18n.t('pr.moveDown')}>
 											<Icon name="chevronDown" class="w-4 h-4" />
 										</button>
-										<button type="button" class="icon-act remove" onclick={() => removeProvider(row.tag)} title="Remove">
+										<button type="button" class="icon-act remove" onclick={() => removeProvider(row.tag)} title={i18n.t('pr.remove')}>
 											<Icon name="close" class="w-4 h-4" />
 										</button>
 									</div>
@@ -468,8 +469,8 @@
 							aria-expanded={showAvailable}
 						>
 							<Icon name="chevronRight" class="w-4 h-4 add-chev {showAvailable ? 'open' : ''}" strokeWidth={2} />
-							<span class="add-toggle-label">Add a provider</span>
-							<span class="add-toggle-count">{availableRows.length} available</span>
+							<span class="add-toggle-label">{i18n.t('pr.addProvider')}</span>
+							<span class="add-toggle-count">{i18n.t('pr.availableN', { n: availableRows.length })}</span>
 						</button>
 
 						{#if showAvailable}
@@ -481,22 +482,22 @@
 											<input
 												class="input-base prov-search-input"
 												type="text"
-												placeholder="Filter providers…"
+												placeholder={i18n.t('pr.filterProviders')}
 												bind:value={providerSearch}
 												autocomplete="off"
 												spellcheck="false"
 												use:autofocus
 											/>
 										</div>
-										<Select variant="compact" bind:value={availSort} aria-label="Sort providers">
-											<option value="name">A to Z</option>
-											<option value="cheap">Cheapest</option>
-											<option value="expensive">Most expensive</option>
+										<Select variant="compact" bind:value={availSort} aria-label={i18n.t('pr.sortAria')}>
+											<option value="name">{i18n.t('pr.sortAZ')}</option>
+											<option value="cheap">{i18n.t('pr.sortCheap')}</option>
+											<option value="expensive">{i18n.t('pr.sortExpensive')}</option>
 										</Select>
 									</div>
 								{/if}
 								{#if filteredAvailable.length === 0}
-									<div class="empty-pick">No providers match “{providerSearch}”.</div>
+									<div class="empty-pick">{i18n.t('pr.noMatch', { q: providerSearch })}</div>
 								{:else}
 									<ul class="available scrollable">
 										{#each filteredAvailable as row (row.tag)}
@@ -508,12 +509,12 @@
 												</div>
 												<div class="avail-actions">
 													{#if reason}
-														<span class="excl-tag" title="Skipped by your current routing filters. Pin it to prefer it anyway">{reason}</span>
+														<span class="excl-tag" title={i18n.t('pr.excludedTip')}>{reason}</span>
 													{/if}
 													<button type="button" class="add-btn" onclick={() => addProvider(row.tag)}>
 														<Icon name="plus" class="w-3.5 h-3.5" strokeWidth={2} /> Add
 													</button>
-													<button type="button" class="block-btn" onclick={() => blockProvider(row.tag)} title="Never route to this provider">
+													<button type="button" class="block-btn" onclick={() => blockProvider(row.tag)} title={i18n.t('pr.neverRoute')}>
 														<Icon name="close" class="w-3.5 h-3.5" strokeWidth={2} />
 													</button>
 												</div>
@@ -530,8 +531,8 @@
 				{#if blockedRows.length > 0}
 					<div class="block">
 						<div class="block-head">
-							<span class="section-label">Blocked</span>
-							<InfoTip text="Never route to these, even as a fallback." />
+							<span class="section-label">{i18n.t('pr.blocked')}</span>
+							<InfoTip text={i18n.t('pr.blockedTip')} />
 						</div>
 						<ul class="available">
 							{#each blockedRows as row (row.tag)}
@@ -553,31 +554,31 @@
 				{#if order.length > 0}
 					<div class="toggle-row" use:toggleRow>
 						<div class="tr-text">
-							<span class="toggle-label">Allow fallback to other providers</span>
-							<span class="toggle-hint">Off = use only the pinned providers, fail if all are down.</span>
+							<span class="toggle-label">{i18n.t('pr.allowFallback')}</span>
+							<span class="toggle-hint">{i18n.t('pr.fallbackHint')}</span>
 						</div>
-						<Toggle checked={allowFallbacks} onchange={(v) => (allowFallbacks = v)} label="Allow fallback to other providers" />
+						<Toggle checked={allowFallbacks} onchange={(v) => (allowFallbacks = v)} label={i18n.t('pr.allowFallback')} />
 					</div>
 				{/if}
 			</section>
 
 			<!-- Routing -->
 			<section class="card">
-				<span class="card-title">Routing</span>
+				<span class="card-title">{i18n.t('pr.routingTitle')}</span>
 
 				<div class="toggle-row" use:toggleRow>
 					<div class="tr-text">
-						<span class="toggle-label">Only providers that honor my sampling settings</span>
-						<span class="toggle-hint">Skip any provider that would silently drop temperature, top_p, etc.</span>
+						<span class="toggle-label">{i18n.t('pr.honorSampling')}</span>
+						<span class="toggle-hint">{i18n.t('pr.honorSamplingHint')}</span>
 					</div>
-					<Toggle checked={requireParameters} onchange={(v) => (requireParameters = v)} label="Only providers that honor my sampling settings" />
+					<Toggle checked={requireParameters} onchange={(v) => (requireParameters = v)} label={i18n.t('pr.honorSampling')} />
 				</div>
 
 				<!-- Auto sort -->
 				<div class="block">
 					<div class="block-head">
-						<span class="section-label">Auto-pick by</span>
-						<InfoTip text="Overrides your order and always routes to the cheapest, fastest or lowest-latency provider." />
+						<span class="section-label">{i18n.t('pr.autoPick')}</span>
+						<InfoTip text={i18n.t('pr.autoPickTip')} />
 					</div>
 					<div class="segmented">
 						{#each SORTS as s (s.mode)}
@@ -591,16 +592,16 @@
 				<!-- Max price -->
 				<div class="block">
 					<div class="block-head">
-						<span class="section-label">Max price</span>
-						<InfoTip text="Skip providers above this price, in USD per million tokens. Blank = no limit." />
+						<span class="section-label">{i18n.t('pr.maxPrice')}</span>
+						<InfoTip text={i18n.t('pr.maxPriceTip')} />
 					</div>
 					<div class="price-inputs">
 						<div class="price-field">
-							<span class="price-label">Prompt $/M</span>
+							<span class="price-label">{i18n.t('pr.promptPrice')}</span>
 							<input type="number" min="0" step="0.01" placeholder="∞" bind:value={maxPrompt} class="input-base num" />
 						</div>
 						<div class="price-field">
-							<span class="price-label">Completion $/M</span>
+							<span class="price-label">{i18n.t('pr.completionPrice')}</span>
 							<input type="number" min="0" step="0.01" placeholder="∞" bind:value={maxCompletion} class="input-base num" />
 						</div>
 					</div>
@@ -609,8 +610,8 @@
 				<!-- Quantization -->
 				<div class="block">
 					<div class="block-head">
-						<span class="section-label">Quantization</span>
-						<InfoTip text="Only route to providers serving these quantization levels. None selected = any." />
+						<span class="section-label">{i18n.t('pr.quantization')}</span>
+						<InfoTip text={i18n.t('pr.quantTip')} />
 					</div>
 					<div class="chips">
 						{#each QUANTIZATION_LEVELS as q (q)}
@@ -624,20 +625,20 @@
 
 			<!-- Privacy -->
 			<section class="card">
-				<span class="card-title">Privacy</span>
+				<span class="card-title">{i18n.t('pr.privacyTitle')}</span>
 				<div class="toggle-row compact" use:toggleRow>
-					<span class="toggle-label">Only providers that don't store data</span>
-					<Toggle checked={dataDeny} onchange={(v) => (dataDeny = v)} label="Only providers that don't store data" />
+					<span class="toggle-label">{i18n.t('pr.noDataStore')}</span>
+					<Toggle checked={dataDeny} onchange={(v) => (dataDeny = v)} label={i18n.t('pr.noDataStore')} />
 				</div>
 				<div class="toggle-row compact" use:toggleRow>
-					<span class="toggle-label">Require zero-data-retention (ZDR) endpoints</span>
-					<Toggle checked={zdr} onchange={(v) => (zdr = v)} label="Require zero-data-retention (ZDR) endpoints" />
+					<span class="toggle-label">{i18n.t('pr.zdr')}</span>
+					<Toggle checked={zdr} onchange={(v) => (zdr = v)} label={i18n.t('pr.zdr')} />
 				</div>
 			</section>
 		{/if}
 
 		<div class="footer">
-			<Button variant="ghost" size="sm" onclick={resetAll} disabled={!hasConfig}>Clear all routing</Button>
+			<Button variant="ghost" size="sm" onclick={resetAll} disabled={!hasConfig}>{i18n.t('pr.clearAll')}</Button>
 		</div>
 </div>
 
