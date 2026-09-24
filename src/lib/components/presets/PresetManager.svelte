@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Select from '$lib/components/ui/Select.svelte';
 	import PromptDialog from '$lib/components/ui/PromptDialog.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
@@ -277,7 +278,7 @@
 				disabled={busy}
 				onchange={(event) => selectPreset((event.target as HTMLSelectElement).value)}
 				class="!h-[2.15rem] !px-3 !pr-8 !py-0 !text-sm"
-				aria-label="Active preset"
+				aria-label={i18n.t('pm.activeAria')}
 			>
 				<!-- Drafts are held per preset, so the tag is per row and not the active row's
 				     alone: a preset edited and then switched away from still has unsaved work,
@@ -310,8 +311,8 @@
 				class:pm-compact={compact}
 				class:is-open={open}
 				disabled={busy}
-				title="Preset actions"
-				aria-label="Preset actions"
+				title={i18n.t('pm.actions')}
+				aria-label={i18n.t('pm.actions')}
 				aria-haspopup="menu"
 				aria-expanded={open}
 				onclick={toggle}
@@ -323,34 +324,34 @@
 		{#if showEdit}
 			<button type="button" role="menuitem" class="brw-menu-item" onclick={() => closeAnd(() => onEdit?.())}>
 				<Icon name="wrench" class="w-4 h-4" strokeWidth={1.5} />
-				<span>Edit in Prompt Builder</span>
+				<span>{i18n.t('pm.editInBuilder')}</span>
 			</button>
 			<div class="pm-menu-divider"></div>
 		{/if}
 		{#if showCreate}
 			<button type="button" role="menuitem" class="brw-menu-item" onclick={() => closeAnd(createPreset)}>
 				<Icon name="plus" class="w-4 h-4" strokeWidth={1.5} />
-				<span>New preset</span>
+				<span>{i18n.t('pm.newPreset')}</span>
 			</button>
 		{/if}
 		<button type="button" role="menuitem" class="brw-menu-item" onclick={() => closeAnd(renamePreset)}>
 			<Icon name="pencil" class="w-4 h-4" strokeWidth={1.5} />
-			<span>Rename…</span>
+			<span>{i18n.t('pm.rename')}</span>
 		</button>
 		<button type="button" role="menuitem" class="brw-menu-item" onclick={() => closeAnd(duplicatePreset)}>
 			<Icon name="copy" class="w-4 h-4" strokeWidth={1.5} />
-			<span>Duplicate</span>
+			<span>{i18n.t('pm.duplicate')}</span>
 		</button>
 		<button type="button" role="menuitem" class="brw-menu-item" onclick={() => closeAnd(() => fileInput?.click())}>
 			<Icon name="upload" class="w-4 h-4" strokeWidth={1.5} />
-			<span>Import card or JSON…</span>
+			<span>{i18n.t('pm.import')}</span>
 		</button>
 		<!-- The ways out sit together, and each wears its own glyph: a picture, a plain file
 		     and a clipboard copy are three different actions, and one `download` on all of
 		     them said they weren't. -->
 		<button type="button" role="menuitem" class="brw-menu-item" onclick={() => closeAnd(exportCard)}>
 			<Icon name="image" class="w-4 h-4" strokeWidth={1.5} />
-			<span>Export card (PNG)</span>
+			<span>{i18n.t('pm.exportPng')}</span>
 		</button>
 		<button type="button" role="menuitem" class="brw-menu-item" onclick={() => closeAnd(exportFile)}>
 			<Icon name="download" class="w-4 h-4" strokeWidth={1.5} />
@@ -358,17 +359,17 @@
 		</button>
 		<button type="button" role="menuitem" class="brw-menu-item" onclick={() => closeAnd(copyJson)}>
 			<Icon name="copy" class="w-4 h-4" strokeWidth={1.5} />
-			<span>Copy as JSON</span>
+			<span>{i18n.t('pm.copyJson')}</span>
 		</button>
 		<div class="pm-menu-divider"></div>
-		<span class="pm-menu-label">Danger zone</span>
+		<span class="pm-menu-label">{i18n.t('pm.danger')}</span>
 		<button type="button" role="menuitem" class="brw-menu-item pm-danger" onclick={() => closeAnd(deletePreset)}>
 			<Icon name="trash" class="w-4 h-4" strokeWidth={1.5} />
-			<span>Delete preset</span>
+			<span>{i18n.t('pm.delete')}</span>
 		</button>
 		<button type="button" role="menuitem" class="brw-menu-item pm-danger" onclick={() => closeAnd(restoreDefaults)}>
 			<Icon name="refresh" class="w-4 h-4" strokeWidth={1.5} />
-			<span>Restore defaults</span>
+			<span>{i18n.t('pm.restore')}</span>
 		</button>
 	</BrowsePopover>
 </div>
