@@ -21,6 +21,7 @@
 	import { steeringStore } from '$lib/stores/steering.svelte';
 	import { bindingLabel } from '$lib/utils/steering-labels';
 	import { noteLabel, steeringTargetForChat, type SteeringScope } from '$lib/types/steering';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	let chat = $derived(chatStore.activeChat);
 	let target = $derived(steeringTargetForChat(chat));
@@ -100,12 +101,12 @@
 		</div>
 	{:else}
 		<div class="pop-head">
-			<span class="pop-title font-ui">Steering</span>
+			<span class="pop-title font-ui">{i18n.t('chat.steeringTitle')}</span>
 			<span class="pop-count font-ui">
 				{#if scoped.length}
-					{activeCount} of {scoped.length} on
+					{i18n.t('chat.steeringCount', { n: activeCount, total: scoped.length })}
 				{:else}
-					nothing set
+					{i18n.t('chat.steeringNone')}
 				{/if}
 			</span>
 		</div>
@@ -120,13 +121,13 @@
 							<Toggle
 								checked={note.enabled}
 								size="sm"
-								label={note.enabled ? 'Disable this note' : 'Enable this note'}
+								label={note.enabled ? i18n.t('chat.steeringDisable') : i18n.t('chat.steeringEnable')}
 								onchange={(on) => steeringStore.update(note.id, { enabled: on })}
 							/>
 							<button type="button" class="row-main" onclick={() => (editingId = note.id)}>
 								<span class="row-title font-ui">{noteLabel(note)}</span>
 								<span class="row-scope font-ui">
-									{bindingLabel(note)}{#if note.mode === 'once'}<span class="row-once">next reply</span>{/if}
+									{bindingLabel(note)}{#if note.mode === 'once'}<span class="row-once">{i18n.t('chat.nextReply')}</span>{/if}
 								</span>
 							</button>
 							<!-- Straight delete, no dialog: the editor's own Delete has never asked
@@ -134,8 +135,8 @@
 							<button
 								type="button"
 								class="row-del"
-								aria-label="Delete steering"
-								title="Delete"
+								aria-label={i18n.t('chat.deleteSteering')}
+								title={i18n.t('common.delete')}
 								onclick={() => steeringStore.remove(note.id)}
 							>
 								<Icon name="trash" class="w-3 h-3" />
@@ -144,12 +145,12 @@
 					{/each}
 				</div>
 			{:else}
-				<p class="empty">No guidance here yet. Type below to steer the next reply.</p>
+				<p class="empty">{i18n.t('chat.steeringEmpty')}</p>
 			{/if}
 
 			{#if history.length > 0}
 				<div class="history">
-					<span class="field-label font-ui">Recent</span>
+					<span class="field-label font-ui">{i18n.t('chat.recent')}</span>
 					{#each history as entry (entry)}
 						<button type="button" class="hist-row" title={entry} onclick={() => (quickText = entry)}>
 							{entry}
@@ -162,21 +163,21 @@
 		<!-- Under the Recent list it fills, and outside the scroller: the cheap action is
 		     never the one you have to scroll for. -->
 		<div class="quick">
-			<span class="field-label font-ui">Steer the next reply</span>
+			<span class="field-label font-ui">{i18n.t('chat.steerNextReply')}</span>
 			<textarea
 				class="quick-box"
 				rows="2"
 				bind:value={quickText}
 				use:autoResize={{ maxHeight: 140, value: quickText, grip: false }}
 				onkeydown={handleQuickKeydown}
-				placeholder="Rides the next request, then it's gone…"
+				placeholder={i18n.t('chat.steeringPlaceholder')}
 			></textarea>
 		</div>
 
 		<div class="foot">
 			<button type="button" class="foot-link font-ui" onclick={newNote}>
 				<Icon name="plus" class="w-3 h-3" />
-				New steering
+				{i18n.t('chat.newSteering')}
 			</button>
 		</div>
 	{/if}
