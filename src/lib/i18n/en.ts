@@ -127,6 +127,15 @@ export const en: Record<string, string> = {
 	// storymap · StoryMapView
 	'common.cancel': 'Cancel',
 	'common.emptyText': '(empty)',
+	'chat.estimatedTokens': 'Estimated tokens',
+	'chat.unknownProvider': 'unknown provider',
+	'chat.generationTime': 'Generation time',
+	'chat.edited': 'Edited',
+	'chat.inMemory': 'In memory',
+	'chat.inMemoryTitle':
+		"This turn has been folded into chat memory: it's recalled as memory, not re-sent verbatim.",
+	'chat.lorebookTitle': 'Which lorebook entries this turn was built with',
+	'chat.generatingResponse': 'Generating response',
 	'storymap.noChatOpen': 'No chat open',
 	'storymap.openChatHint': 'Open a chat to see its story map.',
 	'storymap.noMessages': 'No messages yet',

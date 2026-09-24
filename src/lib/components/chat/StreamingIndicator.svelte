@@ -10,6 +10,7 @@
 	import { openChatSetup } from '$lib/stores/openChatSetup.svelte';
 	import { characterLibraryStore } from '$lib/stores/characterLibrary.svelte';
 	import { themeStore } from '$lib/stores/theme.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	interface Props {
 		content: string;
@@ -31,7 +32,7 @@
 				}
 			: null;
 	});
-	const speakerName = $derived(speaker?.name?.trim() || 'Assistant');
+	const speakerName = $derived(speaker?.name?.trim() || i18n.t('role.story'));
 	const speakerImagePath = $derived(speaker?.imageUrl ?? null);
 	const speakerFocus = $derived(speaker?.portraitFocus);
 
@@ -119,7 +120,7 @@
 						     runs, so the per-tick countTokens estimate is skipped entirely. -->
 						{#if themeStore.appearance.showTokenCount && streamingTokens > 0}
 							<div class="stream-tokens-row">
-								<span class="stream-tokens" title="Estimated tokens">~{streamingTokens}</span>
+								<span class="stream-tokens" title={i18n.t('chat.estimatedTokens')}>~{streamingTokens}</span>
 							</div>
 						{/if}
 					</div>

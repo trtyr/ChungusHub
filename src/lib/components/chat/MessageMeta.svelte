@@ -4,6 +4,7 @@
 	import { themeStore } from '$lib/stores/theme.svelte';
 	import { formatDuration, formatMessageTime, relativeClock } from '$lib/utils/time-format.svelte';
 	import { lorebookWasInjected, type LorebookTrace } from '$lib/lorebook/types';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import type { ProviderName } from '$lib/types/llm';
 
 	interface Props {
@@ -76,7 +77,7 @@
 	const generationTitle = $derived.by(() => {
 		const parts: string[] = [];
 		if (provider || model) {
-			parts.push(`${providerLabel ?? 'unknown provider'}${model ? ` · ${model}` : ''}`);
+			parts.push(`${providerLabel ?? i18n.t('chat.unknownProvider')}${model ? ` · ${model}` : ''}`);
 		}
 		if (tokens) parts.push(tokens);
 		return parts.length > 0 ? parts.join(' · ') : null;
@@ -114,7 +115,7 @@
 	{/if}
 
 	{#if durationLabel}
-		<span class="message-date" title="Generation time">{durationLabel}</span>
+		<span class="message-date" title={i18n.t('chat.generationTime')}>{durationLabel}</span>
 	{/if}
 
 	{#if generationTitle}
@@ -124,13 +125,13 @@
 	{/if}
 
 	{#if edited}
-		<span class="message-edited">Edited</span>
+		<span class="message-edited">{i18n.t('chat.edited')}</span>
 	{/if}
 
 	{#if archived}
-		<span class="message-ghost-tag" title="This turn has been folded into chat memory: it's recalled as memory, not re-sent verbatim.">
+		<span class="message-ghost-tag" title={i18n.t('chat.inMemoryTitle')}>
 			<Icon name="brain" class="w-3 h-3" />
-			<span>In memory</span>
+			<span>{i18n.t('chat.inMemory')}</span>
 		</span>
 	{/if}
 
@@ -139,7 +140,7 @@
 			type="button"
 			class="message-lore-tag"
 			onclick={onLorebook}
-			title="Which lorebook entries this turn was built with"
+			title={i18n.t('chat.lorebookTitle')}
 		>
 			<Icon name="bookOpen" class="w-3 h-3" />
 			<span>{loreCount}</span>
@@ -147,7 +148,7 @@
 	{/if}
 
 	{#if streaming}
-		<span class="message-dots" aria-label="Generating response">
+		<span class="message-dots" aria-label={i18n.t('chat.generatingResponse')}>
 			<span class="message-dot"></span>
 			<span class="message-dot" style="animation-delay: 120ms"></span>
 			<span class="message-dot" style="animation-delay: 240ms"></span>
