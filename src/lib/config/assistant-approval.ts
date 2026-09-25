@@ -34,15 +34,15 @@ export interface ApprovalModeInfo {
 export const APPROVAL_MODES: ApprovalModeInfo[] = [
 	{
 		mode: 'manual',
-		label: 'Manual',
-		describe: 'Every call that changes something is shown first, with the change it will make. Reads and searches run on their own.',
-		hint: 'Changes are shown before they run.'
+		label: 'ap.manual',
+		describe: 'ap.dManual',
+		hint: 'ap.hManual'
 	},
 	{
 		mode: 'auto',
 		label: 'Auto',
-		describe: 'Every call is applied as the assistant works, deletes included.',
-		hint: 'Every call is applied directly, deletes included.',
+		describe: 'ap.dAuto',
+		hint: 'ap.hAuto',
 		badge: 'ap.noReview',
 		warning: {
 			title: 'ap.switchAuto',

@@ -142,8 +142,8 @@
 	const WOKEN_BY_LABELS: Record<LorebookWokenBy, string> = {
 		both: i18n.t('tr.both'),
 		chatOnly: i18n.t('tr.chatOnly'),
-		entriesOnly: 'Other entries only',
-		never: 'Never (SillyTavern)'
+		entriesOnly: i18n.t('ler.wEntriesOnly'),
+		never: i18n.t('ler.wNever')
 	};
 
 	let wokenByOptions = $derived.by(() => {

@@ -82,12 +82,12 @@
 			onclick={() => pickMode(choice)}
 		>
 			<span class="apr-mode-head">
-				<span class="apr-mode-label">{labelT(choice.label)}</span>
+				<span class="apr-mode-label">{i18n.t(choice.label)}</span>
 				{#if choice.badge}
-					<span class="apr-badge">{labelT(choice.badge)}</span>
+					<span class="apr-badge">{i18n.t(choice.badge)}</span>
 				{/if}
 			</span>
-			<span class="apr-mode-describe">{labelT(choice.describe)}</span>
+			<span class="apr-mode-describe">{i18n.t(choice.describe)}</span>
 		</button>
 	{/each}
 </div>

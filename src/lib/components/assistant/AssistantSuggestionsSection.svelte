@@ -94,11 +94,11 @@
 	/** The shipped set is always one press away, and it only ever ADDS: a list the user has
 	 *  rewritten is never overwritten to hand back a default they can already read here. */
 	let missingDefaults = $derived(
-		DEFAULT_SUGGESTED_PROMPTS.filter((d) => !rows.some((r) => r.text.trim() === d))
+		DEFAULT_SUGGESTED_PROMPTS.filter((d) => !rows.some((r) => r.text.trim() === i18n.t(d)))
 	);
 
 	function addDefaults(): void {
-		rows = [...rows, ...toRows(missingDefaults)];
+		rows = [...rows, ...toRows(missingDefaults.map((d) => i18n.t(d)))];
 		void commit();
 	}
 

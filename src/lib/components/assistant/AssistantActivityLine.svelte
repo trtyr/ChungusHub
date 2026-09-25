@@ -45,7 +45,7 @@
 	const ROTATE_MS = 4600;
 	const TICK_INDEXES = Array.from({ length: TICKS }, (_, i) => i);
 	/** Held on a card: one line, never rotated. See `words` below. */
-	const HELD_WORDS = ['waiting for you'];
+	const HELD_WORDS = ['asm.wWaiting'];
 
 	/** A card outranks everything, then a running call: both are more specific than the
 	 *  trailing step, which otherwise says whether the model is writing, reasoning, or silent. */
@@ -80,7 +80,7 @@
 	 * Otherwise the identity is stable per phase (a module constant), so the rotation restarts
 	 * when the phase changes and not on every delta that flows through.
 	 */
-	let words = $derived(mode === 'reasoning' ? null : mode === 'held' ? HELD_WORDS : WORK_WORDS[motion]);
+	let words = $derived(mode === 'reasoning' ? null : (mode === 'held' ? HELD_WORDS : WORK_WORDS[motion]).map((w) => i18n.t(w)));
 
 	/**
 	 * Monotonic while anything is arriving, still when nothing is. Cheap by construction:
@@ -94,7 +94,7 @@
 	});
 
 	let head = $state(-1);
-	let word = $state(WORK_WORDS.idle[0]);
+	let word = $state(i18n.t(WORK_WORDS.idle[0]));
 
 	// Plain mirrors: an $effect that READ the state it writes would re-trigger itself.
 	let headAt = -1;

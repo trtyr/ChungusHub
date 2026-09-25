@@ -153,7 +153,7 @@
 						onclick={() => toggleOpen(group.id)}
 					>
 						<Icon name="chevronDown" class="w-3.5 h-3.5 chev {isOpen ? 'is-open' : ''}" />
-						<span class="group-label">{group.label}</span>
+						<span class="group-label">{i18n.t(group.label)}</span>
 						<!-- The full count stays put and the chosen one leads, so a group half
 						     switched off reads as a fraction of something rather than as a number
 						     that shrank while nobody was looking. -->

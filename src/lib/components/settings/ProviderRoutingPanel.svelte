@@ -54,10 +54,10 @@
 	let availSort = $state('name');
 
 	const SORTS: { mode: SortMode; label: string }[] = [
-		{ mode: 'off', label: 'Off' },
-		{ mode: 'price', label: 'Cheapest' },
+		{ mode: 'off', label: i18n.t('common.off') },
+		{ mode: 'price', label: i18n.t('pr.cheapest') },
 		{ mode: 'throughput', label: 'Fastest' },
-		{ mode: 'latency', label: 'Lowest latency' }
+		{ mode: 'latency', label: i18n.t('pr.lowestLatency') }
 	];
 
 	// One row per provider slug (endpoints can repeat a provider at different quants).

@@ -322,16 +322,16 @@ export function planGroups(scan: FolderScan, labels: PlanLabels = {}): PlanGroup
 	}
 
 	const groups: PlanGroup[] = [
-		{ id: 'characters', label: 'Characters', items: scan.characters.map(fileItem) },
+		{ id: 'characters', label: 'st.gCharacters', items: scan.characters.map(fileItem) },
 		{
 			id: 'sprites',
-			label: 'Sprites',
+			label: 'st.gSprites',
 			items: [...scan.spritesByFolder].map(([folder, files]) => folderItem(folder, files))
 		},
-		{ id: 'personas', label: 'Personas', items: scan.avatars.map(personaItem) },
+		{ id: 'personas', label: 'st.gPersonas', items: scan.avatars.map(personaItem) },
 		{
 			id: 'chats',
-			label: 'Chats',
+			label: 'st.gChats',
 			items: [...chatsByCharacter].map(([character, files]) => folderItem(character, files))
 		},
 		{ id: 'worlds', label: 'Lorebooks', items: scan.worlds.map(fileItem) },

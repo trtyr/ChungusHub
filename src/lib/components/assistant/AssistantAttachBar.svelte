@@ -288,7 +288,7 @@
 			aria-expanded={showApproval}
 		>
 			<Icon name="shield" class="w-3 h-3 shrink-0" />
-			<span>{current.label}</span>
+			<span>{i18n.t(current.label)}</span>
 		</button>
 		{#if showApproval}
 			<div class="assistant-approval-menu surface-float" role="menu">
@@ -302,7 +302,7 @@
 						onclick={() => pickApprovalMode(choice)}
 					>
 						<span class="assistant-approval-item-head">
-							<span class="assistant-approval-item-label">{choice.label}</span>
+							<span class="assistant-approval-item-label">{i18n.t(choice.label)}</span>
 							{#if choice.badge}
 								<span class="assistant-approval-badge">{choice.badge}</span>
 							{/if}

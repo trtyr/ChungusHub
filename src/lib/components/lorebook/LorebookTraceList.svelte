@@ -26,19 +26,19 @@
 
 	/** Why an entry ended where it did, in one line. The only place these are worded. */
 	const REASONS: Record<LorebookStatus, string> = {
-		constant: 'Always active, no keyword needed',
-		keyword: 'Its keyword matched',
+		constant: i18n.t('tr.rConstant'),
+		keyword: i18n.t('tr.rKeyword'),
 		noMatch: i18n.t('tr.noMatch'),
-		filtered: 'A keyword matched, then its filter refused',
-		rolledOut: 'Matched, then lost its trigger roll',
-		delayed: 'Waits for another entry to wake it, and none did',
-		neverFires: 'Its recursion settings leave nothing that can wake it',
-		trimmed: 'Fired, then the token budget dropped it',
-		disabled: 'Switched off',
+		filtered: 'tr.rFiltered',
+		rolledOut: 'tr.rRolledOut',
+		delayed: 'tr.rDelayed',
+		neverFires: 'tr.rNeverFires',
+		trimmed: 'tr.rTrimmed',
+		disabled: 'tr.rDisabled',
 		empty: i18n.t('tr.empty'),
 		offTrigger: i18n.t('tr.offTrigger'),
-		sticky: 'Still held in by the window it opened when it fired',
-		cooldown: 'Fired recently, and its window has not reopened',
+		sticky: 'tr.rSticky',
+		cooldown: 'tr.rCooldown',
 		tooEarly: i18n.t('tr.tooEarly'),
 		groupLost: 'Another entry in its group took the slot'
 	};

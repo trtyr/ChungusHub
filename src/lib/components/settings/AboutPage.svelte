@@ -93,7 +93,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			tapTimer = null;
 			const on = !advancedSettingsStore.developerMode;
 			advancedSettingsStore.setDeveloperMode(on);
-			throwPop(on ? 'Developer on' : 'Developer off', true);
+			throwPop(i18n.t(on ? 'ab.devOn' : 'ab.devOff'), true);
 			return;
 		}
 		throwPop(`${VERSION_TAPS - versionTaps} left`);

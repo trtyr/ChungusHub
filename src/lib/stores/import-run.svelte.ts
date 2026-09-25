@@ -61,8 +61,6 @@ import { SvelteSet } from 'svelte/reactivity';
 
 /** A pick that was not a profile folder. It names what to pick instead, since "not found"
  *  without a way forward is where an import stops for good. */
-const NOT_FOUND =
-	'No SillyTavern data in that folder. Pick your profile folder, usually "data/default-user".';
 
 /** Why a run ended early. Both are ordinary endings rather than failures, and each is said in
  *  its own words: one is a decision, the other is an outage the reader has to fix first. */
@@ -225,7 +223,7 @@ class ImportRunStore {
 
 		const found = scanSillyTavernFolder(files);
 		if (!found) {
-			this.error = NOT_FOUND;
+			this.error = i18n.t('imp.notFound');
 			return;
 		}
 		// The card is published only once the ledger has answered, and both are set together:

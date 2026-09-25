@@ -22,10 +22,10 @@ export const SUGGESTED_PROMPT_MAX_LENGTH = 200;
 /** The empty screen owes an agent with this much reach more than one sentence of
  *  self-explanation, so each of these points at a different corner of the workspace. */
 export const DEFAULT_SUGGESTED_PROMPTS: readonly string[] = [
-	"Clean up this character's card, fix the formatting but keep the voice",
-	'Summarize what has happened in this chat so far',
-	'Turn the recent events of this chat into lorebook entries',
-	'Attribute the unassigned "You" messages to my persona'
+	'as.s1',
+	'as.s2',
+	'as.s3',
+	'as.s4'
 ];
 
 /**

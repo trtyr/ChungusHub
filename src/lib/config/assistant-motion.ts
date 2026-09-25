@@ -102,13 +102,13 @@ export function motionFor(tool: string): WorkMotion {
  * raises, "is this stuck?", by naming who it belongs to.
  */
 export const WORK_WORDS: Record<WorkMotion, string[]> = {
-	sift: ['Going through the stack', 'Card by card', 'Cutting the deck', 'Somewhere in the pile'],
-	read: ['Reading it through', 'Turning the page', 'Between pages', 'Down the page'],
-	write: ['Ink to paper', 'Working the phrasing', 'Mid-sentence', 'Setting the line'],
-	make: ['A fresh sheet', 'Ruling the lines', 'Laying it out'],
-	cut: ['Striking it out', 'Off the page', 'Crossing it through'],
-	bind: ['Tying it in', 'Two threads, one hand', 'Making it hold'],
-	look: ['Bringing it up', 'Holding it to the light', 'Letting it develop'],
-	go: ['Taking you there', 'Marking the spot', 'Pointing the way'],
-	idle: ['Waiting on the model', 'Thinking it over', 'Deciding what comes next', 'Still with you', 'On it']
+	sift: ['asm.wwSift0', 'asm.wwSift1', 'asm.wwSift2', 'asm.wwSift3'],
+	read: ['asm.wwRead0', 'asm.wwRead1', 'asm.wwRead2', 'asm.wwRead3'],
+	write: ['asm.wwWrite0', 'asm.wwWrite1', 'asm.wwWrite2', 'asm.wwWrite3'],
+	make: ['asm.wwMake0', 'asm.wwMake1', 'asm.wwMake2'],
+	cut: ['asm.wwCut0', 'asm.wwCut1', 'asm.wwCut2'],
+	bind: ['asm.wwBind0', 'asm.wwBind1', 'asm.wwBind2'],
+	look: ['asm.wwLook0', 'asm.wwLook1', 'asm.wwLook2'],
+	go: ['asm.wwGo0', 'asm.wwGo1', 'asm.wwGo2'],
+	idle: ['asm.wwIdle0', 'asm.wwIdle1', 'asm.wwIdle2', 'asm.wwIdle3', 'asm.wwIdle4'],
 };

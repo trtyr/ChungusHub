@@ -32,7 +32,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 
 	let { overridden, onRevert, label }: Props = $props();
 
-	let text = $derived(label ?? 'Changed from the default');
+	let text = $derived(label ?? i18n.t('ui.changedDefault'));
 </script>
 
 {#if overridden}

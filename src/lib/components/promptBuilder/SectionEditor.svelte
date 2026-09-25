@@ -42,7 +42,7 @@
 		</div>
 		<div class="se-field">
 			<label for="sec-key-{section.id}" class="se-label">
-				Key <span class="se-optional">(what controls name)</span>
+				{i18n.t('se.keyLabel')} <span class="se-optional">{i18n.t('se.keyOptional')}</span>
 			</label>
 			<input
 				id="sec-key-{section.id}"
