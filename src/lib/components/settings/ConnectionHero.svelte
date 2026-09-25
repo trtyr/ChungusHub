@@ -259,7 +259,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	{:else if status === 'valid'}
 		<div class="connected fade-in">
 			<span class="dot dot-ok"></span>
-			Connected{modelCount ? ` · ${modelCount} models` : ''}
+			{i18n.t('ch.connected')}{modelCount ? ` · ${modelCount} models` : ''}
 		</div>
 	{/if}
 </div>

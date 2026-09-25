@@ -48,14 +48,14 @@ export const HOLD_GATES = [
 	},
 	{
 		id: 'continue',
-		name: 'Continue',
-		confirm: 'Continue',
+		name: 'ph.continue',
+		confirm: 'ph.continue',
 		icon: 'feather'
 	},
 	{
 		id: 'spellcheck',
 		name: engineById('spellcheck').name,
-		confirm: 'Check the draft',
+		confirm: 'ph.checkDraft',
 		icon: engineById('spellcheck').icon
 	},
 	{

@@ -170,12 +170,12 @@
 				<div class="toggle-row" use:toggleRow>
 					<span class="gate-label">
 						<Icon name={gate.icon} class="w-3.5 h-3.5 shrink-0 text-text-muted" strokeWidth={1.75} />
-						{labelT(gate.name)}
+						{i18n.t(gate.name)}
 					</span>
 					<Toggle
 						checked={promptHoldStore.armed(gate.id)}
 						onchange={(v) => promptHoldStore.setGate(gate.id, v)}
-						label={i18n.t('adv.holdForReview', { name: labelT(gate.name) })}
+						label={i18n.t('adv.holdForReview', { name: i18n.t(gate.name) })}
 					/>
 				</div>
 			{/each}

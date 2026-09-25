@@ -1303,6 +1303,8 @@ export const zh: Record<string, string> = {
 	'ch.connected': '已连接',
 	'ch.models': '个模型',
 	'lb.hPrefix': '匹配任何以它开头的词：复数及其他后缀。',
+	'ph.continue': '续写',
+	'ph.checkDraft': '检查草稿',
 	'cmd.say': '添加一条你的回合，不请求回复',
 	'cmd.continue': '从最新回复停下的地方继续',
 	'cmd.retry': '重新生成最新回合',

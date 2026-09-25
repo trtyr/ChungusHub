@@ -185,7 +185,7 @@
 				<div class="identity">
 					<Icon name={pending.gate.icon} class="w-4 h-4 shrink-0 text-text-secondary" />
 					<h2 class="title">{i18n.t('chat.reviewPrompt')}</h2>
-					<span class="gate">{pending.gate.name}</span>
+					<span class="gate">{i18n.t(pending.gate.name)}</span>
 					<span class="spacer"></span>
 					<!-- Grouped so a phone can drop the pair onto its own line whole, the same rule
 					     the debug panel's head follows: the controls never shrink, the name does. -->
@@ -291,7 +291,7 @@
 					     so a stray Enter reads the prompt rather than sending it. ⌘/Ctrl+Enter is
 					     the key that sends, from anywhere in here. -->
 					<Button variant="primary" size="sm" disabled={blocker !== ''} onclick={send}>
-						{labelT(pending.gate.confirm)}
+						{i18n.t(pending.gate.confirm)}
 					</Button>
 				</div>
 			</div>

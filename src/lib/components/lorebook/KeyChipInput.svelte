@@ -245,7 +245,7 @@
 						class:is-active={effective.mode === mode.id}
 						role="radio"
 						aria-checked={effective.mode === mode.id}
-						title={mode.hint}
+						title={i18n.t(mode.hint)}
 						onclick={() => setRule(key, { mode: mode.id === inherited.mode ? undefined : mode.id })}
 					>
 						{i18n.t(mode.label)}

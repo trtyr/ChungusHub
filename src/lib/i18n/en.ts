@@ -1325,6 +1325,8 @@ export const en: Record<string, string> = {
 	'ch.connected': 'Connected',
 	'ch.models': 'models',
 	'lb.hPrefix': 'Matches any word beginning with it: plurals, and other suffixes.',
+	'ph.continue': 'Continue',
+	'ph.checkDraft': 'Check the draft',
 	'cmd.say': 'Add a turn of yours without asking for a reply',
 	'cmd.continue': 'Extend the newest reply where it stops',
 	'cmd.retry': 'Generate the newest turn again',
