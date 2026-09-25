@@ -8,6 +8,7 @@
 -->
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Select from '$lib/components/ui/Select.svelte';
 	import Toggle from '$lib/components/ui/Toggle.svelte';
 	import InfoTip from '$lib/components/ui/InfoTip.svelte';
@@ -586,9 +587,9 @@
 			<div class="pb-spine-status" aria-live="polite">
 				{#if isDirty}
 					<span class="pb-dot pb-dot--dirty"></span>
-					<span class="pb-status-dirty">Unsaved changes</span>
+					<span class="pb-status-dirty">{i18n.t('pbv.unsaved')}</span>
 					<span class="pb-status-spacer"></span>
-					<button type="button" class="pb-status-link" onclick={discardChanges}>Discard</button>
+					<button type="button" class="pb-status-link" onclick={discardChanges}>{i18n.t('pbv.discard')}</button>
 				{:else}
 					<!-- |global so the fade-out still plays when the whole status row leaves. -->
 					<span class="pb-status-saved" transition:fade|global={{ duration: 250 }}>
@@ -612,7 +613,7 @@
 	     deep-link anchor (registry: settings.ts, anchor 'prompt-builder'). -->
 	<section class="pb-sec" data-setting="prompt-builder">
 		<div class="pb-sec-head">
-			<span class="pb-sec-title">Prompt items</span>
+			<span class="pb-sec-title">{i18n.t('pbv.items')}</span>
 			{#if totalEnabledTokens > 0}
 				<span class="pb-sec-meta">{totalEnabledTokens.toLocaleString()} tokens</span>
 			{/if}
@@ -628,7 +629,7 @@
 				</span>
 			{/if}
 			{#if itemsWithUnboundMacros > 0}
-				<span class="pb-warn-chip" title="Some items reference macros that no control or system macro provides.">
+				<span class="pb-warn-chip" title={i18n.t('pbv.macroWarn')}>
 					<Icon name="warning" class="w-3.5 h-3.5" strokeWidth={1.5} />
 					{itemsWithUnboundMacros}
 				</span>
@@ -648,9 +649,9 @@
 				{/snippet}
 				<RawExpandedMockup />
 			</MockupTip>
-			<button type="button" class="pb-add" onclick={addNewItem} title="Add prompt item">
+			<button type="button" class="pb-add" onclick={addNewItem} title={i18n.t('pbv.addItem')}>
 				<Icon name="plus" class="w-3.5 h-3.5" strokeWidth={2} />
-				<span class="pb-add-label">Add item</span>
+				<span class="pb-add-label">{i18n.t('pbv.addItem')}</span>
 			</button>
 		</div>
 
@@ -675,8 +676,8 @@
 							<span
 								class="pb-lead"
 								use:dragHandle
-								aria-label="Drag to reorder"
-								title="Drag to reorder"
+								aria-label={i18n.t('pbv.dragReorder')}
+								title={i18n.t('pbv.dragReorder')}
 								onclick={() => toggleItemExpanded(item.id)}
 							>
 								<span class="pb-lead-chevron"><Icon name="chevronRight" class="w-4 h-4" /></span>
@@ -689,7 +690,7 @@
 								tabindex="0"
 								aria-expanded={isExpanded}
 								aria-label={isExpanded ? 'Collapse item' : 'Expand item'}
-								title="Click to edit"
+								title={i18n.t('pbv.clickEdit')}
 								onclick={() => toggleItemExpanded(item.id)}
 								onkeydown={(e) => onExpandKeydown(e, () => toggleItemExpanded(item.id))}
 							>
@@ -721,8 +722,8 @@
 							<button
 								type="button"
 								class="pb-row-del"
-								title="Delete item"
-								aria-label="Delete item"
+								title={i18n.t('pbv.deleteItem')}
+								aria-label={i18n.t('pbv.deleteItem')}
 								onclick={() => deleteItem(item.id)}
 							>
 								<Icon name="trash" class="w-4 h-4" strokeWidth={1.5} />
@@ -736,40 +737,40 @@
 							<div data-item-body class="pb-body">
 								<div class="pb-fields">
 									<div class="pb-field">
-										<label for="item-name-{item.id}" class="pb-label">Name</label>
+										<label for="item-name-{item.id}" class="pb-label">{i18n.t('pbv.name')}</label>
 										<input
 											id="item-name-{item.id}"
 											type="text"
 											value={item.name}
 											oninput={(e) => handleItemFieldChange(item.id, 'name', (e.target as HTMLInputElement).value)}
-											placeholder="Enter item name"
+											placeholder={i18n.t('pbv.namePh')}
 											class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm"
 										/>
 									</div>
 
 									<div class="pb-field">
-										<label for="item-role-{item.id}" class="pb-label">Role</label>
+										<label for="item-role-{item.id}" class="pb-label">{i18n.t('pbv.role')}</label>
 										<Select
 											id="item-role-{item.id}"
 											value={item.role}
 											onchange={(e) => handleItemFieldChange(item.id, 'role', (e.target as HTMLSelectElement).value)}
 											class="!px-3 !py-2 !text-sm"
 										>
-											<option value="system">System</option>
-											<option value="user">User</option>
-											<option value="assistant">Assistant</option>
+											<option value="system">{i18n.t('pbv.roleSystem')}</option>
+											<option value="user">{i18n.t('pbv.roleUser')}</option>
+											<option value="assistant">{i18n.t('pbv.roleAssistant')}</option>
 										</Select>
 									</div>
 								</div>
 
 								<div class="pb-field">
-									<label for="item-content-{item.id}" class="pb-label">Prompt content</label>
+									<label for="item-content-{item.id}" class="pb-label">{i18n.t('pbv.content')}</label>
 									<textarea
 										id="item-content-{item.id}"
 										value={item.content}
 										oninput={(e) => handleItemFieldChange(item.id, 'content', (e.target as HTMLTextAreaElement).value)}
 										use:autoResize={400}
-										placeholder="Enter the prompt content…"
+										placeholder={i18n.t('pbv.contentPh')}
 										class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm resize-none"
 									></textarea>
 									{#if unboundMacros.length > 0}
@@ -796,7 +797,7 @@
 										value={item.note ?? ''}
 										oninput={(e) => handleItemFieldChange(item.id, 'note', (e.target as HTMLTextAreaElement).value)}
 										use:autoResize={160}
-										placeholder="What this item is for, what breaks if it's edited, who should leave it alone…"
+										placeholder={i18n.t('pbv.notePh')}
 										class="input-base w-full px-3 py-2 text-text-secondary font-ui text-sm resize-none"
 									></textarea>
 								</div>
@@ -807,7 +808,7 @@
 			</div>
 		{:else}
 			<div class="pb-empty">
-				<p>No prompt items yet. "Add item" starts the prompt this preset sends.</p>
+				<p>{i18n.t('pbv.noItems')}</p>
 			</div>
 		{/if}
 	</section>
@@ -816,15 +817,15 @@
 	{#if currentPreset}
 		<section class="pb-sec">
 			<div class="pb-sec-head">
-				<span class="pb-sec-title">Preset controls</span>
+				<span class="pb-sec-title">{i18n.t('pbv.controls')}</span>
 				<InfoTip text="Widgets on the Preset Controls page, each bound to a macro you can drop into the prompt items above." />
 				{#if (currentPreset.controls?.length ?? 0) > 0}
 					<span class="pb-sec-meta">{currentPreset.controls?.length}</span>
 				{/if}
 				<span class="pb-sec-spacer"></span>
-				<button type="button" class="pb-add" onclick={addControl} title="Add control">
+				<button type="button" class="pb-add" onclick={addControl} title={i18n.t('pbv.addControl')}>
 					<Icon name="plus" class="w-3.5 h-3.5" strokeWidth={2} />
-					<span class="pb-add-label">Add control</span>
+					<span class="pb-add-label">{i18n.t('pbv.addControl')}</span>
 				</button>
 			</div>
 
@@ -844,8 +845,8 @@
 								<span
 									class="pb-lead"
 									use:dragHandle
-									aria-label="Drag to reorder"
-									title="Drag to reorder"
+									aria-label={i18n.t('pbv.dragReorder')}
+									title={i18n.t('pbv.dragReorder')}
 									onclick={() => toggleControlExpanded(control.id)}
 								>
 									<span class="pb-lead-chevron"><Icon name="chevronRight" class="w-4 h-4" /></span>
@@ -857,7 +858,7 @@
 									tabindex="0"
 									aria-expanded={isExpanded}
 									aria-label={isExpanded ? 'Collapse control' : 'Expand control'}
-									title="Click to edit"
+									title={i18n.t('pbv.clickEdit')}
 									onclick={() => toggleControlExpanded(control.id)}
 									onkeydown={(e) => onExpandKeydown(e, () => toggleControlExpanded(control.id))}
 								>
@@ -877,8 +878,8 @@
 								<button
 									type="button"
 									class="pb-row-del"
-									title="Delete control"
-									aria-label="Delete control"
+									title={i18n.t('pbv.addControl')}
+									aria-label={i18n.t('pbv.deleteControl')}
 									onclick={() => deleteControl(control.id)}
 								>
 									<Icon name="trash" class="w-4 h-4" strokeWidth={1.5} />
@@ -894,7 +895,7 @@
 				</div>
 			{:else}
 				<div class="pb-empty">
-					<p>No controls yet. "Add control" crafts a widget readers can use on the Preset Controls page.</p>
+					<p>{i18n.t('pbv.noControls')}</p>
 				</div>
 			{/if}
 		</section>
@@ -905,15 +906,15 @@
 	{#if currentPreset}
 		<section class="pb-sec">
 			<div class="pb-sec-head">
-				<span class="pb-sec-title">Sections</span>
+				<span class="pb-sec-title">{i18n.t('pbv.sections')}</span>
 				<InfoTip text="Headings on the Preset Controls page. A control joins one by naming its key, and declaring it here gives that key a title, an icon and a place in the order." />
 				{#if sections.length > 0}
 					<span class="pb-sec-meta">{sections.length}</span>
 				{/if}
 				<span class="pb-sec-spacer"></span>
-				<button type="button" class="pb-add" onclick={addSection} title="Add section">
+				<button type="button" class="pb-add" onclick={addSection} title={i18n.t('pbv.addSection')}>
 					<Icon name="plus" class="w-3.5 h-3.5" strokeWidth={2} />
-					<span class="pb-add-label">Add section</span>
+					<span class="pb-add-label">{i18n.t('pbv.addSection')}</span>
 				</button>
 			</div>
 
@@ -933,8 +934,8 @@
 								<span
 									class="pb-lead"
 									use:dragHandle
-									aria-label="Drag to reorder"
-									title="Drag to reorder, this is the order readers meet them in"
+									aria-label={i18n.t('pbv.dragReorder')}
+									title={i18n.t('pbv.dragSections')}
 									onclick={() => toggleSectionExpanded(section.id)}
 								>
 									<span class="pb-lead-chevron"><Icon name="chevronRight" class="w-4 h-4" /></span>
@@ -946,7 +947,7 @@
 									tabindex="0"
 									aria-expanded={isExpanded}
 									aria-label={isExpanded ? 'Collapse section' : 'Expand section'}
-									title="Click to edit"
+									title={i18n.t('pbv.clickEdit')}
 									onclick={() => toggleSectionExpanded(section.id)}
 									onkeydown={(e) => onExpandKeydown(e, () => toggleSectionExpanded(section.id))}
 								>
@@ -957,7 +958,7 @@
 									{#if section.collapsed}
 										<span class="pb-type">folded</span>
 									{/if}
-									<span class="pb-tokens" class:pb-tokens--warn={used === 0} title="Controls in this section">
+									<span class="pb-tokens" class:pb-tokens--warn={used === 0} title={i18n.t('pbv.controlsIn')}>
 										{used}
 									</span>
 								</div>
@@ -965,8 +966,8 @@
 								<button
 									type="button"
 									class="pb-row-del"
-									title="Delete section"
-									aria-label="Delete section"
+									title={i18n.t('pbv.deleteSection')}
+									aria-label={i18n.t('pbv.deleteSection')}
 									onclick={() => deleteSection(section.id)}
 								>
 									<Icon name="trash" class="w-4 h-4" strokeWidth={1.5} />
@@ -982,7 +983,7 @@
 				</div>
 			{:else}
 				<div class="pb-empty">
-					<p>No sections. Readers get one flat list, in whatever order the controls happen to sit.</p>
+					<p>{i18n.t('pbv.noSections')}</p>
 				</div>
 			{/if}
 
@@ -1009,7 +1010,7 @@
 	{#if currentPreset}
 		<section class="pb-sec">
 			<div class="pb-sec-head">
-				<span class="pb-sec-title">Setups</span>
+				<span class="pb-sec-title">{i18n.t('pbv.setups')}</span>
 				<InfoTip text="A named snapshot of every control value, applied by a reader in one click. It saves you shipping the same preset five times over." />
 				{#if (currentPreset.bundles?.length ?? 0) > 0}
 					<span class="pb-sec-meta">{currentPreset.bundles?.length}</span>
@@ -1028,7 +1029,7 @@
 	{#if currentPreset}
 		<section class="pb-sec">
 			<div class="pb-sec-head">
-				<span class="pb-sec-title">Regex this preset carries</span>
+				<span class="pb-sec-title">{i18n.t('pbv.carriedRegex')}</span>
 				<InfoTip text="Rules that ship inside the preset, run on top of the reader's own, and withdraw when the preset does. Each switch is the position its rule arrives in; a reader can move it, but the rule stays yours." />
 				{#if (currentPreset.regexRules?.length ?? 0) > 0}
 					<span class="pb-sec-meta">{currentPreset.regexRules?.length}</span>
@@ -1042,7 +1043,7 @@
 	{#if currentPreset}
 		<section class="pb-sec">
 			<div class="pb-sec-head">
-				<span class="pb-sec-title">Preset identity</span>
+				<span class="pb-sec-title">{i18n.t('pbv.identity')}</span>
 				<InfoTip text="What a reader meets before they touch a single control." />
 			</div>
 			<PresetIdentityEditor meta={currentPreset.meta} onChange={setMeta} />
@@ -1054,14 +1055,14 @@
 	{#if currentPreset}
 		<section class="pb-sec">
 			<div class="pb-sec-head">
-				<span class="pb-sec-title">Preset options</span>
+				<span class="pb-sec-title">{i18n.t('pbv.options')}</span>
 			</div>
 
 			<!-- Preset-level opt-in: empty tag blocks prune themselves (see macros.ts). Off by
 			     default so imported presets keep meaning exactly what they say. -->
 			<div class="pb-prune">
 				<div class="pb-prune-text">
-					<span class="pb-prune-title">Prune empty blocks</span>
+					<span class="pb-prune-title">{i18n.t('pbv.pruneEmpty')}</span>
 					<MockupTip
 						text="Drops a plain <tag> block, framing and all, when every macro inside it resolves empty. Static-only blocks are never touched."
 					>
@@ -1084,7 +1085,7 @@
 			     to the default "***". -->
 			<div class="pb-prune">
 				<div class="pb-prune-text">
-					<span class="pb-prune-title">Example separator</span>
+					<span class="pb-prune-title">{i18n.t('pbv.exampleSep')}</span>
 				</div>
 				<input
 					type="text"
@@ -1105,9 +1106,9 @@
 			     and rides the same connection as an ordinary send. -->
 			<div class="pb-opt">
 				<div class="pb-opt-head">
-					<label for="continue-prompt" class="pb-prune-title">Continue prompt</label>
+					<label for="continue-prompt" class="pb-prune-title">{i18n.t('pbv.continuePrompt')}</label>
 					{#if continuePromptModified}
-						<button type="button" class="pb-opt-reset" onclick={resetContinuePrompt}>Reset</button>
+						<button type="button" class="pb-opt-reset" onclick={resetContinuePrompt}>{i18n.t('pbv.reset')}</button>
 					{/if}
 				</div>
 				<textarea
@@ -1115,7 +1116,7 @@
 					value={continuePromptText}
 					oninput={(e) => setContinuePrompt((e.target as HTMLTextAreaElement).value)}
 					use:autoResize={{ maxHeight: 260, value: continuePromptText }}
-					placeholder="No instruction, the reply closes the prompt bare."
+					placeholder={i18n.t('pbv.continuePh')}
 					class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm resize-none"
 				></textarea>
 				<p class="pb-sep-hint pb-opt-hint">
