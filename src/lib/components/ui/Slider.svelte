@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	interface Props {
 		value: number;
 		min: number;
@@ -112,7 +113,7 @@
 		{value}
 		{disabled}
 		aria-label={label}
-		title={defaultValue !== undefined ? 'Double-click to reset' : undefined}
+		title={defaultValue !== undefined ? i18n.t('ui.dblReset') : undefined}
 		style="--fill: {fill}"
 		oninput={handleInput}
 		onchange={handleChange}

@@ -1,3 +1,4 @@
+import { i18n } from '$lib/i18n/i18n.svelte';
 /**
  * Svelte action: double-clicking a raw <input type="range"> snaps it back to its
  * default value. ui/Slider has this built in via its `defaultValue` prop. This
@@ -22,7 +23,7 @@ export function rangeReset(node: HTMLInputElement, param: RangeResetParam) {
 	}
 
 	node.addEventListener('dblclick', handleDblClick);
-	node.title ||= 'Double-click to reset';
+	node.title ||= i18n.t('ui.dblReset');
 
 	return {
 		update(next: RangeResetParam) {

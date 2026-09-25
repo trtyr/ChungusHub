@@ -44,7 +44,7 @@ export type LorebookKeyMode = 'substring' | 'word' | 'start' | 'regex';
 /** The three storable modes, in the order the chip's picker offers them. */
 export const LOREBOOK_KEY_MODES: { id: Exclude<LorebookKeyMode, 'regex'>; label: string; hint: string }[] = [
 	{ id: 'substring', label: 'lb.modeAnywhere', hint: 'lb.hAnywhere' },
-	{ id: 'word', label: 'lb.modeWholeWord2', hint: 'Matches only as its own word, so “art” stays out of “cartography”.' },
+	{ id: 'word', label: 'lb.modeWholeWord2', hint: 'lb.hWholeWord2' },
 	{ id: 'start', label: 'lb.modeWordStart', hint: 'Matches any word beginning with it: plurals, and other suffixes.' }
 ];
 

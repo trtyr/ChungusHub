@@ -81,7 +81,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	});
 
 	function getName(): string {
-		return entry.identity.name || (entry.type === 'character' ? 'Unnamed Character' : 'Unnamed Persona');
+		return entry.identity.name || (entry.type === 'character' ? i18n.t('lib.unnamedChar') : i18n.t('lib.unnamedPersona'));
 	}
 
 	function handleCardClick() {

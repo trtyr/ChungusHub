@@ -943,7 +943,7 @@
 					type="button"
 					class="chats-sort-dir"
 					onclick={toggleSortDir}
-					title={sortDir === 'asc' ? 'Ascending' : 'Descending'}
+					title={sortDir === 'asc' ? i18n.t('svc.asc') : i18n.t('svc.desc')}
 					aria-label={i18n.t('svc.toggleDir')}
 				>
 					<Icon name={sortDir === 'asc' ? 'chevronUp' : 'chevronDown'} class="w-4 h-4" />

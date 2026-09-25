@@ -92,7 +92,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	});
 
 	let name = $derived(
-		entry.identity.name || (entry.type === 'character' ? 'Unnamed Character' : 'Unnamed Persona')
+		entry.identity.name || (entry.type === 'character' ? i18n.t('lib.unnamedChar') : i18n.t('lib.unnamedPersona'))
 	);
 	// Characters preview their creator's notes; personas have no notes, so their own
 	// description is the natural preview line.

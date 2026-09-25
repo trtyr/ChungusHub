@@ -102,7 +102,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				group: 'Personas',
 				options: characterLibraryStore.personas.map((p) => ({
 					id: p.id,
-					name: p.identity.name || 'Unnamed persona'
+					name: p.identity.name || i18n.t('lib.unnamedPersona')
 				})),
 				gone: "That persona is no longer in your library, so new chats start as the app's."
 			},

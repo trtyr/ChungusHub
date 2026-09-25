@@ -37,9 +37,9 @@
 	{#each shown as member (member.libraryEntryId)}
 		<div
 			class="chat-avatar"
-			title={member.name || 'Unnamed'}
+			title={member.name || i18n.t('sb.unnamed')}
 			role="img"
-			aria-label={member.name || 'Unnamed'}
+			aria-label={member.name || i18n.t('sb.unnamed')}
 		>
 			{#if urls[member.libraryEntryId]}
 				<img

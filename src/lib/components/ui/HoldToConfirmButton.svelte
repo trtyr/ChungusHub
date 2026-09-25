@@ -100,8 +100,8 @@
 	class="hold-confirm hold-{shape}"
 	class:is-holding={holding}
 	{disabled}
-	title={needsHold ? 'Press and hold to confirm' : undefined}
-	aria-label={needsHold ? 'Press and hold to confirm' : undefined}
+	title={needsHold ? i18n.t('ui.pressHoldConfirm') : undefined}
+	aria-label={needsHold ? i18n.t('ui.pressHoldConfirm') : undefined}
 	onclick={onClick}
 	onpointerdown={start}
 	onpointerup={cancel}

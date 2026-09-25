@@ -81,7 +81,7 @@
 			class:has-art={!!coverUrl}
 			disabled={busy}
 			onclick={() => fileInput?.click()}
-			title={coverUrl ? 'Replace the cover' : 'Choose a cover image'}
+			title={coverUrl ? i18n.t('pi.replaceCover') : i18n.t('pi.chooseCover')}
 		>
 			{#if coverUrl}
 				<img src={coverUrl} alt="" />

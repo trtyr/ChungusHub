@@ -919,7 +919,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 							use:rangeReset={{ defaultValue: DEFAULT_GENERATION_SETTINGS[p.key], apply: (v) => updateGen(p.key, v) }}
 						/>
 						{#if p.key === 'temperature' && modelInfo?.defaultTemperature != null}
-							<span class="slider-note">This model suggests {modelInfo.defaultTemperature.toFixed(2)}.</span>
+							<span class="slider-note">{i18n.t('ce.modelSuggests', { t: modelInfo.defaultTemperature.toFixed(2) })}</span>
 						{/if}
 					</div>
 				{/each}

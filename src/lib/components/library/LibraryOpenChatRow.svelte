@@ -17,7 +17,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 
 	let name = $derived(
 		entry.identity.name?.trim() ||
-			(entry.type === 'character' ? 'Unnamed Character' : 'Unnamed Persona')
+			(entry.type === 'character' ? i18n.t('lib.unnamedChar') : i18n.t('lib.unnamedPersona'))
 	);
 	let face = $derived(imageService.thumbnailUrl(entry.identity.imageUrl));
 </script>
