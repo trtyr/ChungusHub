@@ -127,8 +127,8 @@
 	// architecture/chat-sessions.md): greetings are stored raw, so a preview that skipped this
 	// would show a literal {{user}} where the story shows a name. The persona is the
 	// CHAT's, not the app-wide active one: this is a look at someone else's story.
-	let selfRefChar = $derived(character?.name?.trim() || 'Story');
-	let selfRefUser = $derived(persona?.name?.trim() || 'You');
+	let selfRefChar = $derived(character?.name?.trim() || i18n.t('role.story'));
+	let selfRefUser = $derived(persona?.name?.trim() || i18n.t('role.you'));
 
 	let speakerUrls = $state<Record<string, string | null>>({});
 	$effect(() => {
@@ -171,7 +171,7 @@
 			<div class="preview-head-text">
 				<h3 class="preview-title">{chat.title}</h3>
 				<p class="preview-meta">
-					<span>{pathCount} message{pathCount === 1 ? '' : 's'} on this branch</span>
+					<span>{i18n.t('sb.nOnBranch', { n: pathCount })}</span>
 					{#if offPathCount > 0}
 						<span class="preview-meta-sep">·</span>
 						<span class="preview-meta-branch">
@@ -217,7 +217,7 @@
 						</div>
 						<div class="preview-turn-body">
 							<p class="preview-speaker">
-								{speaker?.name?.trim() || (message.role === 'user' ? 'You' : selfRefChar)}
+								{speaker?.name?.trim() || (message.role === 'user' ? i18n.t('role.you') : selfRefChar)}
 							</p>
 							<p class="preview-text">{previewText(message.content)}</p>
 						</div>

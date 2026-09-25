@@ -236,7 +236,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		<div class="pending">
 			<Alert
 				tone="warning"
-				message="A restore is waiting. Close ChungusHub and start it again, and it puts your data back before anything else runs."
+				message={i18n.t('bk.restoreWaiting')}
 			/>
 			<button type="button" class="link-btn pending-cancel" onclick={cancelPending} disabled={cancelling}>
 				{i18n.t('bk.t34')}
@@ -466,7 +466,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	open={!!deleteTarget}
 	title={i18n.t('bk.deleteAsk')}
 	message={deleteTarget
-		? `The snapshot from ${formatDate(deleteTarget.createdAt)} goes for good. Your current data is not touched.`
+		? i18n.t('bk.delSnapshot', { when: formatDate(deleteTarget.createdAt) })
 		: ''}
 	confirmLabel={i18n.t('common.delete')}
 	variant="danger"

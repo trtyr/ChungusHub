@@ -773,7 +773,7 @@
 					{#if visibleChats.length !== scopedChats.length}
 						{i18n.t('svc.nOfMChats', { n: visibleChats.length, m: scopedChats.length })}
 					{:else}
-						{scopedChats.length} chat{scopedChats.length === 1 ? '' : 's'}
+						{i18n.t(scopedChats.length === 1 ? 'svc.oneChat' : 'svc.nChats', { n: scopedChats.length })}
 					{/if}
 				</span>
 			</div>
