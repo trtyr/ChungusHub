@@ -9,6 +9,7 @@
 	 * this number and the row's can never look like a contradiction.
 	 */
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import ChatAvatars from './ChatAvatars.svelte';
 	import type { Chat, ChatListStats, Message } from '$lib/types/chat';
 	import type { ChatCastMember } from '$lib/stores/chatCast.svelte';
@@ -193,11 +194,11 @@
 			{:else if messages.length === 0}
 				<div class="preview-state preview-state-empty">
 					<Icon name="chat" class="w-6 h-6 mb-2 opacity-50" />
-					<p>No messages yet</p>
+					<p>{i18n.t('sb.previewEmpty')}</p>
 				</div>
 			{:else}
 				{#if hasMore}
-					<p class="preview-more">Scroll up for {messages.length - shown.length} earlier</p>
+					<p class="preview-more">{i18n.t('sb.previewMore', { n: messages.length - shown.length })}</p>
 				{/if}
 				{#each shown as message (message.id)}
 					{@const speaker = speakerFor(message)}
@@ -261,7 +262,7 @@
 	     then on the panel holds whichever chat it was last given. -->
 	<div class="preview-idle">
 		<Icon name="eye" class="w-8 h-8 mb-3 opacity-40" />
-		<p>Hover a chat to preview it</p>
+		<p>{i18n.t('sb.previewHint')}</p>
 	</div>
 {/if}
 

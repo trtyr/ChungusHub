@@ -9,6 +9,7 @@
 	 * disagree; see architecture/chat-sessions.md.
 	 */
 	import { untrack } from 'svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import ChatAvatars from './ChatAvatars.svelte';
 	import type { Chat, ChatListStats } from '$lib/types/chat';
@@ -126,7 +127,7 @@
 		onclick={selecting ? onToggleSelect : onOpen}
 		disabled={renaming}
 		aria-pressed={selecting ? checked : undefined}
-		aria-label={selecting ? `Select ${chat.title}` : `Open ${chat.title}`}
+		aria-label={selecting ? i18n.t('sb.selectChat', { name: chat.title ?? '' }) : i18n.t('sb.openChat', { name: chat.title ?? '' })}
 	>
 		{#if selecting}
 			<span class="chat-row-check" class:is-checked={checked} aria-hidden="true">
@@ -142,7 +143,7 @@
 				<div class="chat-row-orb"><Icon name="chat" class="w-4 h-4" /></div>
 			{/if}
 			{#if isActive}
-				<span class="chat-row-live" title="Open right now"></span>
+				<span class="chat-row-live" title={i18n.t('sb.liveNow')}></span>
 			{/if}
 		</div>
 
@@ -156,7 +157,7 @@
 						class="chat-row-rename input-base"
 						type="text"
 						autofocus
-						aria-label="Chat title"
+						aria-label={i18n.t('sb.chatTitleAria')}
 						onkeydown={handleRenameKeydown}
 						onblur={commitRename}
 						onclick={(e) => e.stopPropagation()}
@@ -167,7 +168,7 @@
 						<!-- svelte-ignore a11y_no_static_element_interactions -->
 						<span
 							class="chat-row-twin"
-							title="{twinCount} chats have identical content. Hover to see which"
+							title={i18n.t('sb.twinTip', { n: twinCount })}
 							onmouseenter={() => onTwinHover(true)}
 							onmouseleave={() => onTwinHover(false)}
 						>
@@ -189,14 +190,14 @@
 		</div>
 
 		<div class="chat-row-meta">
-			<span class="chat-row-count" title="{pathCount} message{pathCount === 1 ? '' : 's'} on this branch">
+			<span class="chat-row-count" title={i18n.t('sb.pathCount', { n: pathCount })}>
 				<Icon name="chat" class="w-3 h-3" />
 				{pathCount}
 			</span>
 			{#if offPathCount > 0}
 				<span
 					class="chat-row-count chat-row-count-offpath"
-					title="{offPathCount} more message{offPathCount === 1 ? '' : 's'} on other branches"
+					title={i18n.t('sb.offPathCount', { n: offPathCount })}
 				>
 					<Icon name="branch" class="w-3 h-3" />
 					{offPathCount}
@@ -208,7 +209,7 @@
 	<div class="chat-row-actions">
 		{#if !selecting}
 		{#if chat.isFavorite}
-			<span class="chat-row-star" title="Favorite">
+			<span class="chat-row-star" title={i18n.t('sb.favorite')}>
 				<Icon name="heart" class="w-3.5 h-3.5 fill-current" />
 			</span>
 		{/if}
@@ -217,8 +218,8 @@
 			type="button"
 			class="chat-row-action"
 			tabindex="-1"
-			title="More actions"
-			aria-label="More actions for {chat.title}"
+			title={i18n.t('sb.moreActions')}
+			aria-label={i18n.t('sb.moreActionsFor', { name: chat.title ?? '' })}
 			aria-haspopup="menu"
 			aria-expanded={menuOpen}
 			onclick={() => menuButtonEl && onMenu(menuButtonEl.getBoundingClientRect())}

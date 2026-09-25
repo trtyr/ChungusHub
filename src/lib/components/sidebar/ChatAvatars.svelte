@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { imageService } from '$lib/services/imageService';
 	import type { ChatCastMember } from '$lib/stores/chatCast.svelte';
 	import { portraitFocusStyle } from '$lib/utils/portrait-focus';
@@ -54,7 +55,7 @@
 		</div>
 	{/each}
 	{#if overflow > 0}
-		<div class="chat-avatar chat-avatar-more" title="{overflow} more">+{overflow}</div>
+		<div class="chat-avatar chat-avatar-more" title={i18n.t('sb.moreAvatars', { n: overflow })}>+{overflow}</div>
 	{/if}
 </div>
 
