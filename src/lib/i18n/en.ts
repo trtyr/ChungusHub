@@ -793,6 +793,8 @@ export const en: Record<string, string> = {
 	'vm.deleteVersion': 'Delete version',
 	'lbv.nOfLinked': '{n} of {total} linked',
 	'tr.noMatch': 'Nothing matched its keywords',
+	'imp.nothingScanned': 'Nothing scanned to import',
+	'tr.empty': 'Nothing to inject',
 	'cmd.say': 'Add a turn of yours without asking for a reply',
 	'cmd.continue': 'Extend the newest reply where it stops',
 	'cmd.retry': 'Generate the newest turn again',

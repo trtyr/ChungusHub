@@ -771,6 +771,8 @@ export const zh: Record<string, string> = {
 	'vm.deleteVersion': '删除版本',
 	'lbv.nOfLinked': '{n} / {total} 本已关联',
 	'tr.noMatch': '没有匹配到其关键词',
+	'imp.nothingScanned': '没有可导入的扫描结果',
+	'tr.empty': '没有可注入的内容',
 	'cmd.say': '添加一条你的回合，不请求回复',
 	'cmd.continue': '从最新回复停下的地方继续',
 	'cmd.retry': '重新生成最新回合',

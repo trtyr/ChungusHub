@@ -35,7 +35,7 @@
 		neverFires: 'Its recursion settings leave nothing that can wake it',
 		trimmed: 'Fired, then the token budget dropped it',
 		disabled: 'Switched off',
-		empty: 'Nothing to inject',
+		empty: i18n.t('tr.empty'),
 		offTrigger: i18n.t('tr.offTrigger'),
 		sticky: 'Still held in by the window it opened when it fired',
 		cooldown: 'Fired recently, and its window has not reopened',

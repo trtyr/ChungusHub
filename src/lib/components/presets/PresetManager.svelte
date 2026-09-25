@@ -230,9 +230,9 @@
 		if (!target) return;
 		const items = target.items.length;
 		const ok = await askConfirm({
-			title: 'Delete preset',
+			title: i18n.t('pm.delete'),
 			message: `Delete "${target.name}" and its ${items} prompt item${items === 1 ? '' : 's'} permanently?${presetService.hasDraft(target.id) ? ' Its unsaved Prompt Builder draft will also be deleted.' : ''}`,
-			confirmLabel: 'Delete preset',
+			confirmLabel: i18n.t('pm.delete'),
 			variant: 'danger',
 			destructive: true,
 			holdMs: holdMsForBlast(items)

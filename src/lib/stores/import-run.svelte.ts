@@ -292,7 +292,7 @@ class ImportRunStore {
 
 	async start(): Promise<void> {
 		const plan = this.plan;
-		if (!plan) throw new Error('Nothing scanned to import');
+		if (!plan) throw new Error(i18n.t('imp.nothingScanned'));
 		this.pending = null;
 		this.running = true;
 		this.report = null;
@@ -345,7 +345,7 @@ class ImportRunStore {
 			return;
 		}
 		if (this.stoppedBy === 'you') {
-			toastStore.info(`SillyTavern import stopped, ${imported} items came over`);
+			toastStore.info(i18n.t('t.stStopped', { n: imported }));
 			return;
 		}
 		if (failed > 0) {
