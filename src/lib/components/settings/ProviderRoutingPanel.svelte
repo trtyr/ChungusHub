@@ -512,7 +512,7 @@
 														<span class="excl-tag" title={i18n.t('pr.excludedTip')}>{reason}</span>
 													{/if}
 													<button type="button" class="add-btn" onclick={() => addProvider(row.tag)}>
-														<Icon name="plus" class="w-3.5 h-3.5" strokeWidth={2} /> Add
+														<Icon name="plus" class="w-3.5 h-3.5" strokeWidth={2} /> {i18n.t('pr.addBtn')}
 													</button>
 													<button type="button" class="block-btn" onclick={() => blockProvider(row.tag)} title={i18n.t('pr.neverRoute')}>
 														<Icon name="close" class="w-3.5 h-3.5" strokeWidth={2} />
@@ -542,7 +542,7 @@
 										{@render provBadges(row)}
 									</div>
 									<button type="button" class="add-btn" onclick={() => unblockProvider(row.tag)}>
-										<Icon name="refresh" class="w-3.5 h-3.5" strokeWidth={2} /> Unblock
+										<Icon name="refresh" class="w-3.5 h-3.5" strokeWidth={2} /> {i18n.t('pr.unblockBtn')}
 									</button>
 								</li>
 							{/each}

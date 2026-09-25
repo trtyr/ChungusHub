@@ -103,7 +103,7 @@ export function monthYearLabel(at: number): string {
 /** When the count was taken: the date, plus the time, since a reader may take two in a day. */
 export function momentLabel(at: number): string {
 	const time = new Date(at).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
-	return `${dateLabel(at)} at ${time}`;
+	return `${dateLabel(at)} · ${time}`;
 }
 
 /**

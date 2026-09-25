@@ -238,14 +238,14 @@
 						{#if snapshot.prime}
 							<div class="fact">
 								<span class="fact-value">
-									{hourLabel(snapshot.prime[0])} to {hourLabel((snapshot.prime[1] + 1) % 24)}
+									{i18n.t('stv.timeTo', { a: hourLabel(snapshot.prime[0]), b: hourLabel((snapshot.prime[1] + 1) % 24) })}
 								</span>
 								<span class="fact-label">{i18n.t('stv.halfHere')}</span>
 							</div>
 						{/if}
 						{#if peakHour !== null}
 							<div class="fact">
-								<span class="fact-value">{hourLabel(peakHour)} to {hourLabel((peakHour + 1) % 24)}</span>
+								<span class="fact-value">{i18n.t('stv.timeTo', { a: hourLabel(peakHour), b: hourLabel((peakHour + 1) % 24) })}</span>
 								<span class="fact-label">{i18n.t('stv.busiestHour')}</span>
 							</div>
 						{/if}

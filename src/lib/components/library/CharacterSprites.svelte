@@ -106,9 +106,9 @@
 	     is the whole reason the engine can ship off without becoming a trap. Only once there is
 	     something to answer for: on an empty set it would be an error message about nothing. -->
 	<p class="text-xs font-ui text-text-muted">
-		Sprites is off, so these stay in the library.
+		{i18n.t('cs.sprOff')}
 		<button type="button" class="text-accent hover:underline" onclick={openSpriteSettings}>
-			Turn it on in Settings
+			{i18n.t('cs.turnOnSettings')}
 		</button>
 	</p>
 {/if}

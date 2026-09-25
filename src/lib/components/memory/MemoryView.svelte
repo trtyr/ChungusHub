@@ -319,7 +319,7 @@
 				</div>
 				<div class="memory-actions">
 					{#if busy}
-						<button type="button" class="memory-btn" onclick={() => memoryStore.cancel()}><Icon name="stop" class="w-3.5 h-3.5" /> Stop</button>
+						<button type="button" class="memory-btn" onclick={() => memoryStore.cancel()}><Icon name="stop" class="w-3.5 h-3.5" /> {i18n.t('mem.stopBtn')}</button>
 					{:else}
 						<button
 							type="button"
@@ -328,7 +328,7 @@
 							disabled={!behind}
 							title={behind
 								? undefined
-								: `${Math.max(1, config.batchSize - pending)} more turn${config.batchSize - pending === 1 ? '' : 's'} before the next summary`}
+								: i18n.t('mem.moreTurns', { n: Math.max(1, config.batchSize - pending) })}
 						>
 							<Icon name="sparkles" class="w-3.5 h-3.5" /> {summariseLabel}
 						</button>
@@ -479,7 +479,7 @@
 								<div class="memory-episode-editor">
 									<textarea class="memory-episode-edit" bind:value={editingText} rows="5"></textarea>
 									<div class="memory-episode-actions">
-										<button type="button" class="memory-btn memory-btn-sm" onclick={saveEpisode}><Icon name="check" class="w-3 h-3" /> Save</button>
+										<button type="button" class="memory-btn memory-btn-sm" onclick={saveEpisode}><Icon name="check" class="w-3 h-3" /> {i18n.t('common.save')}</button>
 										<button type="button" class="memory-btn memory-btn-sm" onclick={() => (editingId = null)}>{i18n.t('common.cancel')}</button>
 									</div>
 								</div>
@@ -496,7 +496,7 @@
 			<section class="memory-section">
 				<button type="button" class="memory-settings-toggle" onclick={() => (showSettings = !showSettings)}>
 					<Icon name={showSettings ? 'chevronDown' : 'chevronRight'} class="w-3.5 h-3.5" />
-					Settings
+					{i18n.t('mem.settingsBtn')}
 				</button>
 				{#if showSettings}
 					<div class="memory-settings">
