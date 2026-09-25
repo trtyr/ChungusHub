@@ -105,7 +105,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 							class="bl-action"
 							class:is-live={live}
 							title={live
-								? 'This setup matches the current values.'
+								? i18n.t('pb.matchCurrent')
 								: 'Overwrite this setup with the values currently set in Preset Controls.'}
 							onclick={() => recapture(bundle.id)}
 						>

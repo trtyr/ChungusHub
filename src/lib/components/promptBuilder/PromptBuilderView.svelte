@@ -627,7 +627,7 @@
 				<span
 					class="pb-warn-chip"
 					title={overBudget
-						? 'The prompt exceeds the context size even with all chat history dropped. The rows below price what each item resolves to; the total prices what fits.'
+						? i18n.t('pbv.overCtxWarn')
 						: `${trimmedMessages} older chat ${trimmedMessages === 1 ? 'turn is' : 'turns are'} dropped to fit the context size, so the rows below add up to more than the total.`}
 				>
 					<Icon name="warning" class="w-3.5 h-3.5" strokeWidth={1.5} />

@@ -137,7 +137,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		}
 		const loss = lost.length
 			? `Everything made since then goes: ${lost.join(', ')}, along with any edits.`
-			: 'Every change made since then goes, including edits.';
+			: i18n.t('bk.sinceEdits');
 		// "Settings" is in the list on purpose: connections and every preference live in the
 		// database, so they rewind with everything else. Only the password and the device
 		// list sit outside the snapshot (architecture/backups.md), and only they may be

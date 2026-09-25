@@ -131,12 +131,12 @@ function emptyReplyReason(result: LLMCompletionResult): string {
 	const capped = result.finishReason === 'length';
 	if (result.thinking) {
 		return capped
-			? 'The model spent its entire output on reasoning and never answered. Raise Max tokens on the connection Chat Memory uses, or turn reasoning off there.'
-			: 'The model returned reasoning and no answer.';
+			? i18n.t('mem.errReasoningOnly')
+			: i18n.t('mem.errReasoningPart');
 	}
 	return capped
-		? 'The model reached its output cap before writing anything.'
-		: 'The model returned an empty reply.';
+		? i18n.t('mem.errCapReached')
+		: i18n.t('mem.errEmptyReply');
 }
 
 /** The LLM port: memory side-tasks ride the Memory engine's connection and that

@@ -295,7 +295,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				if (seq !== connectSeq) return;
 				status = valid ? 'valid' : 'invalid';
 				if (!valid) {
-					connectionError = reason || 'The provider rejected these credentials.';
+					connectionError = reason || i18n.t('conn.rejectedCreds');
 					apiNotFound = !!reason;
 				}
 			}
@@ -504,11 +504,11 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 							<div class="spec-tags">
 								{#if vision}{@render specTag('Vision', 'Reads images you attach to messages.', 'cap')}{/if}
 								{#if tools}{@render specTag('Tools', 'Supports tool calling, which the Chungus Assistant needs.', 'cap')}{/if}
-								{#if info.isReasoning}{@render specTag('Reasoning', 'Thinks before replying. Often better, usually slower and pricier.', 'accent')}{/if}
+								{#if info.isReasoning}{@render specTag(i18n.t('spec.reasoningTag'), i18n.t('spec.reasoning'), 'accent')}{/if}
 								{#if info.isModerated === true}
-									{@render specTag('Moderated', 'The default provider runs a safety filter, so some prompts or replies get blocked.', 'warn')}
+									{@render specTag(i18n.t('spec.moderatedTag'), i18n.t('spec.moderated'), 'warn')}
 								{:else if info.isModerated === false}
-									{@render specTag('Unmoderated', 'No safety filter on the default route, so fewer refusals.', 'ok')}
+									{@render specTag(i18n.t('spec.unmoderatedTag'), i18n.t('spec.unmoderated'), 'ok')}
 								{/if}
 							</div>
 						{/if}

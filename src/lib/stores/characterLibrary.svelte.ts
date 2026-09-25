@@ -838,7 +838,7 @@ class CharacterLibraryStore {
 		const version = this.getVersion(versionId);
 		if (!version || version.entryId !== entry.id) {
 			throw new Error(
-				'This chat is pinned to a character version that no longer exists. Repin it from the version menu.'
+				i18n.t('lib.pinGone')
 			);
 		}
 		return version.data;
@@ -942,7 +942,7 @@ class CharacterLibraryStore {
 				(v) => v.entryId === version.entryId && v.id !== versionId
 			);
 			if (!fallback) {
-				throw new Error('This is the only version: there is nothing to switch back to.');
+				throw new Error(i18n.t('lib.onlyVersion'));
 			}
 			await this.switchActiveVersion(version.entryId, fallback.id);
 		}

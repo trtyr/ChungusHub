@@ -139,8 +139,8 @@
 	/** What each reading is called. An always-active entry has no keys to place, so its own
 	 *  wording for the default says what being always active already means. */
 	const WOKEN_BY_LABELS: Record<LorebookWokenBy, string> = {
-		both: 'The chat and other entries',
-		chatOnly: 'The chat only',
+		both: i18n.t('tr.both'),
+		chatOnly: i18n.t('tr.chatOnly'),
 		entriesOnly: 'Other entries only',
 		never: 'Never (SillyTavern)'
 	};

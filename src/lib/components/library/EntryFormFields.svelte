@@ -201,7 +201,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		creator: 'Who made this card…',
 		creatorNotes: 'Notes on how to use this character…',
 		personality: 'Core personality traits, how they interact with others…',
-		scenario: 'The setting and situation the roleplay takes place in…',
+		scenario: i18n.t('ef.scenarioPh'),
 		exampleDialogue: 'Sample exchanges that show how the character speaks…'
 	};
 

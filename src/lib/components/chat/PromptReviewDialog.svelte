@@ -97,7 +97,7 @@
 	let allOpen = $derived(collapsed.length > 0 && collapsed.every((shut) => !shut));
 
 	/** The one thing standing between the reader and Send, in either view. */
-	let blocker = $derived(jsonError || (messages.length === 0 ? 'The request has no messages left.' : ''));
+	let blocker = $derived(jsonError || (messages.length === 0 ? i18n.t('chat.noMessagesLeft') : ''));
 
 	let note = $derived(
 		pending?.gate.id === 'send'

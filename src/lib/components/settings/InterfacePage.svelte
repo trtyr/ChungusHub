@@ -140,8 +140,8 @@
 	let scopeNote = $derived.by(() => {
 		// The disabled pill says why here rather than only in a title: a phone never
 		// hovers, so a tooltip is the one explanation it would never see.
-		if (!canScope) return 'Open a chat to give it a scene of its own.';
-		if (ownScene) return 'The background and effects below belong to this chat alone.';
+		if (!canScope) return i18n.t('if.openChatScene');
+		if (ownScene) return i18n.t('if.ownScene');
 		if (otherScenes === 0) return i18n.t('if.everyChatBg');
 		const others =
 			otherScenes === 1 ? 'one with a scene of its own' : `${otherScenes} with scenes of their own`;

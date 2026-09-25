@@ -699,7 +699,7 @@
 
 	<div
 		role="region"
-		aria-label={defaultsOpen ? 'Global lorebook settings' : 'Lorebooks'}
+		aria-label={defaultsOpen ? i18n.t('lv2.globalAria') : i18n.t('welcome.chats')}
 		class="brw-content"
 		class:is-flush={defaultsOpen}
 	>
@@ -734,7 +734,7 @@
 			     is on: a list the funnel emptied must not send the reader to clear the search. -->
 			<div class="grid place-items-center h-full">
 				<EmptyState icon="search" size="sm">
-					{query ? `Nothing matches “${search.trim()}”.` : 'Every lorebook here is hidden.'}
+					{query ? i18n.t('lb.nothingMatch', { q: search.trim() }) : i18n.t('lb.allHidden')}
 					{#snippet actions()}
 						{#if query}
 							<Button

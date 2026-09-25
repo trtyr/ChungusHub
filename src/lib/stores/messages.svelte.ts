@@ -410,8 +410,8 @@ class MessageStore {
 					if (!children.some((c) => onPath.has(c.id))) {
 						toastStore.info(
 							children.length === 1
-								? 'The reply below was kept. It now follows the previous turn as its own branch, reachable by swiping there or from the story map.'
-								: 'The replies below were kept. They now follow the previous turn as their own branches, reachable by swiping there or from the story map.'
+								? i18n.t('chat.keptOne')
+								: i18n.t('chat.keptMany')
 						);
 					}
 				}
@@ -750,7 +750,7 @@ class MessageStore {
 			// Fresh rows, never the state snapshot: the standing rule for long operations.
 			const allMessages = await chatStore.freshMessages(state.chat.id);
 			const target = allMessages.find((m) => m.id === leaf.id);
-			if (!target) throw new Error('The reply to continue no longer exists.');
+			if (!target) throw new Error(i18n.t('chat.continueGone'));
 
 			// The same prompt that generated the reply (its parent path), with the reply
 			// itself riding as the assembly's continuation tail. A root reply (greeting /
@@ -904,7 +904,7 @@ class MessageStore {
 
 		try {
 			const chat = await db.getChat(state.chat.id);
-			if (!chat) throw new Error('Chat not found');
+			if (!chat) throw new Error(i18n.t('chat.chatNotFound'));
 
 			// Create a virtual user message for {{chatHistory}} to inject (not saved to DB)
 			const sceneIdea = direction.trim() || 'Surprise me with a compelling opening scene.';

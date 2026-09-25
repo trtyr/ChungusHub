@@ -108,7 +108,7 @@
 	     standing on is the only thing that decides it. -->
 	<p class="act-note">
 		{scope === 'book'
-			? 'This book only. What it does not set follows the defaults.'
+			? i18n.t('lb.bookOnlyScope')
 			: 'What every book follows where it sets nothing of its own.'}
 	</p>
 

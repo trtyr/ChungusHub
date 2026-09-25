@@ -36,10 +36,10 @@
 		trimmed: 'Fired, then the token budget dropped it',
 		disabled: 'Switched off',
 		empty: 'Nothing to inject',
-		offTrigger: 'This kind of generation is not one it fires on',
+		offTrigger: i18n.t('tr.offTrigger'),
 		sticky: 'Still held in by the window it opened when it fired',
 		cooldown: 'Fired recently, and its window has not reopened',
-		tooEarly: 'The chat is not long enough for it yet',
+		tooEarly: i18n.t('tr.tooEarly'),
 		groupLost: 'Another entry in its group took the slot'
 	};
 
