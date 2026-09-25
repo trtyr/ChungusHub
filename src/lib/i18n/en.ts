@@ -1202,6 +1202,7 @@ export const en: Record<string, string> = {
 	'ce2.minmax': 'Use {{{{min}}}} and {{{{max}}}} for the two ends the reader picked.',
 	'lb.howMatch2': 'Click a keyword to change how it matches. /pattern/i is a regular expression.',
 	'stv.timingNote': 'These figures only include replies with a recorded timing ({share}% of the total). Opening greetings and imported messages without time data are excluded rather than estimated.',
+	'asm.t1': 'Behind Show more',
 	'cmd.say': 'Add a turn of yours without asking for a reply',
 	'cmd.continue': 'Extend the newest reply where it stops',
 	'cmd.retry': 'Generate the newest turn again',

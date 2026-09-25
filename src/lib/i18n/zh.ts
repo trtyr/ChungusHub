@@ -1180,6 +1180,7 @@ export const zh: Record<string, string> = {
 	'ce2.minmax': '用 {{{{min}}}} 与 {{{{max}}}} 表示读者选定的两端。',
 	'lb.howMatch2': '点击关键词可更改其匹配方式。/pattern/i 是一个正则表达式。',
 	'stv.timingNote': '这些数字仅统计记录了耗时的回复（占总数的 {share}%）。开场白与没有时间数据的导入消息被排除，而非估算。',
+	'asm.t1': '收在「显示更多」里',
 	'cmd.say': '添加一条你的回合，不请求回复',
 	'cmd.continue': '从最新回复停下的地方继续',
 	'cmd.retry': '重新生成最新回合',

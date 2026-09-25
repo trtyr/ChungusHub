@@ -155,7 +155,7 @@
 			<div class="sug-fold">
 				<span class="sug-fold-chip">
 					<Icon name="chevronDown" class="w-3 h-3" />
-					Behind Show more
+					{i18n.t('asm.t1')}
 				</span>
 			</div>
 		{/if}

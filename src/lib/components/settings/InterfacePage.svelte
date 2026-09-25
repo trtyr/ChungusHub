@@ -460,7 +460,7 @@
 							ambient: ambientStore.config
 						})}
 				>
-					This chat
+					{i18n.t('if.t24')}
 				</button>
 			</div>
 			<p class="scope-note font-ui">{scopeNote}</p>
@@ -564,7 +564,7 @@
 			{#if ownScene}<span class="scope-chip font-ui">{i18n.t('if.thisChat')}</span>{/if}
 			{#if ambientStore.config.types.length > 0}
 				<button type="button" class="link-btn clear-mix" onclick={() => ambientStore.clearAmbients()}>
-					Clear all
+					{i18n.t('if.t26')}
 				</button>
 			{/if}
 		</div>
