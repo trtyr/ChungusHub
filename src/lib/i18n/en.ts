@@ -871,6 +871,7 @@ export const en: Record<string, string> = {
 	'mem.icWhole': "The turns it describes are going too, so nothing is re-read and the rest of memory is untouched.",
 	'mem.icSurvivors': 'The {n} turns that survive go back to being sent in full, so nothing is re-read.',
 	'mem.icStoredGone': '{n} other stored summaries of these turns go with them.',
+
 	'cmd.say': 'Add a turn of yours without asking for a reply',
 	'cmd.continue': 'Extend the newest reply where it stops',
 	'cmd.retry': 'Generate the newest turn again',

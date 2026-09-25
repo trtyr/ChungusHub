@@ -849,6 +849,7 @@ export const zh: Record<string, string> = {
 	'mem.icWhole': '它所描述的回合也一并离去，因此无需重读，记忆其余部分不受影响。',
 	'mem.icSurvivors': '幸存的 {n} 个回合回到完整发送，因此无需重读。',
 	'mem.icStoredGone': '这些回合的另外 {n} 条已存摘要也随之而去。',
+
 	'cmd.say': '添加一条你的回合，不请求回复',
 	'cmd.continue': '从最新回复停下的地方继续',
 	'cmd.retry': '重新生成最新回合',

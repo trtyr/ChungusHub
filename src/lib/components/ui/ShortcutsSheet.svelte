@@ -87,10 +87,10 @@
 	<div class="sheet">
 		{#each groups as group (group.id)}
 			<section class="group">
-				<h3 class="group-title">{group.label}</h3>
+				<h3 class="group-title">{i18n.t(group.label)}</h3>
 				{#each group.rows as row (row.id)}
 					<div class="row">
-						<span class="row-label">{row.label}</span>
+						<span class="row-label">{i18n.t(row.label)}</span>
 						<span class="row-keys">
 							{#each chipsFor(row) as key, i (i)}
 								<kbd class="key">{key}</kbd>

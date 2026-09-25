@@ -21,6 +21,7 @@
  *
  * See architecture/ui-shell-settings.md, "Keyboard".
  */
+import { i18n } from '$lib/i18n/i18n.svelte';
 import { chatCursor } from '$lib/stores/chatCursor.svelte';
 import { chatSearch } from '$lib/stores/chatSearch.svelte';
 import { chatStore } from '$lib/stores/chat.svelte';
@@ -59,11 +60,11 @@ export type ShortcutGroup = 'reach' | 'panels' | 'turns' | 'composer' | 'help';
 
 /** Group order and headings in the sheet. Display only; nothing derives behaviour here. */
 export const SHORTCUT_GROUPS: { id: ShortcutGroup; label: string }[] = [
-	{ id: 'reach', label: 'Getting around' },
-	{ id: 'panels', label: 'Panels' },
-	{ id: 'turns', label: 'On a turn' },
-	{ id: 'composer', label: 'In the composer' },
-	{ id: 'help', label: 'Help' }
+	{ id: 'reach', label: 'sc.grpReach' },
+	{ id: 'panels', label: 'sc.grpPanels' },
+	{ id: 'turns', label: 'sc.grpTurns' },
+	{ id: 'composer', label: 'sc.grpComposer' },
+	{ id: 'help', label: 'sc.grpHelp' }
 ];
 
 export interface ShortcutBinding {
@@ -135,21 +136,21 @@ export const SHORTCUTS: ShortcutDef[] = [
 	{
 		id: 'chats',
 		group: 'reach',
-		label: 'Chats',
+		label: 'sc.l0',
 		binding: { mod: true, key: 'k' },
 		run: () => uiStore.toggleOverlay('chats', flush)
 	},
 	{
 		id: 'hints',
 		group: 'reach',
-		label: 'Label every control on screen',
+		label: 'sc.l1',
 		binding: { mod: true, shift: true, key: 'f' },
 		run: () => hintMode.toggle()
 	},
 	{
 		id: 'find',
 		group: 'reach',
-		label: 'Find in chat',
+		label: 'sc.l2',
 		// Takes the key off the browser's own find, which cannot tell a message from the
 		// chrome around it, and only while there is a transcript to search.
 		binding: { mod: true, key: 'f' },
@@ -161,7 +162,7 @@ export const SHORTCUTS: ShortcutDef[] = [
 	{
 		id: 'transcript',
 		group: 'reach',
-		label: 'Step through the story',
+		label: 'sc.l3',
 		// Both ways, and a step every time rather than a door that only enters: the gesture a
 		// reader reaches for is the modifier held and the arrow tapped, so a press that landed
 		// back where it already was would read as the key being dead. By position like every
@@ -175,7 +176,7 @@ export const SHORTCUTS: ShortcutDef[] = [
 	{
 		id: 'move-focus',
 		group: 'reach',
-		label: 'Move the keyboard one control',
+		label: 'sc.l4',
 		// A modifier rather than the bare letters, and it is what keeps this out of a mode: the
 		// composer holds the caret nearly all the time, so bare WASD would need a state to be
 		// switched into and switched back out of at every text box on the screen. The arrows
@@ -189,7 +190,7 @@ export const SHORTCUTS: ShortcutDef[] = [
 	{
 		id: 'escape',
 		group: 'reach',
-		label: 'Close the top surface, or go back to the composer',
+		label: 'sc.l5',
 		chips: ['Esc']
 	},
 
@@ -197,21 +198,21 @@ export const SHORTCUTS: ShortcutDef[] = [
 	{
 		id: 'settings',
 		group: 'panels',
-		label: 'Settings',
+		label: 'sc.l6',
 		binding: { mod: true, key: ',' },
 		run: () => uiStore.toggleSettings(flush)
 	},
 	{
 		id: 'lorebook',
 		group: 'panels',
-		label: 'Library: Lorebooks',
+		label: 'sc.l7',
 		binding: { mod: true, key: 'b' },
 		run: () => uiStore.toggleLorebooks(flush)
 	},
 	{
 		id: 'library',
 		group: 'panels',
-		label: 'Library: Characters',
+		label: 'sc.l8',
 		binding: { mod: true, key: 'l' },
 		run: () => {
 			// Through setLibraryTab rather than a bare assignment: that is the one door that
@@ -225,7 +226,7 @@ export const SHORTCUTS: ShortcutDef[] = [
 	{
 		id: 'personas',
 		group: 'panels',
-		label: 'Library: Personas',
+		label: 'sc.l9',
 		binding: { mod: true, shift: true, key: 'p' },
 		run: () => {
 			uiStore.setLibraryTab('personas', flush);
@@ -235,7 +236,7 @@ export const SHORTCUTS: ShortcutDef[] = [
 	{
 		id: 'prompt-builder',
 		group: 'panels',
-		label: 'Prompt Builder',
+		label: 'sc.l10',
 		binding: { mod: true, shift: true, key: 'b' },
 		run: () => {
 			uiStore.gotoSettingsPage('prompt-builder');
@@ -245,7 +246,7 @@ export const SHORTCUTS: ShortcutDef[] = [
 	{
 		id: 'assistant',
 		group: 'panels',
-		label: 'Chungus Assistant',
+		label: 'sc.l11',
 		// The assistant's other door, and the ONLY one once its floating button is switched
 		// off in Settings → General.
 		binding: { mod: true, key: 'j' },
@@ -254,7 +255,7 @@ export const SHORTCUTS: ShortcutDef[] = [
 	{
 		id: 'new-chat',
 		group: 'panels',
-		label: 'New chat',
+		label: 'sc.l12',
 		binding: { mod: true, key: 'n' },
 		run: () => uiStore.startNewChat(flush)
 	},
@@ -284,7 +285,7 @@ export const SHORTCUTS: ShortcutDef[] = [
 	{
 		id: 'shortcuts',
 		group: 'help',
-		label: 'Keyboard shortcuts (this sheet)',
+		label: 'sc.l13',
 		binding: { mod: true, key: '/' },
 		run: () => shortcutsSheet.toggle()
 	}
