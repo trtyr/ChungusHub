@@ -355,7 +355,7 @@
 		</button>
 		<button type="button" role="menuitem" class="brw-menu-item" onclick={() => closeAnd(exportFile)}>
 			<Icon name="download" class="w-4 h-4" strokeWidth={1.5} />
-			<span>Export JSON file</span>
+			<span>{i18n.t('pm.exportJson')}</span>
 		</button>
 		<button type="button" role="menuitem" class="brw-menu-item" onclick={() => closeAnd(copyJson)}>
 			<Icon name="copy" class="w-4 h-4" strokeWidth={1.5} />

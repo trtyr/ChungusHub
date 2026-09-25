@@ -336,7 +336,7 @@
 					/>
 				</div>
 				<div class="toggle-row" use:toggleRow>
-					<span class="slider-label">After Continue extends it</span>
+					<span class="slider-label">{i18n.t('lbl.rereadOnContinue')}</span>
 					<Toggle
 						checked={featurePromptsStore.spritesRereadOnContinue}
 						onchange={(v) => featurePromptsStore.setSpritesRereadOnContinue(v)}

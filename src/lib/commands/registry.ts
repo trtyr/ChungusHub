@@ -147,7 +147,7 @@ export const COMMANDS: CommandDef[] = [
 		icon: 'refresh',
 		describe: 'cmd.swipe',
 		unavailable: (ctx) =>
-			ctx.canSwipeLast ? null : 'The newest turn must be a reply, or a turn of yours',
+			ctx.canSwipeLast ? null : i18n.t('cmd.swipeGate'),
 		run: (_arg, ctx) => ctx.host.swipeLast()
 	},
 	{
@@ -202,7 +202,7 @@ export const COMMANDS: CommandDef[] = [
 		describe: 'cmd.steer',
 		arg: { label: 'guidance', required: true },
 		unavailable: () =>
-			featurePromptsStore.steeringEnabled ? null : 'Steering is switched off in Settings → Engines',
+			featurePromptsStore.steeringEnabled ? null : i18n.t('cmd.steeringOff'),
 		run: async (text, ctx) => {
 			// One-shot and inherited placement, exactly what the composer's quick box writes:
 			// this is that box reached from the keyboard, not a second kind of note.

@@ -692,7 +692,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		<!-- Response -->
 		<section class="card" data-setting="response-behavior">
 			<div class="card-head">
-				<span class="card-title">Response</span>
+				<span class="card-title">{i18n.t('ce.responseTitle')}</span>
 				<InfoTip
 					text="Length, streaming, reasoning and images. Only what this provider and model support shows up here."
 				/>
@@ -897,7 +897,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 							{/each}
 						</div>
 						{#if declared.length === 0}
-							<p class="declare-hint">Nothing declared: only temperature is sent.</p>
+							<p class="declare-hint">{i18n.t('ce.declareHint')}</p>
 						{/if}
 					</div>
 				{/if}

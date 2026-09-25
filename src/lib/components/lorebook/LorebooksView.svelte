@@ -596,7 +596,7 @@
 			onclick={() => void setDefaults(true)}
 		>
 			<Icon name="settings" class="w-4 h-4 text-text-muted flex-shrink-0" />
-			<span class="strip-title">Global Settings</span>
+			<span class="strip-title">{i18n.t('lv2.globalSettings')}</span>
 			<span class="strip-sum">
 				{#each defaults as part (part.text)}
 					<span class="strip-part">{part.text}</span>
