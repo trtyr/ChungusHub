@@ -353,7 +353,7 @@ class MemoryStore {
 			const n = this.pendingPromotions;
 			return {
 				kind: 'behind',
-				label: `${n} ${n === 1 ? 'summary' : 'summaries'} waiting to be merged`,
+				label: i18n.t('mem.stMerging', { n }),
 				outstanding: this.outstandingCalls
 			};
 		}

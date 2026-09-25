@@ -1006,7 +1006,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				>
 					<Icon name="close" class="w-4 h-4" />
 				</button>
-				<span class="brw-bulk-count"><b>{selectedCount}</b> selected</span>
+				<span class="brw-bulk-count"><b>{selectedCount}</b> {i18n.t('clv.selected')}</span>
 				<button
 					type="button"
 					class="brw-bulk-link"

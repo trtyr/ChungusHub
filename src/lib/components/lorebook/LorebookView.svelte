@@ -102,7 +102,7 @@
 			// Aimed by the card's own framing, like every cover-fit portrait in the app.
 			thumb: imageService.thumbnailUrl(en.identity.imageUrl),
 			focus: portraitFocusStyle(en.identity.portraitFocus),
-			title: `Open ${en.type} editor`,
+			title: i18n.t('lbw.openEditor', { type: en.type }),
 			open: () => uiStore.openLibraryEntry(en.id, en.type, () => lorebookStore.flush())
 		})),
 		...boundChats.map((chat) => ({
@@ -358,7 +358,7 @@
 				toastStore.error(i18n.t('lbw.nothingToSend'));
 				return;
 			}
-			const verb = mode === 'move' ? 'Moved' : 'Copied';
+			const verb = mode === 'move' ? i18n.t('lbw.moved') : i18n.t('lbw.copied');
 			toastStore.success(i18n.t('t.transferred', { verb, n: landed, name }));
 			if (mode === 'move') selectMode = false;
 		} catch (error) {
@@ -849,7 +849,7 @@
 												aria-pressed={!hidden.includes(option.id)}
 												onclick={() => lorebookEntryPrefs.toggleNature(option.id)}
 											>
-												<span class="lb-dot lb-dot-{option.id}"></span>{option.label}
+												<span class="lb-dot lb-dot-{option.id}"></span>{i18n.t(option.label)}
 											</button>
 										{/each}
 									</div>
@@ -885,7 +885,7 @@
 							>
 								<Icon name="close" class="w-4 h-4" />
 							</button>
-							<span class="brw-bulk-count"><b>{selectedIds.size}</b> selected</span>
+							<span class="brw-bulk-count"><b>{selectedIds.size}</b> {i18n.t('clv.selected')}</span>
 							<button
 								type="button"
 								class="brw-bulk-link"

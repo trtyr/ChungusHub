@@ -650,7 +650,7 @@
 						onclick={() => (showExpandedTokens = !showExpandedTokens)}
 					>
 						<Icon name="sparkles" class="w-3.5 h-3.5" strokeWidth={1.5} />
-						{showExpandedTokens ? 'Expanded' : 'Raw'}
+						{i18n.t(showExpandedTokens ? 'pbv.expanded' : 'pbv.raw')}
 					</button>
 				{/snippet}
 				<RawExpandedMockup />
@@ -701,7 +701,7 @@
 								onkeydown={(e) => onExpandKeydown(e, () => toggleItemExpanded(item.id))}
 							>
 								<span class="pb-role {roleColors[item.role]}">
-									<span class="pb-role-full">{roleLabels[item.role]}</span>
+									<span class="pb-role-full">{i18n.t(roleLabels[item.role])}</span>
 									<span class="pb-role-abbr" aria-hidden="true">{roleLabels[item.role][0]}</span>
 								</span>
 								<span class="pb-name">{item.name || i18n.t('clv.untitled')}</span>

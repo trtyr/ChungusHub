@@ -276,7 +276,7 @@
 			if (token !== loadToken) return;
 			endpoints = list;
 			if (list.length === 0) {
-				error = 'No provider endpoints reported for this model';
+				error = i18n.t('pr.noEndpoints');
 			} else {
 				// Drop stale pins/blocks for providers that no longer serve this model.
 				// Gated on a successful, non-empty load so a fetch failure never wipes config.

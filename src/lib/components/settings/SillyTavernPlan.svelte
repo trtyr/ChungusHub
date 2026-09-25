@@ -167,7 +167,7 @@
 							<input
 								type="search"
 								class="input-base item-filter font-ui"
-								placeholder={i18n.t('plan.filterPlaceholder', { label: group.label })}
+								placeholder={i18n.t('plan.filterPlaceholder', { label: i18n.t(group.label) })}
 								bind:value={
 									() => filters[group.id] ?? '',
 									(v) => (filters = { ...filters, [group.id]: v })

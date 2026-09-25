@@ -79,7 +79,7 @@
 				class:is-active={lorebookViewPrefs.order === option.id}
 				onclick={() => lorebookViewPrefs.setOrder(option.id)}
 			>
-				{option.label}
+				{i18n.t(option.label)}
 			</button>
 		{/each}
 	</div>

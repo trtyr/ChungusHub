@@ -38,7 +38,7 @@ export const CHARACTER_SORT_OPTIONS: { id: SortOption; label: string }[] = [
 	{ id: 'least-chats', label: 'brw.leastChats' },
 	{ id: 'most-messages', label: 'brw.mostMsgs' },
 	{ id: 'least-messages', label: 'brw.leastMsgs' },
-	{ id: 'recent', label: 'Recent' },
+	{ id: 'recent', label: 'brw.recent' },
 	{ id: 'random', label: 'brw.random' }
 ];
 

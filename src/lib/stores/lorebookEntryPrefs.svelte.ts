@@ -35,9 +35,9 @@ export const LOREBOOK_ENTRY_SORT_OPTIONS: { id: LorebookEntrySort; label: string
 /** The three natures, worded and ordered exactly as the entry row's own behavior switch
  *  words them: a row the list calls "Off" cannot read as something else once it is open. */
 export const LOREBOOK_ENTRY_NATURE_OPTIONS: { id: LorebookEntryNature; label: string }[] = [
-	{ id: 'always', label: 'Always' },
-	{ id: 'keyword', label: 'Keyword' },
-	{ id: 'off', label: 'Off' }
+	{ id: 'always', label: 'ler.natAlways' },
+	{ id: 'keyword', label: 'ler.natKeyword' },
+	{ id: 'off', label: 'ler.natOff' }
 ];
 
 /** Today's order, kept as the default so no existing book rearranges itself on upgrade. */

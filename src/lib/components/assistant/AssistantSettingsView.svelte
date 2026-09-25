@@ -164,7 +164,7 @@
 					{i18n.t('asm.secApproval')}
 				</h3>
 				<InfoTip
-					text="A reviewed call is shown with the change it would make, and refusing one drops that call alone: the assistant carries on with the rest of its work. This sets what a new tab starts with; the pill beside the composer moves any tab on its own."
+					text={i18n.t('asm.approvalTip')}
 				/>
 			</div>
 			<AssistantApprovalSection />

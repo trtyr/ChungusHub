@@ -106,11 +106,11 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 							class:is-live={live}
 							title={live
 								? i18n.t('pb.matchCurrent')
-								: 'Overwrite this setup with the values currently set in Preset Controls.'}
+								: i18n.t('ce2.overwriteHint')}
 							onclick={() => recapture(bundle.id)}
 						>
 							<Icon name={live ? 'check' : 'refresh'} class="w-3.5 h-3.5" strokeWidth={1.5} />
-							<span>{live ? 'Current' : 'Recapture'}</span>
+							<span>{i18n.t(live ? 'ce2.currentBtn' : 'ce2.recapture')}</span>
 						</button>
 						<button
 							type="button"

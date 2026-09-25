@@ -242,7 +242,7 @@
 			{#if open}
 				<div class="assistant-step-detail">
 					{#if tool.args != null}
-						<div class="assistant-step-detail-head">arguments</div>
+						<div class="assistant-step-detail-head">{i18n.t('asm.arguments')}</div>
 						<pre class="assistant-step-detail-pre">{JSON.stringify(tool.args, null, 1)}</pre>
 					{/if}
 					{#if typeof tool.resultPreview === 'string'}

@@ -261,7 +261,7 @@
 
 			<div class="field">
 				<span class="section-label">
-					Readability{failing > 0 ? ` · ${failing} below the floor` : ''}
+					Readability{failing > 0 ? i18n.t('pal.belowFloor', { n: failing }) : ''}
 				</span>
 				<ul class="reads">
 					{#each readings as reading (reading.label)}

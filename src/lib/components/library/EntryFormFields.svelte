@@ -506,7 +506,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		title={i18n.t('ef.manageGreetings')}
 	>
 		<Icon name="chat" class="w-3 h-3" />
-		Alternate greetings{greetings.length ? ` · ${greetings.length}` : ''}
+		{i18n.t('ef.altGreetings')}{greetings.length ? ` · ${greetings.length}` : ''}
 	</button>
 {/snippet}
 

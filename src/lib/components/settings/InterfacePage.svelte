@@ -247,7 +247,7 @@
 							class:seg-lift={appearance.contrast === opt.value}
 							onclick={() => themeStore.update({ contrast: opt.value })}
 						>
-							{labelT(opt.label)}
+							{i18n.t(opt.label)}
 						</button>
 					{/each}
 				</div>
@@ -407,7 +407,7 @@
 							class:seg-lift={appearance.glass === opt.value}
 							onclick={() => themeStore.update({ glass: opt.value })}
 						>
-							{labelT(opt.label)}
+							{i18n.t(opt.label)}
 						</button>
 					{/each}
 				</div>

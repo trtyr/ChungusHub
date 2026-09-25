@@ -781,7 +781,7 @@
 								<div class="flex items-start gap-3">
 									{#each TIMED as t (t.field)}
 										<label class="ed-timed">
-											<span class="ed-timed-name">{t.label}</span>
+											<span class="ed-timed-name">{i18n.t(t.label)}</span>
 											<input
 												type="text"
 												inputmode="numeric"
@@ -891,7 +891,7 @@
 												aria-label={i18n.t('ler.turnRoleAria')}
 											>
 												{#each LOREBOOK_ROLES as r (r.id)}
-													<option value={String(r.id)}>{r.label}</option>
+													<option value={String(r.id)}>{i18n.t(r.label)}</option>
 												{/each}
 											</Select>
 										</label>

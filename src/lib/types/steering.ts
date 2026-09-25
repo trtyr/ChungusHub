@@ -127,11 +127,13 @@ export function createSteeringNote(fields: {
 }
 
 /** The list label: the given title, else the note's own first line, trimmed to fit. */
+const EMPTY_STEERING = 'Empty steering';
+
 export function noteLabel(note: SteeringNote): string {
 	const title = note.title.trim();
 	if (title) return title;
 	const firstLine = note.text.trim().split('\n', 1)[0].trim();
-	if (!firstLine) return 'Empty steering';
+	if (!firstLine) return EMPTY_STEERING;
 	return firstLine.length > 48 ? `${firstLine.slice(0, 47)}…` : firstLine;
 }
 

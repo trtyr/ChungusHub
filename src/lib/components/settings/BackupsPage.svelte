@@ -339,7 +339,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 
 		{#if selecting && selected.size > 0}
 			<div class="bulk" transition:slide={{ duration: 140 }}>
-				<span class="bulk-count">{selected.size} selected</span>
+				<span class="bulk-count">{selected.size} {i18n.t('clv.selected')}</span>
 				<div class="bulk-actions">
 					<button type="button" class="link-btn" onclick={selectAll}>
 						{i18n.t(selected.size === snapshots.length ? 'common.clear' : 'clv.allN2')}

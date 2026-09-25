@@ -992,7 +992,7 @@
 		     while a selection is being built across several queries. -->
 		{#if selecting}
 			<div class="chats-bulk">
-				<span class="chats-bulk-count"><b>{selectedCount}</b> selected</span>
+				<span class="chats-bulk-count"><b>{selectedCount}</b> {i18n.t('clv.selected')}</span>
 				<button
 					type="button"
 					class="chats-bulk-link"
