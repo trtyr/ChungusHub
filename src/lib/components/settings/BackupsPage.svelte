@@ -78,16 +78,14 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 
 	function countLine(s: SnapshotManifest): string {
 		const parts: string[] = [];
-		if (s.summary.chats) parts.push(`${s.summary.chats} chat${s.summary.chats === 1 ? '' : 's'}`);
-		if (s.summary.characters) {
-			parts.push(`${s.summary.characters} character${s.summary.characters === 1 ? '' : 's'}`);
-		}
-		if (s.summary.images) parts.push(`${s.summary.images} image${s.summary.images === 1 ? '' : 's'}`);
-		return parts.length ? parts.join(' · ') : 'Empty';
+		if (s.summary.chats) parts.push(i18n.t('bk.nChats', { n: s.summary.chats }));
+		if (s.summary.characters) parts.push(i18n.t('bk.nCharacters', { n: s.summary.characters }));
+		if (s.summary.images) parts.push(i18n.t('bk.nImages', { n: s.summary.images }));
+		return parts.length ? parts.join(' · ') : i18n.t('bk.empty');
 	}
 
 	let totalLine = $derived(
-		`${snapshots.length} snapshot${snapshots.length === 1 ? '' : 's'} · ${bytes(backupStore.totalBytes)} on disk`
+		i18n.t('bk.totalLine', { n: snapshots.length, size: bytes(backupStore.totalBytes) })
 	);
 
 	/** A snapshot this build is too old to read. Shown as a disabled row rather than hidden:
@@ -127,22 +125,18 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		const when = `${formatDate(restoreTarget.createdAt)}, ${formatRelativeTime(restoreTarget.createdAt).toLowerCase()}`;
 		const lost: string[] = [];
 		if (restoreLoss) {
-			if (restoreLoss.chats) lost.push(`${restoreLoss.chats} chat${restoreLoss.chats === 1 ? '' : 's'}`);
-			if (restoreLoss.messages) {
-				lost.push(`${restoreLoss.messages} message${restoreLoss.messages === 1 ? '' : 's'}`);
-			}
-			if (restoreLoss.characters) {
-				lost.push(`${restoreLoss.characters} character${restoreLoss.characters === 1 ? '' : 's'}`);
-			}
+			if (restoreLoss.chats) lost.push(i18n.t('bk.nChats', { n: restoreLoss.chats }));
+			if (restoreLoss.messages) lost.push(i18n.t('bk.nMessages', { n: restoreLoss.messages }));
+			if (restoreLoss.characters) lost.push(i18n.t('bk.nCharacters', { n: restoreLoss.characters }));
 		}
 		const loss = lost.length
-			? `Everything made since then goes: ${lost.join(', ')}, along with any edits.`
+			? i18n.t('bk.restoreLoss', { items: lost.join(', ') })
 			: i18n.t('bk.sinceEdits');
 		// "Settings" is in the list on purpose: connections and every preference live in the
 		// database, so they rewind with everything else. Only the password and the device
 		// list sit outside the snapshot (architecture/backups.md), and only they may be
 		// promised here.
-		return `Your chats, characters, lorebooks, presets and settings go back to ${when}. ${loss} Your password and device list are left alone. ChungusHub then has to be closed and started again to apply it.`;
+		return i18n.t('bk.restoreConfirm', { when, loss });
 	});
 
 	/** The hold is scaled by what is actually at stake, messages included: a restore that

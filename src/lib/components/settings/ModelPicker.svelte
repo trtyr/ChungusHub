@@ -24,7 +24,7 @@
 		models,
 		value,
 		loading = false,
-		emptyHint = 'No models available.',
+		emptyHint = i18n.t('mp.noModels'),
 		routedModels,
 		onpick,
 		onConfigureRouting

@@ -320,10 +320,10 @@
 				type="text"
 				value={control.sliderTemplate ?? ''}
 				oninput={(e) => update({ sliderTemplate: (e.target as HTMLInputElement).value })}
-				placeholder={'e.g. Spice level: {{value}}/10  (empty = inject the raw number)'}
+				placeholder={i18n.t('ce2.sliderTemplatePh')}
 				class="input-base w-full px-3 py-2 text-text-primary font-mono text-sm"
 			/>
-			<p class="ce-note">Use <code class="text-accent">{'{{value}}'}</code> where the number should appear.</p>
+			<p class="ce-note">{i18n.t('ce2.sliderTemplateNote')}</p>
 		</div>
 	{:else if control.type === 'range'}
 		<div class="ce-grid ce-grid--nums">

@@ -226,11 +226,11 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			{#if account.limit != null}
 				<div class="budget">
 					<div class="budget-head">
-						<span class="budget-left">{formatUsd(account.limitRemaining)} left</span>
-						<span class="budget-cap">of {formatUsd(account.limit)}</span>
+						<span class="budget-left">{i18n.t('ch.budgetLeft', { v: formatUsd(account.limitRemaining) })}</span>
+						<span class="budget-cap">{i18n.t('ch.budgetOf', { v: formatUsd(account.limit) })}</span>
 					</div>
 					<div class="meter"><div class="meter-fill" class:low={budgetLow} style="width:{budgetPct}%"></div></div>
-					{#if account.limitReset}<span class="budget-note">resets {account.limitReset}</span>{/if}
+					{#if account.limitReset}<span class="budget-note">{i18n.t('ch.budgetReset', { v: account.limitReset })}</span>{/if}
 				</div>
 			{:else}
 				<div class="budget-flat">
@@ -259,7 +259,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	{:else if status === 'valid'}
 		<div class="connected fade-in">
 			<span class="dot dot-ok"></span>
-			{i18n.t('ch.connected')}{modelCount ? ` · ${modelCount} models` : ''}
+			{i18n.t('ch.connected')}{modelCount ? ' · ' + i18n.t('ch.models', { n: modelCount }) : ''}
 		</div>
 	{/if}
 </div>

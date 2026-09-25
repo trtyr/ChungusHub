@@ -589,7 +589,7 @@
 						<p class="mt-1 text-xs font-ui text-text-muted">{i18n.t('ler.orderHelp')}</p>
 					</div>
 					<div>
-						<label for="entry-prob-{entryId}" class="ed-label section-label">Trigger %</label>
+						<label for="entry-prob-{entryId}" class="ed-label section-label">{i18n.t('ler.triggerPct')}</label>
 						<input
 							id="entry-prob-{entryId}"
 							type="text"

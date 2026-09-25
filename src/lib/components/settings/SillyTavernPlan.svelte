@@ -109,9 +109,9 @@
 		const { chats, sprites } = stranded;
 		if (chats === 0 && sprites === 0) return '';
 		const parts: string[] = [];
-		if (chats > 0) parts.push(`${chats} chat${chats === 1 ? '' : 's'}`);
-		if (sprites > 0) parts.push(`${sprites} sprite pack${sprites === 1 ? '' : 's'}`);
-		return `${parts.join(' and ')} belong to characters you switched off. They are skipped unless you switch those characters back on.`;
+		if (chats > 0) parts.push(i18n.t('bk.nChats', { n: chats }));
+		if (sprites > 0) parts.push(i18n.t('st.nSpritePacks', { n: sprites }));
+		return i18n.t('st.skippedChars', { items: parts.join(' + ') });
 	});
 </script>
 

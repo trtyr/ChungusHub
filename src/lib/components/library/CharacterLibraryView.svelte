@@ -589,10 +589,10 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	let bulkDeleteUsage = $state<{ boundCount: number; chatCount: number } | null>(null);
 	let bulkDeleteMessage = $derived.by(() => {
 		const n = selectedCount;
-		const base = `Delete ${n} character${n === 1 ? '' : 's'}? This cannot be undone.`;
+		const base = i18n.t('clv.bulkDeleteAsk', { n });
 		if (!bulkDeleteUsage || bulkDeleteUsage.boundCount === 0) return base;
 		const { boundCount, chatCount } = bulkDeleteUsage;
-		return `${base} ${boundCount} of them ${boundCount === 1 ? 'is' : 'are'} bound to ${chatCount} chat(s); those chats will be left without a character.`;
+		return base + ' ' + i18n.t('clv.bulkBound', { bound: boundCount, chats: chatCount });
 	});
 
 	async function openBulkDelete() {

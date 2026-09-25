@@ -175,7 +175,7 @@
 									<span class="assistant-history-title">{session.title}</span>
 								</span>
 								<span class="assistant-history-meta">
-									{formatRelativeTime(session.updatedAt)}{session.messageCount ? ` · ${session.messageCount} message${session.messageCount === 1 ? '' : 's'}` : ''}{aboutChat ? ` · ${aboutChat}` : ''}
+									{formatRelativeTime(session.updatedAt)}{session.messageCount ? ' · ' + i18n.t('asm.nMessages', { n: session.messageCount }) : ''}{aboutChat ? ` · ${aboutChat}` : ''}
 								</span>
 							</button>
 							<div class="assistant-history-actions">

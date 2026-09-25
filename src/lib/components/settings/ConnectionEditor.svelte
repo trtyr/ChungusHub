@@ -212,7 +212,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		connectionError
 			? connectionError
 			: meta?.baseUrlEditable
-				? 'No models. Is the server running with a model loaded?'
+				? i18n.t('ce.noModelsHint')
 				: status === 'valid'
 					? i18n.t('ce.noModels')
 					: i18n.t('ce.addKeyToLoad')
