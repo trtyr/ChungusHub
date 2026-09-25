@@ -271,7 +271,7 @@
 	let deleteId = $state<string | null>(null);
 	let deleteTarget = $derived(deleteId ? lorebookStore.getBook(deleteId) : null);
 	let deleteMessage = $derived(
-		deleteTarget ? lorebookDeleteMessage(deleteTarget, links.get(deleteTarget.id) ?? 0) : ''
+		deleteTarget ? lorebookDeleteMessage(deleteTarget, links.get(deleteTarget.id) ?? 0, i18n.t) : ''
 	);
 
 	async function confirmDelete() {

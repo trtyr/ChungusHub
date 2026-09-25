@@ -503,10 +503,10 @@
 	/** Validate a control's macro name: required, unique, not a built-in. */
 	function macroError(control: PromptControl): string | undefined {
 		const macro = control.macro.trim();
-		if (!macro) return 'Macro name is required.';
-		if (RESERVED_MACROS.has(macro)) return `{{${macro}}} is a built-in macro, so the engine resolves it itself and this control would be ignored. Pick another name.`;
+		if (!macro) return i18n.t('pbv.macroRequired');
+		if (RESERVED_MACROS.has(macro)) return i18n.t('pbv.macroReserved', { macro });
 		const clash = currentPreset?.controls?.some((c) => c.id !== control.id && c.macro.trim() === macro);
-		if (clash) return 'Another control already uses this macro.';
+		if (clash) return i18n.t('pbv.macroClash');
 		return undefined;
 	}
 

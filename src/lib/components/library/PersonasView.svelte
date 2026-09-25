@@ -223,7 +223,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	);
 	let deleteTargetMessage = $derived(
 		i18n.t('pv.deleteAsk', { name: deleteTargetName }) +
-			(deleteTargetId === activeId ? ' New chats start as it, so another one takes that over.' : '')
+			(deleteTargetId === activeId ? i18n.t('pv.newChatsTake') : '')
 	);
 
 	// The successor is the server's to pick, and it announces the switch on the `settings`

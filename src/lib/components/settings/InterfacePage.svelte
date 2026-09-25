@@ -145,7 +145,7 @@
 		if (ownScene) return i18n.t('if.ownScene');
 		if (otherScenes === 0) return i18n.t('if.everyChatBg');
 		const others =
-			otherScenes === 1 ? 'one with a scene of its own' : `${otherScenes} with scenes of their own`;
+			otherScenes === 1 ? i18n.t('if.except1') : i18n.t('if.exceptN', { n: otherScenes });
 		return i18n.t('if.everyChatBgExcept', { others });
 	});
 

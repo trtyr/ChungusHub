@@ -411,7 +411,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		if (!deleteTargetUsage || deleteTargetUsage.castCount === 0) {
 			return base;
 		}
-		return `${base} It is bound to ${deleteTargetUsage.chatCount} chat(s); those chats will be left without a character.`;
+		return `${base} ${i18n.t('clv.delBound', { n: deleteTargetUsage.chatCount })}`;
 	});
 
 	async function handleDelete(id: string) {

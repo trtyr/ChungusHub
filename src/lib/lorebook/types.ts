@@ -1064,14 +1064,24 @@ export function sortLorebooks<
  */
 export function lorebookDeleteMessage(
 	book: Pick<Lorebook, 'name' | 'entries' | 'global'>,
-	links: number
+	links: number,
+	t?: (key: string, params?: Record<string, string | number>) => string
 ): string {
+	const x = t ?? ((key: string, params?: Record<string, string | number>) => {
+		const defaults: Record<string, string> = {
+			'lbw.delAsk': 'Delete "{name}"', 'lbw.held1': ' and its 1 entry', 'lbw.heldN': ' and its {n} entries',
+			'lbw.delEverywhere': ' It is in every chat.', 'lbw.bound1': ' It is bound to 1 character or persona.',
+			'lbw.boundN': ' It is bound to {n} characters or personas.', 'lbw.delTail': ' This cannot be undone.'
+		};
+		let out = defaults[key] ?? key;
+		if (params) for (const [k, v] of Object.entries(params)) out = out.replaceAll(`{${k}}`, String(v));
+		return out;
+	});
 	const n = book.entries.length;
-	const held = n > 0 ? ` and its ${n} ${n === 1 ? 'entry' : 'entries'}` : '';
-	const everywhere = book.global ? ' It is in every chat.' : '';
-	const s = links === 1 ? '' : 's';
-	const bound = links > 0 ? ` It is bound to ${links} character${s} or persona${s}.` : '';
-	return `Delete "${book.name || 'Untitled lorebook'}"${held}?${everywhere}${bound} This cannot be undone.`;
+	const held = n > 0 ? x(n === 1 ? 'lbw.held1' : 'lbw.heldN', { n }) : '';
+	const everywhere = book.global ? x('lbw.delEverywhere') : '';
+	const bound = links > 0 ? x(links === 1 ? 'lbw.bound1' : 'lbw.boundN', { n: links }) : '';
+	return x('lbw.delAsk', { name: book.name || 'Untitled lorebook' }) + held + '?' + everywhere + bound + x('lbw.delTail');
 }
 
 /** Parse a comma-separated keyword string into a trimmed, non-empty list. */

@@ -139,9 +139,9 @@
 	 */
 	let deleteMessage = $derived.by(() => {
 		if (!palette) return '';
-		const parts = [`"${palette.name}" will be gone for good.`];
+		const parts = [i18n.t('pal.delHead', { name: palette.name })];
 		if (themeStore.appearance.palette === paletteId) {
-			parts.push(`The app is wearing it, so it goes back to ${fallbackName} on screen.`);
+			parts.push(i18n.t('pal.delWearing', { name: fallbackName }));
 		}
 		parts.push(i18n.t('chat.cannotUndo'));
 		return parts.join(' ');

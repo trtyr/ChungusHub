@@ -419,7 +419,7 @@
 	}
 
 	let bookDeleteMessage = $derived(
-		selectedBook ? lorebookDeleteMessage(selectedBook, linked.length) : ''
+		selectedBook ? lorebookDeleteMessage(selectedBook, linked.length, i18n.t) : ''
 	);
 
 	async function deleteBook() {
