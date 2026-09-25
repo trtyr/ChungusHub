@@ -8,6 +8,8 @@ import { i18n } from './i18n.svelte';
 
 const ZH: Record<string, string> = {
 	'Getting around': '移动',
+	'Persona': '用户角色',
+	'Personality': '性格',
 	'Persona Description': '用户角色描述',
 	"Creator's Notes": '作者注释',
 	'Created by': '作者',

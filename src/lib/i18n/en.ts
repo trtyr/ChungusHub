@@ -1656,6 +1656,8 @@ export const en: Record<string, string> = {
 	'lbf.Regenerate': 'Regenerate',
 	'lbf.Continue': 'Continue',
 	'lbf.Impersonate': 'Impersonate',
+	'tr.rConstant': 'Always active, no keyword needed',
+	'tr.rKeyword': 'Its keyword matched',
 	'cmd.say': 'Add a turn of yours without asking for a reply',
 	'cmd.continue': 'Extend the newest reply where it stops',
 	'cmd.retry': 'Generate the newest turn again',

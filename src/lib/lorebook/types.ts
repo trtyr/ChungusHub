@@ -150,12 +150,12 @@ export function resolveKeyMatch(
  * book that opted into it there opts into it here, and back again.
  */
 export const LOREBOOK_SCAN_FIELDS = [
-	{ id: 'characterDescription', label: 'lbf.Description', native: 'matchCharacterDescription', card: 'match_character_description' },
-	{ id: 'characterPersonality', label: 'lbf.Personality', native: 'matchCharacterPersonality', card: 'match_character_personality' },
-	{ id: 'scenario', label: 'lbf.Scenario', native: 'matchScenario', card: 'match_scenario' },
-	{ id: 'personaDescription', label: 'lbf.Persona', native: 'matchPersonaDescription', card: 'match_persona_description' },
-	{ id: 'creatorNotes', label: 'lbf.Creator’snotes', native: 'matchCreatorNotes', card: 'match_creator_notes' },
-	{ id: 'steering', label: 'lbf.Steering', native: 'matchCharacterDepthPrompt', card: 'match_character_depth_prompt' }
+	{ id: 'characterDescription', label: 'Description', native: 'matchCharacterDescription', card: 'match_character_description' },
+	{ id: 'characterPersonality', label: 'Personality', native: 'matchCharacterPersonality', card: 'match_character_personality' },
+	{ id: 'scenario', label: 'Scenario', native: 'matchScenario', card: 'match_scenario' },
+	{ id: 'personaDescription', label: 'Persona', native: 'matchPersonaDescription', card: 'match_persona_description' },
+	{ id: 'creatorNotes', label: "Creator's Notes", native: 'matchCreatorNotes', card: 'match_creator_notes' },
+	{ id: 'steering', label: 'Steering', native: 'matchCharacterDepthPrompt', card: 'match_character_depth_prompt' }
 ] as const;
 
 export type LorebookScanField = (typeof LOREBOOK_SCAN_FIELDS)[number]['id'];

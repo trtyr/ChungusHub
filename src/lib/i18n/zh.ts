@@ -1634,6 +1634,8 @@ export const zh: Record<string, string> = {
 	'lbf.Regenerate': 'Regenerate',
 	'lbf.Continue': 'Continue',
 	'lbf.Impersonate': 'Impersonate',
+	'tr.rConstant': '始终激活，无需关键词',
+	'tr.rKeyword': '其关键词已匹配',
 	'cmd.say': '添加一条你的回合，不请求回复',
 	'cmd.continue': '从最新回复停下的地方继续',
 	'cmd.retry': '重新生成最新回合',

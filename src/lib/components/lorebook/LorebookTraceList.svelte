@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { labelT } from '$lib/i18n/labels';
 	/**
 	 * What one lorebook scan decided, read back. The single surface for it: the chat renders it
 	 * for the turn a reply carries, the lorebook page's tester renders it for text the reader
@@ -26,8 +27,8 @@
 
 	/** Why an entry ended where it did, in one line. The only place these are worded. */
 	const REASONS: Record<LorebookStatus, string> = {
-		constant: i18n.t('tr.rConstant'),
-		keyword: i18n.t('tr.rKeyword'),
+		constant: 'tr.rConstant',
+		keyword: 'tr.rKeyword',
 		noMatch: i18n.t('tr.noMatch'),
 		filtered: 'tr.rFiltered',
 		rolledOut: 'tr.rRolledOut',
@@ -65,13 +66,13 @@
 	function sourceLabel(match: LorebookKeyMatch, bookName: string): string {
 		const source = match.source;
 		if (source.kind === 'entry') {
-			const woke = source.title || 'another entry';
+			const woke = source.title || i18n.t('tr.another');
 			// The book is named only when it is not the one this entry lives in: that is the
 			// case the reader cannot work out from the row they are looking at.
 			return source.bookName && source.bookName !== bookName ? i18n.t('tr.fromBook', { w: woke, b: source.bookName }) : i18n.t('tr.from', { w: woke });
 		}
 		if (source.kind === 'field') {
-			return i18n.t('tr.inField', { f: i18n.t(LOREBOOK_SCAN_FIELDS.find((f) => f.id === source.field)?.label ?? '') });
+			return i18n.t('tr.inField', { f: labelT(LOREBOOK_SCAN_FIELDS.find((f) => f.id === source.field)?.label ?? '') });
 		}
 		if (source.depth === 0) return i18n.t('tr.lastTurn');
 		return i18n.t('tr.nBack', { n: source.depth });
