@@ -20,6 +20,7 @@
 -->
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Toggle from '$lib/components/ui/Toggle.svelte';
 	import RegexRoutingIcons from '$lib/components/regex/RegexRoutingIcons.svelte';
 	import RegexRuleEditor from '$lib/components/regex/RegexRuleEditor.svelte';
@@ -142,7 +143,7 @@
 				<div class="cr-rule" class:is-off={!rule.enabled} class:is-open={open}>
 					<div class="cr-row">
 						<!-- svelte-ignore a11y_no_static_element_interactions -->
-						<span class="cr-grip" use:dragHandle aria-label="Drag to reorder" title="Drag to reorder">
+						<span class="cr-grip" use:dragHandle aria-label={i18n.t('pb.dragReorder')} title={i18n.t('pb.dragReorder')}>
 							<Icon name="menu" class="w-4 h-4" strokeWidth={1.5} />
 						</span>
 						<Toggle
@@ -182,7 +183,7 @@
 								{lastReply}
 							>
 								{#snippet footer()}
-									<span class="cr-foot-note">Readers can switch this, never edit it.</span>
+									<span class="cr-foot-note">{i18n.t('pb.readerSwitch')}</span>
 									<button type="button" class="cr-remove" onclick={() => remove(rule.id)}>
 										<Icon name="trash" class="w-3.5 h-3.5" />
 										Remove from preset
@@ -195,7 +196,7 @@
 			{/each}
 		</div>
 		{#if list.length > 1}
-			<p class="cr-hint">Rules run top to bottom, after the reader's own, each seeing the last one's output.</p>
+			<p class="cr-hint">{i18n.t('pb.rulesOrder')}</p>
 		{/if}
 	{:else}
 		<div class="cr-empty">
@@ -233,7 +234,7 @@
 	     three clicks and no selection state. -->
 	{#if pickerOpen}
 		<div class="cr-picker">
-			<p class="cr-picker-head">Each one lands as a copy. Later edits to yours leave the preset's alone.</p>
+			<p class="cr-picker-head">{i18n.t('pb.copiesNote')}</p>
 			{#each regexRulesStore.rules as own (own.id)}
 				<button type="button" class="cr-pick" onclick={() => adopt(own)}>
 					<Icon name="plus" class="w-3 h-3 flex-shrink-0" />

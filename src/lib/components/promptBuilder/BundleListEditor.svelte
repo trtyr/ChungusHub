@@ -16,6 +16,7 @@
   and why "Current" also demands full coverage: a recapture must change nothing.
 -->
 <script lang="ts">
+import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import { getControlValue } from '$lib/utils/prompt-controls';
 	import type { PromptControl, PromptPresetBundle } from '$lib/types/database';
@@ -95,8 +96,8 @@
 							type="text"
 							value={bundle.name}
 							oninput={(e) => update(bundle.id, { name: (e.target as HTMLInputElement).value })}
-							placeholder="Setup name"
-							aria-label="Setup name"
+							placeholder={i18n.t('pb.setupName')}
+							aria-label={i18n.t('pb.setupNameAria')}
 							class="input-base flex-1 min-w-0 px-2.5 py-1.5 text-text-primary font-ui text-sm"
 						/>
 						<button
@@ -114,8 +115,8 @@
 						<button
 							type="button"
 							class="bl-del"
-							title="Delete setup"
-							aria-label="Delete setup"
+							title={i18n.t('pb.deleteSetup')}
+							aria-label={i18n.t('pb.deleteSetup')}
 							onclick={() => remove(bundle.id)}
 						>
 							<Icon name="trash" class="w-4 h-4" strokeWidth={1.5} />
@@ -126,8 +127,8 @@
 						value={bundle.description ?? ''}
 						oninput={(e) =>
 							update(bundle.id, { description: (e.target as HTMLInputElement).value || undefined })}
-						placeholder="What this setup is for (optional)"
-						aria-label="Setup description"
+						placeholder={i18n.t('pb.setupDesc')}
+						aria-label={i18n.t('pb.setupDescAria')}
 						class="input-base w-full px-2.5 py-1.5 text-text-primary font-ui text-sm"
 					/>
 					<p class="bl-kit-meta">
