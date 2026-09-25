@@ -29,7 +29,7 @@
 			</div>
 			<div class="scr ok">
 				<span class="scr-check"><Icon name="check" class="w-3.5 h-3.5" strokeWidth={2.5} /></span>
-				<span class="scr-title">Connected</span>
+				<span class="scr-title">{i18n.t('mk.connected')}</span>
 			</div>
 		</div>
 
@@ -44,20 +44,20 @@
 		<div class="panel">
 			<div class="panel-title">
 				<Icon name="shield" class="w-3 h-3" strokeWidth={2} />
-				<span>Device Access</span>
+				<span>{i18n.t('sec.deviceTitle')}</span>
 			</div>
 
-			<span class="zone-label">Waiting</span>
+			<span class="zone-label">{i18n.t('mk.waiting')}</span>
 			<div class="zone wait-zone">
 				<span class="none-line">no one waiting</span>
 				<div class="wait-row">
 					<span class="pulse"></span>
 					<span class="row-ip">192.168.1.23</span>
-					<span class="allow">Allow</span>
+					<span class="allow">{i18n.t('mk.allow')}</span>
 				</div>
 			</div>
 
-			<span class="zone-label">Allowed</span>
+			<span class="zone-label">{i18n.t('mk.allowed')}</span>
 			<div class="row host-row">
 				<span class="host-dot"></span>
 				<span class="row-txt">{i18n.t('sec.thisDevice')}</span>

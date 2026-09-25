@@ -18,8 +18,8 @@
 	<div class="head">
 		<span class="switch"><span class="knob"></span></span>
 		<span class="state">
-			<span class="lbl off">Off</span>
-			<span class="lbl on">On</span>
+			<span class="lbl off">{i18n.t('mk.off')}</span>
+			<span class="lbl on">{i18n.t('mk.on')}</span>
 		</span>
 		<span class="count">
 			<span class="c c3">3 blocks</span>

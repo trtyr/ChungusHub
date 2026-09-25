@@ -20,8 +20,8 @@
 		<span class="btn">
 			<Icon name="sparkles" class="w-3.5 h-3.5" strokeWidth={1.5} />
 			<span class="blabel">
-				<span class="bl raw-bl">Raw</span>
-				<span class="bl exp-bl">Expanded</span>
+				<span class="bl raw-bl">{i18n.t('dp.raw')}</span>
+				<span class="bl exp-bl">{i18n.t('asm.expand')}</span>
 			</span>
 		</span>
 		<span class="cap">
@@ -35,7 +35,7 @@
 
 	<div class="item">
 		<div class="item-head">
-			<span class="role-chip">System</span>
+			<span class="role-chip">{i18n.t('pbv.roleSystem')}</span>
 			<span class="name">{i18n.t('mk.charBrief')}</span>
 		</div>
 		<div class="item-body">

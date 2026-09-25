@@ -520,7 +520,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		<!-- Request: how the assembled prompt is shaped and delivered. -->
 		<section class="card">
 			<div class="card-head">
-				<span class="card-title">Request</span>
+				<span class="card-title">{i18n.t('ce.requestTitle')}</span>
 				<InfoTip text="How the assembled prompt is shaped and delivered to this provider." />
 			</div>
 
@@ -929,7 +929,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					<div class="row-block">
 						<div class="slider-top">
 							<div class="slider-label-wrap">
-								<label for="gen-seed" class="slider-label">Seed</label>
+								<label for="gen-seed" class="slider-label">{i18n.t('ce.seed')}</label>
 								<InfoTip text="A fixed seed makes the same prompt reproduce the same output. Blank = random each run." />
 							</div>
 							{#if gen.seed != null}
