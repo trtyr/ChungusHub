@@ -25,7 +25,7 @@
 				<span class="scr-dot"></span>
 				<span class="scr-title">{i18n.t('mk.notAllowed')}</span>
 				<span class="scr-ip">192.168.1.23</span>
-				<span class="scr-hint">asking to join…</span>
+				<span class="scr-hint">{i18n.t('mk.joining')}</span>
 			</div>
 			<div class="scr ok">
 				<span class="scr-check"><Icon name="check" class="w-3.5 h-3.5" strokeWidth={2.5} /></span>
@@ -49,7 +49,7 @@
 
 			<span class="zone-label">{i18n.t('mk.waiting')}</span>
 			<div class="zone wait-zone">
-				<span class="none-line">no one waiting</span>
+				<span class="none-line">{i18n.t('mk.noOneWaiting')}</span>
 				<div class="wait-row">
 					<span class="pulse"></span>
 					<span class="row-ip">192.168.1.23</span>
@@ -61,7 +61,7 @@
 			<div class="row host-row">
 				<span class="host-dot"></span>
 				<span class="row-txt">{i18n.t('sec.thisDevice')}</span>
-				<span class="row-tag">always</span>
+				<span class="row-tag">{i18n.t('common.always')}</span>
 			</div>
 			<div class="zone ok-zone">
 				<div class="ok-row">

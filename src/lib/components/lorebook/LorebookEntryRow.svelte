@@ -291,21 +291,21 @@
 		if (!entry) return '';
 		const parts: string[] = [];
 		if (entry.scanDepth != null && entry.scanDepth !== depthDefault) {
-			parts.push(entry.scanDepth === 0 ? 'scans the whole chat' : `scans ${entry.scanDepth} back`);
+			parts.push(entry.scanDepth === 0 ? i18n.t('ler.advWholeChat') : i18n.t('ler.advScans', { n: entry.scanDepth }));
 		}
-		if (entry.scanFields?.length) parts.push(`${entry.scanFields.length} extra source${entry.scanFields.length === 1 ? '' : 's'}`);
-		if (wokenBy === 'chatOnly') parts.push('woken by the chat only');
+		if (entry.scanFields?.length) parts.push(i18n.t('ler.advExtra', { n: entry.scanFields.length }));
+		if (wokenBy === 'chatOnly') parts.push(i18n.t('ler.advWokeChat'));
 		else if (wokenBy === 'entriesOnly') {
 			const level = recursion?.delayLevel ?? 1;
-			parts.push(level > 1 ? `woken by other entries, level ${level}` : 'woken by other entries');
+			parts.push(level > 1 ? i18n.t('ler.advWokeL', { n: level }) : i18n.t('ler.advWokeEntries'));
 		}
-		else if (wokenBy === 'never') parts.push('never fires');
-		if (recursion?.preventRecursion) parts.push('wakes nobody');
+		else if (wokenBy === 'never') parts.push(i18n.t('ler.advNever'));
+		if (recursion?.preventRecursion) parts.push(i18n.t('ler.advWakesNobody'));
 		if (entry.triggers?.length) {
 			// Counted through the engine's own reader, so an imported alias token counts once and
 			// an unknown one (a kind this app never generates) honestly counts as nothing.
 			const kinds = LOREBOOK_TRIGGERS.filter((t) => firesOnTrigger(entry!.triggers, t.id)).length;
-			if (kinds < LOREBOOK_TRIGGERS.length) parts.push(`fires on ${kinds} of ${LOREBOOK_TRIGGERS.length}`);
+			if (kinds < LOREBOOK_TRIGGERS.length) parts.push(i18n.t('ler.advFiresOn', { n: kinds, m: LOREBOOK_TRIGGERS.length }));
 		}
 		for (const { field, label } of TIMED) {
 			const v = entry[field];

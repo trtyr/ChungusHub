@@ -29,18 +29,18 @@
 	const REASONS: Record<LorebookStatus, string> = {
 		constant: 'tr.rConstant',
 		keyword: 'tr.rKeyword',
-		noMatch: i18n.t('tr.noMatch'),
+		noMatch: 'tr.noMatch',
 		filtered: 'tr.rFiltered',
 		rolledOut: 'tr.rRolledOut',
 		delayed: 'tr.rDelayed',
 		neverFires: 'tr.rNeverFires',
 		trimmed: 'tr.rTrimmed',
 		disabled: 'tr.rDisabled',
-		empty: i18n.t('tr.empty'),
-		offTrigger: i18n.t('tr.offTrigger'),
+		empty: 'tr.empty',
+		offTrigger: 'tr.offTrigger',
 		sticky: 'tr.rSticky',
 		cooldown: 'tr.rCooldown',
-		tooEarly: i18n.t('tr.tooEarly'),
+		tooEarly: 'tr.tooEarly',
 		groupLost: 'tr.rGroupLost'
 	};
 

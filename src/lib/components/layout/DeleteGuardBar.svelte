@@ -22,7 +22,7 @@
 
 	let message = $derived(
 		deleteGuard.asks
-			? 'Deletes ask once and never wait for a press and hold.'
+			? i18n.t('dg.hint')
 			: 'Deletes happen immediately, with nothing asked.'
 	);
 

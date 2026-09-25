@@ -73,7 +73,7 @@
 		<div class="card-head">
 			<span class="card-title">SillyTavern</span>
 			<InfoTip
-				text="Everything is read straight from disk in your browser. Nothing is uploaded anywhere but your own ChungusHub."
+				text={i18n.t('imp.ipTip')}
 			/>
 		</div>
 		<div class="card-body">

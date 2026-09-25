@@ -124,7 +124,7 @@
 
 	/** "12 passes over the story and 3 merges". Merges only appear when there are any. */
 	function priceOf(w: Work): string {
-		const passes = `${w.extractions} ${w.extractions === 1 ? 'pass' : 'passes'} over the story`;
+		const passes = i18n.t('mem.passesStory', { n: w.extractions });
 		if (w.promotions === 0) return passes;
 		return `${passes} and ${w.promotions} ${w.promotions === 1 ? 'merge' : 'merges'} of older summaries`;
 	}

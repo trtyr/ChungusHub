@@ -109,7 +109,7 @@
 	<p class="act-note">
 		{scope === 'book'
 			? i18n.t('lb.bookOnlyScope')
-			: 'What every book follows where it sets nothing of its own.'}
+			: i18n.t('lb.globalScopeDesc')}
 	</p>
 
 	<!-- Where the book applies at all, before anything about how it scans. Book scope only:
