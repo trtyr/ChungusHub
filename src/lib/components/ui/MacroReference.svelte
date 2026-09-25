@@ -45,7 +45,7 @@
 	<button
 		type="button"
 		onclick={() => copyMacro(name)}
-		title={`Click to copy {{${name}}}`}
+		title={i18n.t('ui.clickCopy', { name })}
 		class="group/chip relative flex flex-col items-start gap-1 text-left pl-2.5 pr-7 py-2 rounded-[var(--radius-md)] border border-border-subtle bg-bg-secondary/40 hover:border-accent/50 hover:bg-bg-secondary transition-colors"
 	>
 		<span class="flex items-center gap-1.5 flex-wrap">

@@ -50,7 +50,7 @@ function emptyRuntime(): AssistantSessionRuntime {
 
 function deriveTitle(text: string): string {
 	const firstLine = text.trim().split('\n')[0].trim();
-	if (!firstLine) return 'New session';
+	if (!firstLine) return i18n.t('asm.sessionName');
 	return firstLine.length > 48 ? firstLine.slice(0, 48).trimEnd() + '…' : firstLine;
 }
 

@@ -11,6 +11,7 @@
  * whatever the library and chat list currently hold, and a MISSING row is labeled, never
  * hidden: a note bound to a deleted character is inert but must still be findable.
  */
+import { i18n } from '$lib/i18n/i18n.svelte';
 import { chatStore } from '$lib/stores/chat.svelte';
 import { characterLibraryStore } from '$lib/stores/characterLibrary.svelte';
 import type { SteeringNote, SteeringScope, SteeringTarget } from '$lib/types/steering';
@@ -72,7 +73,7 @@ export function versionChoices(target: SteeringTarget): { id: string; label: str
  *  already the context. `bindingLabel` is the one that names the owner too. */
 export function versionLabel(id: string): string {
 	const version = characterLibraryStore.getVersion(id);
-	if (!version) return 'Deleted version';
+	if (!version) return i18n.t('chat.deletedVersion');
 	return version.name.trim() || 'Unnamed version';
 }
 
@@ -116,7 +117,7 @@ function characterName(id: string): string {
 
 function versionName(id: string): string {
 	const version = characterLibraryStore.getVersion(id);
-	if (!version) return 'Deleted version';
+	if (!version) return i18n.t('chat.deletedVersion');
 	const owner = characterLibraryStore.entries.find((e) => e.id === version.entryId);
 	const ownerName = owner?.identity.name?.trim();
 	return ownerName ? `${ownerName} · ${versionLabel(id)}` : versionLabel(id);

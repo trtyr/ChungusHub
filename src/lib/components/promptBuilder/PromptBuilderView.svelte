@@ -222,6 +222,12 @@
 		);
 	}
 
+	function unboundListFor(content: string): string {
+		return unboundMacrosFor(content)
+			.map((m) => '{' + '{' + m + '}' + '}')
+			.join(', ');
+	}
+
 	let itemsWithUnboundMacros = $derived(
 		currentPreset?.items.filter((item) => unboundMacrosFor(item.content).length > 0).length ?? 0
 	);
@@ -713,7 +719,7 @@
 							{#if unboundMacros.length > 0}
 								<span
 									class="pb-row-warn"
-									title={`Unbound macro${unboundMacros.length > 1 ? 's' : ''}: ${unboundMacros.map((m) => `{{${m}}}`).join(', ')}. Nothing provides ${unboundMacros.length > 1 ? 'them' : 'it'}, so ${unboundMacros.length > 1 ? 'they' : 'it'} will appear literally in the prompt.`}
+									title={i18n.t('pbv.unboundTitle', { n: unboundMacros.length, list: unboundListFor(item.content) })}
 								>
 									<Icon name="warning" class="w-4 h-4" strokeWidth={1.5} />
 								</span>

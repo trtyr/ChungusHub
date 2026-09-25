@@ -1,3 +1,4 @@
+import { i18n } from '$lib/i18n/i18n.svelte';
 /** A timestamp as ISO 8601 `YYYY-MM-DD`, the app's ONE numeric date shape. Every
  *  surface that prints digits rather than words goes through here.
  *
@@ -51,7 +52,7 @@ export function dayBucket(timestamp: number, now: number = Date.now()): DayBucke
  *  under a "Today" heading for half an hour of every day. */
 export function formatRelativeTime(timestamp: number, now: number = Date.now()): string {
 	const diff = now - timestamp;
-	if (diff < 45_000) return 'Just now';
+	if (diff < 45_000) return i18n.t('date.justNow');
 	if (diff < 3_600_000) return `${Math.max(1, Math.floor(diff / 60_000))}m ago`;
 	if (diff < 86_400_000) return `${Math.floor(diff / 3_600_000)}h ago`;
 
