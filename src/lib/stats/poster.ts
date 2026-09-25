@@ -27,6 +27,7 @@
  * `document.fonts.load`s every weight it draws with before touching the canvas:
  * `fonts.ready` alone only covers faces something on screen already asked for.
  */
+import { i18n } from '$lib/i18n/i18n.svelte';
 import type { StatsSnapshot } from '$lib/stores/stats.svelte';
 import {
 	count,
@@ -84,10 +85,10 @@ function recordEntries(snapshot: StatsSnapshot): RecordEntry[] {
 	const { records, shape } = snapshot.stats;
 	const entries: RecordEntry[] = [];
 	if (records.longestReply) {
-		entries.push({ value: count(records.longestReply.words), label: 'words in the longest reply you were sent' });
+		entries.push({ value: count(records.longestReply.words), label: 'p.m0' });
 	}
 	if (records.longestUserTurn) {
-		entries.push({ value: count(records.longestUserTurn.words), label: 'words in your longest single message' });
+		entries.push({ value: count(records.longestUserTurn.words), label: 'p.m1' });
 	}
 	if (snapshot.busiest) {
 		entries.push({
@@ -96,13 +97,13 @@ function recordEntries(snapshot: StatsSnapshot): RecordEntry[] {
 		});
 	}
 	if (shape.longestStory > 0) {
-		entries.push({ value: count(shape.longestStory), label: 'turns in your longest chat' });
+		entries.push({ value: count(shape.longestStory), label: 'p.m2' });
 	}
 	if (shape.abandoned > 0) {
-		entries.push({ value: count(shape.abandoned), label: 'turns you wrote and left behind' });
+		entries.push({ value: count(shape.abandoned), label: 'p.m3' });
 	}
 	if (snapshot.longest.days > 1) {
-		entries.push({ value: count(snapshot.longest.days), label: 'days in your longest run of writing' });
+		entries.push({ value: count(snapshot.longest.days), label: 'p.m4' });
 	}
 	return entries;
 }
@@ -114,15 +115,15 @@ function recordEntries(snapshot: StatsSnapshot): RecordEntry[] {
  * bars is not a picture anyone posts.
  */
 export function posterCards(snapshot: StatsSnapshot, names: Record<string, string>): PosterCard[] {
-	const cards: PosterCard[] = [{ id: 'writing', label: 'What you wrote' }];
+	const cards: PosterCard[] = [{ id: 'writing', label: 'p.m5' }];
 	if (snapshot.stats.cast.some((m) => names[m.characterId])) {
-		cards.push({ id: 'cast', label: 'Your cast' });
+		cards.push({ id: 'cast', label: 'p.m6' });
 	}
-	if (snapshot.days.length) cards.push({ id: 'time', label: 'When you wrote' });
+	if (snapshot.days.length) cards.push({ id: 'time', label: 'p.m7' });
 	// A lead figure, four for the grid, and the first-words line: fewer and the page
 	// shows its gaps.
 	if (recordEntries(snapshot).length >= 5 && snapshot.stats.records.firstMessageAt !== null) {
-		cards.push({ id: 'records', label: 'For the record' });
+		cards.push({ id: 'records', label: 'p.m8' });
 	}
 	return cards;
 }
@@ -715,7 +716,7 @@ function drawRecords(ctx: CanvasRenderingContext2D, palette: Palette, snapshot: 
 
 	ctx.fillStyle = palette.secondary;
 	ctx.font = `500 36px ${palette.sans}`;
-	wrap(ctx, lead.label, INNER).forEach((line, i) => {
+	wrap(ctx, i18n.t(lead.label), INNER).forEach((line, i) => {
 		ctx.fillText(line, PAD, 566 + i * 48);
 	});
 
@@ -738,7 +739,7 @@ function drawRecords(ctx: CanvasRenderingContext2D, palette: Palette, snapshot: 
 
 		ctx.fillStyle = palette.muted;
 		ctx.font = `400 30px ${palette.sans}`;
-		wrap(ctx, entry.label, column).slice(0, 3).forEach((line, l) => {
+		wrap(ctx, i18n.t(entry.label), column).slice(0, 3).forEach((line, l) => {
 			ctx.fillText(line, x, y + 196 + l * 40);
 		});
 	});

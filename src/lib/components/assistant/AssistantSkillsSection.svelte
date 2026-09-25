@@ -53,7 +53,7 @@
 		try {
 			applySkills(await getAllSkills());
 		} catch (e) {
-			error = failureText('load the skills', e);
+			error = failureText('f.loadSkills', e);
 		} finally {
 			loading = false;
 		}

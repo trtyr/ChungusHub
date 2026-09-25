@@ -236,7 +236,7 @@ class ImportRunStore {
 		} catch (e) {
 			// Without the ledger every file reads as new. The pick is dropped rather than offered
 			// under a count that would be a lie.
-			this.error = failureText('check what has already been imported', e);
+			this.error = failureText('f.checkImported', e);
 			return;
 		}
 
@@ -318,7 +318,7 @@ class ImportRunStore {
 			this.report = report;
 			if (this.onScreen === 0) this.announce(report);
 		} catch (e) {
-			this.error = failureText('import that folder', e);
+			this.error = failureText('f.importFolder', e);
 		} finally {
 			watchConnection();
 			this.controller = null;

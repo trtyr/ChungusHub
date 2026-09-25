@@ -169,7 +169,7 @@
 						aria-selected={i === index}
 						onclick={() => (index = i)}
 					>
-						{card.label}
+						{i18n.t(card.label)}
 					</button>
 				{/each}
 			</div>

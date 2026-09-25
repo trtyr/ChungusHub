@@ -62,7 +62,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 
 	onMount(() => {
 		void backupStore.load().catch((error) => {
-			pageError = failureText('load your backups', error);
+			pageError = failureText('f.loadBackups', error);
 		});
 	});
 	onDestroy(() => backupStore.close());
@@ -103,7 +103,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			await backupStore.snapshotNow(label.trim() || null);
 			label = '';
 		} catch (error) {
-			pageError = failureText('start the backup', error);
+			pageError = failureText('f.startBackup', error);
 		} finally {
 			busy = false;
 		}
@@ -160,7 +160,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		try {
 			await backupStore.restore(target.id);
 		} catch (error) {
-			pageError = failureText('start the restore', error);
+			pageError = failureText('f.startRestore', error);
 		}
 	}
 

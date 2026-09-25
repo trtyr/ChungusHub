@@ -99,7 +99,7 @@
 			personaStore.setActive(entry.id);
 			close();
 		} catch (e) {
-			error = failureText('create that persona', e);
+			error = failureText('f.createPersona', e);
 		} finally {
 			saving = false;
 		}

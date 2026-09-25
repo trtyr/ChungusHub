@@ -38,7 +38,7 @@
 			const data = (await apiGet('/api/backgrounds')) as { backgrounds: BackgroundEntry[] };
 			backgrounds = data.backgrounds;
 		} catch (e) {
-			error = failureText('load the backgrounds', e);
+			error = failureText('f.loadBackgrounds', e);
 		} finally {
 			loading = false;
 		}

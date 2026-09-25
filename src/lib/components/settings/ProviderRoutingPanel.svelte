@@ -287,7 +287,7 @@
 		} catch (e) {
 			if (token !== loadToken) return;
 			endpoints = [];
-			error = failureText('load the provider endpoints', e);
+			error = failureText('f.loadEndpoints', e);
 		} finally {
 			if (token === loadToken) loading = false;
 		}
