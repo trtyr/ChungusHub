@@ -146,8 +146,8 @@ const ZH: Record<string, string> = {
 	"Collapse extra blank lines": '折叠多余空行',
 	"Curly double quotes to straight": '弯双引号转直引号',
 	"Curly single quotes to straight": '弯单引号转直引号',
-	"Straightens typographic single quotes and curly apostrophes.": '（正则种子规则说明）',
-	"System default": 'System default',
+	"Straightens typographic single quotes and curly apostrophes.": '将排印弯单引号与弯撇号拉直。',
+	"System default": '系统默认',
 };
 
 /** Translate a store-sourced label into the active language; unknown labels pass through. */
