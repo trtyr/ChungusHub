@@ -16,9 +16,9 @@
 	const flush = () => lorebookStore.flush();
 
 	const TABS: { id: LibraryTab; icon: IconName; label: string }[] = [
-		{ id: 'characters', icon: 'users', label: 'Characters' },
-		{ id: 'personas', icon: 'user', label: 'Personas' },
-		{ id: 'lorebooks', icon: 'bookOpen', label: 'Lorebooks' }
+		{ id: 'characters', icon: 'users', label: i18n.t('lv.tabCharacters') },
+		{ id: 'personas', icon: 'user', label: i18n.t('lv.tabPersonas') },
+		{ id: 'lorebooks', icon: 'bookOpen', label: i18n.t('lv.tabLorebooks') }
 	];
 
 	// The New chat flow rides this panel: a banner names the current step, picks in the

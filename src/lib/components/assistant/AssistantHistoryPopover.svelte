@@ -93,8 +93,8 @@
 		const startOfToday = new Date().setHours(0, 0, 0, 0);
 		const dayMs = 86_400_000;
 		const buckets: { label: string; min: number }[] = [
-			{ label: 'Today', min: startOfToday },
-			{ label: 'Yesterday', min: startOfToday - dayMs },
+			{ label: i18n.t('asm.histToday'), min: startOfToday },
+			{ label: i18n.t('asm.histYesterday'), min: startOfToday - dayMs },
 			{ label: 'Previous 7 days', min: startOfToday - 7 * dayMs },
 			{ label: 'Older', min: -Infinity }
 		];

@@ -42,7 +42,7 @@
 							</span>
 							<span class="row-text">
 								<span class="row-name">{labelT(engine.name)}</span>
-								<span class="row-summary">{engine.summary}</span>
+								<span class="row-summary">{i18n.t(engine.summary)}</span>
 							</span>
 							<Icon name="chevronRight" class="w-4 h-4 row-chev" strokeWidth={2} />
 						</button>

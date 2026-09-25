@@ -358,8 +358,8 @@
 				{@const missing = (field.requires ?? []).filter((m) => !(drafts[field.key] ?? '').includes(m))}
 				<div class="prompt-field">
 					<div class="prompt-head">
-						<span class="prompt-label">{field.label}</span>
-						<InfoTip text={field.hint} />
+						<span class="prompt-label">{i18n.t(field.label)}</span>
+						<InfoTip text={i18n.t(field.hint)} />
 						{#if isModified(field.key)}
 							<span class="modified-badge" title={i18n.t('eng.modifiedTip')}>{i18n.t('eng.modified')}</span>
 						{/if}

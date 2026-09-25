@@ -78,21 +78,21 @@
 	let groups = $derived.by<BindGroup[]>(() => [
 		{
 			id: 'characters',
-			label: 'Characters',
+			label: i18n.t('lbp.gCharacters'),
 			icon: 'users',
 			rows: cardRows(characterLibraryStore.characters),
 			toggle: toggleCard
 		},
 		{
 			id: 'personas',
-			label: 'Personas',
+			label: i18n.t('lbp.gPersonas'),
 			icon: 'user',
 			rows: cardRows(characterLibraryStore.personas),
 			toggle: toggleCard
 		},
 		{
 			id: 'chats',
-			label: 'Chats',
+			label: i18n.t('lbp.gChats'),
 			icon: 'chat',
 			// Newest first, which is the order the Chats panel lists them in: the story
 			// somebody is binding a book for is almost always one they were just in.

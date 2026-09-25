@@ -23,15 +23,15 @@
 			<span class="lbl on">{i18n.t('mk.on')}</span>
 		</span>
 		<span class="count">
-			<span class="c c-sent">empty shell sent</span>
-			<span class="c c-drop">shell dropped</span>
+			<span class="c c-sent">{i18n.t('mk.shellSent')}</span>
+			<span class="c c-drop">{i18n.t('mk.shellDropped')}</span>
 		</span>
 	</div>
 
 	<div class="doc">
 		<div class="block prunable">
 			<span class="ln"><span class="tag">&lt;memory&gt;</span></span>
-			<span class="ln">Treat this as canon:</span>
+			<span class="ln">{i18n.t('mk.treatCanon')}</span>
 			<span class="ln"><span class="macro">{'{{memory}}'}</span><span class="mark">empty</span></span>
 			<span class="ln"><span class="tag">&lt;/memory&gt;</span></span>
 		</div>

@@ -101,7 +101,7 @@
 {:else}
 	<p class="lt-summary">{summary}</p>
 
-	{#each [{ label: 'In the prompt', rows: injected }, { label: 'Kept out', rows: held }] as group (group.label)}
+	{#each [{ label: i18n.t('tr.inPrompt'), rows: injected }, { label: i18n.t('tr.keptOut'), rows: held }] as group (group.label)}
 		{#if group.rows.length > 0}
 			<section class="lt-group">
 				<h3 class="section-label">{group.label}</h3>

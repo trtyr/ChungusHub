@@ -37,9 +37,9 @@
 	import Toggle from '$lib/components/ui/Toggle.svelte';
 
 	const SHELVES = [
-		{ id: 'weather', label: 'Weather' },
-		{ id: 'nature', label: 'Nature' },
-		{ id: 'scene', label: 'Scene' }
+		{ id: 'weather', label: i18n.t('amb.catWeather') },
+		{ id: 'nature', label: i18n.t('amb.catNature') },
+		{ id: 'scene', label: i18n.t('amb.catScene') }
 	] as const;
 
 	type ShelfId = (typeof SHELVES)[number]['id'];
@@ -159,7 +159,7 @@
 							title={i18n.t(AMBIENT_DESCRIPTIONS[type])}
 							onclick={() => toggleEffect(type)}
 						>
-							{AMBIENT_LABELS[type]}
+							{i18n.t(AMBIENT_LABELS[type])}
 						</button>
 					{/each}
 				</div>
@@ -181,7 +181,7 @@
 							aria-expanded={open}
 							onclick={() => toggleExpanded(type)}
 						>
-							<span class="fx-name">{AMBIENT_LABELS[type]}</span>
+							<span class="fx-name">{i18n.t(AMBIENT_LABELS[type])}</span>
 							<Icon name="chevronDown" class="w-3.5 h-3.5 fx-chevron" />
 						</button>
 						<button
@@ -200,12 +200,12 @@
 						     this one has of its own. -->
 						<div class="fx-settings">
 							{#each settingsFor(type) as def (def.key)}
-								<span class="fx-setting-label">{def.label}</span>
+								<span class="fx-setting-label">{i18n.t(def.label)}</span>
 								{#if def.kind === 'toggle'}
 									<div class="fx-setting-toggle">
 										<Toggle
 											checked={effectSetting(config, type, def.key) >= 0.5}
-											label="{AMBIENT_LABELS[type]}: {def.label}"
+											label="{i18n.t(AMBIENT_LABELS[type])}: {i18n.t(def.label)}"
 											onchange={(on) => ambientStore.setEffectSetting(type, def.key, on ? 1 : 0)}
 										/>
 									</div>
@@ -217,7 +217,7 @@
 										step={def.step}
 										defaultValue={def.defaultValue}
 										format={pct}
-										label="{AMBIENT_LABELS[type]}: {def.label}"
+										label="{i18n.t(AMBIENT_LABELS[type])}: {i18n.t(def.label)}"
 										oninput={(v) => ambientStore.setEffectSetting(type, def.key, v)}
 									/>
 								{/if}

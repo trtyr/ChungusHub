@@ -99,10 +99,10 @@ export interface AmbientSettingDef {
  * a thing to meet.
  */
 export const AMBIENT_BASE_SETTINGS: AmbientSettingDef[] = [
-	{ key: 'density', label: 'Density', kind: 'slider', min: 0.2, max: 2, step: 0.05, defaultValue: 1 },
-	{ key: 'speed', label: 'Speed', kind: 'slider', min: 0.25, max: 2, step: 0.05, defaultValue: 1 },
+	{ key: 'density', label: 'amb.dDensity', kind: 'slider', min: 0.2, max: 2, step: 0.05, defaultValue: 1 },
+	{ key: 'speed', label: 'amb.dSpeed', kind: 'slider', min: 0.25, max: 2, step: 0.05, defaultValue: 1 },
 	{ key: 'visibility', label: 'Visibility', kind: 'slider', min: 0.05, max: 1, step: 0.05, defaultValue: 0.5 },
-	{ key: 'overMessages', label: 'Over messages', kind: 'toggle', min: 0, max: 1, step: 1, defaultValue: 0 }
+	{ key: 'overMessages', label: 'amb.dOverMessages', kind: 'toggle', min: 0, max: 1, step: 1, defaultValue: 0 }
 ];
 
 /**

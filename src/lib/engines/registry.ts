@@ -73,21 +73,20 @@ export const ENGINES: EngineDef[] = [
 		id: 'memory',
 		name: 'Chat Memory',
 		icon: 'brain',
-		summary: 'Summarizes old scenes and recalls them later',
-		description:
-			'Summarizes scenes once they fall out of the context window and recalls them into later prompts, so a long chat keeps its thread at a flat cost. It runs on its own as the story grows.',
+		summary: 'eng.s0',
+		description: 'eng.d0',
 		makesCalls: true,
 		prompts: [
 			{
 				key: 'memoryExtract',
-				label: 'Summarizing',
-				hint: 'Turns a batch of old turns into one scene summary.',
+				label: 'eng.l0',
+				hint: 'eng.h0',
 				requires: ['{{batch}}']
 			},
 			{
 				key: 'memoryPromote',
-				label: 'Compaction',
-				hint: 'Merges older scene summaries into tighter ones.',
+				label: 'eng.l1',
+				hint: 'eng.h1',
 				requires: ['{{episodes}}']
 			}
 		],
@@ -100,14 +99,13 @@ export const ENGINES: EngineDef[] = [
 		id: 'opening-scene',
 		name: 'Opening Scene',
 		icon: 'sparkles',
-		summary: 'Writes another way for a story to open',
-		description:
-			'Writes an opening scene through the full story pipeline, with preset, character, persona, lorebooks and memory all in place. It lands beside the card’s own greetings as one more beginning to swipe between, and fires only when you ask for it.',
+		summary: 'eng.s1',
+		description: 'eng.d1',
 		makesCalls: true,
 		prompts: [
 			{
 				key: 'openingScene',
-				label: 'Opening scene direction',
+				label: 'eng.l2',
 				hint: "Directs the opening scene. {{idea}} is the direction you typed, or a request to surprise you when you left it empty; {{scenario}} stays the character card's own field."
 			}
 		],
@@ -120,15 +118,14 @@ export const ENGINES: EngineDef[] = [
 		id: 'steering',
 		name: 'Steering',
 		icon: 'compass',
-		summary: 'Injects your composer guidance into the story prompt',
-		description:
-			'Injects the guidance you type in the composer straight into the story prompt. It makes no call of its own, the text rides the generation you were already sending.',
+		summary: 'eng.s2',
+		description: 'eng.d2',
 		makesCalls: false,
 		prompts: [
 			{
 				key: 'steeringWrapper',
-				label: 'Guidance wrapper',
-				hint: 'Wraps your composer guidance before it goes into the story prompt. {{steering}} is the text you typed.'
+				label: 'eng.l3',
+				hint: 'eng.h2'
 			}
 		],
 		enabled: {
@@ -140,15 +137,14 @@ export const ENGINES: EngineDef[] = [
 		id: 'spellcheck',
 		name: 'Spellcheck',
 		icon: 'checkCircle',
-		summary: 'Fixes your composer draft, keeping its voice',
-		description:
-			'Fixes spelling, grammar and awkward phrasing in your composer draft, keeping its meaning and voice. Runs only when you trigger it.',
+		summary: 'eng.s3',
+		description: 'eng.d3',
 		makesCalls: true,
 		prompts: [
 			{
 				key: 'spellcheck',
-				label: 'Correction prompt',
-				hint: 'Sent to fix your draft. {{draft}} is the composer text being corrected.'
+				label: 'eng.l4',
+				hint: 'eng.h3'
 			}
 		],
 		enabled: {
@@ -160,15 +156,14 @@ export const ENGINES: EngineDef[] = [
 		id: 'impersonate',
 		name: 'Impersonate',
 		icon: 'mask',
-		summary: 'Expands a short draft into a full message',
-		description:
-			'Expands a short composer draft into a full in-character message written from your perspective. Runs only when you trigger it.',
+		summary: 'eng.s4',
+		description: 'eng.d4',
 		makesCalls: true,
 		prompts: [
 			{
 				key: 'impersonate',
-				label: 'Expansion prompt',
-				hint: 'Sent as the final user turn after the chat history, which arrives with its roles swapped so the model already sits in your seat. {{draft}} is the composer text, {{perspective}} is first, second or third person.'
+				label: 'eng.l5',
+				hint: 'eng.h4'
 			}
 		],
 		enabled: {
@@ -187,7 +182,7 @@ export const ENGINES: EngineDef[] = [
 		prompts: [
 			{
 				key: 'sprites',
-				label: 'Sprite prompt',
+				label: 'eng.l6',
 				hint: "Sent to read the newest reply. {{labels}} is this character's own sprite labels. How much story goes with it is yours: {{chatHistoryLast3}} for three turns, {{lastMessage}} for the reply alone.",
 				requires: ['{{labels}}']
 			}
