@@ -654,7 +654,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	     New chat flow or a selection owns the top of the panel: both are tasks of their own,
 	     and a door out of them here would read as part of the task. -->
 	{#if chatCharacter && !uiStore.newChatStep && !selectionMode}
-		<LibraryOpenChatRow entry={chatCharacter} label="In this chat" onOpen={handleEditEntry} />
+		<LibraryOpenChatRow entry={chatCharacter} label={i18n.t('lbl.inThisChat')} onOpen={handleEditEntry} />
 	{/if}
 
 	{#if sectionEntries.length > 0}
@@ -854,7 +854,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 								size="sm"
 								checked={listPortraits}
 								onchange={(v) => libraryViewPrefs.setListPortraits(v)}
-								label="Show portraits on each row"
+								label={i18n.t('lbl.portraitsRow')}
 							/>
 						</div>
 						<div class="flex items-center justify-between gap-2">
@@ -863,7 +863,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 								size="sm"
 								checked={listTags}
 								onchange={(v) => libraryViewPrefs.setListTags(v)}
-								label="Show tags on each row"
+								label={i18n.t('lbl.tagsRow')}
 							/>
 						</div>
 					</div>

@@ -252,7 +252,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	<!-- The persona the open story is played as, one press from its editor. Gone while the New
 	     chat flow is on, since this shelf is that flow's persona picker. -->
 	{#if chatPersona && !uiStore.newChatStep}
-		<LibraryOpenChatRow entry={chatPersona} label="Playing as" onOpen={handleEditEntry} />
+		<LibraryOpenChatRow entry={chatPersona} label={i18n.t('lbl.playingAs')} onOpen={handleEditEntry} />
 	{/if}
 
 	<!-- Toolbar: search front and center, two quiet disclosures, one primary action.
@@ -388,7 +388,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 							size="sm"
 							checked={listPortraits}
 							onchange={(v) => personasViewPrefs.setListPortraits(v)}
-							label="Show portraits on each row"
+							label={i18n.t('lbl.portraitsRow')}
 						/>
 					</div>
 				</div>

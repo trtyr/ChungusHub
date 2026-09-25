@@ -148,7 +148,7 @@
 						</span>
 						<Toggle
 							checked={rule.enabled}
-							label="Ship {rule.name} enabled"
+							label={i18n.t('lbl.shipEnabled', { name: rule.name })}
 							onchange={(on) => setEnabled(rule.id, on)}
 						/>
 						<button

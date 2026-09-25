@@ -620,7 +620,7 @@
 						<div class="ed-cascade">
 							<Toggle
 								checked={entry.matchWholeWords ?? wholeDefault}
-								label="Match whole words"
+								label={i18n.t('lbl.wholeWords2')}
 								onchange={(next) => update({ matchWholeWords: next })}
 							/>
 							<OverrideMark

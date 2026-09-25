@@ -106,7 +106,7 @@
 		<Toggle
 			checked={section.collapsed ?? false}
 			onchange={(v) => update({ collapsed: v || undefined })}
-			label="Starts folded"
+			label={i18n.t('se.startsFolded')}
 		/>
 	</div>
 

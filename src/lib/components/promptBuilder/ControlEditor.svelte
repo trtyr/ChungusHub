@@ -192,7 +192,7 @@
 				<Toggle
 					checked={control.helpInline ?? false}
 					onchange={(v) => update({ helpInline: v || undefined })}
-					label="Show the help text on the card"
+					label={i18n.t('lbl.helpOnCard')}
 				/>
 			</div>
 			<p class="ce-note">{i18n.t('ce2.showNote')}</p>
@@ -259,7 +259,7 @@
 	{:else if control.type === 'toggle'}
 		<div class="ce-inline">
 			<span class="ce-label">{i18n.t('ce2.default')}</span>
-			<Toggle checked={control.defaultOn ?? false} onchange={(v) => update({ defaultOn: v })} label="Default state" />
+			<Toggle checked={control.defaultOn ?? false} onchange={(v) => update({ defaultOn: v })} label={i18n.t('lbl.defaultState')} />
 			<span class="ce-note">{control.defaultOn ? 'On' : 'Off'}</span>
 		</div>
 		<div class="ce-grid">
@@ -393,7 +393,7 @@
 					<Toggle
 						checked={control.allowCustom ?? false}
 						onchange={(v) => update({ allowCustom: v })}
-						label="Allow custom entries"
+						label={i18n.t('lbl.allowCustom')}
 					/>
 				</div>
 				{#if control.allowCustom}

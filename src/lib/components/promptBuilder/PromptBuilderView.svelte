@@ -729,7 +729,7 @@
 								<Icon name="trash" class="w-4 h-4" strokeWidth={1.5} />
 							</button>
 
-							<Toggle checked={item.enabled} onchange={() => toggleItem(item.id)} label="Toggle enabled" />
+							<Toggle checked={item.enabled} onchange={() => toggleItem(item.id)} label={i18n.t('lbl.toggleEnabled')} />
 						</div>
 
 						<!-- Expanded editor -->
@@ -1076,7 +1076,7 @@
 						currentPreset.pruneEmptyBlocks = v;
 						persistDraft();
 					}}
-					label="Prune empty blocks"
+					label={i18n.t('lbl.pruneEmpty2')}
 				/>
 			</div>
 

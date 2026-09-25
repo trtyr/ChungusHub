@@ -284,7 +284,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				max={MAX_PORTRAIT_ZOOM}
 				step={0.01}
 				defaultValue={1}
-				label="Zoom"
+				label={i18n.t('lbl.zoom')}
 				format={(v) => `${v.toFixed(2)}×`}
 				oninput={setZoom}
 			/>

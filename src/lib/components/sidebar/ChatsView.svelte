@@ -964,7 +964,7 @@
 						}}
 						role="button"
 						tabindex="-1"
-						aria-label="Close menu"
+						aria-label={i18n.t('lbl.closeMenu')}
 					></div>
 					<div class="chats-sort-menu surface-float" role="menu">
 						{#each SORT_OPTIONS as opt (opt.key)}
@@ -1038,7 +1038,7 @@
 				class="chats-scroll chats-list panel-scroll"
 				role="listbox"
 				tabindex="-1"
-				aria-label="Chats"
+				aria-label={i18n.t('welcome.chats')}
 			>
 				{#if isEmpty}
 					<div class="chats-empty">
@@ -1159,7 +1159,7 @@
 			}}
 			role="button"
 			tabindex="-1"
-			aria-label="Close menu"
+			aria-label={i18n.t('lbl.closeMenu')}
 		></div>
 		<div
 			bind:this={menuEl}
