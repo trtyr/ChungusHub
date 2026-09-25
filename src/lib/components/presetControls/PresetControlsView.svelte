@@ -418,7 +418,7 @@
 
 <div class="pcv">
 	<header class="overlay-header overlay-header--stacked">
-		<h2 class="overlay-title">Preset Controls</h2>
+		<h2 class="overlay-title">{i18n.t('pbv.controlsTitle')}</h2>
 		<div class="overlay-crumb">
 			<!-- The switcher and the actions menu sit together on the subject line: the
 			     menu acts on the preset the switcher names. -->

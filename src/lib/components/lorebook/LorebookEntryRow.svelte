@@ -602,11 +602,11 @@
 						<p class="mt-1 text-xs font-ui text-text-muted">{i18n.t('ler.chanceHelp')}</p>
 					</div>
 					<div>
-						<span class="ed-label section-label">Case-sensitive</span>
+						<span class="ed-label section-label">{i18n.t('lb.caseSensitive')}</span>
 						<div class="ed-cascade">
 							<Toggle
 								checked={entry.caseSensitive ?? caseDefault}
-								label="Case-sensitive"
+								label={i18n.t('lb.caseSensitive')}
 								onchange={(next) => update({ caseSensitive: next })}
 							/>
 							<OverrideMark

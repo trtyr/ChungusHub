@@ -355,7 +355,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						name="chevronDown"
 						class="w-3 h-3 shrink-0 transition-transform {defaultsOpen ? '' : '-rotate-90'}"
 					/>
-					<span class="section-label group-hover:text-text-secondary">New Chat Defaults</span>
+					<span class="section-label group-hover:text-text-secondary">{i18n.t('cd.title')}</span>
 				</button>
 
 				{#if defaultsOpen}

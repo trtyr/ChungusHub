@@ -328,7 +328,7 @@
 			</div>
 			<div class="card-body">
 				<div class="toggle-row" use:toggleRow>
-					<span class="slider-label">After I edit it</span>
+					<span class="slider-label">{i18n.t('lbl.afterEdit')}</span>
 					<Toggle
 						checked={featurePromptsStore.spritesRereadOnEdit}
 						onchange={(v) => featurePromptsStore.setSpritesRereadOnEdit(v)}

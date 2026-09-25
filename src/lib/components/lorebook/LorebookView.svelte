@@ -563,7 +563,7 @@
 							onclick={() => closeActionsAnd(exportBook)}
 						>
 							<Icon name="download" class="w-4 h-4" strokeWidth={1.5} />
-							<span>Export World Info</span>
+							<span>{i18n.t('lbv.exportCards')}</span>
 						</button>
 						<button
 							type="button"

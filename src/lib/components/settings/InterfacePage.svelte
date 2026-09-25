@@ -142,10 +142,10 @@
 		// hovers, so a tooltip is the one explanation it would never see.
 		if (!canScope) return 'Open a chat to give it a scene of its own.';
 		if (ownScene) return 'The background and effects below belong to this chat alone.';
-		if (otherScenes === 0) return 'Every chat wears the background and effects below.';
+		if (otherScenes === 0) return i18n.t('if.everyChatBg');
 		const others =
 			otherScenes === 1 ? 'one with a scene of its own' : `${otherScenes} with scenes of their own`;
-		return `Every chat wears the background and effects below, except ${others}.`;
+		return i18n.t('if.everyChatBgExcept', { others });
 	});
 
 	/* --- Background --- */

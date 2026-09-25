@@ -4,6 +4,7 @@
 	 * Name-only under the picture is the whole reason this mode exists, so the entry and link
 	 * counts the other two shapes carry are deliberately left to them.
 	 */
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import LibraryEntryMenu from '$lib/components/library/LibraryEntryMenu.svelte';
 	import LorebookGlobalBadge from './LorebookGlobalBadge.svelte';
@@ -81,7 +82,7 @@
 			>
 				<LibraryEntryMenu
 					onExport={() => onExport(book.id)}
-					exportLabel="Export World Info"
+					exportLabel={i18n.t('lbv.exportCards')}
 					onDelete={() => onDelete(book.id)}
 					triggerClass="icon-btn !w-7 !h-7 !rounded-[var(--radius-md)] !bg-black/55 !text-white/90 hover:!bg-bg-tertiary hover:!text-text-primary"
 				/>
