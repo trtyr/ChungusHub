@@ -8,6 +8,7 @@
   leaves it behind and says so.
 -->
 <script lang="ts">
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import { autoResize } from '$lib/actions/autoResize';
 	import { imageRejectionReason, imageService } from '$lib/services/imageService';
@@ -89,62 +90,62 @@
 			{/if}
 		</button>
 		<div class="pi-cover-text">
-			<span class="pi-cover-title">Cover</span>
+			<span class="pi-cover-title">{i18n.t('pi.cover')}</span>
 			<p class="pi-cover-hint">
 				The face of the preset, and the picture a PNG card is. Framed 3:4 portrait, anything
 				else is centre-cropped to fit. A JSON export has nowhere to keep it.
 			</p>
 			{#if coverUrl}
-				<button type="button" class="pi-cover-clear" disabled={busy} onclick={removeCover}>Remove</button>
+				<button type="button" class="pi-cover-clear" disabled={busy} onclick={removeCover}>{i18n.t('pi.remove')}</button>
 			{/if}
 		</div>
 	</div>
 
 	<div class="pi-grid">
 		<div class="pi-field">
-			<label for="preset-author" class="pi-label">Author</label>
+			<label for="preset-author" class="pi-label">{i18n.t('pi.author')}</label>
 			<input
 				id="preset-author"
 				type="text"
 				value={meta?.author ?? ''}
 				oninput={(e) => set('author', (e.target as HTMLInputElement).value)}
-				placeholder="Your name or handle"
+				placeholder={i18n.t('pi.authorPh')}
 				class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm"
 			/>
 		</div>
 		<div class="pi-field">
-			<label for="preset-version" class="pi-label">Version</label>
+			<label for="preset-version" class="pi-label">{i18n.t('pi.version')}</label>
 			<input
 				id="preset-version"
 				type="text"
 				value={meta?.version ?? ''}
 				oninput={(e) => set('version', (e.target as HTMLInputElement).value)}
-				placeholder="e.g. 2.1"
+				placeholder={i18n.t('pi.versionPh')}
 				class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm"
 			/>
 		</div>
 	</div>
 
 	<div class="pi-field">
-		<label for="preset-description" class="pi-label">Description</label>
+		<label for="preset-description" class="pi-label">{i18n.t('pi.description')}</label>
 		<textarea
 			id="preset-description"
 			value={meta?.description ?? ''}
 			oninput={(e) => set('description', (e.target as HTMLTextAreaElement).value)}
 			use:autoResize={260}
-			placeholder="The paragraph that opens Preset Controls. What it does, who it's for, what it expects."
+			placeholder={i18n.t('pi.descPh')}
 			class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm resize-none"
 		></textarea>
 	</div>
 
 	<div class="pi-field">
-		<label for="preset-written-for" class="pi-label">Written against</label>
+		<label for="preset-written-for" class="pi-label">{i18n.t('pi.writtenFor')}</label>
 		<input
 			id="preset-written-for"
 			type="text"
 			value={meta?.writtenFor ?? ''}
 			oninput={(e) => set('writtenFor', (e.target as HTMLInputElement).value)}
-			placeholder="e.g. Tuned on Claude Opus at 1.0 temperature, 32k context"
+			placeholder={i18n.t('pi.writtenForPh')}
 			class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm"
 		/>
 		<p class="pi-hint">
