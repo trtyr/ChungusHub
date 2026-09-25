@@ -432,9 +432,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	<p class="legal">
 		{i18n.t('ab.legalA')}
 		<a href={LINKS.license} target="_blank" rel="noopener noreferrer">AGPL-3.0</a>{i18n.t('ab.legalB')}<a href={LINKS.repo} target="_blank" rel="noopener noreferrer">GitHub</a>{i18n.t('ab.legalC')}
-		{i18n.t('ab.legalD2')}
-		<a href={LINKS.fontLicense} target="_blank" rel="noopener noreferrer">SIL Open Font License</a>,
-		{i18n.t('ab.legalD')}
+		<a href={LINKS.fontLicense} target="_blank" rel="noopener noreferrer">SIL Open Font License</a>{i18n.t('ab.legalD')}
 		<a href={LINKS.soundCredits} target="_blank" rel="noopener noreferrer">Creative Commons</a>{i18n.t('ab.legalE')}
 	</p>
 </div>

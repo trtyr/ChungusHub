@@ -62,7 +62,7 @@
 			>
 				<Icon name={command.icon} class="w-4 h-4" />
 				<span class="command-name">
-					/{command.name}{#if command.arg}<span class="command-arg">&nbsp;{command.arg.label}</span
+					/{command.name}{#if command.arg}<span class="command-arg">&nbsp;{i18n.t(command.arg.label)}</span
 						>{/if}
 				</span>
 				<span class="command-describe" class:command-describe--warn={refused !== null}>

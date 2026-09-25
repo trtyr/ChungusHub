@@ -309,14 +309,14 @@
 		}
 		for (const { field, label } of TIMED) {
 			const v = entry[field];
-			if (v) parts.push(`${label.toLowerCase()} ${v}`);
+			if (v) parts.push(`${i18n.t(label).toLowerCase()} ${v}`);
 		}
-		if (entry.group?.trim()) parts.push(`group ${entry.group.trim()}`);
+		if (entry.group?.trim()) parts.push(i18n.t('ler.advGroup', { g: entry.group.trim() }));
 		if (atDepth) {
 			const d = entry.depth ?? DEFAULT_LOREBOOK_DEPTH;
-			parts.push(d === 0 ? 'in the chat after the last turn' : `in the chat, ${d} back`);
+			parts.push(d === 0 ? i18n.t('ler.advDepth0') : i18n.t('ler.advDepthN', { d }));
 		} else if (foreignPosition) {
-			parts.push('SillyTavern placement');
+			parts.push(i18n.t('ler.advStPlacement'));
 		}
 		return parts.join(' · ');
 	});
