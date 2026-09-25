@@ -172,7 +172,7 @@
 	<header class="panel-head">
 		<div class="title-wrap">
 			<Icon name="wrench" class="w-4 h-4" strokeWidth={1.75} />
-			<h2 class="title">Prompt Debug</h2>
+			<h2 class="title">{i18n.t('dbg.title')}</h2>
 			<span class="count-chip">{entries.length}</span>
 		</div>
 		<div class="head-actions">
@@ -197,7 +197,7 @@
 	</header>
 
 	{#if promptLogStore.error}
-		<div class="banner error">Couldn't load the shared log: {promptLogStore.error}</div>
+		<div class="banner error">{i18n.t('dbg.loadFail', { error: promptLogStore.error ?? '' })}</div>
 	{/if}
 	{#if promptLogStore.large}
 		<div class="banner warn">{i18n.t('dp.largeLog', { n: entries.length })}</div>
@@ -484,7 +484,7 @@
 <ImageLightbox
 	{images}
 	bind:index={viewerIndex}
-	alt="Attachment sent with this request"
+	alt={i18n.t('dbg.attachAlt')}
 	onClose={() => (viewerIndex = null)}
 />
 
