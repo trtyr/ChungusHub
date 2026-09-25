@@ -12,6 +12,7 @@
 	 * No format logic lives here. The header is read by the format module and the tree is built
 	 * by `chatStore.importSillyTavernChat`, the same call the folder importer makes.
 	 */
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Dialog from '$lib/components/ui/Dialog.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
@@ -104,7 +105,7 @@
 					imported++;
 					continue;
 				}
-				failed.push(`${row.file.name}: no importable messages`);
+				failed.push(`${row.file.name}: ${i18n.t('impc.noMessages')}`);
 				kept.push(row);
 			} catch (e) {
 				failed.push(`${row.file.name}: ${reason(e)}`);
@@ -122,7 +123,7 @@
 			// The imported chats sort by when they were actually played, so a story from months
 			// ago lands well down a list the reader is not even looking at while this dialog is
 			// open. That is the toast channel's own case: a count the screen does not show.
-			toastStore.success(`Imported ${imported} chat${imported === 1 ? '' : 's'}`);
+			toastStore.success(i18n.t('imp.importedToast', { n: imported }));
 			onClose();
 		}
 	}
@@ -132,16 +133,16 @@
 	}
 </script>
 
-<Dialog open={true} onClose={requestClose} title="Import chats" size="md">
+<Dialog open={true} onClose={requestClose} title={i18n.t('impc.dialogTitle')} size="md">
 	{#if reading}
 		<div class="loading">
 			<Spinner size="sm" />
-			<span>Reading the files…</span>
+			<span>{i18n.t('impc.reading')}</span>
 		</div>
 	{:else}
 		{#if rows.length > 0}
 			<p class="lead">
-				Each file lands on <strong>{target}</strong> as its own chat, its swipes kept as branches.
+				{i18n.t('imp.lead', { target })}
 			</p>
 
 			<ul class="rows">
@@ -157,8 +158,7 @@
 
 			{#if strays > 0}
 				<p class="note is-stray">
-					{strays === 1 ? 'One file was' : `${strays} files were`} played with a different character.
-					{strays === 1 ? 'It still lands' : 'They still land'} on {target}.
+					{i18n.t('imp.strays', { n: strays, target })}
 				</p>
 			{/if}
 		{/if}
@@ -166,9 +166,7 @@
 		{#if problems.length > 0}
 			<div class="failures">
 				<span class="failures-head">
-					{problems.length}
-					{problems.length === 1 ? 'file' : 'files'} did not come over
-					{#if imported > 0}, {imported} did{/if}
+					{i18n.t('imp.failures', { n: problems.length, ok: imported > 0 ? i18n.t('imp.someDid', { n: imported }) : '' })}
 				</span>
 				<ul>
 					<!-- Keyed by position: two files can carry the same name and the same reason,
@@ -182,11 +180,11 @@
 
 		<div class="actions">
 			<Button variant="ghost" onclick={requestClose} disabled={busy}>
-				{rows.length === 0 ? 'Close' : 'Cancel'}
+				{rows.length === 0 ? i18n.t('common.close') : i18n.t('common.cancel')}
 			</Button>
 			{#if rows.length > 0}
 				<Button variant="primary" onclick={runImport} disabled={busy}>
-					{busy ? 'Importing…' : `Import ${rows.length} chat${rows.length === 1 ? '' : 's'}`}
+					{busy ? i18n.t('impc.importing') : i18n.t('imp.importN', { n: rows.length })}
 				</Button>
 			{/if}
 		</div>
@@ -208,10 +206,6 @@
 		font-size: 0.82rem;
 		line-height: 1.5;
 		color: var(--color-text-secondary);
-	}
-
-	.lead strong {
-		color: var(--color-text-primary);
 	}
 
 	.rows {

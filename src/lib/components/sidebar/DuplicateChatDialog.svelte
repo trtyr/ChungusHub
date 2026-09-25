@@ -5,6 +5,7 @@
 	 * without asking anything (see ChatsView.handleDuplicate).
 	 */
 	import Dialog from '$lib/components/ui/Dialog.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import type { ChatMemoryFootprint } from '$lib/types/chat';
@@ -25,37 +26,34 @@
 	// is usually larger; saying "across every branch" is what keeps the two from reading as
 	// the same figure disagreeing with itself.
 	let summary = $derived(
-		footprint.episodes > 0
-			? `${footprint.episodes} scene summar${footprint.episodes === 1 ? 'y' : 'ies'} across every branch`
-			: ''
+		footprint.episodes > 0 ? i18n.t('dup.summary', { n: footprint.episodes }) : ''
 	);
 </script>
 
-<Dialog {open} onClose={onCancel} title="Duplicate chat" size="md">
+<Dialog {open} onClose={onCancel} title={i18n.t('dup.title')} size="md">
 	<p class="dup-lead">
-		<strong>{title}</strong> will be copied whole: every message, every branch and swipe, its
-		labels and its canon path. The copy is independent from here on.
+		{i18n.t('dup.lead', { name: title })}
 	</p>
 
 	<div class="dup-memory">
 		<div class="dup-memory-head">
 			<Icon name="brain" class="w-4 h-4" />
-			<span>This chat remembers things</span>
+			<span>{i18n.t('dup.hasMemory')}</span>
 		</div>
 		<p class="dup-memory-body">
 			{#if summary}
-				Its memory holds {summary}{footprint.enabled ? '' : ' (currently switched off)'}.
+				{i18n.t('dup.memoryHolds', { summary })}{footprint.enabled ? '' : i18n.t('dup.memoryOff')}{i18n.t('dup.period')}
 			{:else}
-				Memory is switched on but hasn't recorded anything yet.
+				{i18n.t('dup.memoryEmpty')}
 			{/if}
-			Carry it over, or start the copy with a clean slate?
+			{i18n.t('dup.question')}
 		</p>
 	</div>
 
 	<div class="dup-actions">
-		<Button variant="ghost" onclick={onCancel} disabled={busy}>Cancel</Button>
-		<Button variant="secondary" onclick={() => onConfirm(false)} disabled={busy}>Story only</Button>
-		<Button variant="primary" onclick={() => onConfirm(true)} disabled={busy}>Copy with memory</Button>
+		<Button variant="ghost" onclick={onCancel} disabled={busy}>{i18n.t('common.cancel')}</Button>
+		<Button variant="secondary" onclick={() => onConfirm(false)} disabled={busy}>{i18n.t('dup.storyOnly')}</Button>
+		<Button variant="primary" onclick={() => onConfirm(true)} disabled={busy}>{i18n.t('dup.withMemory')}</Button>
 	</div>
 </Dialog>
 
@@ -65,10 +63,6 @@
 		font-size: 0.85rem;
 		line-height: 1.5;
 		color: var(--color-text-secondary);
-	}
-
-	.dup-lead strong {
-		color: var(--color-text-primary);
 	}
 
 	.dup-memory {
