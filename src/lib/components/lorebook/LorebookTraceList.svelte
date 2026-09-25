@@ -111,7 +111,7 @@
 							<span class="lt-dot" aria-hidden="true"></span>
 							<div class="lt-body">
 								<p class="lt-head">
-									<span class="lt-title">{record.title || 'Untitled entry'}</span>
+									<span class="lt-title">{record.title || i18n.t('lbw.untitledEntry')}</span>
 									<span class="lt-book">
 										<Icon name="bookOpen" class="w-3 h-3" strokeWidth={1.6} />
 										{record.bookName}

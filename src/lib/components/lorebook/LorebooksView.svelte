@@ -136,7 +136,7 @@
 		if (cached && cached.stamp === book.updatedAt) return cached.text;
 		// The fallback name is searchable too, or the one word an unnamed book is listed
 		// under is the one word that cannot find it.
-		const parts = [book.name || 'Untitled lorebook'];
+		const parts = [book.name || i18n.t('lbw.untitledLorebook')];
 		for (const entry of book.entries) {
 			if (entry.comment) parts.push(entry.comment);
 			parts.push(...entry.key, ...entry.keysecondary);
@@ -656,14 +656,14 @@
 				>
 					<Icon name="close" class="w-4 h-4" />
 				</button>
-				<span class="brw-bulk-count"><b>{selected.length}</b> selected</span>
+				<span class="brw-bulk-count"><b>{selected.length}</b> {i18n.t('clv.selected')}</span>
 				<button
 					type="button"
 					class="brw-bulk-link"
 					onclick={() => (selectedIds = new Set([...selectedIds, ...visible.map((b) => b.id)]))}
 					disabled={allVisibleSelected}
 				>
-					All ({visible.length})
+					{i18n.t('clv.allN', { n: visible.length })}
 				</button>
 				<button
 					type="button"
@@ -825,10 +825,7 @@
 	{#if totalPages > 1}
 		<div class="brw-pager">
 			<span class="brw-pager-count">
-				Showing {(safePage - 1) * lorebookViewPrefs.perPage + 1}-{Math.min(
-					safePage * lorebookViewPrefs.perPage,
-					visible.length
-				)} of {visible.length}
+				{i18n.t('clv.showingOf', { a: (safePage - 1) * lorebookViewPrefs.perPage + 1, b: Math.min(safePage * lorebookViewPrefs.perPage, visible.length), m: visible.length })}
 			</span>
 			<LibraryPager page={safePage} {totalPages} onPage={(p) => (currentPage = p)} />
 		</div>

@@ -376,7 +376,7 @@
 				aria-expanded={expanded}
 			>
 				<span class="lbr-title" class:is-untitled={!entry.comment}>
-					{entry.comment || 'Untitled entry'}
+					{entry.comment || i18n.t('lbw.untitledEntry')}
 				</span>
 				{#if entry.constant}
 					<span class="lbr-sub lbr-sub-always">{i18n.t('ler.alwaysActive')}</span>

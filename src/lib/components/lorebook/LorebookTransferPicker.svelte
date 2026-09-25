@@ -38,7 +38,7 @@
 	let visible = $derived.by(() => {
 		const q = foldForSearch(query.trim());
 		if (!q) return books;
-		return books.filter((book) => foldForSearch(book.name || 'Untitled lorebook').includes(q));
+		return books.filter((book) => foldForSearch(book.name || i18n.t('lbw.untitledLorebook')).includes(q));
 	});
 
 	// Escape clears an active search before it bubbles up and closes the popover.
@@ -92,7 +92,7 @@
 		{#each visible as book (book.id)}
 			<button type="button" class="lbt-row" onclick={() => onPick(book.id)}>
 				<Icon name="bookOpen" class="w-3.5 h-3.5 text-text-muted flex-shrink-0" />
-				<span class="lbt-name">{book.name || 'Untitled lorebook'}</span>
+				<span class="lbt-name">{book.name || i18n.t('lbw.untitledLorebook')}</span>
 				<!-- Landing in a book that is in every chat is what that press really does, so the
 				     row says it here as well as on the shelf. -->
 				{#if book.global}

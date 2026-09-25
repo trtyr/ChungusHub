@@ -33,7 +33,7 @@
 	}: Props = $props();
 
 	let cover = $derived(imageService.thumbnailUrl(book.cover));
-	let name = $derived(book.name || 'Untitled lorebook');
+	let name = $derived(book.name || i18n.t('lbw.untitledLorebook'));
 
 	function press() {
 		if (selectionMode) onToggleSelect?.(book.id);

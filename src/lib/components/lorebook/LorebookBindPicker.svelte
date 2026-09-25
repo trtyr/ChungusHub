@@ -67,7 +67,7 @@
 		return entries
 			.map((entry) => ({
 				id: entry.id,
-				name: entry.identity.name?.trim() || 'Unnamed',
+				name: entry.identity.name?.trim() || i18n.t('sb.unnamed'),
 				bound: entry.data.lorebookIds?.includes(bookId) ?? false,
 				thumb: imageService.thumbnailUrl(entry.identity.imageUrl),
 				focus: portraitFocusStyle(entry.identity.portraitFocus)
@@ -98,7 +98,7 @@
 			// somebody is binding a book for is almost always one they were just in.
 			rows: chatStore.sortedChats.map((chat) => ({
 				id: chat.id,
-				name: chat.title?.trim() || 'Untitled chat',
+				name: chat.title?.trim() || i18n.t('lbw.untitledChat'),
 				bound: chatLorebookClaim(chat).includes(bookId)
 			})),
 			toggle: toggleChat

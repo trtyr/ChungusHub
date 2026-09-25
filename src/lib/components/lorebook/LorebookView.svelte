@@ -97,7 +97,7 @@
 	let carriers = $derived([
 		...linked.map((en) => ({
 			id: en.id,
-			name: en.identity.name || 'Unnamed',
+			name: en.identity.name || i18n.t('sb.unnamed'),
 			icon: en.type === 'persona' ? ('user' as const) : ('users' as const),
 			// Aimed by the card's own framing, like every cover-fit portrait in the app.
 			thumb: imageService.thumbnailUrl(en.identity.imageUrl),

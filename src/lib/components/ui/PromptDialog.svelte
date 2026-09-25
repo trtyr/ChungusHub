@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Dialog from './Dialog.svelte';
 	import Button from './Button.svelte';
 
@@ -16,12 +17,12 @@
 
 	let {
 		open,
-		title = 'Enter a value',
+		title = i18n.t('ui.enterValue'),
 		label,
 		value = '',
 		placeholder = '',
-		confirmLabel = 'OK',
-		cancelLabel = 'Cancel',
+		confirmLabel = i18n.t('ui.ok'),
+		cancelLabel = i18n.t('common.cancel'),
 		onConfirm,
 		onCancel
 	}: Props = $props();

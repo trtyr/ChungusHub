@@ -704,7 +704,7 @@
 									<span class="pb-role-full">{roleLabels[item.role]}</span>
 									<span class="pb-role-abbr" aria-hidden="true">{roleLabels[item.role][0]}</span>
 								</span>
-								<span class="pb-name">{item.name || 'Untitled'}</span>
+								<span class="pb-name">{item.name || i18n.t('clv.untitled')}</span>
 								<span class="pb-tokens">
 									{breakdown.total.toLocaleString()}{#if showExpandedTokens && breakdown.macroTokens > 0}<em>+{breakdown.macroTokens.toLocaleString()}</em>{/if}
 								</span>

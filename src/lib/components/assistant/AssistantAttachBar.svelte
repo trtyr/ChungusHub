@@ -102,7 +102,7 @@
 						kind: 'entry',
 						refId: e.id,
 						entryType: e.type,
-						label: e.identity.name || 'Untitled',
+						label: e.identity.name || i18n.t('clv.untitled'),
 						imageUrl: imageService.thumbnailUrl(e.identity.imageUrl) ?? undefined
 					}) as AssistantAttachment
 			)

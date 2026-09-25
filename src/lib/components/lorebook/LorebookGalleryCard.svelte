@@ -40,7 +40,7 @@
 	}: Props = $props();
 
 	let cover = $derived(imageService.thumbnailUrl(book.cover));
-	let name = $derived(book.name || 'Untitled lorebook');
+	let name = $derived(book.name || i18n.t('lbw.untitledLorebook'));
 	let count = $derived(book.entries.length);
 
 	function press() {

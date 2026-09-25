@@ -119,7 +119,7 @@
 		const entryId = workspaceFocus.entryId;
 		if (entryId) {
 			const entry = characterLibraryStore.entries.find((e) => e.id === entryId);
-			if (entry) return { kind: 'entry', refId: entry.id, entryType: entry.type, label: entry.identity.name || 'Untitled' };
+			if (entry) return { kind: 'entry', refId: entry.id, entryType: entry.type, label: entry.identity.name || i18n.t('clv.untitled') };
 		}
 		// 3) The lorebook open in the Lorebook view, the same "what is open in the editor"
 		//    band as the entry. The entry outranks it: the two only coexist when a LOCKED

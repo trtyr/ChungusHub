@@ -999,7 +999,7 @@
 					onclick={selectAllVisible}
 					disabled={allVisibleSelected}
 				>
-					All ({visibleChats.length})
+					{i18n.t('clv.allN', { n: visibleChats.length })}
 				</button>
 				<button
 					type="button"

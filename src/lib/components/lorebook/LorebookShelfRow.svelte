@@ -122,7 +122,7 @@
 					? 'font-medium text-text-primary'
 					: 'italic text-text-muted'}"
 			>
-				{book.name || 'Untitled lorebook'}
+				{book.name || i18n.t('lbw.untitledLorebook')}
 			</span>
 			{#if book.global}
 				<LorebookGlobalBadge />

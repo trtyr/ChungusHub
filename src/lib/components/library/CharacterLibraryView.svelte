@@ -1013,7 +1013,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					onclick={selectAllFiltered}
 					disabled={allFilteredSelected}
 				>
-					All ({processedEntries.length})
+					{i18n.t('clv.allN', { n: processedEntries.length })}
 				</button>
 				<button
 					type="button"
@@ -1338,7 +1338,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						<input type="checkbox" bind:checked={item.importBook} class="mt-1" />
 						<span class="min-w-0">
 							<span class="block text-sm font-medium text-text-primary truncate">
-								{item.result.character.name || 'Unnamed character'}
+								{item.result.character.name || i18n.t('setup.unnamedPersona')}
 							</span>
 							<span class="block text-xs text-text-secondary truncate">
 								{item.result.lorebook?.name || 'Lorebook'} · {item.result.lorebook?.entries.length ?? 0} entries

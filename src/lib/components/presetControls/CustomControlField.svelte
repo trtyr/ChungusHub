@@ -133,7 +133,7 @@
 	<div class="pcf-head" class:pcf-head--inline={control.type === 'toggle'}>
 		<div class="pcf-head-text">
 			<span class="pcf-label-row">
-				<span class="pcf-label">{control.label || 'Untitled'}</span>
+				<span class="pcf-label">{control.label || i18n.t('clv.untitled')}</span>
 				<!-- Help sits next to the name it explains, and stays folded away unless the
 				     author asked for it on the card. -->
 				{#if help && !control.helpInline}
@@ -161,7 +161,7 @@
 			{/if}
 		</div>
 		{#if control.type === 'toggle'}
-			<Toggle checked={value as boolean} onchange={onChange} label={control.label || 'Untitled'} />
+			<Toggle checked={value as boolean} onchange={onChange} label={control.label || i18n.t('clv.untitled')} />
 		{/if}
 	</div>
 
@@ -189,7 +189,7 @@
 				max={track.max}
 				step={track.step}
 				value={value as number}
-				aria-label={control.label || 'Untitled'}
+				aria-label={control.label || i18n.t('clv.untitled')}
 				oninput={(e) => onChange(Number((e.target as HTMLInputElement).value))}
 				use:rangeReset={{ defaultValue: baselineValue as number, apply: (v) => onChange(v) }}
 				class="flex-1 h-2 bg-bg-tertiary rounded-lg appearance-none cursor-pointer accent-accent"
@@ -226,9 +226,9 @@
 			<span class="pcf-slider-value">{range[0]} to {range[1]}</span>
 		</div>
 	{:else if control.type === 'select'}
-		<Select value={value as string} onchange={(e) => onChange((e.target as HTMLSelectElement).value)} aria-label={control.label || 'Untitled'}>
+		<Select value={value as string} onchange={(e) => onChange((e.target as HTMLSelectElement).value)} aria-label={control.label || i18n.t('clv.untitled')}>
 			{#each control.options ?? [] as option (option.id)}
-				<option value={option.id}>{option.label || 'Untitled'}</option>
+				<option value={option.id}>{option.label || i18n.t('clv.untitled')}</option>
 			{/each}
 		</Select>
 		{#if selectedOption?.description}
@@ -244,7 +244,7 @@
 					class:is-selected={selected}
 					onclick={() => onChange(option.id)}
 				>
-					<span class="pcf-radio-label">{option.label || 'Untitled'}</span>
+					<span class="pcf-radio-label">{option.label || i18n.t('clv.untitled')}</span>
 					{#if optionsCarryReasons}
 						<span class="pcf-radio-note">{option.description ?? ''}</span>
 					{/if}
@@ -262,7 +262,7 @@
 					title={option.description}
 					onclick={() => toggleTag(option.id)}
 				>
-					{option.label || 'Untitled'}
+					{option.label || i18n.t('clv.untitled')}
 				</button>
 			{/each}
 			<!-- The reader's own entries sit in the same row as the author's suggestions,

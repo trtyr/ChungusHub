@@ -27,7 +27,7 @@
 		try {
 			await messageStore.setChatPersona(chatId, personaId);
 			const name = personaId
-				? personas.find((p) => p.id === personaId)?.identity.name?.trim() || 'Unnamed persona'
+				? personas.find((p) => p.id === personaId)?.identity.name?.trim() || i18n.t('lib.unnamedPersona')
 				: null;
 			toastStore.success(name ? i18n.t('t.relabelNow', { name }) : i18n.t('t.relabelYou'));
 			onClose();
@@ -96,7 +96,7 @@
 						<Icon name="user" class="w-4 h-4" />
 					{/if}
 				</span>
-				<span class="persona-name">{persona.identity.name?.trim() || 'Unnamed persona'}</span>
+				<span class="persona-name">{persona.identity.name?.trim() || i18n.t('lib.unnamedPersona')}</span>
 				{#if currentPersonaId === persona.id}
 					<span class="persona-check"><Icon name="check" class="w-3.5 h-3.5" /></span>
 				{/if}

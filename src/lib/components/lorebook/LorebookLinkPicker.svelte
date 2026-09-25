@@ -46,7 +46,7 @@
 	let visible = $derived.by(() => {
 		const q = foldForSearch(query.trim());
 		if (!q) return ordered;
-		return ordered.filter((book) => foldForSearch(book.name || 'Untitled lorebook').includes(q));
+		return ordered.filter((book) => foldForSearch(book.name || i18n.t('lbw.untitledLorebook')).includes(q));
 	});
 
 	function toggle(id: string) {
@@ -117,7 +117,7 @@
 					<span class="lbp-book-icon">
 						<Icon name="bookOpen" class="w-3.5 h-3.5" />
 					</span>
-					<span class="lbp-name">{book.name || 'Untitled lorebook'}</span>
+					<span class="lbp-name">{book.name || i18n.t('lbw.untitledLorebook')}</span>
 					<!-- Says why linking this one changes nothing: it is already in every chat, so
 					     the row would otherwise read as a link that did not take. -->
 					{#if book.global}
