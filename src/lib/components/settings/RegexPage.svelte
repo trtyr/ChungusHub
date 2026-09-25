@@ -158,7 +158,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		input.value = '';
 		if (!file) return;
 		try {
-			if (file.size > 2 * 1024 * 1024) throw new Error('Rule files must be smaller than 2 MB.');
+			if (file.size > 2 * 1024 * 1024) throw new Error(i18n.t('rx.fileTooBig'));
 			const imported = parseRegexRulesImport(await file.text());
 			regexRulesStore.importRules(imported);
 			toastStore.success(i18n.t('t.importedRules', { n: imported.length }));

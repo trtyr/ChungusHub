@@ -73,7 +73,7 @@
 		input.value = '';
 		if (!file) return;
 		try {
-			if (file.size > 2 * 1024 * 1024) throw new Error('Rule files must be smaller than 2 MB.');
+			if (file.size > 2 * 1024 * 1024) throw new Error(i18n.t('rx.fileTooBig'));
 			const imported = parseRegexRulesImport(await file.text());
 			set([...rules, ...imported]);
 			toastStore.success(i18n.t('t.addedRules', { n: imported.length }));

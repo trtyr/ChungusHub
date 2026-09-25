@@ -215,7 +215,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				? 'No models. Is the server running with a model loaded?'
 				: status === 'valid'
 					? 'No models returned by the provider.'
-					: 'Add your API key to load models.'
+					: i18n.t('ce.addKeyToLoad')
 	);
 
 	onMount(() => {

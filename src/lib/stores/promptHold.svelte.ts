@@ -16,6 +16,7 @@
  *
  * Which gates are armed rides the settings sync spine, so a device agrees with the rest.
  */
+import { i18n } from '$lib/i18n/i18n.svelte';
 import { readSetting, writeSetting, registerSettingsReload } from '$lib/services/syncedSetting';
 import { HOLD_GATES, holdGateById, type HoldGate, type HoldGateDef } from '$lib/config/prompt-hold';
 import type { CallTarget, LLMMessage } from '$lib/types/llm';
@@ -87,7 +88,7 @@ class PromptHoldStore {
 		// One request at a time by construction: every gate's caller is already behind a
 		// busy guard, and the review is modal. Two would leave the first one's promise
 		// with nothing left to resolve it.
-		if (this.pending) throw new Error('A prompt is already waiting for review.');
+		if (this.pending) throw new Error(i18n.t('ph.alreadyWaiting'));
 		return new Promise<LLMMessage[] | null>((resolve) => {
 			this.settle = resolve;
 			this.pending = { id: crypto.randomUUID(), gate: holdGateById(gate), target, messages };

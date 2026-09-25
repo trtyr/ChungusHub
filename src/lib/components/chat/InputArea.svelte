@@ -165,7 +165,7 @@
 		menuOpen = false;
 		if (messageStore.warnIfBusy()) return;
 		const entry = activeCharacterEntry;
-		if (!entry) throw new Error('New chat: this story has no library character');
+		if (!entry) throw new Error(i18n.t('chat.newNoCharacter'));
 		void chatStore.createChat({ characterId: entry.id });
 	}
 

@@ -252,7 +252,7 @@ class CharacterLibraryStore {
 	 */
 	async addSprites(id: string, items: { file: File; label: string }[]): Promise<string[]> {
 		const entry = this.getEntryById(id);
-		if (!entry) throw new Error('That entry no longer exists.');
+		if (!entry) throw new Error(i18n.t('lib.entryGone'));
 		if (items.length === 0) return [];
 
 		const sprites = [...(entry.identity.sprites ?? [])];
@@ -280,13 +280,13 @@ class CharacterLibraryStore {
 	/** Rename one sprite. The picture and its place in the list stay exactly where they are. */
 	async setSpriteLabel(id: string, path: string, label: string): Promise<void> {
 		const entry = this.getEntryById(id);
-		if (!entry) throw new Error('That entry no longer exists.');
+		if (!entry) throw new Error(i18n.t('lib.entryGone'));
 		const existing = entry.identity.sprites ?? [];
 		if (!existing.some((sprite) => sprite.path === path)) {
-			throw new Error('That picture is not one of this character’s sprites.');
+			throw new Error(i18n.t('lib.notSprite'));
 		}
 		const clean = normalizeSpriteLabel(label);
-		if (!clean) throw new Error('A sprite needs a label.');
+		if (!clean) throw new Error(i18n.t('lib.spriteLabel'));
 		if (findLabelConflict(existing, clean, path)) {
 			throw new Error(`Another sprite is already “${clean}”.`);
 		}
@@ -317,9 +317,9 @@ class CharacterLibraryStore {
 	/** Choose which sprite stands in before the engine has read anything. */
 	async setDefaultSprite(id: string, path: string): Promise<void> {
 		const entry = this.getEntryById(id);
-		if (!entry) throw new Error('That entry no longer exists.');
+		if (!entry) throw new Error(i18n.t('lib.entryGone'));
 		if (!(entry.identity.sprites ?? []).some((sprite) => sprite.path === path)) {
-			throw new Error('Only a sprite can be the default.');
+			throw new Error(i18n.t('lib.onlySpriteDefault'));
 		}
 		entry.identity = { ...entry.identity, defaultSprite: path };
 		await this.persistEntry(entry);
@@ -519,7 +519,7 @@ class CharacterLibraryStore {
 			}
 			// An export without an active mark is malformed, so surface it instead of
 			// guessing which variant the character should be on.
-			if (!activeId) throw new Error('Import file marks no active character version.');
+			if (!activeId) throw new Error(i18n.t('lib.noActiveVersion'));
 			entry.activeVersionId = activeId;
 			entry.data = this.clone(this.getVersion(activeId)!.data);
 			await this.persistEntry(entry);
@@ -599,7 +599,7 @@ class CharacterLibraryStore {
 	 *  server mirrors the save into the active row) and write at once. */
 	async updateData(id: string, updates: LibraryDataUpdate): Promise<void> {
 		const entry = this.getEntryById(id);
-		if (!entry) throw new Error('That entry no longer exists.');
+		if (!entry) throw new Error(i18n.t('lib.entryGone'));
 		entry.data = this.mergeData(entry.data, updates);
 		await this.persistEntry(entry);
 	}
@@ -609,7 +609,7 @@ class CharacterLibraryStore {
 	 *  story and where it is sent are not properties of one variant of the character. */
 	async setChatDefault(id: string, key: ChatDefaultKey, value: string | null): Promise<void> {
 		const entry = this.getEntryById(id);
-		if (!entry) throw new Error('That entry no longer exists.');
+		if (!entry) throw new Error(i18n.t('lib.entryGone'));
 		if (value) entry[key] = value;
 		else delete entry[key];
 		await this.persistEntry(entry);
@@ -654,7 +654,7 @@ class CharacterLibraryStore {
 	 *  the centred default is stored as nothing, so an untouched entry keeps a bare row. */
 	async setPortraitFocus(id: string, focus: PortraitFocus | null): Promise<void> {
 		const entry = this.getEntryById(id);
-		if (!entry) throw new Error('That entry no longer exists.');
+		if (!entry) throw new Error(i18n.t('lib.entryGone'));
 		const next = focus ? clampPortraitFocus(focus) : null;
 		entry.identity = {
 			...this.clone(entry.identity),
@@ -737,7 +737,7 @@ class CharacterLibraryStore {
 	 */
 	async convertEntry(id: string, description: string): Promise<LibraryEntry> {
 		const source = this.getEntryById(id);
-		if (!source) throw new Error('That entry no longer exists.');
+		if (!source) throw new Error(i18n.t('lib.entryGone'));
 		const type: LibraryEntryType = source.type === 'character' ? 'persona' : 'character';
 
 		// The new entry owns its art outright, like every other entry: a shared path would

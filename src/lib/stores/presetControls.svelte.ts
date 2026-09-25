@@ -14,6 +14,7 @@
  * from value-matching, because a matched-derived selection collapses the moment one
  * knob moves and leaves "reset" pointing at two different configurations at once.
  */
+import { i18n } from '$lib/i18n/i18n.svelte';
 import { db } from '$lib/services/database';
 import { presetService } from '$lib/services/presets.svelte';
 
