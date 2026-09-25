@@ -4,6 +4,7 @@
   room and stack in a tight dock, so nothing ever cramps at 360px.
 -->
 <script lang="ts">
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import Select from '$lib/components/ui/Select.svelte';
 	import Toggle from '$lib/components/ui/Toggle.svelte';
@@ -103,20 +104,20 @@
 	<div class="ce-grid">
 		<!-- Label -->
 		<div class="ce-field">
-			<label for="ctrl-label-{control.id}" class="ce-label">Label</label>
+			<label for="ctrl-label-{control.id}" class="ce-label">{i18n.t('ce2.label')}</label>
 			<input
 				id="ctrl-label-{control.id}"
 				type="text"
 				value={control.label}
 				oninput={(e) => update({ label: (e.target as HTMLInputElement).value })}
-				placeholder="Shown in Preset Controls"
+				placeholder={i18n.t('ce2.labelPh')}
 				class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm"
 			/>
 		</div>
 
 		<!-- Macro -->
 		<div class="ce-field">
-			<label for="ctrl-macro-{control.id}" class="ce-label">Macro</label>
+			<label for="ctrl-macro-{control.id}" class="ce-label">{i18n.t('ce2.macro')}</label>
 			<div class="ce-macro-row">
 				<span class="ce-brace">{'{{'}</span>
 				<input
@@ -136,7 +137,7 @@
 
 		<!-- Type -->
 		<div class="ce-field">
-			<label for="ctrl-type-{control.id}" class="ce-label">Type</label>
+			<label for="ctrl-type-{control.id}" class="ce-label">{i18n.t('ce2.type')}</label>
 			<Select
 				id="ctrl-type-{control.id}"
 				value={control.type}
@@ -159,7 +160,7 @@
 				list="ctrl-sections-{control.id}"
 				value={control.group ?? ''}
 				oninput={(e) => update({ group: (e.target as HTMLInputElement).value })}
-				placeholder="Heading in Preset Controls"
+				placeholder={i18n.t('ce2.headingPh')}
 				class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm"
 			/>
 			<datalist id="ctrl-sections-{control.id}">
@@ -173,13 +174,13 @@
 	<!-- Help. Multi-line: what an author wants to say is usually a paragraph, and the
 	     reader's card keeps the line breaks. -->
 	<div class="ce-field">
-		<label for="ctrl-help-{control.id}" class="ce-label">Help text <span class="ce-optional">(optional)</span></label>
+		<label for="ctrl-help-{control.id}" class="ce-label">{i18n.t('ce2.helpText')} <span class="ce-optional">{i18n.t('ce2.optional')}</span></label>
 		<textarea
 			id="ctrl-help-{control.id}"
 			value={control.help ?? ''}
 			oninput={(e) => update({ help: (e.target as HTMLTextAreaElement).value })}
 			use:autoResize={220}
-			placeholder="Explain what this does for the reader, a sentence or a paragraph"
+			placeholder={i18n.t('ce2.helpPh')}
 			class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm resize-none"
 		></textarea>
 		<!-- Where it is read. Folded away by default, so a section of cards stays scannable
@@ -187,20 +188,20 @@
 		     reader has to meet before they touch it. Offered only once there is prose. -->
 		{#if control.help?.trim()}
 			<div class="ce-inline">
-				<span class="ce-label">Show it on the card</span>
+				<span class="ce-label">{i18n.t('ce2.showOnCard')}</span>
 				<Toggle
 					checked={control.helpInline ?? false}
 					onchange={(v) => update({ helpInline: v || undefined })}
 					label="Show the help text on the card"
 				/>
 			</div>
-			<p class="ce-note">Off, it hides behind an info icon beside the label.</p>
+			<p class="ce-note">{i18n.t('ce2.showNote')}</p>
 		{/if}
 	</div>
 
 	<!-- Standing counsel. The badge readers see beside the label. -->
 	<div class="ce-field">
-		<label for="ctrl-advice-{control.id}" class="ce-label">Advice badge</label>
+		<label for="ctrl-advice-{control.id}" class="ce-label">{i18n.t('ce2.adviceBadge')}</label>
 		<Select
 			id="ctrl-advice-{control.id}"
 			value={control.advice ?? ''}
@@ -220,7 +221,7 @@
 	{#if control.type === 'text' || control.type === 'textarea'}
 		<div class="ce-grid">
 			<div class="ce-field">
-				<label for="ctrl-default-{control.id}" class="ce-label">Default value</label>
+				<label for="ctrl-default-{control.id}" class="ce-label">{i18n.t('ce2.defaultValue')}</label>
 				<input
 					id="ctrl-default-{control.id}"
 					type="text"
@@ -230,7 +231,7 @@
 				/>
 			</div>
 			<div class="ce-field">
-				<label for="ctrl-ph-{control.id}" class="ce-label">Placeholder</label>
+				<label for="ctrl-ph-{control.id}" class="ce-label">{i18n.t('ce2.placeholder')}</label>
 				<input
 					id="ctrl-ph-{control.id}"
 					type="text"
@@ -241,7 +242,7 @@
 			</div>
 		</div>
 		<div class="ce-field">
-			<label for="ctrl-texttmpl-{control.id}" class="ce-label">Inject template <span class="ce-optional">(optional)</span></label>
+			<label for="ctrl-texttmpl-{control.id}" class="ce-label">{i18n.t('ce2.injectTemplate')} <span class="ce-optional">{i18n.t('ce2.optional')}</span></label>
 			<input
 				id="ctrl-texttmpl-{control.id}"
 				type="text"
@@ -257,30 +258,30 @@
 		</div>
 	{:else if control.type === 'toggle'}
 		<div class="ce-inline">
-			<span class="ce-label">Default</span>
+			<span class="ce-label">{i18n.t('ce2.default')}</span>
 			<Toggle checked={control.defaultOn ?? false} onchange={(v) => update({ defaultOn: v })} label="Default state" />
 			<span class="ce-note">{control.defaultOn ? 'On' : 'Off'}</span>
 		</div>
 		<div class="ce-grid">
 			<div class="ce-field">
-				<label for="ctrl-onText-{control.id}" class="ce-label">Inject when ON</label>
+				<label for="ctrl-onText-{control.id}" class="ce-label">{i18n.t('ce2.injectOn')}</label>
 				<textarea
 					id="ctrl-onText-{control.id}"
 					value={control.onText ?? ''}
 					oninput={(e) => update({ onText: (e.target as HTMLTextAreaElement).value })}
 					use:autoResize={200}
-					placeholder="Text added to the prompt when on"
+					placeholder={i18n.t('ce2.onTextPh')}
 					class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm resize-none"
 				></textarea>
 			</div>
 			<div class="ce-field">
-				<label for="ctrl-offText-{control.id}" class="ce-label">Inject when OFF</label>
+				<label for="ctrl-offText-{control.id}" class="ce-label">{i18n.t('ce2.injectOff')}</label>
 				<textarea
 					id="ctrl-offText-{control.id}"
 					value={control.offText ?? ''}
 					oninput={(e) => update({ offText: (e.target as HTMLTextAreaElement).value })}
 					use:autoResize={200}
-					placeholder="Usually left empty"
+					placeholder={i18n.t('ce2.offTextPh')}
 					class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm resize-none"
 				></textarea>
 			</div>
@@ -288,32 +289,32 @@
 	{:else if control.type === 'slider'}
 		<div class="ce-grid ce-grid--nums">
 			<div class="ce-field">
-				<label for="ctrl-min-{control.id}" class="ce-label">Min</label>
+				<label for="ctrl-min-{control.id}" class="ce-label">{i18n.t('ce2.min')}</label>
 				<input id="ctrl-min-{control.id}" type="number" value={control.min ?? 0}
 					oninput={(e) => update({ min: Number((e.target as HTMLInputElement).value) })}
 					class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm" />
 			</div>
 			<div class="ce-field">
-				<label for="ctrl-max-{control.id}" class="ce-label">Max</label>
+				<label for="ctrl-max-{control.id}" class="ce-label">{i18n.t('ce2.max')}</label>
 				<input id="ctrl-max-{control.id}" type="number" value={control.max ?? 100}
 					oninput={(e) => update({ max: Number((e.target as HTMLInputElement).value) })}
 					class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm" />
 			</div>
 			<div class="ce-field">
-				<label for="ctrl-step-{control.id}" class="ce-label">Step</label>
+				<label for="ctrl-step-{control.id}" class="ce-label">{i18n.t('ce2.step')}</label>
 				<input id="ctrl-step-{control.id}" type="number" value={control.step ?? 1}
 					oninput={(e) => update({ step: Number((e.target as HTMLInputElement).value) })}
 					class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm" />
 			</div>
 			<div class="ce-field">
-				<label for="ctrl-defnum-{control.id}" class="ce-label">Default</label>
+				<label for="ctrl-defnum-{control.id}" class="ce-label">{i18n.t('ce2.default')}</label>
 				<input id="ctrl-defnum-{control.id}" type="number" value={control.defaultNumber ?? control.min ?? 0}
 					oninput={(e) => update({ defaultNumber: Number((e.target as HTMLInputElement).value) })}
 					class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm" />
 			</div>
 		</div>
 		<div class="ce-field">
-			<label for="ctrl-tmpl-{control.id}" class="ce-label">Inject template</label>
+			<label for="ctrl-tmpl-{control.id}" class="ce-label">{i18n.t('ce2.injectTemplate')}</label>
 			<input
 				id="ctrl-tmpl-{control.id}"
 				type="text"
@@ -327,19 +328,19 @@
 	{:else if control.type === 'range'}
 		<div class="ce-grid ce-grid--nums">
 			<div class="ce-field">
-				<label for="ctrl-rmin-{control.id}" class="ce-label">Track min</label>
+				<label for="ctrl-rmin-{control.id}" class="ce-label">{i18n.t('ce2.trackMin')}</label>
 				<input id="ctrl-rmin-{control.id}" type="number" value={control.min ?? 0}
 					oninput={(e) => update({ min: Number((e.target as HTMLInputElement).value) })}
 					class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm" />
 			</div>
 			<div class="ce-field">
-				<label for="ctrl-rmax-{control.id}" class="ce-label">Track max</label>
+				<label for="ctrl-rmax-{control.id}" class="ce-label">{i18n.t('ce2.trackMax')}</label>
 				<input id="ctrl-rmax-{control.id}" type="number" value={control.max ?? 100}
 					oninput={(e) => update({ max: Number((e.target as HTMLInputElement).value) })}
 					class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm" />
 			</div>
 			<div class="ce-field">
-				<label for="ctrl-rlow-{control.id}" class="ce-label">Starts at</label>
+				<label for="ctrl-rlow-{control.id}" class="ce-label">{i18n.t('ce2.startsAt')}</label>
 				<input id="ctrl-rlow-{control.id}" type="number" value={rangeDefault[0]}
 					oninput={(e) => setRangeEnd(0, Number((e.target as HTMLInputElement).value))}
 					class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm" />
@@ -352,13 +353,13 @@
 			</div>
 		</div>
 		<div class="ce-field">
-			<label for="ctrl-rstep-{control.id}" class="ce-label">Step</label>
+			<label for="ctrl-rstep-{control.id}" class="ce-label">{i18n.t('ce2.step')}</label>
 			<input id="ctrl-rstep-{control.id}" type="number" value={control.step ?? 1}
 				oninput={(e) => update({ step: Number((e.target as HTMLInputElement).value) })}
 				class="input-base w-40 px-3 py-2 text-text-primary font-ui text-sm" />
 		</div>
 		<div class="ce-field">
-			<label for="ctrl-rtmpl-{control.id}" class="ce-label">Inject template</label>
+			<label for="ctrl-rtmpl-{control.id}" class="ce-label">{i18n.t('ce2.injectTemplate')}</label>
 			<input
 				id="ctrl-rtmpl-{control.id}"
 				type="text"
@@ -375,12 +376,12 @@
 	{:else if control.type === 'select' || control.type === 'radio' || control.type === 'tags'}
 		<div class="ce-field">
 			<div class="ce-inline ce-inline--between">
-				<span class="ce-label">Options</span>
+				<span class="ce-label">{i18n.t('ce2.options')}</span>
 				<button type="button" class="ce-add-option" onclick={addOption}>+ Add option</button>
 			</div>
 			{#if control.type === 'tags'}
 				<div class="ce-field">
-					<label for="ctrl-sep-{control.id}" class="ce-note">Separator between selected texts</label>
+					<label for="ctrl-sep-{control.id}" class="ce-note">{i18n.t('ce2.separator')}</label>
 					<input id="ctrl-sep-{control.id}" type="text" value={control.tagSeparator ?? ', '}
 						oninput={(e) => update({ tagSeparator: (e.target as HTMLInputElement).value })}
 						class="input-base w-40 px-3 py-2 text-text-primary font-ui text-sm" />
@@ -388,7 +389,7 @@
 				<!-- Your list and theirs in one control: suggest the twenty-five you'd ban,
 				     and let them add the one that keeps ruining their story. -->
 				<div class="ce-inline">
-					<span class="ce-label">Let readers add their own</span>
+					<span class="ce-label">{i18n.t('ce2.letReadersAdd')}</span>
 					<Toggle
 						checked={control.allowCustom ?? false}
 						onchange={(v) => update({ allowCustom: v })}
@@ -397,10 +398,10 @@
 				</div>
 				{#if control.allowCustom}
 					<div class="ce-field">
-						<label for="ctrl-custph-{control.id}" class="ce-note">Placeholder for their field</label>
+						<label for="ctrl-custph-{control.id}" class="ce-note">{i18n.t('ce2.custPh')}</label>
 						<input id="ctrl-custph-{control.id}" type="text" value={control.customPlaceholder ?? ''}
 							oninput={(e) => update({ customPlaceholder: (e.target as HTMLInputElement).value })}
-							placeholder="Add your own…"
+							placeholder={i18n.t('pcf.addOwn')}
 							class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm" />
 						<p class="ce-note">
 							What they type is injected exactly as written, alongside your options' texts.
@@ -409,7 +410,7 @@
 				{/if}
 			{/if}
 			{#if (control.options ?? []).length === 0}
-				<p class="ce-note ce-note--italic">No options yet.</p>
+				<p class="ce-note ce-note--italic">{i18n.t('ce2.noOptions')}</p>
 			{:else}
 				<div class="ce-options">
 					{#each control.options ?? [] as option (option.id)}
@@ -418,7 +419,7 @@
 							{#if control.type === 'select' || control.type === 'radio'}
 								<button
 									type="button"
-									title="Make default"
+									title={i18n.t('ce2.makeDefault')}
 									onclick={() => update({ defaultOptionId: option.id })}
 									class="ce-default-radio {control.defaultOptionId === option.id ? 'is-default' : ''}"
 								>
@@ -429,7 +430,7 @@
 							{:else}
 								<button
 									type="button"
-									title="Selected by default"
+									title={i18n.t('ce2.selectedDefault')}
 									onclick={() => toggleDefaultTag(option.id)}
 									class="ce-default-tag {control.defaultOptionIds?.includes(option.id) ? 'is-default' : ''}"
 								>
@@ -441,14 +442,14 @@
 									type="text"
 									value={option.label}
 									oninput={(e) => updateOption(option.id, { label: (e.target as HTMLInputElement).value })}
-									placeholder="Label (shown)"
+									placeholder={i18n.t('ce2.optLabel')}
 									class="input-base w-full px-2.5 py-1.5 text-text-primary font-ui text-sm"
 								/>
 								<input
 									type="text"
 									value={option.injectedText}
 									oninput={(e) => updateOption(option.id, { injectedText: (e.target as HTMLInputElement).value })}
-									placeholder="Injected into prompt"
+									placeholder={i18n.t('ce2.optInject')}
 									class="input-base w-full px-2.5 py-1.5 text-text-primary font-ui text-sm"
 								/>
 								<!-- Why a reader would pick this one. Never reaches the prompt; it is the
@@ -457,11 +458,11 @@
 									type="text"
 									value={option.description ?? ''}
 									oninput={(e) => updateOption(option.id, { description: (e.target as HTMLInputElement).value })}
-									placeholder="Why pick this one? (shown to the reader, never sent)"
+									placeholder={i18n.t('ce2.optWhy')}
 									class="input-base w-full px-2.5 py-1.5 text-text-primary font-ui text-sm ce-option-why"
 								/>
 							</div>
-							<button type="button" class="ce-option-del" title="Remove option" aria-label="Remove option" onclick={() => removeOption(option.id)}>
+							<button type="button" class="ce-option-del" title={i18n.t('ce2.removeOption')} aria-label={i18n.t('ce2.removeOption')} onclick={() => removeOption(option.id)}>
 								<Icon name="trash" class="w-4 h-4" strokeWidth={1.5} />
 							</button>
 						</div>
