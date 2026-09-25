@@ -17,6 +17,7 @@
 	 * read as a fault to go and fix.
 	 */
 	import Icon from './Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	interface Props {
 		/** What this panel decides, named exactly as the panel names it. */
@@ -32,7 +33,7 @@
 
 <p class="chat-override font-ui" role="status">
 	<Icon name="warning" class="w-3.5 h-3.5 shrink-0 chat-override-icon" strokeWidth={1.75} />
-	<span>The open chat overrides {subject}: it uses “{using}”, not “{instead}”.</span>
+	<span>{i18n.t('ui.overrideLine', { subject, using, instead })}</span>
 </p>
 
 <style>

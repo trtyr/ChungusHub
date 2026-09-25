@@ -25,7 +25,7 @@
 	]);
 
 	const LENGTHS = $derived([
-		...WINDOW_CHOICES.map((c) => ({ value: String(c.ms), label: c.label })),
+		...WINDOW_CHOICES.map((c) => ({ value: String(c.ms), label: i18n.t(c.label) })),
 		{ value: 'kept', label: i18n.t('adv.keptLength') }
 	]);
 

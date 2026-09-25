@@ -23,8 +23,8 @@ import { onReachabilityChange } from '$lib/services/transport';
 /** How long a temporary drop can run. Offered instead of a free-form duration because the
  *  question being answered is "how long is this cleanup", not "how many minutes". */
 export const WINDOW_CHOICES: readonly { ms: number; label: string }[] = [
-	{ ms: 10 * 60_000, label: '10 minutes' },
-	{ ms: 60 * 60_000, label: '1 hour' }
+	{ ms: 10 * 60_000, label: 'guard.win10m' },
+	{ ms: 60 * 60_000, label: 'guard.win1h' }
 ];
 
 /** The window the in-dialog offer arms, so the copy there and the choice above agree. */

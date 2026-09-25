@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { fade, fly } from 'svelte/transition';
 	import Icon from './Icon.svelte';
 
@@ -171,7 +172,7 @@
 					type="button"
 					class="absolute top-3 right-3 icon-btn hover:bg-bg-tertiary z-10"
 					onclick={onClose}
-					aria-label="Close dialog"
+					aria-label={i18n.t('ui.closeDialog')}
 				>
 					<Icon name="close" class="w-5 h-5" />
 				</button>

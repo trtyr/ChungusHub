@@ -6,6 +6,7 @@
 	 * Flow macros carry their availability in their group hint.
 	 */
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { MACROS, MACRO_GROUPS } from '$lib/macros';
 	import { toastStore } from '$lib/stores/toast.svelte';
 	import { copyText } from '$lib/utils/clipboard';
@@ -78,7 +79,7 @@
 			class="w-3.5 h-3.5 shrink-0 text-accent transition-transform -rotate-90 group-open/macros:rotate-0"
 		/>
 		<Icon name="sparkles" class="w-3.5 h-3.5 shrink-0 text-accent" />
-		<span class="text-sm font-ui font-semibold text-text-primary">Available macros</span>
+		<span class="text-sm font-ui font-semibold text-text-primary">{i18n.t('ui.availableMacros')}</span>
 		<span class="hidden sm:inline text-xs font-ui text-text-muted">
 			Click to copy · a macro resolves wherever its data exists
 		</span>
@@ -132,7 +133,7 @@
 
 		<!-- The pruning rule, stated once where every macro author already looks. -->
 		<p class="text-[11px] font-ui text-text-muted leading-snug border-t border-border-subtle/60 pt-2.5">
-			<span class="font-semibold text-text-secondary">Empty blocks can prune themselves:</span>
+			<span class="font-semibold text-text-secondary">{i18n.t('ui.emptyPrune')}</span>
 			with the preset's “Prune empty blocks” toggle on, wrapping a macro in a plain tag
 			(<code class="font-mono text-accent">&lt;memory&gt;{'{{memory}}'}&lt;/memory&gt;</code>) drops the whole
 			block (tags and framing text included) from the prompt when every macro inside it comes back

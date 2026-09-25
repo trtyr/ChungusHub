@@ -19,6 +19,7 @@
 	 * changes a setting, and a row whose whole job is to open a list already carries the way
 	 * back as the first item in it.
 	 */
+import { i18n } from '$lib/i18n/i18n.svelte';
 	interface Props {
 		/** The value in force differs from the one this row would inherit. */
 		overridden: boolean;
@@ -40,7 +41,7 @@
 			type="button"
 			class="ovr"
 			onclick={onRevert}
-			aria-label="Restore the default value"
+			aria-label={i18n.t('ui.restoreDefault')}
 			title="{text}, click to put it back"
 		>*</button>
 	{:else}

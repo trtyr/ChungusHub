@@ -26,6 +26,7 @@
 	 * platform's spelling of a modifier and the drawing.
 	 */
 	import Dialog from './Dialog.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import {
 		SHORTCUTS,
 		SHORTCUT_GROUPS,
@@ -80,7 +81,7 @@
 <Dialog
 	open={shortcutsSheet.open}
 	onClose={() => shortcutsSheet.close()}
-	title="Keyboard shortcuts"
+	title={i18n.t('ab.shortcuts')}
 	size="md"
 >
 	<div class="sheet">

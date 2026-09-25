@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { toastStore, type ToastTone } from '$lib/stores/toast.svelte';
 	import Icon from './Icon.svelte';
 
@@ -56,7 +57,7 @@
 				type="button"
 				class="p-1 text-text-muted hover:text-text-primary rounded transition-colors"
 				onclick={() => toastStore.remove(toast.id)}
-				aria-label="Dismiss"
+				aria-label={i18n.t('guard.dismissAria')}
 			>
 				<Icon name="close" class="w-4 h-4" />
 			</button>

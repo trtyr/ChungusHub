@@ -1,5 +1,6 @@
 <script lang="ts" module>
 	import { deleteGuard } from '$lib/stores/delete-guard.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	/** Blast radii below this confirm with a plain click; at/above it the button
 	 *  requires a press-and-hold, so muscle memory alone can never fire it. */
@@ -112,7 +113,7 @@
 	<span class="hold-fill" style:transition-duration="{holding ? holdMs : 120}ms"></span>
 	<span class="hold-content" class:hint-visible={showHint}>
 		{#if showHint}
-			<span class="hold-hint">Press and hold</span>
+			<span class="hold-hint">{i18n.t('ui.pressHold')}</span>
 		{:else}
 			{@render children()}
 		{/if}

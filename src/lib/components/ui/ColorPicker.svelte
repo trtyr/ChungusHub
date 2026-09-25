@@ -4,6 +4,7 @@
 	 * Pure panel: the caller owns the popover (anchor, click-away, Escape).
 	 * Emits a #rrggbb hex on every change.
 	 */
+import { i18n } from '$lib/i18n/i18n.svelte';
 	interface Props {
 		value: string;
 		oninput: (hex: string) => void;
@@ -112,12 +113,12 @@
 	const current = $derived(hsvToHex(h, s, v));
 </script>
 
-<div class="picker" role="group" aria-label="Custom color">
+<div class="picker" role="group" aria-label={i18n.t('ui.customColor')}>
 	<div
 		class="pad"
 		bind:this={padEl}
 		role="slider"
-		aria-label="Saturation and brightness"
+		aria-label={i18n.t('ui.satBright')}
 		aria-valuenow={Math.round(v * 100)}
 		tabindex="0"
 		style="background:
@@ -139,7 +140,7 @@
 		max="360"
 		step="1"
 		value={h}
-		aria-label="Hue"
+		aria-label={i18n.t('ui.hue')}
 		oninput={handleHue}
 	/>
 
@@ -151,7 +152,7 @@
 			spellcheck="false"
 			maxlength="7"
 			value={hexField}
-			aria-label="Hex color"
+			aria-label={i18n.t('ui.hexColor')}
 			oninput={handleHexInput}
 		/>
 	</div>

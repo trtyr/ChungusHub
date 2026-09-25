@@ -15,6 +15,7 @@
 	 * of those must not become skippable by inheriting a default it never asked for.
 	 */
 	import { untrack } from 'svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Dialog from './Dialog.svelte';
 	import Button from './Button.svelte';
 	import HoldToConfirmButton from './HoldToConfirmButton.svelte';
@@ -83,7 +84,7 @@
 	{#if destructive && deleteGuard.holds}
 		<label class="skip-offer">
 			<input type="checkbox" bind:checked={armWindow} />
-			<span>Stop asking for {WINDOW_CHOICES[0].label} after this one</span>
+			<span>{i18n.t('ui.stopAsking', { window: i18n.t(WINDOW_CHOICES[0].label) })}</span>
 		</label>
 	{/if}
 	<div class="actions">

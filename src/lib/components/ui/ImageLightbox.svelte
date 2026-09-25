@@ -11,6 +11,7 @@
 	 * behind it, and every one of those four answers is different.
 	 */
 	import { fade, scale } from 'svelte/transition';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from './Icon.svelte';
 	import { focusTrap } from '$lib/actions/focusTrap';
 	import { fileUrl } from '$lib/services/transport';
@@ -133,13 +134,13 @@
 		<div class="lightbox-toolbar">
 			<span class="lightbox-name" title={filename}>{filename}</span>
 			<div class="lightbox-actions">
-				<a class="lightbox-btn" href={src} download={filename} title="Download" aria-label="Download image">
+				<a class="lightbox-btn" href={src} download={filename} title={i18n.t('ui.download')} aria-label={i18n.t('ui.downloadImage')}>
 					<Icon name="download" class="w-5 h-5" strokeWidth={1.8} />
 				</a>
-				<a class="lightbox-btn" href={src} target="_blank" rel="noopener" title="Open original in a new tab" aria-label="Open original in a new tab">
+				<a class="lightbox-btn" href={src} target="_blank" rel="noopener" title={i18n.t('ui.openOriginal')} aria-label={i18n.t('ui.openOriginal')}>
 					<Icon name="maximize" class="w-5 h-5" strokeWidth={1.8} />
 				</a>
-				<button type="button" class="lightbox-btn" onclick={onClose} title="Close" aria-label="Close viewer">
+				<button type="button" class="lightbox-btn" onclick={onClose} title={i18n.t('common.close')} aria-label={i18n.t('ui.closeViewer')}>
 					<Icon name="close" class="w-5 h-5" strokeWidth={1.8} />
 				</button>
 			</div>
@@ -158,8 +159,8 @@
 				type="button"
 				class="lightbox-btn lightbox-nav lightbox-nav--prev"
 				onclick={() => step(-1)}
-				title="Previous image"
-				aria-label="Previous image"
+				title={i18n.t('storymap.prevMatch')}
+				aria-label={i18n.t('ui.prevImage')}
 			>
 				<Icon name="chevronLeft" class="w-6 h-6" strokeWidth={1.8} />
 			</button>
@@ -167,8 +168,8 @@
 				type="button"
 				class="lightbox-btn lightbox-nav lightbox-nav--next"
 				onclick={() => step(1)}
-				title="Next image"
-				aria-label="Next image"
+				title={i18n.t('storymap.nextMatch')}
+				aria-label={i18n.t('ui.nextImage')}
 			>
 				<Icon name="chevronRight" class="w-6 h-6" strokeWidth={1.8} />
 			</button>
