@@ -199,7 +199,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				: 'text-error hover:bg-error/10'}"
 		>
 			<Icon name="trash" class="w-3.5 h-3.5" />
-			Delete
+			{i18n.t('common.delete')}
 		</button>
 	</div>
 {/if}

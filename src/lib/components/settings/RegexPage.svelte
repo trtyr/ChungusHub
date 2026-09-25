@@ -219,7 +219,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					</button>
 					<button type="button" class="rx-btn" onclick={openImport}>
 						<Icon name="upload" class="w-3.5 h-3.5" />
-						Import
+						{i18n.t('common.import')}
 					</button>
 					<button type="button" class="rx-btn" onclick={handleRestore}>
 						<Icon name="refresh" class="w-3.5 h-3.5" />
@@ -303,7 +303,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 									</div>
 									<button type="button" class="rx-btn rx-btn-danger" onclick={() => (deleteTarget = rule)}>
 										<Icon name="trash" class="w-3.5 h-3.5" />
-										Delete
+										{i18n.t('common.delete')}
 									</button>
 								{/snippet}
 							</RegexRuleEditor>

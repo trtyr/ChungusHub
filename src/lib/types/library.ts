@@ -195,7 +195,7 @@ export const PERMANENT_TRAITS: Record<LibraryEntryType, PermanentTraitDef[]> = {
 	],
 	// Personas are a single free-text field (see PersonasView). Everything the
 	// protagonist needs lives in this one description, placed verbatim by {{persona}}.
-	persona: [{ key: 'description', label: 'Persona Description', macro: 'persona' }]
+	persona: [{ key: 'description', label: 'ef.fPersonaDesc', macro: 'persona' }]
 };
 
 /** The whole-sheet blob macro per entry type: the badge treats its presence as "field sent". */

@@ -369,7 +369,7 @@
 							onclick={() => resetField(field.key)}
 							disabled={!isModified(field.key)}
 						>
-							Reset
+							{i18n.t('common.reset')}
 						</button>
 					</div>
 					<textarea

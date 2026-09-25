@@ -900,7 +900,7 @@
 								disabled={selectedIds.size === 0}
 								onclick={() => bulkSet({ disable: false })}
 							>
-								Enable
+								{i18n.t('common.enable')}
 							</button>
 							<button
 								type="button"
@@ -908,7 +908,7 @@
 								disabled={selectedIds.size === 0}
 								onclick={() => bulkSet({ disable: true })}
 							>
-								Disable
+								{i18n.t('common.disable')}
 							</button>
 
 							<!-- The verb is pressed here and the destination picked in the panel. Both

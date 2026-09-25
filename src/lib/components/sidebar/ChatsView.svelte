@@ -1007,7 +1007,7 @@
 					onclick={() => (selectedIds = new Set())}
 					disabled={selectedCount === 0}
 				>
-					None
+					{i18n.t('common.none')}
 				</button>
 				<div class="chats-bulk-spacer"></div>
 				<button

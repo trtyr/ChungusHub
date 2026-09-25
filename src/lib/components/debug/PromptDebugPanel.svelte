@@ -186,7 +186,7 @@
 			{/if}
 			<button class="head-btn danger" type="button" onclick={() => promptLogStore.clear()} disabled={entries.length === 0}>
 				<Icon name="trash" class="w-3.5 h-3.5" strokeWidth={1.75} />
-				Clear
+				{i18n.t('common.clear')}
 			</button>
 			{#if !standalone}
 				<button class="head-btn" type="button" onclick={() => uiStore.closeDebugPanel()} aria-label={i18n.t('dp.close')}>

@@ -109,7 +109,7 @@
 				class="px-3 py-1.5 text-sm font-ui font-medium text-text-secondary hover:text-text-primary hover:bg-bg-tertiary rounded-[var(--radius-md)] transition-all duration-150"
 				onclick={onCancel}
 			>
-				Cancel
+				{i18n.t('common.cancel')}
 			</button>
 			<button
 				class="px-3 py-1.5 text-sm font-ui font-medium text-accent hover:bg-accent/10 rounded-[var(--radius-md)] transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed"

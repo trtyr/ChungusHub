@@ -334,7 +334,7 @@
 					</div>
 					<button type="button" class="skill-save-btn" onclick={() => save(item)} disabled={item.busy || (!isDirty(item) && !item.isNew)}>
 						<Icon name="check" class="w-3.5 h-3.5" strokeWidth={2} />
-						Save
+						{i18n.t('common.save')}
 					</button>
 				</div>
 			</div>
@@ -355,7 +355,7 @@
 			</button>
 			<button type="button" class="skill-ghost-btn" onclick={() => fileInput?.click()}>
 				<Icon name="upload" class="w-3.5 h-3.5" />
-				Import
+				{i18n.t('common.import')}
 			</button>
 			<button type="button" class="skill-ghost-btn" onclick={openExport} disabled={exportable.length === 0}>
 				<Icon name="download" class="w-3.5 h-3.5" />

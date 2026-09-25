@@ -189,11 +189,11 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		{#if isNew}
 			<span class="editor-header-divider"></span>
 			<button type="button" class="edh-btn" disabled={busy} onclick={onDiscardNew}>
-				Discard
+				{i18n.t('common.discard')}
 			</button>
 			<button type="button" class="edh-btn is-primary" disabled={busy} onclick={onSaveNew}>
 				<Icon name="check" class="w-4 h-4" />
-				Save
+				{i18n.t('common.save')}
 			</button>
 		{:else}
 			<button
@@ -226,12 +226,12 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						{#if onExport}
 							<button type="button" role="menuitem" class="edh-menu-item" onclick={menuItem(onExport)}>
 								<Icon name="download" class="w-4 h-4" />
-								Export…
+								{i18n.t('eh.exportEllipsis')}
 							</button>
 						{/if}
 						<button type="button" role="menuitem" class="edh-menu-item" onclick={menuItem(onDuplicate)}>
 							<Icon name="copy" class="w-4 h-4" />
-							Duplicate
+							{i18n.t('common.duplicate')}
 						</button>
 						{#if onConvert}
 							<button type="button" role="menuitem" class="edh-menu-item" onclick={menuItem(onConvert)}>
@@ -251,7 +251,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 							onclick={deleteBlockedReason ? refuseDelete : menuItem(onDelete)}
 						>
 							<Icon name="trash" class="w-4 h-4" />
-							Delete
+							{i18n.t('common.delete')}
 						</button>
 					</div>
 				{/if}

@@ -611,7 +611,7 @@
 								type="submit"
 								disabled={securityBusy || !idleValid || !idleDirty}
 							>
-								Save
+								{i18n.t('common.save')}
 							</button>
 						</form>
 					</div>

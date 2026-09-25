@@ -231,15 +231,15 @@
 		<footer class="preview-actions">
 			<button type="button" class="preview-action preview-action-primary" onclick={onOpen}>
 				<Icon name="chat" class="w-3.5 h-3.5" />
-				Open
+				{i18n.t('sb.open')}
 			</button>
 			<button type="button" class="preview-action" onclick={onRename}>
 				<Icon name="pencil" class="w-3.5 h-3.5" />
-				Rename
+				{i18n.t('asm.rename')}
 			</button>
 			<button type="button" class="preview-action" onclick={onDuplicate}>
 				<Icon name="copy" class="w-3.5 h-3.5" />
-				Duplicate
+				{i18n.t('common.duplicate')}
 			</button>
 			<button
 				type="button"
@@ -253,7 +253,7 @@
 			</button>
 			<button type="button" class="preview-action preview-action-danger" onclick={onDelete}>
 				<Icon name="trash" class="w-3.5 h-3.5" />
-				Delete
+				{i18n.t('common.delete')}
 			</button>
 		</footer>
 	</div>

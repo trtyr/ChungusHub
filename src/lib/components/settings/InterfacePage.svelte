@@ -574,7 +574,7 @@
 	{#if themeStore.isModified('interface')}
 		<div class="page-reset" data-setting="interface-defaults">
 			<button type="button" class="link-btn" onclick={() => (confirmRestore = true)}>
-				Restore defaults
+				{i18n.t('if.t27')}
 			</button>
 		</div>
 	{/if}

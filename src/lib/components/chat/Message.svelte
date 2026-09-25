@@ -746,7 +746,7 @@
 													class="w-full px-3 py-2 text-left text-sm font-ui font-medium text-text-secondary hover:bg-bg-tertiary rounded-[var(--radius-lg)] transition-all duration-150"
 													onclick={cancelDelete}
 												>
-													Cancel
+													{i18n.t('common.cancel')}
 												</button>
 											</div>
 										{:else}
@@ -788,7 +788,7 @@
 													class="w-full text-left px-3 py-2.5 hover:bg-bg-tertiary rounded-[var(--radius-lg)] text-sm font-ui text-text-muted transition-all duration-150"
 													onclick={cancelDelete}
 												>
-													Cancel
+													{i18n.t('common.cancel')}
 												</button>
 											</div>
 										{/if}
@@ -839,7 +839,7 @@
 													class="w-full px-3 py-2 text-left text-sm font-ui font-medium text-text-secondary hover:bg-bg-tertiary rounded-[var(--radius-lg)] transition-all duration-150"
 													onclick={cancelRegenerate}
 												>
-													Cancel
+													{i18n.t('common.cancel')}
 												</button>
 											</div>
 										{:else}
@@ -879,7 +879,7 @@
 												class="w-full text-left px-3 py-2.5 hover:bg-bg-tertiary rounded-[var(--radius-lg)] text-sm font-ui text-text-muted transition-all duration-150"
 												onclick={cancelRegenerate}
 											>
-												Cancel
+												{i18n.t('common.cancel')}
 											</button>
 										</div>
 										{/if}

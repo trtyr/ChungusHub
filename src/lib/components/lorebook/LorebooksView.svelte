@@ -638,7 +638,7 @@
 						resetPage();
 					}}
 				>
-					Clear
+					{i18n.t('common.clear')}
 				</button>
 			</div>
 		{/if}
@@ -671,7 +671,7 @@
 					onclick={() => (selectedIds = new Set())}
 					disabled={selected.length === 0}
 				>
-					None
+					{i18n.t('common.none')}
 				</button>
 				<div class="brw-bulk-spacer"></div>
 
@@ -725,7 +725,7 @@
 						</Button>
 						<Button variant="secondary" size="sm" onclick={() => fileInput?.click()}>
 							<Icon name="upload" class="w-4 h-4" />
-							Import
+							{i18n.t('common.import')}
 						</Button>
 					{/snippet}
 				</EmptyState>

@@ -156,7 +156,7 @@
 								aria-checked={current === null}
 								onclick={() => pickTone(event.id, null)}
 							>
-								None
+								{i18n.t('common.none')}
 							</button>
 							{#each TONES as tone (tone.id)}
 								<button

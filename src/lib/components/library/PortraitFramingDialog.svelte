@@ -294,7 +294,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					class="shrink-0 text-xs font-ui text-text-secondary hover:text-text-primary transition-colors"
 					onclick={() => (draft = { ...DEFAULT_PORTRAIT_FOCUS })}
 				>
-					Reset
+					{i18n.t('common.reset')}
 				</button>
 			{/if}
 		</div>
