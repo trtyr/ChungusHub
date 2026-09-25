@@ -210,7 +210,7 @@
 	open={deleteTarget !== null}
 	title={i18n.t('asm.histDeleteTitle')}
 	message={deleteMessage}
-	confirmLabel="Delete"
+	confirmLabel={i18n.t('common.delete')}
 	variant="danger"
 	destructive
 	onConfirm={confirmDeleteSession}

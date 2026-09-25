@@ -255,7 +255,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	<div class="flex flex-col h-full">
 		<LibraryEditorHeader
 			name={snapshot.name}
-			fallbackName="Unnamed Persona"
+			fallbackName={i18n.t('lib.unnamedPersona')}
 			{isNew}
 			busy={committing}
 			saving={committing || saving}

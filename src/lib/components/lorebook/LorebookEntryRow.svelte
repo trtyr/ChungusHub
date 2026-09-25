@@ -343,7 +343,7 @@
 					class="lbr-glyph"
 					onclick={onSelectToggle}
 					aria-pressed={selected}
-					aria-label={selected ? 'Deselect entry' : 'Select entry'}
+					aria-label={selected ? i18n.t('ler.deselectEntry') : i18n.t('ler.selectEntry')}
 				>
 					<span class="lbr-check" class:is-checked={selected}>
 						{#if selected}
@@ -427,7 +427,7 @@
 					class="lbr-chev"
 					class:is-open={expanded}
 					onclick={onToggle}
-					aria-label={expanded ? 'Collapse entry' : 'Expand entry'}
+					aria-label={expanded ? i18n.t('pbv.collapseItem') : i18n.t('pbv.expandItem')}
 				>
 					<Icon name="chevronDown" class="w-4 h-4" />
 				</button>

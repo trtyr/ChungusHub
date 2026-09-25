@@ -201,7 +201,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				class="editor-header-btn"
 				class:is-favorite={isFavorite}
 				onclick={onToggleFavorite}
-				aria-label={isFavorite ? 'Unfavorite' : 'Favorite'}
+				aria-label={isFavorite ? i18n.t('eh.unfavorite') : i18n.t('sb.favorite')}
 				aria-pressed={isFavorite}
 				title={isFavorite ? i18n.t('eh.unfavorite') : i18n.t('eh.favorite')}
 			>

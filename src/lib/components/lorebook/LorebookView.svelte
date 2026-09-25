@@ -1093,7 +1093,7 @@
 	open={bookDeleteOpen}
 	title={i18n.t('lbv.deleteTitle')}
 	message={bookDeleteMessage}
-	confirmLabel="Delete"
+	confirmLabel={i18n.t('common.delete')}
 	variant="danger"
 	destructive
 	holdMs={holdMsForBlast(selectedBook?.entries.length ?? 0)}
@@ -1105,7 +1105,7 @@
 	open={bulkDeleteOpen}
 	title={i18n.t('lbw.deleteEntries')}
 	message={i18n.t('lbw.deleteEntriesMsg', { n: selectedIds.size, name: selectedBook?.name || i18n.t('lbw.untitledLorebook') })}
-	confirmLabel="Delete"
+	confirmLabel={i18n.t('common.delete')}
 	variant="danger"
 	destructive
 	holdMs={holdMsForBlast(selectedIds.size)}
@@ -1117,7 +1117,7 @@
 	open={entryDeleteId !== null}
 	title={i18n.t('ler.deleteEntry')}
 	message={i18n.t('lbw.deleteEntryMsg', { name: entryToDelete?.comment || i18n.t('lbw.untitledEntry') })}
-	confirmLabel="Delete"
+	confirmLabel={i18n.t('common.delete')}
 	variant="danger"
 	destructive
 	onConfirm={deleteEntry}

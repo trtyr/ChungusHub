@@ -554,7 +554,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	open={deleteTargetId !== null}
 	title={i18n.t('pv.deleteTitle')}
 	message={deleteTargetMessage}
-	confirmLabel="Delete"
+	confirmLabel={i18n.t('common.delete')}
 	variant="danger"
 	destructive
 	onConfirm={confirmDelete}

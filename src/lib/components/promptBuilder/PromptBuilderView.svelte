@@ -695,7 +695,7 @@
 								role="button"
 								tabindex="0"
 								aria-expanded={isExpanded}
-								aria-label={isExpanded ? 'Collapse item' : 'Expand item'}
+								aria-label={isExpanded ? i18n.t('pbv.collapseItem') : i18n.t('pbv.expandItem')}
 								title={i18n.t('pbv.clickEdit')}
 								onclick={() => toggleItemExpanded(item.id)}
 								onkeydown={(e) => onExpandKeydown(e, () => toggleItemExpanded(item.id))}
@@ -863,13 +863,13 @@
 									role="button"
 									tabindex="0"
 									aria-expanded={isExpanded}
-									aria-label={isExpanded ? 'Collapse control' : 'Expand control'}
+									aria-label={isExpanded ? i18n.t('pbv.collapseControl') : i18n.t('pbv.expandControl')}
 									title={i18n.t('pbv.clickEdit')}
 									onclick={() => toggleControlExpanded(control.id)}
 									onkeydown={(e) => onExpandKeydown(e, () => toggleControlExpanded(control.id))}
 								>
 									<span class="pb-type">{control.type}</span>
-									<span class="pb-name">{control.label || 'Untitled control'}</span>
+									<span class="pb-name">{control.label || i18n.t('ce2.untitledControl')}</span>
 									{#if control.macro}
 										<span class="pb-macro">{`{{${control.macro}}}`}</span>
 									{/if}
@@ -952,7 +952,7 @@
 									role="button"
 									tabindex="0"
 									aria-expanded={isExpanded}
-									aria-label={isExpanded ? 'Collapse section' : 'Expand section'}
+									aria-label={isExpanded ? i18n.t('pbv.collapseSection') : i18n.t('pbv.expandSection')}
 									title={i18n.t('pbv.clickEdit')}
 									onclick={() => toggleSectionExpanded(section.id)}
 									onkeydown={(e) => onExpandKeydown(e, () => toggleSectionExpanded(section.id))}

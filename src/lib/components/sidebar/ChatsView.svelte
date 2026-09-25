@@ -1202,7 +1202,7 @@
 	open={deleteTarget !== null}
 	title={i18n.t('svc.deleteChatTitle')}
 	message={deleteMessage}
-	confirmLabel="Delete"
+	confirmLabel={i18n.t('common.delete')}
 	variant="danger"
 	destructive
 	holdMs={holdMsForBlast(deleteStats?.total ?? 0)}
@@ -1214,7 +1214,7 @@
 	open={bulkDeleteOpen}
 	title={i18n.t('lbv.deleteBulk', { n: selectedCount })}
 	message={bulkDeleteMessage}
-	confirmLabel="Delete {selectedCount}"
+	confirmLabel={i18n.t('lbv.deleteBulk', { n: selectedCount })}
 	variant="danger"
 	destructive
 	holdMs={holdMsForBlast(bulkDeleteStats)}

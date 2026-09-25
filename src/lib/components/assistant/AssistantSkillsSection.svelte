@@ -393,7 +393,7 @@
 	open={deleteTarget !== null}
 	title={i18n.t('asm.skDelete')}
 	message={i18n.t('asm.skDeleteAsk', { name: deleteTarget?.name ?? '' })}
-	confirmLabel="Delete"
+	confirmLabel={i18n.t('common.delete')}
 	variant="danger"
 	destructive
 	onConfirm={remove}

@@ -468,7 +468,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	message={deleteTarget
 		? `The snapshot from ${formatDate(deleteTarget.createdAt)} goes for good. Your current data is not touched.`
 		: ''}
-	confirmLabel="Delete"
+	confirmLabel={i18n.t('common.delete')}
 	variant="danger"
 	destructive
 	onConfirm={confirmDelete}

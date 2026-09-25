@@ -873,9 +873,9 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 								text={i18n.t('ce.acceptedTip')}
 							/>
 							<div class="declare-actions">
-								<button type="button" class="micro-btn" onclick={() => declareAll(true)}>all</button>
+								<button type="button" class="micro-btn" onclick={() => declareAll(true)}>{i18n.t('ce2.allBtn')}</button>
 								<span class="micro-sep" aria-hidden="true"></span>
-								<button type="button" class="micro-btn" onclick={() => declareAll(false)}>none</button>
+								<button type="button" class="micro-btn" onclick={() => declareAll(false)}>{i18n.t('ce2.noneBtn')}</button>
 							</div>
 						</div>
 						<div class="chips">
@@ -932,7 +932,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 								<InfoTip text={i18n.t('ce.tipSeed')} />
 							</div>
 							{#if gen.seed != null}
-								<button type="button" class="link-btn" onclick={() => updateGen('seed', null)}>clear</button>
+								<button type="button" class="link-btn" onclick={() => updateGen('seed', null)}>{i18n.t('ce2.clearBtn')}</button>
 							{/if}
 						</div>
 						<input

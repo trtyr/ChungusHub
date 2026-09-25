@@ -540,7 +540,7 @@
 	open={enableConfirmOpen}
 	title={i18n.t('mem.readTitle')}
 	message={i18n.t('mem.readAsk', { price: priceOf(quoted), n: quoted.total })}
-	confirmLabel="Start"
+	confirmLabel={i18n.t('bk.start')}
 	onConfirm={confirmEnable}
 	onCancel={() => (enableConfirmOpen = false)}
 />
@@ -549,7 +549,7 @@
 	open={summariseConfirmOpen}
 	title={i18n.t('mem.sumTitle')}
 	message={i18n.t('mem.sumAsk', { price: priceOf(quoted), n: quoted.total })}
-	confirmLabel="Summarize"
+	confirmLabel={i18n.t('mem.summarize')}
 	onConfirm={confirmSummarise}
 	onCancel={() => (summariseConfirmOpen = false)}
 />
@@ -558,7 +558,7 @@
 	open={rebuildConfirmOpen}
 	title={i18n.t('mem.rebuildTitle')}
 	message={i18n.t('mem.rebuildAsk', { n: allSummaries, price: priceOf(quoted), calls: quoted.total })}
-	confirmLabel="Rebuild"
+	confirmLabel={i18n.t('mem.rebuild')}
 	variant="danger"
 	holdMs={holdMsForBlast(allSummaries)}
 	onConfirm={rebuild}
