@@ -13,6 +13,7 @@
  */
 
 import type { Message } from '$lib/types/chat';
+import { i18n } from '$lib/i18n/i18n.svelte';
 
 export type RegexRuleRole = 'user' | 'assistant';
 export type RegexRuleScope = 'display' | 'prompt';
@@ -287,12 +288,12 @@ export function depthInverted(rule: RuleReach): boolean {
 export function depthSentence(rule: RuleReach): string | null {
 	const { minDepth: min, maxDepth: max } = rule;
 	/** "the newest turn" for one, "the newest 3 turns" for more. */
-	const newest = (n: number) => (n === 1 ? 'the newest turn' : `the newest ${n} turns`);
+	const newest = (n: number) => (n === 1 ? i18n.t('rx.newestOne') : i18n.t('rx.newestN', { n }));
 	if (min === undefined && max === undefined) return null;
-	if (depthInverted(rule)) return 'reaches no turn at all';
-	if (min !== undefined && max !== undefined) return `only turns ${min} to ${max} back`;
-	if (min !== undefined) return min === 0 ? null : `skips ${newest(min)}`;
-	return `only ${newest(max! + 1)}`;
+	if (depthInverted(rule)) return i18n.t('rx.reachesNone');
+	if (min !== undefined && max !== undefined) return i18n.t('rx.onlyRange', { min, max });
+	if (min !== undefined) return min === 0 ? null : i18n.t('rx.skips', { n: newest(min) });
+	return i18n.t('rx.onlyNewest', { n: newest(max! + 1) });
 }
 
 /** Whether a rule can reach anything at all. An empty target or scope list makes it a
@@ -307,18 +308,18 @@ export function isRuleInert(rule: RuleReach): boolean {
 export function routingSentence(rule: RuleReach): string {
 	if (isRuleInert(rule)) {
 		return depthInverted(rule)
-			? 'Applies to nothing: it starts further back than it reaches.'
-			: 'Applies to nothing: pick who it touches and where it rewrites.';
+			? i18n.t('rx.inertDepth')
+			: i18n.t('rx.inertPick');
 	}
-	const who = rule.targets.map((t) => (t === 'user' ? 'your messages' : 'AI replies')).join(' & ');
-	const where = rule.scopes.map((s) => (s === 'display' ? 'chat display' : 'outgoing prompt')).join(' & ');
+	const who = rule.targets.map((t) => (t === 'user' ? i18n.t('rxe.roleUser') : i18n.t('rxe.roleAssistant'))).join(' & ');
+	const where = rule.scopes.map((s) => (s === 'display' ? i18n.t('rxe.scopeDisplay') : i18n.t('rxe.scopePrompt'))).join(' & ');
 	const depth = depthSentence(rule);
-	return `Applies to ${who} · rewrites ${where}${depth ? ` · ${depth}` : ''}`;
+	return i18n.t('rx.routingLine', { who, where, depth: depth ? ` · ${depth}` : '' });
 }
 
 /** Human-readable compile error for a rule's pattern+flags; null when valid. */
 export function regexRuleError(rule: Pick<RegexRule, 'pattern' | 'flags'>): string | null {
-	if (!rule.pattern) return 'Pattern is empty.';
+	if (!rule.pattern) return i18n.t('rx.patternEmpty');
 	try {
 		new RegExp(rule.pattern, rule.flags);
 		return null;

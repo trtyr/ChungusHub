@@ -8,6 +8,7 @@
 	 * shape, and dropping it would slide the whole day sideways.
 	 */
 	import { hourLabel, plural } from '$lib/stats/format';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	let { hours, prime }: { hours: number[]; prime: [number, number] | null } = $props();
 
@@ -27,7 +28,7 @@
 			<div
 				class="slot"
 				class:is-prime={inPrime(hour)}
-				title={`${plural(value, 'message')} · ${hourLabel(hour)}`}
+				title={i18n.t('st.msgsAt', { n: plural(value, 'message'), hour: hourLabel(hour) })}
 			>
 				<div class="bar" style="height: {Math.max(value > 0 ? 6 : 2, (value / peak) * 100)}%"></div>
 			</div>
