@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { labelT } from '$lib/i18n/labels';
 	import { audioSettingsStore, type SoundTiming } from '$lib/stores/audio-settings.svelte';
 	import {
 		SOUND_EVENTS,
@@ -136,7 +137,7 @@
 						aria-expanded={open}
 					>
 						<span class="event-text">
-							<span class="event-label">{event.label}</span>
+							<span class="event-label">{labelT(event.label)}</span>
 							<span class="event-desc">{event.description}</span>
 						</span>
 						<span class="event-tone" class:is-silent={current === null}>
@@ -166,7 +167,7 @@
 									aria-checked={current === tone.id}
 									onclick={() => pickTone(event.id, tone.id)}
 								>
-									{tone.label}
+									{labelT(tone.label)}
 								</button>
 							{/each}
 						</div>

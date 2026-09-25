@@ -9,6 +9,7 @@
 	 * keystrokes must not become one write each. The store's `flush()` is what generation
 	 * calls before reading the rows, so nothing here needs a save.
 	 */
+	import { labelT } from '$lib/i18n/labels';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import OverrideMark from '$lib/components/ui/OverrideMark.svelte';
 	import { autoResize } from '$lib/actions/autoResize';
@@ -169,7 +170,7 @@
 							title={hint}
 							onclick={() => pickScope('version')}
 						>
-							{versionPick ? `${choice.label} · ${versionLabel(versionPick)}` : choice.label}
+							{versionPick ? `${labelT(choice.label)} · ${versionLabel(versionPick)}` : labelT(choice.label)}
 						</button>
 						<button
 							type="button"
@@ -195,7 +196,7 @@
 						title={hint}
 						onclick={() => pickScope(choice.scope)}
 					>
-						{choice.label}
+						{labelT(choice.label)}
 					</button>
 				{/if}
 			{/each}

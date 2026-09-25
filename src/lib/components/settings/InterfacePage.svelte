@@ -19,6 +19,7 @@
 	 * Restore defaults is the one way back to the shipped look for this half of it, at the
 	 * foot of the page and only there while something has actually moved.
 	 */
+	import { labelT } from '$lib/i18n/labels';
 	import InfoTip from '$lib/components/ui/InfoTip.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import Select from '$lib/components/ui/Select.svelte';
@@ -246,7 +247,7 @@
 							class:seg-lift={appearance.contrast === opt.value}
 							onclick={() => themeStore.update({ contrast: opt.value })}
 						>
-							{opt.label}
+							{labelT(opt.label)}
 						</button>
 					{/each}
 				</div>
@@ -406,7 +407,7 @@
 							class:seg-lift={appearance.glass === opt.value}
 							onclick={() => themeStore.update({ glass: opt.value })}
 						>
-							{opt.label}
+							{labelT(opt.label)}
 						</button>
 					{/each}
 				</div>

@@ -7,6 +7,7 @@
 	 * A press opens the book's editor over the chat (uiStore.lorebookEditorId), the same slot
 	 * and the same reason as the character editor: a book is a document, and the dock is a shelf.
 	 */
+	import { labelT } from '$lib/i18n/labels';
 	import { tick } from 'svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import { i18n } from '$lib/i18n/i18n.svelte';
@@ -393,7 +394,7 @@
 									resetPage();
 								}}
 							>
-								{option.label}
+								{labelT(option.label)}
 							</button>
 						{/each}
 					</div>

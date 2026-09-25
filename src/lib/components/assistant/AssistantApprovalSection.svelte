@@ -11,6 +11,7 @@
 	 * The two choices, Auto's badge and its warning come from $lib/config/assistant-approval
 	 * so this page and the composer's pill cannot describe the same switch two different ways.
 	 */
+	import { labelT } from '$lib/i18n/labels';
 	import { onMount } from 'svelte';
 	import { i18n } from '$lib/i18n/i18n.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
@@ -81,12 +82,12 @@
 			onclick={() => pickMode(choice)}
 		>
 			<span class="apr-mode-head">
-				<span class="apr-mode-label">{choice.label}</span>
+				<span class="apr-mode-label">{labelT(choice.label)}</span>
 				{#if choice.badge}
-					<span class="apr-badge">{choice.badge}</span>
+					<span class="apr-badge">{labelT(choice.badge)}</span>
 				{/if}
 			</span>
-			<span class="apr-mode-describe">{choice.describe}</span>
+			<span class="apr-mode-describe">{labelT(choice.describe)}</span>
 		</button>
 	{/each}
 </div>

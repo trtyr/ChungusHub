@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { labelT } from '$lib/i18n/labels';
 	import { lorebookStore } from '$lib/lorebook/store.svelte';
 	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { lorebookSettingsStore } from '$lib/lorebook/settings.svelte';
@@ -683,7 +684,7 @@
 											aria-pressed={entry.scanFields?.includes(field.id) ?? false}
 											onclick={() => toggleScanField(field.id)}
 										>
-											{field.label}
+											{labelT(field.label)}
 										</button>
 									{/each}
 								</div>
@@ -705,7 +706,7 @@
 										class="!w-auto"
 									>
 										{#each wokenByOptions as option (option.id)}
-											<option value={option.id}>{option.label}</option>
+											<option value={option.id}>{labelT(option.label)}</option>
 										{/each}
 									</Select>
 									{#if wokenBy === 'entriesOnly'}
