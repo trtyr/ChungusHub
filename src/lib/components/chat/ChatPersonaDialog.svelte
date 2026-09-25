@@ -29,11 +29,7 @@
 			const name = personaId
 				? personas.find((p) => p.id === personaId)?.identity.name?.trim() || 'Unnamed persona'
 				: null;
-			toastStore.success(
-				name
-					? `Your messages in this chat now show as ${name}.`
-					: `Your messages in this chat show as You again.`
-			);
+			toastStore.success(name ? i18n.t('t.relabelNow', { name }) : i18n.t('t.relabelYou'));
 			onClose();
 		} catch (e) {
 			toastStore.failed('set the chat persona', e);

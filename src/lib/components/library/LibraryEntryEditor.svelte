@@ -198,9 +198,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		// Silently missing sprites would read as a failed upload, so name the ones that
 		// collided with a label this character already uses.
 		if (refused.length) {
-			toastStore.error(
-				`Skipped, those labels are already taken: ${refused.join(', ')}`
-			);
+			toastStore.error(i18n.t('t.labelsTaken', { keys: refused.join(', ') }));
 		}
 	}
 

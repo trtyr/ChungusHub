@@ -616,9 +616,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		const ids = [...selectedIds];
 		if (ids.length === 0) return;
 		await characterLibraryStore.setFavoriteMany(ids, isFavorite);
-		toastStore.success(
-			`${isFavorite ? 'Favorited' : 'Unfavorited'} ${ids.length} character${ids.length === 1 ? '' : 's'}`
-		);
+		toastStore.success(i18n.t(isFavorite ? 't.faved' : 't.unfaved') + ' ' + i18n.t('t.favedN', { verb: '', n: ids.length }).trim());
 	}
 
 	// ---- Bulk favorite menu + tag editor popovers ----
@@ -632,9 +630,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		const changed = await characterLibraryStore.addTagsMany([...selectedIds], tags);
 		addTagsValue = '';
 		tagsOpen = false;
-		toastStore.success(
-			`Added tag${tags.length === 1 ? '' : 's'} to ${changed} character${changed === 1 ? '' : 's'}`
-		);
+		toastStore.success(i18n.t('t.tagsAdded', { n: changed }));
 	}
 
 	function handleAddTagsKeydown(e: KeyboardEvent) {

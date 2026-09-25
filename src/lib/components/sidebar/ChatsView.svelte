@@ -623,9 +623,7 @@
 		// opened (architecture/memory.md). Anything else gets the plain message.
 		const stale = e instanceof Error && e.message.includes('mem-copy-stale');
 		if (stale) {
-			toastStore.error(
-				`"${chat.title}" has memory pointing at deleted messages. Open the chat once to let it repair itself, or duplicate the story on its own.`
-			);
+			toastStore.error(i18n.t('t.memoryDangling', { name: chat.title ?? '' }));
 		} else {
 			toastStore.failed(`duplicate "${chat.title}"`, e);
 		}
