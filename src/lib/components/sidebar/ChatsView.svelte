@@ -876,7 +876,7 @@
 					class:is-on={searchInMessages}
 					aria-pressed={searchInMessages}
 					title={searchInMessages
-						? 'Searching message text too (the branch each chat is on)'
+						? i18n.t('svc.searchMsgsOn')
 						: i18n.t('svc.searchInside')}
 					aria-label={i18n.t('svc.searchMsgsAria')}
 					onclick={() => (searchInMessages = !searchInMessages)}

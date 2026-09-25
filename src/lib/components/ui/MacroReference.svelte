@@ -100,7 +100,7 @@
 						{@render macroChip(
 							macro.name,
 							i18n.t(macro.description),
-							macro.structural ? 'structural' : undefined
+							macro.structural ? i18n.t('ui.structuralTag') : undefined
 						)}
 					{/each}
 				</div>
@@ -134,10 +134,8 @@
 		<!-- The pruning rule, stated once where every macro author already looks. -->
 		<p class="text-[11px] font-ui text-text-muted leading-snug border-t border-border-subtle/60 pt-2.5">
 			<span class="font-semibold text-text-secondary">{i18n.t('ui.emptyPrune')}</span>
-			with the preset's “Prune empty blocks” toggle on, wrapping a macro in a plain tag
-			(<code class="font-mono text-accent">&lt;memory&gt;{'{{memory}}'}&lt;/memory&gt;</code>) drops the whole
-			block (tags and framing text included) from the prompt when every macro inside it comes back
-			empty. Static-only blocks and unknown macro names are never touched.
+			{i18n.t('ui.pruneA')}
+			(<code class="font-mono text-accent">&lt;memory&gt;{'{{memory}}'}&lt;/memory&gt;</code>){i18n.t('ui.pruneB')}
 		</p>
 	</div>
 </details>

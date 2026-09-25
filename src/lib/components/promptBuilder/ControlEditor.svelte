@@ -248,11 +248,11 @@
 				type="text"
 				value={control.textTemplate ?? ''}
 				oninput={(e) => update({ textTemplate: (e.target as HTMLInputElement).value })}
-				placeholder={'e.g. Extra rules: {{value}}  (empty = inject the text as-is)'}
+				placeholder={i18n.t('ce2.phText')}
 				class="input-base w-full px-3 py-2 text-text-primary font-mono text-sm"
 			/>
 			<p class="ce-note">
-				Use <code class="text-accent">{'{{value}}'}</code> where the reader's text should appear.
+				{i18n.t('ce2.useValuePre')}<code class="text-accent">{'{{value}}'}</code>{i18n.t('ce2.useValuePost')}
 				{i18n.t('ce2.t81')}
 			</p>
 		</div>
@@ -346,7 +346,7 @@
 					class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm" />
 			</div>
 			<div class="ce-field">
-				<label for="ctrl-rhigh-{control.id}" class="ce-label">…up to</label>
+				<label for="ctrl-rhigh-{control.id}" class="ce-label">{i18n.t('ce2.upTo')}</label>
 				<input id="ctrl-rhigh-{control.id}" type="number" value={rangeDefault[1]}
 					oninput={(e) => setRangeEnd(1, Number((e.target as HTMLInputElement).value))}
 					class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm" />
@@ -365,7 +365,7 @@
 				type="text"
 				value={control.rangeTemplate ?? ''}
 				oninput={(e) => update({ rangeTemplate: (e.target as HTMLInputElement).value })}
-				placeholder={'e.g. Write between {{min}} and {{max}} words.  (empty = "min to max")'}
+				placeholder={i18n.t('ce2.phRange')}
 				class="input-base w-full px-3 py-2 text-text-primary font-mono text-sm"
 			/>
 			<p class="ce-note">{i18n.t('ce2.minmax')}</p>

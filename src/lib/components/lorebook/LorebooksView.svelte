@@ -576,7 +576,7 @@
 					}}
 				>
 					<Icon name="check" class="w-3.5 h-3.5" />
-					{selectionMode ? 'Exit selection' : 'Select multiple'}
+					{i18n.t(selectionMode ? 'clv.exitSelection' : 'clv.selectMultiple')}
 				</button>
 			</BrowsePopover>
 

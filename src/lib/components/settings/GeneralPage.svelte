@@ -138,7 +138,7 @@
 						{i18n.t('gp.t18')}
 					</button>
 					<span class="text-xs font-ui text-text-muted">
-						{historyCount} {historyCount === 1 ? 'entry' : 'entries'} stored
+						{i18n.t(historyCount === 1 ? 'gp.oneStored' : 'gp.nStored', { n: historyCount })}
 					</span>
 				</div>
 			</div>
