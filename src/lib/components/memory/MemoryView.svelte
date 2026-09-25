@@ -368,7 +368,7 @@
 					title={autoExtract ? i18n.t('mem.autoTipOn') : i18n.t('mem.autoTipOff')}
 				>
 					<Toggle checked={autoExtract} onchange={toggleAutoExtract} label={i18n.t('mem.autoLabel')} />
-					<span>{autoExtract ? 'Auto' : 'Manual'}</span>
+					<span>{i18n.t(autoExtract ? 'ap.auto' : 'ap.manual')}</span>
 				</div>
 			</section>
 

@@ -502,8 +502,8 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						{/if}
 						{#if hasTags}
 							<div class="spec-tags">
-								{#if vision}{@render specTag('Vision', 'Reads images you attach to messages.', 'cap')}{/if}
-								{#if tools}{@render specTag('Tools', 'Supports tool calling, which the Chungus Assistant needs.', 'cap')}{/if}
+								{#if vision}{@render specTag(i18n.t('ce.vision'), i18n.t('ce.visionDesc'), 'cap')}{/if}
+								{#if tools}{@render specTag(i18n.t('ce.tools'), i18n.t('ce.toolsDesc'), 'cap')}{/if}
 								{#if info.isReasoning}{@render specTag(i18n.t('spec.reasoningTag'), i18n.t('spec.reasoning'), 'accent')}{/if}
 								{#if info.isModerated === true}
 									{@render specTag(i18n.t('spec.moderatedTag'), i18n.t('spec.moderated'), 'warn')}

@@ -23,7 +23,7 @@
 	let message = $derived(
 		deleteGuard.asks
 			? i18n.t('dg.hint')
-			: 'Deletes happen immediately, with nothing asked.'
+			: i18n.t('dg.immediate')
 	);
 
 	// Rounded up, so the last stretch reads as a minute rather than counting itself down to a

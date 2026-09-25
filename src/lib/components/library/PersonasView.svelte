@@ -221,7 +221,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			: ''
 	);
 	let deleteTargetMessage = $derived(
-		`Are you sure you want to delete "${deleteTargetName}"? This cannot be undone.` +
+		i18n.t('pv.deleteAsk', { name: deleteTargetName }) +
 			(deleteTargetId === activeId ? ' New chats start as it, so another one takes that over.' : '')
 	);
 

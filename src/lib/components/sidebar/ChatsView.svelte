@@ -877,7 +877,7 @@
 					aria-pressed={searchInMessages}
 					title={searchInMessages
 						? 'Searching message text too (the branch each chat is on)'
-						: 'Search inside messages as well'}
+						: i18n.t('svc.searchInside')}
 					aria-label={i18n.t('svc.searchMsgsAria')}
 					onclick={() => (searchInMessages = !searchInMessages)}
 				>

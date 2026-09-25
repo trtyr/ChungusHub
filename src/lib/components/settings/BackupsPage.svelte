@@ -306,7 +306,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			<span class="card-title">{i18n.t('bk.history')}</span>
 			{#if snapshots.length > 1 && !pendingRestoreId}
 				<button type="button" class="link-btn head-action" onclick={() => { selecting = !selecting; selected = new Set(); }}>
-					{selecting ? 'Done' : 'Select'}
+					{i18n.t(selecting ? 'bk.done' : 'bk.select')}
 				</button>
 			{/if}
 		</div>
@@ -342,7 +342,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				<span class="bulk-count">{selected.size} selected</span>
 				<div class="bulk-actions">
 					<button type="button" class="link-btn" onclick={selectAll}>
-						{selected.size === snapshots.length ? 'Clear' : 'All'}
+						{i18n.t(selected.size === snapshots.length ? 'common.clear' : 'clv.allN2')}
 					</button>
 					<Button size="sm" variant="danger" onclick={() => (bulkDeleteOpen = true)}>{i18n.t('bk.delete')}</Button>
 				</div>

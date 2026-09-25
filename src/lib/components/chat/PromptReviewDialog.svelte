@@ -102,8 +102,8 @@
 
 	let note = $derived(
 		pending?.gate.id === 'send'
-			? 'Edits change this request only. Your message is stored in the chat as you typed it.'
-			: 'Edits change this request only.'
+			? i18n.t('pr.editsFull')
+			: i18n.t('pr.editsShort')
 	);
 
 	/** A message the built request did not have is new, and so edited by definition. */

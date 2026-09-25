@@ -84,7 +84,7 @@
 		></textarea>
 		<button type="button" class="opening-go" onclick={submit}>
 			<Icon name="sparkles" class="w-3.5 h-3.5" strokeWidth={1.75} />
-			{direction.trim() ? 'Generate' : 'Surprise me'}
+			{i18n.t(direction.trim() ? 'os.generate' : 'os.surprise')}
 		</button>
 	</div>
 {/if}

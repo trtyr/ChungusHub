@@ -407,7 +407,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			: ''
 	);
 	let deleteTargetMessage = $derived.by(() => {
-		const base = `Are you sure you want to delete "${deleteTargetName}"? This cannot be undone.`;
+		const base = i18n.t('clv.deleteAsk', { name: deleteTargetName });
 		if (!deleteTargetUsage || deleteTargetUsage.castCount === 0) {
 			return base;
 		}
@@ -947,7 +947,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					onclick={() => { moreOpen = false; toggleSelectionMode(); }}
 				>
 					<Icon name="check" class="w-3.5 h-3.5" />
-					{selectionMode ? 'Exit selection' : 'Select multiple'}
+					{i18n.t(selectionMode ? 'clv.exitSelection' : 'clv.selectMultiple')}
 				</button>
 			</BrowsePopover>
 

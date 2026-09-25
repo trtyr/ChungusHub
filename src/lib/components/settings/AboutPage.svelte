@@ -118,7 +118,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		}
 	});
 
-	const buildLabel = $derived(install?.build === 'portable' ? 'Portable build' : 'Running from source');
+	const buildLabel = $derived(install?.build === 'portable' ? i18n.t('ab.portable') : i18n.t('ab.fromSource'));
 
 	const sizeLine = $derived(
 		!install
@@ -393,7 +393,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			{#if staleClient}
 				<Alert
 					tone="warning"
-					message="This page is still running the {APP_VERSION} build while the server has moved to {staleClient}. Reload to catch up."
+					message={i18n.t('ab.stale', { mine: APP_VERSION, server: staleClient })}
 				/>
 			{/if}
 			<div class="facts">

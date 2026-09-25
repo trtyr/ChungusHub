@@ -139,7 +139,7 @@
 			idleMinutes = info.sessionIdleMinutes;
 			if (idleWasClean) idleInput = String(idleMinutes);
 		} catch (e) {
-			securityError = e instanceof Error ? e.message : 'Failed to load security settings';
+			securityError = e instanceof Error ? e.message : i18n.t('sec.loadFail');
 		}
 	}
 
