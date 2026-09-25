@@ -331,7 +331,7 @@
 
 	async function discardChanges(): Promise<void> {
 		if (!currentPreset || !isDirty) return;
-		const ok = await askConfirm({ title: 'Discard changes', message: 'Discard unsaved changes and revert to the saved version?', confirmLabel: 'Discard', variant: 'danger' });
+		const ok = await askConfirm({ title: i18n.t('pbv.discardTitle'), message: i18n.t('pbv.discardAsk'), confirmLabel: i18n.t('pbv.discard'), variant: 'danger' });
 		if (!ok) return;
 		const abandoned = currentPreset.meta?.cover;
 		const committed = await presetService.discardDraft(currentPreset.id);

@@ -28,6 +28,7 @@
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import { i18n } from '$lib/i18n/i18n.svelte';
+	import { labelT } from '$lib/i18n/labels';
 	import SettingsPageView from './SettingsPageView.svelte';
 	import { uiStore } from '$lib/stores/ui.svelte';
 	import { SETTINGS_GROUPS } from '$lib/config/settings-pages';
@@ -44,9 +45,9 @@
 	const engineId = $derived(uiStore.settingsEngineId);
 
 	const info = $derived.by(() => {
-		if (routing) return { group: 'Connection', label: 'Provider routing' };
-		if (connectionId) return { group: 'Connections', label: connectionStore.get(connectionId)?.name ?? 'Connection' };
-		if (engineId) return { group: 'Engines', label: ENGINES.find((e) => e.id === engineId)?.name ?? 'Engine' };
+		if (routing) return { group: i18n.t('sp.grpConnection'), label: i18n.t('pr.routingTitle2') };
+		if (connectionId) return { group: i18n.t('sp.grpConnections'), label: connectionStore.get(connectionId)?.name ?? i18n.t('sp.connFallback') };
+		if (engineId) return { group: i18n.t('sp.grpEngines'), label: labelT(ENGINES.find((e) => e.id === engineId)?.name ?? '') || i18n.t('sp.engineFallback') };
 		for (const group of SETTINGS_GROUPS) {
 			const row = group.rows.find((r) => r.page === page);
 			if (row) return { group: i18n.t(group.label), label: i18n.t(row.label) };

@@ -122,9 +122,9 @@
 	}
 
 	async function createPreset(): Promise<void> {
-		const name = await askName('New preset', 'Preset name', '', 'Create');
+		const name = await askName(i18n.t('pm.newTitle'), i18n.t('pm.nameLabel'), '', i18n.t('pm.create'));
 		if (!name?.trim() || rejectTakenName(name)) return;
-		await run(`create "${name.trim()}"`, async () => {
+		await run(i18n.t('f.createNamed', { name: name.trim() }), async () => {
 			const preset = await presetService.createPreset(name.trim());
 			await presetService.activatePreset(preset.id);
 		});
@@ -134,22 +134,22 @@
 		// Snapshotted like the delete: a sync while the dialog is open may swap the active preset.
 		const target = activePreset;
 		if (!target) return;
-		const name = (await askName('Rename preset', 'Preset name', target.name, 'Rename'))?.trim();
+		const name = (await askName(i18n.t('pm.renameTitle'), i18n.t('pm.nameLabel'), target.name, i18n.t('pm.rename')))?.trim();
 		if (!name || name === target.name || rejectTakenName(name, target.id)) return;
-		await run(`rename "${target.name}"`, () => presetService.renamePreset(target.id, name));
+		await run(i18n.t('f.renameNamed', { name: target.name }), () => presetService.renamePreset(target.id, name));
 	}
 
 	async function duplicatePreset(): Promise<void> {
 		const source = activePreset;
 		if (!source) return;
 		const name = await askName(
-			'Duplicate preset',
-			'Name for the duplicate',
-			`${source.name} (Copy)`,
-			'Duplicate'
+			i18n.t('pm.dupTitle'),
+			i18n.t('pm.dupLabel'),
+			i18n.t('pm.dupDefault', { name: source.name }),
+			i18n.t('pm.dup')
 		);
 		if (!name?.trim() || rejectTakenName(name)) return;
-		await run(`duplicate "${source.name}"`, async () => {
+		await run(i18n.t('f.dupNamed', { name: source.name }), async () => {
 			const preset = await presetService.duplicatePreset(source.id, name.trim());
 			await presetService.activatePreset(preset.id);
 		});
@@ -231,14 +231,14 @@
 		const items = target.items.length;
 		const ok = await askConfirm({
 			title: i18n.t('pm.delete'),
-			message: `Delete "${target.name}" and its ${items} prompt item${items === 1 ? '' : 's'} permanently?${presetService.hasDraft(target.id) ? ' Its unsaved Prompt Builder draft will also be deleted.' : ''}`,
+			message: i18n.t('pm.deleteAsk', { name: target.name, n: items }) + (presetService.hasDraft(target.id) ? i18n.t('pm.deleteDraft') : ''),
 			confirmLabel: i18n.t('pm.delete'),
 			variant: 'danger',
 			destructive: true,
 			holdMs: holdMsForBlast(items)
 		});
 		if (!ok) return;
-		await run(`delete "${target.name}"`, async () => {
+		await run(i18n.t('f.delNamed', { name: target.name }), async () => {
 			await presetService.deletePreset(target.id);
 		});
 	}
@@ -246,9 +246,9 @@
 	async function restoreDefaults(): Promise<void> {
 		const n = allPresets.length;
 		const ok = await askConfirm({
-			title: 'Restore default presets',
-			message: `This permanently deletes all ${n} preset${n === 1 ? '' : 's'} and every unsaved preset draft, then restores the factory defaults.`,
-			confirmLabel: 'Restore all defaults',
+			title: i18n.t('pm.restoreTitle'),
+			message: i18n.t('pm.restoreAsk', { n }),
+			confirmLabel: i18n.t('pm.restoreAll'),
 			variant: 'danger',
 			destructive: true,
 			holdMs: holdMsForBlast(n)
@@ -299,7 +299,7 @@
 			onclick={() => run('t.presetSaved', async () => { await onSave?.(); })}
 		>
 			<Icon name="check" class="w-3.5 h-3.5" strokeWidth={2} />
-			Save
+			{i18n.t('common.save')}
 		</button>
 	{/if}
 

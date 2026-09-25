@@ -277,13 +277,13 @@ export function buildGenerationParams(
 const EFFORT_ORDER: ReasoningEffort[] = ['off', 'minimal', 'low', 'medium', 'high', 'max'];
 
 export const EFFORT_LABELS: Record<'auto' | ReasoningEffort, string> = {
-	auto: 'Auto',
-	off: 'Off',
-	minimal: 'Minimal',
-	low: 'Low',
-	medium: 'Medium',
-	high: 'High',
-	max: 'Max'
+	auto: 'smp.effAuto',
+	off: 'smp.effOff',
+	minimal: 'smp.effMinimal',
+	low: 'smp.effLow',
+	medium: 'smp.effMedium',
+	high: 'smp.effHigh',
+	max: 'smp.effMax'
 };
 
 /** Model-gated reasoning policies apply only to models flagged isReasoning; an

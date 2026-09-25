@@ -288,7 +288,7 @@ class CharacterLibraryStore {
 		const clean = normalizeSpriteLabel(label);
 		if (!clean) throw new Error(i18n.t('lib.spriteLabel'));
 		if (findLabelConflict(existing, clean, path)) {
-			throw new Error(`Another sprite is already “${clean}”.`);
+			throw new Error(i18n.t('lib.spriteTaken', { name: clean }));
 		}
 
 		entry.identity = {
@@ -908,7 +908,7 @@ class CharacterLibraryStore {
 		const entry = this.getEntryById(entryId);
 		if (!entry || entry.activeVersionId === versionId) return;
 		const version = this._versions.find((v) => v.id === versionId && v.entryId === entryId);
-		if (!version) throw new Error(`No version "${versionId}" on this character.`);
+		if (!version) throw new Error(i18n.t('lib.noVersion', { name: versionId }));
 		await this.flushEntry(entryId);
 		entry.data = this.clone(version.data);
 		entry.activeVersionId = versionId;

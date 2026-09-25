@@ -89,11 +89,11 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	const routedModels = $derived(conn && !isRoutingEmpty(conn.routing) ? new Set([conn.model]) : new Set<string>());
 
 	const POST_PROCESSING_OPTIONS: { value: PromptPostProcessingMode; label: string; hint?: string }[] = [
-		{ value: 'none', label: 'None', hint: 'Send the prompt exactly as assembled, no reshaping.' },
-		{ value: 'merge', label: 'Merge consecutive roles' },
-		{ value: 'semi-strict', label: 'Semi-strict', hint: 'Merge roles and keep a single system message at the top; any later system message is sent as user.' },
-		{ value: 'strict', label: 'Strict', hint: 'Semi-strict, plus the conversation must open with a user turn. The placeholder below fills in when it doesn’t.' },
-		{ value: 'single-user', label: 'Single user message', hint: 'Collapse the entire prompt into one user message, for APIs that only accept a single turn.' }
+		{ value: 'none', label: i18n.t('ce.ppNone'), hint: i18n.t('ce.ppNoneH') },
+		{ value: 'merge', label: i18n.t('ce.ppMerge') },
+		{ value: 'semi-strict', label: i18n.t('ce.ppSemi'), hint: i18n.t('ce.ppSemiH') },
+		{ value: 'strict', label: i18n.t('ce.ppStrict'), hint: i18n.t('ce.ppStrictH') },
+		{ value: 'single-user', label: i18n.t('ce.ppSingle'), hint: i18n.t('ce.ppSingleH') }
 	];
 
 	const postProcessingHint = $derived(
@@ -133,27 +133,27 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	const cachingCtl = $derived(cachingControl(meta?.caching ?? null));
 
 	const VERBOSITY_OPTIONS: { value: string; label: string; title?: string }[] = [
-		{ value: 'auto', label: 'Auto', title: 'Provider default, nothing sent' },
-		{ value: 'low', label: 'Low', title: 'Terse' },
-		{ value: 'medium', label: 'Medium', title: 'Balanced' },
-		{ value: 'high', label: 'High', title: 'Expansive' }
+		{ value: 'auto', label: i18n.t('ce.verbAuto'), title: i18n.t('ce.verbAutoT') },
+		{ value: 'low', label: i18n.t('ce.verbLow'), title: i18n.t('ce.verbLowT') },
+		{ value: 'medium', label: i18n.t('ce.verbMedium'), title: i18n.t('ce.verbMediumT') },
+		{ value: 'high', label: i18n.t('ce.verbHigh'), title: i18n.t('ce.verbHighT') }
 	];
 
 	const IMAGE_DETAIL_OPTIONS: { value: string; label: string; title?: string }[] = [
-		{ value: 'auto', label: 'Auto', title: 'Provider decides' },
-		{ value: 'low', label: 'Low', title: 'Faster, cheaper' },
-		{ value: 'high', label: 'High', title: 'Full fidelity, pricier' }
+		{ value: 'auto', label: i18n.t('ce.imgAuto'), title: i18n.t('ce.imgAutoT') },
+		{ value: 'low', label: i18n.t('ce.imgLow'), title: i18n.t('ce.imgLowT') },
+		{ value: 'high', label: i18n.t('ce.imgHigh'), title: i18n.t('ce.imgHighT') }
 	];
 
 	const CACHE_TTL_OPTIONS: { value: string; label: string; title?: string }[] = [
-		{ value: '5m', label: '5 minutes', title: 'Cheapest writes' },
-		{ value: '1h', label: '1 hour', title: 'Pricier writes, worth it in long chats' }
+		{ value: '5m', label: i18n.t('ce.ttl5m'), title: i18n.t('ce.ttl5mT') },
+		{ value: '1h', label: i18n.t('ce.ttl1h'), title: i18n.t('ce.ttl1hT') }
 	];
 
 	const TIER_OPTIONS: { value: string; label: string; title?: string }[] = SERVICE_TIERS.map((t) => ({
 		value: t.value,
-		label: t.label,
-		title: t.hint
+		label: i18n.t(t.label),
+		title: i18n.t(t.hint)
 	}));
 
 	const effortPills = $derived(reasoningEffortOptions.map((l) => ({ value: l as string, label: EFFORT_LABELS[l] })));
