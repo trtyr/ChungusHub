@@ -113,7 +113,7 @@
 			if (successMessage) toastStore.success(successMessage);
 			return true;
 		} catch (e) {
-			toastStore.failed('save the skills', e);
+			toastStore.failed(i18n.t('f.saveSkills'), e);
 			await load();
 			return false;
 		}
@@ -213,7 +213,7 @@
 		try {
 			stage('defaults', await getDefaultSkills());
 		} catch (e) {
-			toastStore.failed('read the bundled skills', e);
+			toastStore.failed(i18n.t('f.readSkills'), e);
 		}
 	}
 

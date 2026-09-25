@@ -377,7 +377,7 @@
 		try {
 			await presetService.activatePreset(presetId);
 		} catch (err) {
-			toastStore.failed('switch the preset', err);
+			toastStore.failed(i18n.t('f.switchPreset'), err);
 		}
 	}
 

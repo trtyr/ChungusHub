@@ -132,7 +132,7 @@
 			const name = sanitizeFilename(`ChungusHub ${current?.label ?? 'stats'} ${stamp}`);
 			triggerDownload(`${name}.png`, await toBlob());
 		} catch (e) {
-			toastStore.failed('save the picture', e);
+			toastStore.failed(i18n.t('f.savePicture'), e);
 		}
 	}
 
@@ -147,7 +147,7 @@
 			await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
 			toastStore.success(i18n.t('st.copied'));
 		} catch (e) {
-			toastStore.failed('copy the picture', e);
+			toastStore.failed(i18n.t('f.copyPicture'), e);
 		}
 	}
 </script>

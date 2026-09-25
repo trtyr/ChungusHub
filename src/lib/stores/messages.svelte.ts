@@ -150,7 +150,7 @@ class MessageStore {
 			await this.generateResponse(state.chat.id, userMessage.id, prompt);
 		} catch (error) {
 			if (error instanceof Error && error.name !== 'AbortError') {
-				toastStore.failed('generate the reply', error);
+				toastStore.failed(i18n.t('f.genReply'), error);
 			}
 		} finally {
 			this.isProcessing = false;
@@ -304,7 +304,7 @@ class MessageStore {
 			await chatStore.refreshCurrentChat();
 		} catch (error) {
 			if (error instanceof Error && error.name !== 'AbortError') {
-				toastStore.failed('save the edit', error);
+				toastStore.failed(i18n.t('f.saveEdit'), error);
 			}
 			await chatStore.refreshCurrentChat();
 		} finally {
@@ -320,7 +320,7 @@ class MessageStore {
 			if (dropped) toastStore.info("This turn's summary was discarded. It will be re-read on the next pass.");
 		} catch (e) {
 			console.error('[memory] invalidate after archived edit failed:', e);
-			toastStore.failed('update memory for this edit', e);
+			toastStore.failed(i18n.t('f.updateMemEdit'), e);
 		}
 	}
 
@@ -331,7 +331,7 @@ class MessageStore {
 			await spriteStore.invalidateMessage(messageId);
 		} catch (e) {
 			console.error('[sprites] invalidate after edit failed:', e);
-			toastStore.failed('re-read the sprite for this turn', e);
+			toastStore.failed(i18n.t('f.rereadSprite'), e);
 		}
 	}
 
@@ -700,7 +700,7 @@ class MessageStore {
 			throw new Error('Retry is only available for user and assistant messages');
 		} catch (error) {
 			if (error instanceof Error && error.name !== 'AbortError') {
-				toastStore.failed('generate the new reply', error);
+				toastStore.failed(i18n.t('f.genNewReply'), error);
 			}
 		} finally {
 			this.isProcessing = false;
@@ -868,7 +868,7 @@ class MessageStore {
 			// stays untouched (the kept-tail case resolves normally above).
 			if (!(error instanceof Error && error.name === 'AbortError')) {
 				notifySound('failed');
-				toastStore.failed('continue the reply', error);
+				toastStore.failed(i18n.t('f.continueReply'), error);
 			}
 		} finally {
 			chatStore.endStream();

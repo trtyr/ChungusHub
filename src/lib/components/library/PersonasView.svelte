@@ -235,7 +235,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		try {
 			await characterLibraryStore.deleteEntry(id);
 		} catch (e) {
-			toastStore.failed('delete that persona', e);
+			toastStore.failed(i18n.t('f.delPersona'), e);
 		}
 	}
 

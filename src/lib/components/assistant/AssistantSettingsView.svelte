@@ -46,7 +46,7 @@
 			instructionsSaved = stored;
 			instructionsLoaded = true;
 		} catch (e) {
-			toastStore.failed('load the assistant instructions', e);
+			toastStore.failed(i18n.t('f.loadInstr'), e);
 		}
 	}
 
@@ -60,7 +60,7 @@
 			toastStore.success(next ? i18n.t('asm.setSaved') : i18n.t('asm.setCleared'));
 		} catch (e) {
 			instructionsDraft = instructionsSaved;
-			toastStore.failed('save the assistant instructions', e);
+			toastStore.failed(i18n.t('f.saveInstr'), e);
 		}
 	}
 

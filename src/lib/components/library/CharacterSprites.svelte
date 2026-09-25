@@ -69,7 +69,7 @@
 			await onRemove(sprite.path);
 		} catch (error) {
 			console.error('Removing a sprite failed:', error);
-			toastStore.failed('remove that sprite', error);
+			toastStore.failed(i18n.t('f.removeSprite'), error);
 		}
 	}
 
@@ -79,7 +79,7 @@
 			await onSetDefault(sprite.path);
 		} catch (error) {
 			console.error('Setting the default sprite failed:', error);
-			toastStore.failed('make that the default', error);
+			toastStore.failed(i18n.t('f.makeDefault'), error);
 		}
 	}
 

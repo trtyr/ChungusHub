@@ -155,7 +155,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			await copyText(install.dataDir);
 			toastStore.success(i18n.t('t.copiedDataPath'));
 		} catch (error) {
-			toastStore.failed('copy the path', error);
+			toastStore.failed(i18n.t('f.copyPath'), error);
 		}
 	}
 
@@ -164,7 +164,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			await copyText(LINKS.discordHandle);
 			toastStore.success(i18n.t('t.copiedDiscord'));
 		} catch (error) {
-			toastStore.failed('copy the handle', error);
+			toastStore.failed(i18n.t('f.copyHandle'), error);
 		}
 	}
 
@@ -173,7 +173,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			await copyText(environment);
 			toastStore.success(i18n.t('t.copiedDetails'));
 		} catch (error) {
-			toastStore.failed('copy the details', error);
+			toastStore.failed(i18n.t('f.copyDetails'), error);
 		}
 	}
 

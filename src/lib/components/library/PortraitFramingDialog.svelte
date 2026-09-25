@@ -192,7 +192,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			await onSave(isDefault ? null : draft);
 			onClose();
 		} catch (error) {
-			toastStore.failed('save that framing', error);
+			toastStore.failed(i18n.t('f.saveFraming'), error);
 		} finally {
 			saving = false;
 		}

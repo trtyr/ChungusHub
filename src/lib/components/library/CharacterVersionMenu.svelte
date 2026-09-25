@@ -104,7 +104,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		try {
 			await characterLibraryStore.switchActiveVersion(entryId, versionId);
 		} catch (error) {
-			toastStore.failed('switch to that version', error);
+			toastStore.failed(i18n.t('f.switchVersion'), error);
 		} finally {
 			busy = false;
 		}
@@ -144,7 +144,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			await characterLibraryStore.deleteVersion(versionId);
 			confirmingDeleteId = null;
 		} catch (error) {
-			toastStore.failed('delete that version', error);
+			toastStore.failed(i18n.t('f.delVersion'), error);
 			confirmingDeleteId = null;
 		} finally {
 			busy = false;

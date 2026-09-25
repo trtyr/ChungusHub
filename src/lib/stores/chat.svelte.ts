@@ -314,7 +314,7 @@ class ChatStore {
 			// nothing on screen saying why. Put the reader back where they were and say it.
 			this.activeChatId = previousChatId;
 			if (previousChatId === null) uiStore.openWelcome();
-			toastStore.failed('open that chat', e);
+			toastStore.failed(i18n.t('f.openChat'), e);
 			throw e;
 		}
 	}
@@ -485,7 +485,7 @@ class ChatStore {
 			stopGeneration(live.requestId);
 			this.setLiveElsewhere(null);
 		} catch (e) {
-			toastStore.failed('stop that reply', e);
+			toastStore.failed(i18n.t('f.stopReply'), e);
 		}
 	}
 

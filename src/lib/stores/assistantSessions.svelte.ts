@@ -10,6 +10,7 @@
  * refresh and syncs across devices); the open-tab set and active tab are saved
  * as device preferences in settings.
  */
+import { i18n } from '$lib/i18n/i18n.svelte';
 import { db } from '$lib/services/database';
 import { toastStore } from '$lib/stores/toast.svelte';
 import {
@@ -223,7 +224,7 @@ class AssistantSessionStore {
 		try {
 			await assistantApprove(sessionId, pending.askId, approved);
 		} catch (e) {
-			toastStore.failed('send your answer', e);
+			toastStore.failed(i18n.t('f.sendAnswer'), e);
 			return;
 		}
 		this.clearPending(sessionId, pending.askId);
@@ -237,7 +238,7 @@ class AssistantSessionStore {
 		try {
 			await assistantAnswer(sessionId, pending.askId, answers);
 		} catch (e) {
-			toastStore.failed('send your answer', e);
+			toastStore.failed(i18n.t('f.sendAnswer'), e);
 			return;
 		}
 		this.clearPending(sessionId, pending.askId);
@@ -635,7 +636,7 @@ class AssistantSessionStore {
 		// or on another device. Turns are session-keyed server-side, so the Stop still lands
 		// and the turn answers with its usual stopped finish.
 		assistantCancel(sessionId).catch((e) => {
-			toastStore.failed('stop the turn', e);
+			toastStore.failed(i18n.t('f.stopTurn'), e);
 		});
 	}
 

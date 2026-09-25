@@ -123,7 +123,7 @@
 		try {
 			await characterLibraryStore.updateData(id, { lorebookIds: next });
 		} catch (error) {
-			toastStore.failed('change what carries this lorebook', error);
+			toastStore.failed(i18n.t('f.changeCarrier'), error);
 		}
 	}
 
@@ -131,7 +131,7 @@
 		try {
 			await chatStore.toggleChatLorebook(id, bookId);
 		} catch (error) {
-			toastStore.failed('change what carries this lorebook', error);
+			toastStore.failed(i18n.t('f.changeCarrier'), error);
 		}
 	}
 </script>

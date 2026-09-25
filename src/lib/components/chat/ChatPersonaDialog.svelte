@@ -32,7 +32,7 @@
 			toastStore.success(name ? i18n.t('t.relabelNow', { name }) : i18n.t('t.relabelYou'));
 			onClose();
 		} catch (e) {
-			toastStore.failed('set the chat persona', e);
+			toastStore.failed(i18n.t('f.setPersona'), e);
 		} finally {
 			saving = false;
 		}

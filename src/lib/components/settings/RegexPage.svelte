@@ -163,7 +163,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			regexRulesStore.importRules(imported);
 			toastStore.success(i18n.t('t.importedRules', { n: imported.length }));
 		} catch (e) {
-			toastStore.failed('import those rules', e);
+			toastStore.failed(i18n.t('f.importRules'), e);
 		}
 	}
 </script>

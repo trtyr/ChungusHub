@@ -45,7 +45,7 @@
 			enabled = parseEnabledGroups(await db.getSetting(CAPABILITIES_SETTING), catalog);
 			loaded = true;
 		} catch (e) {
-			toastStore.failed('load the assistant capabilities', e);
+			toastStore.failed(i18n.t('f.loadCaps'), e);
 		}
 	}
 
@@ -56,7 +56,7 @@
 			await db.setSetting(CAPABILITIES_SETTING, JSON.stringify(next));
 		} catch (e) {
 			enabled = previous;
-			toastStore.failed('save the capabilities', e);
+			toastStore.failed(i18n.t('f.saveCaps'), e);
 		}
 	}
 

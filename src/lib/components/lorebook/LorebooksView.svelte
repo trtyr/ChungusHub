@@ -232,7 +232,7 @@
 			const book = await lorebookStore.createBook('');
 			open(book.id);
 		} catch (err) {
-			toastStore.failed('create a lorebook', err);
+			toastStore.failed(i18n.t('f.createBook'), err);
 		}
 	}
 
@@ -282,7 +282,7 @@
 		try {
 			await lorebookStore.deleteBook(id);
 		} catch (err) {
-			toastStore.failed('delete that lorebook', err);
+			toastStore.failed(i18n.t('f.delBook'), err);
 		}
 	}
 

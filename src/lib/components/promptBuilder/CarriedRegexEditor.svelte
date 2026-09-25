@@ -78,7 +78,7 @@
 			set([...rules, ...imported]);
 			toastStore.success(i18n.t('t.addedRules', { n: imported.length }));
 		} catch (e) {
-			toastStore.failed('import those rules', e);
+			toastStore.failed(i18n.t('f.importRules'), e);
 		}
 	}
 

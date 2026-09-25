@@ -65,7 +65,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		if (!entry) return;
 		characterLibraryStore
 			.setChatDefault(entry.id, key, value)
-			.catch((error) => toastStore.failed('save what new chats with this character start on', error));
+			.catch((error) => toastStore.failed(i18n.t('f.saveChatDefaults'), error));
 	}
 
 	// Closed by default and per open editor: what a chat starts on is set once and then left

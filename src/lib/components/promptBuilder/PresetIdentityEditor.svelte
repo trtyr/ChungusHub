@@ -54,7 +54,7 @@
 		try {
 			set('cover', await imageService.saveImage(file, 'presets'));
 		} catch (error) {
-			toastStore.failed('read that image', error);
+			toastStore.failed(i18n.t('f.readImage'), error);
 		} finally {
 			busy = false;
 		}

@@ -77,7 +77,7 @@
 		try {
 			await messageStore.continueMessage();
 		} catch (error) {
-			toastStore.failed('continue the reply', error);
+			toastStore.failed(i18n.t('f.continueReply'), error);
 		}
 	}
 

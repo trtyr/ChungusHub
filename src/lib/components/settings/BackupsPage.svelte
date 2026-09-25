@@ -169,7 +169,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		try {
 			await backupStore.cancelPendingRestore();
 		} catch (error) {
-			toastStore.failed('cancel the restore', error);
+			toastStore.failed(i18n.t('f.cancelRestore'), error);
 		} finally {
 			cancelling = false;
 		}
@@ -182,7 +182,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		try {
 			await backupStore.remove([target.id]);
 		} catch (error) {
-			toastStore.failed('delete that backup', error);
+			toastStore.failed(i18n.t('f.delBackup'), error);
 		}
 	}
 
@@ -197,7 +197,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			// The rows vanish, which the screen shows; the count is the part it does not.
 			toastStore.success(i18n.t('t.deletedBackups', { n: removed }));
 		} catch (error) {
-			toastStore.failed('delete those backups', error);
+			toastStore.failed(i18n.t('f.delBackups'), error);
 		}
 	}
 
@@ -225,7 +225,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			await copyText(backupStore.location);
 			toastStore.success(i18n.t('t.copiedBackupPath'));
 		} catch (error) {
-			toastStore.failed('copy the path', error);
+			toastStore.failed(i18n.t('f.copyPath'), error);
 		}
 	}
 

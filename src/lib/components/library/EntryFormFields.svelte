@@ -108,7 +108,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			await onSpriteLabel(target.path, label);
 		} catch (error) {
 			console.error('Renaming a sprite failed:', error);
-			toastStore.failed('rename that sprite', error);
+			toastStore.failed(i18n.t('f.renameSprite'), error);
 		}
 	}
 

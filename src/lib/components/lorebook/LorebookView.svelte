@@ -128,7 +128,7 @@
 			await lorebookStore.flush();
 		} catch (error) {
 			// The book stays open, so what was typed is still on screen to try again with.
-			toastStore.failed('save this lorebook', error);
+			toastStore.failed(i18n.t('f.saveBook'), error);
 			return;
 		}
 		uiStore.lorebookEditorId = null;
@@ -214,7 +214,7 @@
 		try {
 			await lorebookStore.setCover(selectedBook.id, null);
 		} catch (error) {
-			toastStore.failed('remove that cover', error);
+			toastStore.failed(i18n.t('f.removeCover'), error);
 		} finally {
 			coverBusy = false;
 		}
@@ -431,7 +431,7 @@
 		try {
 			await lorebookStore.deleteBook(id);
 		} catch (error) {
-			toastStore.failed('delete that lorebook', error);
+			toastStore.failed(i18n.t('f.delBook'), error);
 		}
 	}
 

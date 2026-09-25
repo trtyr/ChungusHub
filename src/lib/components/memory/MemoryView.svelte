@@ -160,7 +160,7 @@
 		try {
 			await memoryStore.enable(c);
 		} catch (e) {
-			toastStore.failed('turn memory on for this chat', e);
+			toastStore.failed(i18n.t('f.memoryOn'), e);
 		}
 	}
 

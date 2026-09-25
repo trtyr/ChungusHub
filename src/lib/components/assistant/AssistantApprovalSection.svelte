@@ -33,7 +33,7 @@
 			mode = readApprovalMode(await db.getSetting(MODE_SETTING));
 			loaded = true;
 		} catch (e) {
-			toastStore.failed('load the approval settings', e);
+			toastStore.failed(i18n.t('f.loadApproval'), e);
 		}
 	}
 
@@ -56,7 +56,7 @@
 			await assistantSessionStore.refreshApprovalDefaults();
 		} catch (e) {
 			mode = previous;
-			toastStore.failed('save the approval mode', e);
+			toastStore.failed(i18n.t('f.saveApproval'), e);
 		}
 	}
 

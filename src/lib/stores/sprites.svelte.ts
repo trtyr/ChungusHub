@@ -10,6 +10,7 @@
  * and a phone, which never draws one, spends nothing on sprites at all.
  */
 
+import { i18n } from '$lib/i18n/i18n.svelte';
 import { SvelteMap, SvelteSet } from 'svelte/reactivity';
 import { db } from '$lib/services/database';
 import { chatStore } from '$lib/stores/chat.svelte';
@@ -187,7 +188,7 @@ class SpriteStore {
 			// per turn.
 			this.failed.set(message.id, message.content);
 			console.error('[sprites] reading the newest turn failed:', e);
-			toastStore.failed('pick a sprite for this reply', e);
+			toastStore.failed(i18n.t('f.pickSprite'), e);
 		} finally {
 			this.inFlight.delete(message.id);
 		}

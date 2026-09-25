@@ -47,7 +47,7 @@
 			total = page.totalLines;
 		} catch (e) {
 			failed = e instanceof Error ? e.message : String(e);
-			toastStore.failed('read this file', e);
+			toastStore.failed(i18n.t('f.readFile'), e);
 		} finally {
 			loading = false;
 		}

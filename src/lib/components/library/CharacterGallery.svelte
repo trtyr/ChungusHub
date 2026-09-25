@@ -55,7 +55,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			await onRemove(path);
 		} catch (error) {
 			console.error('Removing a gallery image failed:', error);
-			toastStore.failed('remove that image', error);
+			toastStore.failed(i18n.t('f.removeImage2'), error);
 		}
 	}
 

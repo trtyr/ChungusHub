@@ -13,6 +13,7 @@
  * with no write, no round trip and nothing to go stale.
  */
 
+import { i18n } from '$lib/i18n/i18n.svelte';
 import type { Message } from '$lib/types/chat';
 import type { LLMCompletionResult, LLMMessage } from '$lib/types/llm';
 import { llmService } from '$lib/services/llm/provider';
@@ -747,7 +748,7 @@ class MemoryStore {
 					this.status = 'error';
 					this.lastError = e instanceof Error ? e.message : String(e);
 					console.error('[memory] processing failed:', e);
-					toastStore.failed('update this chat memory', this.lastError);
+					toastStore.failed(i18n.t('f.updateMem'), this.lastError);
 				}
 			}
 			// Per-batch commits are durable, so surface whatever was folded before the failure

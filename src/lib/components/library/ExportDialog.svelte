@@ -62,7 +62,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			onClose();
 		} catch (error) {
 			console.error('Failed to export character:', error);
-			toastStore.failed('export that entry', error);
+			toastStore.failed(i18n.t('f.exportEntry'), error);
 		} finally {
 			busy = false;
 		}
