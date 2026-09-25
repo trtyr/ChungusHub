@@ -44,7 +44,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	let listEl = $state<HTMLDivElement | null>(null);
 
 	let picked = $derived(options.find((option) => option.id === value) ?? null);
-	let triggerText = $derived(lost ? 'No longer here' : (picked?.name ?? fallbackLabel));
+	let triggerText = $derived(lost ? i18n.t('cd.noLongerHere') : (picked?.name ?? fallbackLabel));
 	/** The app's answer first, then the library's rows: one list for the keyboard, in the
 	 *  order they are drawn. A lost seed is not in it, since it is already the value. */
 	let navigable = $derived<(string | null)[]>([null, ...options.map((option) => option.id)]);

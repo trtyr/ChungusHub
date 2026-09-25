@@ -331,21 +331,21 @@ class MemoryStore {
 	 */
 	standing = $derived.by<MemoryStandingState>(() => {
 		if (this.status === 'processing') {
-			return { kind: 'working', label: 'Reading new turns…', outstanding: this.outstandingCalls };
+			return { kind: 'working', label: i18n.t('mem.stReading'), outstanding: this.outstandingCalls };
 		}
 		if (this.status === 'building') {
-			return { kind: 'working', label: 'Reading the story…', outstanding: this.outstandingCalls };
+			return { kind: 'working', label: i18n.t('mem.stStory'), outstanding: this.outstandingCalls };
 		}
 		if (this.status === 'rebuilding') {
 			return { kind: 'working', label: 'Re-reading from the start…', outstanding: this.outstandingCalls };
 		}
-		const idle: MemoryStandingState = { kind: 'idle', label: 'Up to date', outstanding: 0 };
+		const idle: MemoryStandingState = { kind: 'idle', label: i18n.t('mem.stUpToDate'), outstanding: 0 };
 		if (!this.active) return idle;
 		if (this.status === 'error') return { kind: 'error', label: 'Something went wrong', outstanding: 0 };
 		if (this.pending > 0 && this.canSummarise) {
 			return {
 				kind: 'behind',
-				label: `${this.pending} turns waiting to be summarized`,
+				label: i18n.t('mem.stWaiting', { n: this.pending }),
 				outstanding: this.outstandingCalls
 			};
 		}

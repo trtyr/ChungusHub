@@ -94,53 +94,53 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		const rows: ChatDefaultRow[] = [
 			{
 				key: 'defaultPersonaId',
-				label: 'Persona',
+				label: i18n.t('ed.labelPersona'),
 				// The word the library badges the app's own persona with, so the option points at
 				// something the reader can go and look at.
-				fallback: 'Default',
-				detail: chatPersonaEntry(null)?.identity.name?.trim() || 'No persona',
-				group: 'Personas',
+				fallback: i18n.t('ed.fallbackDefault'),
+				detail: chatPersonaEntry(null)?.identity.name?.trim() || i18n.t('ed.noPersona'),
+				group: i18n.t('ed.grpPersonas'),
 				options: characterLibraryStore.personas.map((p) => ({
 					id: p.id,
 					name: p.identity.name || i18n.t('lib.unnamedPersona')
 				})),
-				gone: "That persona is no longer in your library, so new chats start as the app's."
+				gone: i18n.t('ed.gonePersona')
 			},
 			{
 				key: 'defaultConnectionId',
-				label: 'Connection',
+				label: i18n.t('ed.labelConnection'),
 				// Not "Default" here: a connection can BE named Default (a fresh install's is), and
 				// an option naming one of the rows under it is a trap.
-				fallback: 'Global',
-				detail: connectionStore.connectionFor('primary')?.name ?? 'No connection',
-				group: 'Connections',
+				fallback: i18n.t('ed.fallbackGlobal'),
+				detail: connectionStore.connectionFor('primary')?.name ?? i18n.t('ed.noConnection'),
+				group: i18n.t('ed.grpConnections'),
 				options: connectionStore.list().map((c) => ({ id: c.id, name: c.name })),
-				gone: "That connection is gone, so new chats send on the app's."
+				gone: i18n.t('ed.goneConnection')
 			},
 			{
 				key: 'defaultPresetId',
 				// Not "Default" either, and for the connection row's reason: a preset can be
 				// named Default, and an option naming one of the rows under it is a trap.
-				label: 'Preset',
-				fallback: 'Global',
-				detail: presetService.getActiveEffectivePreset()?.name ?? 'No preset',
-				group: 'Presets',
+				label: i18n.t('ed.labelPreset'),
+				fallback: i18n.t('ed.fallbackGlobal'),
+				detail: presetService.getActiveEffectivePreset()?.name ?? i18n.t('ed.noPreset'),
+				group: i18n.t('ed.grpPresets'),
 				options: presetService.getAllPresets().map((p) => ({ id: p.id, name: p.name })),
-				gone: "That preset is gone, so new chats run the app's."
+				gone: i18n.t('ed.gonePreset')
 			}
 		];
 		// Nothing to choose between on an unversioned character, and its chats pin nothing.
 		if (versions.length > 0) {
 			rows.push({
 				key: 'defaultVersionId',
-				label: 'Version',
+				label: i18n.t('ed.labelVersion'),
 				// Which one that is carries the Default badge in the header's version menu too, so
 				// the answer is the same wherever the reader meets it.
-				fallback: 'Default',
+				fallback: i18n.t('ed.fallbackDefault'),
 				detail: versions[0].name,
-				group: 'Versions',
+				group: i18n.t('ed.grpVersions'),
 				options: versions.map((v) => ({ id: v.id, name: v.name })),
-				gone: 'That version is gone, so new chats start on the first one made.'
+				gone: i18n.t('ed.goneVersion')
 			});
 		}
 		return rows;

@@ -50,7 +50,7 @@
 		if (record.status === 'groupLost' && record.lostTo) {
 			return i18n.t('tr.rGroupTo', { g: record.lostTo.group, t: record.lostTo.title || i18n.t('tr.another') });
 		}
-		return REASONS[record.status];
+		return i18n.t(REASONS[record.status]);
 	}
 
 	/** Where an entry landed, said only when it is not the block everything else went into. */
@@ -68,13 +68,13 @@
 			const woke = source.title || 'another entry';
 			// The book is named only when it is not the one this entry lives in: that is the
 			// case the reader cannot work out from the row they are looking at.
-			return source.bookName && source.bookName !== bookName ? `from ${woke} (${source.bookName})` : `from ${woke}`;
+			return source.bookName && source.bookName !== bookName ? i18n.t('tr.fromBook', { w: woke, b: source.bookName }) : i18n.t('tr.from', { w: woke });
 		}
 		if (source.kind === 'field') {
-			return `in the ${LOREBOOK_SCAN_FIELDS.find((f) => f.id === source.field)?.label.toLowerCase()}`;
+			return i18n.t('tr.inField', { f: i18n.t(LOREBOOK_SCAN_FIELDS.find((f) => f.id === source.field)?.label ?? '') });
 		}
-		if (source.depth === 0) return 'in the last turn';
-		return `${source.depth} ${source.depth === 1 ? 'turn' : 'turns'} back`;
+		if (source.depth === 0) return i18n.t('tr.lastTurn');
+		return i18n.t('tr.nBack', { n: source.depth });
 	}
 
 	const injected = $derived(trace.records.filter((r) => lorebookWasInjected(r.status)));
@@ -82,11 +82,11 @@
 
 	const summary = $derived.by(() => {
 		const parts: string[] = [];
-		parts.push(injected.length === 1 ? '1 entry in the prompt' : `${injected.length} entries in the prompt`);
-		if (held.length > 0) parts.push(`${held.length} kept out`);
+		parts.push(i18n.t('tr.nInPrompt', { n: injected.length }));
+		if (held.length > 0) parts.push(i18n.t('tr.nKeptOut', { n: held.length }));
 		// "Silent", not "never matched": the count also holds entries that were switched off,
 		// empty, or filtered to another generation kind.
-		if (trace.silent > 0) parts.push(`${trace.silent} stayed silent`);
+		if (trace.silent > 0) parts.push(i18n.t('tr.nSilent', { n: trace.silent }));
 		return parts.join(' · ');
 	});
 

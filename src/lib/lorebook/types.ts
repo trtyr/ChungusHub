@@ -150,12 +150,12 @@ export function resolveKeyMatch(
  * book that opted into it there opts into it here, and back again.
  */
 export const LOREBOOK_SCAN_FIELDS = [
-	{ id: 'characterDescription', label: 'Description', native: 'matchCharacterDescription', card: 'match_character_description' },
-	{ id: 'characterPersonality', label: 'Personality', native: 'matchCharacterPersonality', card: 'match_character_personality' },
-	{ id: 'scenario', label: 'Scenario', native: 'matchScenario', card: 'match_scenario' },
-	{ id: 'personaDescription', label: 'Persona', native: 'matchPersonaDescription', card: 'match_persona_description' },
-	{ id: 'creatorNotes', label: 'Creator’s notes', native: 'matchCreatorNotes', card: 'match_creator_notes' },
-	{ id: 'steering', label: 'Steering', native: 'matchCharacterDepthPrompt', card: 'match_character_depth_prompt' }
+	{ id: 'characterDescription', label: 'lbf.Description', native: 'matchCharacterDescription', card: 'match_character_description' },
+	{ id: 'characterPersonality', label: 'lbf.Personality', native: 'matchCharacterPersonality', card: 'match_character_personality' },
+	{ id: 'scenario', label: 'lbf.Scenario', native: 'matchScenario', card: 'match_scenario' },
+	{ id: 'personaDescription', label: 'lbf.Persona', native: 'matchPersonaDescription', card: 'match_persona_description' },
+	{ id: 'creatorNotes', label: 'lbf.Creator’snotes', native: 'matchCreatorNotes', card: 'match_creator_notes' },
+	{ id: 'steering', label: 'lbf.Steering', native: 'matchCharacterDepthPrompt', card: 'match_character_depth_prompt' }
 ] as const;
 
 export type LorebookScanField = (typeof LOREBOOK_SCAN_FIELDS)[number]['id'];
@@ -308,9 +308,9 @@ export type LorebookRole = 'system' | 'user' | 'assistant';
 
 /** SillyTavern's `role` enum for at-depth entries: system 0, user 1, assistant 2. */
 export const LOREBOOK_ROLES: { id: number; label: string; role: LorebookRole }[] = [
-	{ id: 0, label: 'System', role: 'system' },
-	{ id: 1, label: 'User', role: 'user' },
-	{ id: 2, label: 'Assistant', role: 'assistant' }
+	{ id: 0, label: 'lbf.System', role: 'system' },
+	{ id: 1, label: 'lbf.User', role: 'user' },
+	{ id: 2, label: 'lbf.Assistant', role: 'assistant' }
 ];
 
 /** How far back an at-depth entry lands when it names no depth. SillyTavern's own default. */
@@ -346,10 +346,10 @@ export type LorebookTrigger = 'normal' | 'swipe' | 'continue' | 'impersonate';
 /** The kinds the editor offers, labelled in the app's own words. Values are SillyTavern's
  *  own trigger tokens, so the filter exports natively. */
 export const LOREBOOK_TRIGGERS: { id: LorebookTrigger; label: string }[] = [
-	{ id: 'normal', label: 'Send' },
-	{ id: 'swipe', label: 'Regenerate' },
-	{ id: 'continue', label: 'Continue' },
-	{ id: 'impersonate', label: 'Impersonate' }
+	{ id: 'normal', label: 'lbf.Send' },
+	{ id: 'swipe', label: 'lbf.Regenerate' },
+	{ id: 'continue', label: 'lbf.Continue' },
+	{ id: 'impersonate', label: 'lbf.Impersonate' }
 ];
 
 /** SillyTavern splits replacing a reply from swiping a new one; one Regenerate answers both.

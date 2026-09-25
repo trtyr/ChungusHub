@@ -304,7 +304,7 @@
 						<span class="assistant-approval-item-head">
 							<span class="assistant-approval-item-label">{i18n.t(choice.label)}</span>
 							{#if choice.badge}
-								<span class="assistant-approval-badge">{choice.badge}</span>
+								<span class="assistant-approval-badge">{i18n.t(choice.badge)}</span>
 							{/if}
 						</span>
 						<span class="assistant-approval-item-hint">{i18n.t(choice.hint)}</span>

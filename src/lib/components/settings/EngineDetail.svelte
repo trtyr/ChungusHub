@@ -282,8 +282,8 @@
 					<div class="slider-block">
 						<div class="slider-top">
 							<span class="slider-label-wrap">
-								<label for="mem-default-{f.key}" class="slider-label">{f.label}</label>
-								<InfoTip text={f.help} />
+								<label for="mem-default-{f.key}" class="slider-label">{i18n.t(f.label)}</label>
+								<InfoTip text={i18n.t(f.help)} />
 								<OverrideMark
 									overridden={!followsInherited(featurePromptsStore.memoryDefaults, {}, f.key)}
 									onRevert={() => memCommit(f.key, DEFAULT_MEMORY_CONFIG[f.key])}

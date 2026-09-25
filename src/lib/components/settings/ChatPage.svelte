@@ -207,7 +207,7 @@
 				value={row.color}
 				chip="var({row.live})"
 				oninput={row.oncolor}
-				label="{row.label} color"
+				label={i18n.t('chatpg.colorAria', { label: row.label })}
 				sources={proseSources(row.color, row.shipped)}
 				source={row.source}
 				onsource={row.onsource}
