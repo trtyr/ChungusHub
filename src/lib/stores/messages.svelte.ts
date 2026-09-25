@@ -317,7 +317,7 @@ class MessageStore {
 	private async invalidateMemoryFor(chatId: string, messageId: string): Promise<void> {
 		try {
 			const dropped = await memoryStore.invalidateMessage(chatId, messageId);
-			if (dropped) toastStore.info("This turn's summary was discarded. It will be re-read on the next pass.");
+			if (dropped) toastStore.info(i18n.t('t.summaryDiscarded'));
 		} catch (e) {
 			console.error('[memory] invalidate after archived edit failed:', e);
 			toastStore.failed(i18n.t('f.updateMemEdit'), e);

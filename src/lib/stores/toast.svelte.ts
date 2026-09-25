@@ -77,7 +77,7 @@ function reasonText(cause: unknown): string {
 export function failureText(act: string, cause?: unknown): string {
 	const reason = reasonText(cause);
 	const verb = act.startsWith('f.') || act.startsWith('t.') ? i18n.t(act) : act;
-	return reason ? `${verb}失败：${reason}` : `${verb}失败`;
+	return reason ? i18n.t('t.failLine', { verb, reason }) : i18n.t('t.failBare', { verb });
 }
 
 class ToastStore {

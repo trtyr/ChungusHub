@@ -57,7 +57,7 @@
 			await onAddFiles(valid.map((file) => ({ file, label: labelFromFilename(file.name) })));
 		} catch (error) {
 			console.error('Adding sprites failed:', error);
-			toastStore.failed(valid.length === 1 ? 'add that sprite' : `add those ${valid.length} sprites`, error);
+			toastStore.failed(valid.length === 1 ? 'f.addThatSprite' : 'f.addThoseSprites', error);
 		} finally {
 			uploading = false;
 		}

@@ -205,7 +205,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		try {
 			await backupStore.setPinned(s.id, !s.pinned);
 		} catch (error) {
-			toastStore.failed(s.pinned ? 'unpin that backup' : 'pin that backup', error);
+			toastStore.failed(s.pinned ? 'f.unpinBackup' : 'f.pinBackup', error);
 		}
 	}
 

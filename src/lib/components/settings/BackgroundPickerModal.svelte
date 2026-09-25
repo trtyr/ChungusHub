@@ -68,7 +68,7 @@
 			await refresh();
 			backgroundStore.setBackground(path);
 		} catch (e) {
-			error = failureText(`upload "${file.name}"`, e);
+			error = failureText(i18n.t('f.uploadNamed', { name: file.name }), e);
 		} finally {
 			uploading = false;
 		}
@@ -87,7 +87,7 @@
 			if (selectedPath === entry.path) backgroundStore.setBackground(null);
 			await refresh();
 		} catch (e) {
-			error = failureText(`delete "${entry.name}"`, e);
+			error = failureText(i18n.t('f.delNamedBg', { name: entry.name }), e);
 		}
 	}
 </script>

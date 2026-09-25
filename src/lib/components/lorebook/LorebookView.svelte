@@ -362,7 +362,7 @@
 			toastStore.success(i18n.t('t.transferred', { verb, n: landed, name }));
 			if (mode === 'move') selectMode = false;
 		} catch (error) {
-			toastStore.failed(mode === 'move' ? 'move those entries' : 'copy those entries', error);
+			toastStore.failed(mode === 'move' ? 'f.moveEntries' : 'f.copyEntries', error);
 		} finally {
 			transferBusy = false;
 		}

@@ -171,7 +171,7 @@
 			phase = 'ready';
 		} catch (error) {
 			if (signal.aborted || (error instanceof Error && error.name === 'AbortError')) return;
-			errorMessage = failureText(kind === 'spellcheck' ? 'check the draft' : 'write the message', error);
+			errorMessage = failureText(kind === 'spellcheck' ? 'f.checkDraft' : 'f.writeMessage', error);
 			phase = 'error';
 		}
 	}
