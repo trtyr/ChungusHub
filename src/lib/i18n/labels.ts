@@ -107,6 +107,23 @@ const ZH: Record<string, string> = {
 	'in flight': '进行中',
 	'Your only persona: create another one before deleting this': '这是你唯一的身份：先创建另一个身份才能删除',
 	'Empty steering': '空引导',
+	"Unsupported file type. Please use a PNG or JSON character card.": '不支持的文件类型。请使用 PNG 或 JSON 角色卡。',
+	"No character data found in PNG. Is this a valid SillyTavern character card?": 'PNG 中未找到角色数据。这是有效的 SillyTavern 角色卡吗？',
+	"Invalid JSON in character card.": '角色卡中的 JSON 无效。',
+	"Spellcheck is turned off in Settings → Engines": '拼写检查已在 设置 → 引擎 中关闭',
+	"Impersonate is turned off in Settings → Engines": '扮演已在 设置 → 引擎 中关闭',
+	"Cannot transform an empty draft": '空草稿无法转换',
+	"Sprites is turned off in Settings → Engines": '立绘已在 设置 → 引擎 中关闭',
+	"There is no turn to read": '没有可读取的回合',
+	"The Sprites prompt has no {{labels}}, so there is nothing to choose from": '立绘提示词没有 {{{{labels}}}}，因此无从选择',
+	"Message not found in active path": '活动路径中未找到该消息',
+	"Cannot regenerate: assistant message has no parent": '无法重新生成：AI 回复消息没有父消息',
+	"Retry is only available for user and assistant messages": '仅用户消息与 AI 回复可重试',
+	"Opening Scene is turned off in Settings → Engines": '开场场景已在 设置 → 引擎 中关闭',
+	"This chat is pinned to a character version that no longer exists. Repin it from the version menu.": '此聊天钉住的立绘版本已不存在。请在版本菜单中重新钉住。',
+	"Not valid JSON.": 'JSON 无效。',
+	"No regex rules found. Expected a rules export or a SillyTavern regex script.": '未找到正则规则。需要规则导出或 SillyTavern 正则脚本。',
+	"Not a lorebook: expected a JSON object.": '不是世界书：应为 JSON 对象。',
 };
 
 /** Translate a store-sourced label into the active language; unknown labels pass through. */

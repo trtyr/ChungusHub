@@ -163,7 +163,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		title={activeVersion ? i18n.t('vm.versionPrefix', { name: activeVersion.name }) : i18n.t('vm.versions')}
 	>
 		<Icon name="branch" class="w-3.5 h-3.5" />
-		<span class="version-chip-label">{activeVersion ? activeVersion.name : 'Versions'}</span>
+		<span class="version-chip-label">{activeVersion ? activeVersion.name : i18n.t('sb.versions')}</span>
 		<Icon name="chevronDown" class="w-3 h-3" />
 	</button>
 

@@ -38,7 +38,6 @@ export interface Toast {
 	/** Repeats of an identical line fold into the live one instead of stacking twins. */
 	count: number;
 }
-
 /** How long each tone is worth reading. Held here rather than at the call sites so a sentence
  *  cannot quietly buy itself a longer stay than its severity earns. */
 const DURATION: Record<ToastTone, number> = {
@@ -54,6 +53,7 @@ const MAX_VISIBLE = 3;
 /** An embedded reason past this is a stack trace or a page of provider JSON, and neither is
  *  something the reader can act on. */
 import { i18n } from '$lib/i18n/i18n.svelte';
+import { labelT } from '$lib/i18n/labels';
 
 const REASON_CAP = 160;
 
@@ -65,7 +65,6 @@ function reasonText(cause: unknown): string {
 	if (!raw) return '';
 	return raw.length > REASON_CAP ? `${raw.slice(0, REASON_CAP).trimEnd()}…` : raw;
 }
-
 /**
  * The app's one failure sentence. `act` is what was being attempted, as a bare verb phrase the
  * sentence completes: 'save the preset', 'import "Alice"', 'reach the server'.
@@ -77,9 +76,9 @@ function reasonText(cause: unknown): string {
 export function failureText(act: string, cause?: unknown): string {
 	const reason = reasonText(cause);
 	const verb = act.startsWith('f.') || act.startsWith('t.') ? i18n.t(act) : act;
-	return reason ? i18n.t('t.failLine', { verb, reason }) : i18n.t('t.failBare', { verb });
+	const shown = labelT(reason);
+		return reason ? i18n.t('t.failLine', { verb, reason: shown }) : i18n.t('t.failBare', { verb });
 }
-
 class ToastStore {
 	toasts = $state<Toast[]>([]);
 	private timers = new Map<string, ReturnType<typeof setTimeout>>();
@@ -143,5 +142,4 @@ class ToastStore {
 		this.show(failureText(act, cause), 'error');
 	}
 }
-
 export const toastStore = new ToastStore();

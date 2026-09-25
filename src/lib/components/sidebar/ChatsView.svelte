@@ -1078,7 +1078,7 @@
 								{section.label}
 							</div>
 						{/if}
-						<div class="chats-section-body" role="group" aria-label={section.label ?? 'Chats'}>
+						<div class="chats-section-body" role="group" aria-label={section.label ?? i18n.t('svc.chats2')}>
 							{#each section.chats as chat (chat.id)}
 								{@const index = indexById.get(chat.id) ?? 0}
 								<ChatListRow

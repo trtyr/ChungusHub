@@ -389,7 +389,7 @@
 										<span class="sec-title">{i18n.t('dp.tools')}</span>
 										<span class="sec-count">{tools.length}</span>
 									</button>
-									<span class="sec-meta">~{toolSize.toLocaleString()} tok · {toolShare}% of the request</span>
+									<span class="sec-meta">~{toolSize.toLocaleString()} tok · {i18n.t('dp.ofRequest', { n: toolShare })}</span>
 									<span class="spacer"></span>
 									<CopyButton text={() => JSON.stringify(tools, null, 2)} title={i18n.t('dp.copyTools')} />
 								</div>
