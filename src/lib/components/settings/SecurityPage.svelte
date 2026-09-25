@@ -162,7 +162,7 @@
 			await setNetworkAccessEnabled(on);
 			networkEnabled = on;
 		} catch (e) {
-			networkError = e instanceof Error ? e.message : 'Failed to update network access';
+			networkError = e instanceof Error ? e.message : i18n.t('sec.updNetwork');
 		} finally {
 			securityBusy = false;
 		}
@@ -192,7 +192,7 @@
 			await setIpAllowlistEnabled(on);
 			allowlistEnabled = on;
 		} catch (e) {
-			accessError = e instanceof Error ? e.message : 'Failed to update allowlist setting';
+			accessError = e instanceof Error ? e.message : i18n.t('sec.updAllow');
 		} finally {
 			securityBusy = false;
 		}
@@ -216,7 +216,7 @@
 			applyAccess(await allowIpAddress(ip));
 			return true;
 		} catch (e) {
-			accessError = e instanceof Error ? e.message : 'Failed to add IP';
+			accessError = e instanceof Error ? e.message : i18n.t('sec.addIp');
 			return false;
 		} finally {
 			busy = false;
@@ -253,7 +253,7 @@
 		try {
 			applyAccess(await revokeIpAddress(ip));
 		} catch (e) {
-			accessError = e instanceof Error ? e.message : 'Failed to remove IP';
+			accessError = e instanceof Error ? e.message : i18n.t('sec.rmIp');
 		} finally {
 			busy = false;
 		}
@@ -294,7 +294,7 @@
 			await setPasswordLockEnabled(on);
 			passwordEnabled = on;
 		} catch (e) {
-			securityError = e instanceof Error ? e.message : 'Failed to update password lock';
+			securityError = e instanceof Error ? e.message : i18n.t('sec.updLock');
 		} finally {
 			securityBusy = false;
 		}
@@ -311,7 +311,7 @@
 			// "060" saves as 60, and a field left spelling it the other way reads as unsaved.
 			idleInput = String(minutes);
 		} catch (e) {
-			securityError = e instanceof Error ? e.message : 'Failed to update the idle timeout';
+			securityError = e instanceof Error ? e.message : i18n.t('sec.updIdle');
 		} finally {
 			securityBusy = false;
 		}

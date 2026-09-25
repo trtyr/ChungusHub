@@ -20,7 +20,7 @@
 
 	let { tool, model, collapsed, onToggle }: Props = $props();
 
-	/** Providers take tool definitions in OpenAI's `{type:'function', function:{…}}` shape,
+	/** Providers take {i18n.t('dbg.toolDefs')} in OpenAI's `{type:'function', function:{…}}` shape,
 	 *  which is what every caller here builds. Anything else is shown as raw JSON under an
 	 *  explicit label rather than silently rendered as an empty tool. */
 	let shape = $derived.by(() => {

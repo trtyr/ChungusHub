@@ -663,7 +663,7 @@
 					{i18n.t('asm.t5')}
 				</span>
 				<button type="button" onclick={applySettings} disabled={applyingSettings} title={i18n.t('asm.applyTip')}>
-					{applyingSettings ? 'Applying…' : 'Apply'}
+					{i18n.t(applyingSettings ? 'ch.applying' : 'ch.applyBtn')}
 				</button>
 			</div>
 		{/if}

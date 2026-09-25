@@ -52,7 +52,7 @@
 
 	/**
 	 * Cards the user has toggled AWAY from their default: messages open by default (they
-	 * are the reading surface), tool definitions closed (they are reference). Scoped to the
+	 * are the reading surface), {i18n.t('dbg.toolDefs')} closed (they are reference). Scoped to the
 	 * entry the keys belong to and re-derived when the selection moves, so switching entries
 	 * can never carry another entry's state, and the fold-all control and each card's own
 	 * chevron read the same one source.
@@ -312,42 +312,42 @@
 
 					<div class="stats">
 						<div class="stat">
-							<span class="k">status</span>
+							<span class="k">{i18n.t('dbg.kStatus')}</span>
 							<span class="v st">{statusLabel(entry.status)}</span>
 						</div>
 						<div class="stat">
-							<span class="k">prompt · {size.reported ? 'reported' : 'estimated'}</span>
+							<span class="k">{i18n.t('dbg.kPrompt')} · {i18n.t(size.reported ? 'dbg.kReported' : 'dbg.kEstimated')}</span>
 							<span class="v" class:est={!size.reported}>{size.reported ? '' : '~'}{size.tokens.toLocaleString()}</span>
 						</div>
 						{#if entry.usage}
 							<div class="stat">
-								<span class="k">completion</span>
+								<span class="k">{i18n.t('dbg.kCompletion')}</span>
 								<span class="v">{entry.usage.completionTokens.toLocaleString()}</span>
 							</div>
 							{#if entry.usage.cachedTokens}
 								<div class="stat">
-									<span class="k">cached</span>
+									<span class="k">{i18n.t('dbg.kCached')}</span>
 									<span class="v cached">{entry.usage.cachedTokens.toLocaleString()}</span>
 								</div>
 							{/if}
 							<div class="stat">
-								<span class="k">total</span>
+								<span class="k">{i18n.t('dbg.kTotal')}</span>
 								<span class="v">{entry.usage.totalTokens.toLocaleString()}</span>
 							</div>
 						{/if}
 						<div class="stat">
-							<span class="k">started</span>
+							<span class="k">{i18n.t('dbg.kStarted')}</span>
 							<span class="v">{formatPreciseTime(entry.startedAt)}</span>
 						</div>
 						{#if formatDuration(entry.startedAt, entry.endedAt)}
 							<div class="stat">
-								<span class="k">duration</span>
+								<span class="k">{i18n.t('dbg.kDuration')}</span>
 								<span class="v">{formatDuration(entry.startedAt, entry.endedAt)}</span>
 							</div>
 						{/if}
 						{#if entry.finishReason}
 							<div class="stat">
-								<span class="k">finish</span>
+								<span class="k">{i18n.t('dbg.kFinish')}</span>
 								<span class="v">{entry.finishReason}</span>
 							</div>
 						{/if}
