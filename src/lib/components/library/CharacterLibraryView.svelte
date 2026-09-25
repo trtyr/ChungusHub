@@ -85,7 +85,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		guardFlash = true;
 		if (guardFlashTimer) clearTimeout(guardFlashTimer);
 		guardFlashTimer = setTimeout(() => (guardFlash = false), 800);
-		toastStore.error('Save or discard this new character first');
+		toastStore.error(i18n.t('t.saveOrDiscard'));
 	});
 
 	// SillyTavern import
@@ -369,7 +369,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	async function handleDuplicate(id: string) {
 		const entry = await characterLibraryStore.duplicateEntry(id);
 		if (entry) {
-			toastStore.success(`Duplicated "${entry.identity.name || 'entry'}"`);
+			toastStore.success(i18n.t('t.duplicatedNamed', { name: entry.identity.name || i18n.t('lbw.untitledEntry') }));
 		}
 	}
 
@@ -496,10 +496,10 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		}
 		if (successCount > 0) {
 			if (successCount === 1 && lastEntry) {
-				toastStore.success(`Imported "${lastEntry.identity.name || 'character'}"`);
+				toastStore.success(i18n.t('t.importedNamed', { name: lastEntry.identity.name || i18n.t('pcf.untitled') }));
 				uiStore.libraryEditorId = lastEntry.id;
 			} else {
-				toastStore.success(`Imported ${successCount} character${successCount > 1 ? 's' : ''}`);
+				toastStore.success(i18n.t('t.importedChars', { n: successCount }));
 			}
 		}
 
@@ -607,7 +607,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		bulkDeleteUsage = null;
 		const unboundChatIds = await characterLibraryStore.deleteEntries(ids);
 		chatStore.unbindCharacterFromChats(unboundChatIds);
-		toastStore.success(`Deleted ${ids.length} character${ids.length === 1 ? '' : 's'}`);
+		toastStore.success(i18n.t('t.deletedChars', { n: ids.length }));
 		clearSelection();
 	}
 
@@ -646,7 +646,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 
 	async function removeBulkTag(tag: string) {
 		const changed = await characterLibraryStore.removeTagsMany([...selectedIds], [tag]);
-		toastStore.success(`Removed "${tag}" from ${changed} character${changed === 1 ? '' : 's'}`);
+		toastStore.success(i18n.t('t.removedTagFrom', { tag, n: changed }));
 	}
 </script>
 

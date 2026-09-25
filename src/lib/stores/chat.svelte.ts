@@ -1,3 +1,4 @@
+import { i18n } from '$lib/i18n/i18n.svelte';
 import type { Chat, Message, ChatState, ChatStream } from '$lib/types/chat';
 import {
 	DEFAULT_CHAT_FEATURE_STATE,
@@ -582,7 +583,7 @@ class ChatStore {
 		// A reply this page is not writing counts the same: the rows it is about to be
 		// committed into are the ones being deleted.
 		if (this.stream?.chatId === chatId || this.liveElsewhere?.chatId === chatId) {
-			toastStore.warning('A reply is still generating in this chat. Wait for it, or stop it first.');
+			toastStore.warning(i18n.t('t.replyInChat'));
 			return;
 		}
 
@@ -643,7 +644,7 @@ class ChatStore {
 		// The vanished rows say the delete happened. These two say what the rows cannot:
 		// one chat the batch could not touch, and one that refused.
 		if (streaming) {
-			toastStore.warning(`"${streaming.title}" was kept: a reply is still generating in it`);
+			toastStore.warning(i18n.t('t.keptStreaming', { name: streaming.title ?? '' }));
 		}
 		if (failure) toastStore.failed(`delete "${failure.title}"`, failure.cause);
 	}

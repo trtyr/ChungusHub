@@ -195,7 +195,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			selected = new Set();
 			selecting = false;
 			// The rows vanish, which the screen shows; the count is the part it does not.
-			toastStore.success(`Deleted ${removed} backup${removed === 1 ? '' : 's'}`);
+			toastStore.success(i18n.t('t.deletedBackups', { n: removed }));
 		} catch (error) {
 			toastStore.failed('delete those backups', error);
 		}
@@ -223,7 +223,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	async function copyLocation(): Promise<void> {
 		try {
 			await copyText(backupStore.location);
-			toastStore.success('Copied the backup folder path');
+			toastStore.success(i18n.t('t.copiedBackupPath'));
 		} catch (error) {
 			toastStore.failed('copy the path', error);
 		}

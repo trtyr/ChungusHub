@@ -78,7 +78,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		regexRulesStore.setCarriedEnabled(rule, false);
 		expandedCarriedId = null;
 		expandedId = copy.id;
-		toastStore.success(`Copied “${rule.name}” to your rules`);
+		toastStore.success(i18n.t('t.copiedRule', { name: rule.name }));
 	}
 
 	function handleAdd(): void {
@@ -161,7 +161,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			if (file.size > 2 * 1024 * 1024) throw new Error('Rule files must be smaller than 2 MB.');
 			const imported = parseRegexRulesImport(await file.text());
 			regexRulesStore.importRules(imported);
-			toastStore.success(`Imported ${imported.length} rule${imported.length === 1 ? '' : 's'}`);
+			toastStore.success(i18n.t('t.importedRules', { n: imported.length }));
 		} catch (e) {
 			toastStore.failed('import those rules', e);
 		}

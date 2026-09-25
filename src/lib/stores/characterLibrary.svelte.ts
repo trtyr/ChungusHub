@@ -1,3 +1,4 @@
+import { i18n } from '$lib/i18n/i18n.svelte';
 import { db } from '$lib/services/database';
 import { imageService, type ImageCategory } from '$lib/services/imageService';
 import type {
@@ -168,7 +169,7 @@ class CharacterLibraryStore {
 			await this.persistEntry(entry);
 		} catch (error) {
 			console.error('Failed to save library entry:', error);
-			toastStore.error('Couldn\'t save. Your edits are on screen but not on disk.');
+			toastStore.error(i18n.t('t.saveFailed'));
 		}
 	}
 

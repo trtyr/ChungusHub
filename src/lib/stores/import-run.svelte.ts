@@ -33,6 +33,7 @@
  * Runtime state, written nowhere. The run is one page's async call, so a reload ends it, and
  * anything persisted here would outlive the thing it describes.
  */
+import { i18n } from '$lib/i18n/i18n.svelte';
 import {
 	importSillyTavernFolder,
 	type ImportProgress,
@@ -340,7 +341,7 @@ class ImportRunStore {
 		const imported = groups.reduce((sum, g) => sum + g.imported, 0);
 		const failed = groups.reduce((sum, g) => sum + g.failed.length, 0);
 		if (this.stoppedBy === 'connection') {
-			toastStore.warning(`SillyTavern import stopped, the server went away. ${imported} items came over.`);
+			toastStore.warning(i18n.t('t.stStopped', { n: imported }));
 			return;
 		}
 		if (this.stoppedBy === 'you') {
@@ -348,10 +349,10 @@ class ImportRunStore {
 			return;
 		}
 		if (failed > 0) {
-			toastStore.warning(`Imported ${imported} items from SillyTavern, ${failed} failed`);
+			toastStore.warning(i18n.t('t.stPartial', { n: imported, f: failed }));
 			return;
 		}
-		toastStore.success(`Imported ${imported} items from SillyTavern`);
+		toastStore.success(i18n.t('t.stImported', { n: imported }));
 	}
 }
 

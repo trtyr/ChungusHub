@@ -155,7 +155,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	async function handleDuplicate() {
 		if (!entry) return;
 		const copy = await characterLibraryStore.duplicateEntry(entry.id);
-		if (copy) toastStore.success(`Duplicated "${copy.identity.name || 'persona'}"`);
+		if (copy) toastStore.success(i18n.t('t.duplicatedNamed', { name: copy.identity.name || i18n.t('pv.newPersona') }));
 	}
 
 	let showConvert = $state(false);
@@ -214,7 +214,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			// without a second step; otherwise activation stays an explicit choice.
 			if (!personaStore.activeId) personaStore.setActive(entry.id);
 			flashSaved();
-			toastStore.success('Persona saved');
+			toastStore.success(i18n.t('t.personaSaved'));
 		} finally {
 			committing = false;
 		}

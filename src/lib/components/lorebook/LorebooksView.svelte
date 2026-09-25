@@ -246,7 +246,7 @@
 				const book = await readLorebookFile(file);
 				await lorebookStore.addBook(book);
 				landed.push(book.id);
-				toastStore.success(`Imported "${book.name}" (${book.entries.length} entries)`);
+				toastStore.success(i18n.t('t.importedBook', { name: book.name, n: book.entries.length }));
 			} catch (err) {
 				toastStore.failed(`import "${file.name}"`, err);
 			}

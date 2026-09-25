@@ -31,7 +31,7 @@
 		try {
 			await copyText(`{{${name}}}`);
 		} catch {
-			toastStore.error('Copy failed. Type the macro out instead.');
+			toastStore.error(i18n.t('t.macroCopyFailed'));
 			return;
 		}
 		copiedMacro = name;

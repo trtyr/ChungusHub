@@ -153,7 +153,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		if (!install) return;
 		try {
 			await copyText(install.dataDir);
-			toastStore.success('Copied the data folder path');
+			toastStore.success(i18n.t('t.copiedDataPath'));
 		} catch (error) {
 			toastStore.failed('copy the path', error);
 		}
@@ -162,7 +162,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	async function copyHandle(): Promise<void> {
 		try {
 			await copyText(LINKS.discordHandle);
-			toastStore.success('Copied the Discord handle');
+			toastStore.success(i18n.t('t.copiedDiscord'));
 		} catch (error) {
 			toastStore.failed('copy the handle', error);
 		}
@@ -171,7 +171,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	async function copyEnvironment(): Promise<void> {
 		try {
 			await copyText(environment);
-			toastStore.success('Copied the details');
+			toastStore.success(i18n.t('t.copiedDetails'));
 		} catch (error) {
 			toastStore.failed('copy the details', error);
 		}

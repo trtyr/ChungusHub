@@ -68,11 +68,11 @@ class MessageStore {
 		// "still generating" about a prompt that has not left the browser sends the reader
 		// looking for a Stop button that is not the answer.
 		if (promptHoldStore.holding) {
-			toastStore.warning('A prompt is waiting for your review. Send it or cancel it first.');
+			toastStore.warning(i18n.t('t.promptWaiting'));
 			return true;
 		}
 		if (this.isProcessing || this.isStreaming) {
-			toastStore.warning('A reply is still generating. Wait for it, or stop it first.');
+			toastStore.warning(i18n.t('t.replyGenerating'));
 			return true;
 		}
 		return false;
@@ -740,7 +740,7 @@ class MessageStore {
 		if (!state) throw new Error('No active chat');
 		const leaf = state.activePath[state.activePath.length - 1];
 		if (!leaf || leaf.role !== 'assistant') {
-			toastStore.warning('Continue needs the newest turn to be an AI reply');
+			toastStore.warning(i18n.t('t.continueNeedsReply'));
 			return;
 		}
 
@@ -808,14 +808,14 @@ class MessageStore {
 			if (!result.content.trim()) {
 				// A stop before the first token is the user's own doing, not a model that
 				// answered with nothing, so it passes silently.
-				if (result.finishReason !== 'cancelled') toastStore.warning('The model returned no continuation text');
+				if (result.finishReason !== 'cancelled') toastStore.warning(i18n.t('t.noContinuation'));
 				return;
 			}
 			// The anchor is the turn's text as the model received it (self-refs expanded, prompt
 			// regex applied), so a restatement of a macro-laden greeting is still caught.
 			const joined = joinContinuation(target.content, result.content, continuationSent);
 			if (joined === target.content) {
-				toastStore.warning('The model only restated the existing reply, so nothing was added');
+				toastStore.warning(i18n.t('t.restatedOnly'));
 				return;
 			}
 

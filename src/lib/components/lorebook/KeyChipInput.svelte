@@ -113,9 +113,9 @@
 		// A refusal, not a failure, but it is the one thing here that answers a keystroke with
 		// nothing happening, so it carries more than the quiet weight an info note has.
 		if (refused.length === 1) {
-			toastStore.warning(`"${refused[0]}" is already a keyword here`);
+			toastStore.warning(i18n.t('t.keyExists', { key: refused[0] }));
 		} else if (refused.length > 1) {
-			toastStore.warning(`${refused.length} keywords were already here: ${refused.join(', ')}`);
+			toastStore.warning(i18n.t('t.keysExist', { n: refused.length, keys: refused.join(', ') }));
 		}
 		if (next.length !== keys.length) onChange(next);
 	}

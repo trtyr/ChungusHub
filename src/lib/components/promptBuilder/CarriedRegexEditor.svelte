@@ -76,7 +76,7 @@
 			if (file.size > 2 * 1024 * 1024) throw new Error('Rule files must be smaller than 2 MB.');
 			const imported = parseRegexRulesImport(await file.text());
 			set([...rules, ...imported]);
-			toastStore.success(`Added ${imported.length} rule${imported.length === 1 ? '' : 's'} to this preset`);
+			toastStore.success(i18n.t('t.addedRules', { n: imported.length }));
 		} catch (e) {
 			toastStore.failed('import those rules', e);
 		}
@@ -100,7 +100,7 @@
 		const { id: _ownId, ...body } = source;
 		const copy = createRegexRule({ ...body, targets: [...source.targets], scopes: [...source.scopes] });
 		set([...rules, copy]);
-		toastStore.success(`Added “${copy.name}” to this preset`);
+		toastStore.success(i18n.t('t.addedNamed', { name: copy.name }));
 	}
 
 	function remove(id: string): void {

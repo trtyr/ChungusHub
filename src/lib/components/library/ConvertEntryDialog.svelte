@@ -43,7 +43,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		busy = true;
 		try {
 			const created = await characterLibraryStore.convertEntry(entry.id, description);
-			toastStore.success(`Created the ${targetLabel} "${created.identity.name || 'Unnamed'}"`);
+			toastStore.success(i18n.t('t.createdNamed', { label: targetLabel, name: created.identity.name || i18n.t('pcf.untitled') }));
 			onClose();
 		} catch (error) {
 			console.error('Converting the entry failed:', error);

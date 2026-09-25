@@ -131,7 +131,7 @@
 	async function save(item: Item): Promise<void> {
 		if (item.busy || (!isDirty(item) && !item.isNew)) return;
 		if (!item.name.trim() || !item.description.trim() || !item.body.trim()) {
-			toastStore.error('A skill needs a name, a description, and a body');
+			toastStore.error(i18n.t('t.skillNeedsFields'));
 			return;
 		}
 		item.busy = true;

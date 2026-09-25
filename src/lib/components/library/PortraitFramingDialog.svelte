@@ -104,7 +104,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			};
 			probe.onerror = () => {
 				if (cancelled) return;
-				toastStore.error('That portrait could not be loaded.');
+				toastStore.error(i18n.t('t.portraitLoadFail'));
 				onClose();
 			};
 			probe.src = url;

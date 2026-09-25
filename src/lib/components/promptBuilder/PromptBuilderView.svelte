@@ -320,7 +320,7 @@
 		if (committed) currentPreset = cloneForEdit(committed);
 		await dropUnusedCover(replaced, committed?.meta?.cover);
 		flashSaved();
-		toastStore.success('Preset saved');
+		toastStore.success(i18n.t('t.presetSaved'));
 	}
 
 	async function discardChanges(): Promise<void> {

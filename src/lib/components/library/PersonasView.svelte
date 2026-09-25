@@ -87,7 +87,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		guardFlash = true;
 		if (guardFlashTimer) clearTimeout(guardFlashTimer);
 		guardFlashTimer = setTimeout(() => (guardFlash = false), 800);
-		toastStore.error('Save or discard this new persona first');
+		toastStore.error(i18n.t('t.saveOrDiscard'));
 	});
 
 	// ---- View mode & card size. Persisted via the synced settings spine. ----
@@ -199,7 +199,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	async function handleDuplicate(id: string) {
 		const entry = await characterLibraryStore.duplicateEntry(id);
 		if (entry) {
-			toastStore.success(`Duplicated "${entry.identity.name || 'entry'}"`);
+			toastStore.success(i18n.t('t.duplicatedNamed', { name: entry.identity.name || i18n.t('lbw.untitledEntry') }));
 		}
 	}
 

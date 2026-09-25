@@ -304,7 +304,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	async function handleDuplicate() {
 		if (!entry) return;
 		const copy = await characterLibraryStore.duplicateEntry(entry.id);
-		if (copy) toastStore.success(`Duplicated "${copy.identity.name || 'entry'}"`);
+		if (copy) toastStore.success(i18n.t('t.duplicatedNamed', { name: copy.identity.name || i18n.t('lbw.untitledEntry') }));
 	}
 </script>
 

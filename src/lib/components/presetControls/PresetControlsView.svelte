@@ -298,22 +298,22 @@
 
 	function applyBundle(bundle: PromptPresetBundle): void {
 		adoptSetup(bundle);
-		toastStore.success(`Applied “${bundle.name}”`);
+		toastStore.success(i18n.t('t.applied', { name: bundle.name }));
 	}
 
 	function applyDefaults(): void {
 		adoptDefaults();
-		toastStore.success("Back to the author's defaults");
+		toastStore.success(i18n.t('t.backToDefaults'));
 	}
 
 	/** Reset-all re-adopts whichever baseline is lit. It never changes what is lit. */
 	function resetAll(): void {
 		if (selectedSetup) {
 			adoptSetup(selectedSetup);
-			toastStore.success(`Back to “${selectedSetup.name}”`);
+			toastStore.success(i18n.t('t.backTo', { name: selectedSetup.name }));
 		} else {
 			adoptDefaults();
-			toastStore.success("Back to the author's defaults");
+			toastStore.success(i18n.t('t.backToDefaults'));
 		}
 	}
 

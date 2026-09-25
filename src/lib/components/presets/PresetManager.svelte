@@ -92,7 +92,7 @@
 
 	function rejectTakenName(name: string, exceptId?: string): boolean {
 		if (!presetService.isNameTaken(name, exceptId)) return false;
-		toastStore.error(`A preset named "${name.trim()}" already exists`);
+		toastStore.error(i18n.t('t.presetExists', { name: name.trim() }));
 		return true;
 	}
 
@@ -159,7 +159,7 @@
 		if (!activePreset) return;
 		await run('copy the preset JSON', async () => {
 			await copyText(presetService.exportPresetJson(activePreset.id));
-			toastStore.success('Preset JSON copied to clipboard');
+			toastStore.success(i18n.t('t.presetJsonCopied'));
 		});
 	}
 
@@ -178,7 +178,7 @@
 		await run(`export "${preset.name}"`, async () => {
 			const json = presetService.exportPresetJson(preset.id);
 			triggerDownload(presetFilename(preset.name, 'json'), new Blob([json], { type: 'application/json' }));
-			toastStore.success(`Exported "${preset.name}"`);
+			toastStore.success(i18n.t('t.exported', { name: preset.name }));
 		});
 	}
 
@@ -188,7 +188,7 @@
 		if (!preset) return;
 		await run(`export "${preset.name}" as a card`, async () => {
 			await exportPresetCard(preset, presetFilename(preset.name, 'png'));
-			toastStore.success(`Exported "${preset.name}" as a card`);
+			toastStore.success(i18n.t('t.exportedCard', { name: preset.name }));
 		});
 	}
 
@@ -219,7 +219,7 @@
 				preset = await presetService.importPresetJson(await file.text());
 			}
 			await presetService.activatePreset(preset.id);
-			toastStore.success(`Imported "${preset.name}"`);
+			toastStore.success(i18n.t('t.importedNamed2', { name: preset.name }));
 		});
 	}
 
@@ -256,7 +256,7 @@
 		if (!ok) return;
 		await run('restore the default presets', async () => {
 			await presetService.restoreDefaults();
-			toastStore.success('Default presets restored');
+			toastStore.success(i18n.t('t.defaultsRestored'));
 		});
 	}
 </script>
