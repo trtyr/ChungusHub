@@ -477,7 +477,7 @@ function drawWriting(ctx: CanvasRenderingContext2D, palette: Palette, snapshot: 
 	if (comparison) {
 		ctx.fillStyle = palette.muted;
 		ctx.font = `400 36px ${palette.serif}`;
-		wrap(ctx, i18n.t('p.aboutLong', { c: comparisonLabel(comparison, i18n.t('st.timesWord')) }), INNER).forEach((line, i) => {
+		wrap(ctx, i18n.t('p.aboutLong', { c: comparisonLabel(comparison, comparison.times === 2 ? i18n.t('st.twice') : comparison.times > 2 ? i18n.t('st.nTimes', { n: count(comparison.times) }) : undefined) }), INNER).forEach((line, i) => {
 			ctx.fillText(line, PAD, 726 + i * 50);
 		});
 	}
