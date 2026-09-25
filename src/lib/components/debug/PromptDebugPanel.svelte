@@ -356,7 +356,7 @@
 
 					{#if !size.reported && images.length}
 						<p class="note">
-							The estimate covers text and tool schemas only. The {images.length} image attachment{images.length === 1 ? '' : 's'}
+							{i18n.t('dbg.estimateNote', { n: images.length })}
 							
 						</p>
 					{/if}

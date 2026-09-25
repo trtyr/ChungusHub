@@ -132,7 +132,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						class="input-base w-full px-2.5 py-1.5 text-text-primary font-ui text-sm"
 					/>
 					<p class="bl-kit-meta">
-						{Object.keys(bundle.values).length} value{Object.keys(bundle.values).length === 1 ? '' : 's'}{#if missing > 0}<span class="bl-kit-warn"> · {missing} newer control{missing === 1 ? '' : 's'} not covered, recapture to include {missing === 1 ? 'it' : 'them'}</span>{/if}
+						{i18n.t('bl.valuesN', { n: Object.keys(bundle.values).length })}{#if missing > 0}<span class="bl-kit-warn">{i18n.t('bl.notCovered', { n: missing })}</span>{/if}
 					</p>
 				</div>
 			{/each}

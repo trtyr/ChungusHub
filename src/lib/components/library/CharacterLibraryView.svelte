@@ -1318,7 +1318,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	<div class="space-y-4">
 		<p class="text-sm text-text-secondary">
 			{i18n.t('clv.ofImported', { n: pendingWithBooks.length })}
-			{pendingWithBooks.length === 1 ? 'comes' : 'come'} with an embedded lorebook. Pick which to
+			{pendingWithBooks.length === 1 ? i18n.t('clv.embedded1') : i18n.t('clv.embeddedN')}
 			
 		</p>
 
@@ -1327,7 +1327,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				{i18n.t(allBooksSelected ? 'common.deselectAll' : 'common.selectAll')}
 			</button>
 			<span class="text-xs text-text-tertiary">
-				{pendingWithBooks.filter((p) => p.importBook).length} selected
+				{pendingWithBooks.filter((p) => p.importBook).length} {i18n.t('clv.selected')}
 			</span>
 		</div>
 

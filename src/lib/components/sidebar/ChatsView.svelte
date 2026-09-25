@@ -1017,7 +1017,7 @@
 					disabled={selectedCount === 0}
 				>
 					<Icon name="trash" class="w-3.5 h-3.5" />
-					Delete {selectedCount}
+					{i18n.t('common.delete')} {selectedCount}
 				</button>
 			</div>
 		{/if}
