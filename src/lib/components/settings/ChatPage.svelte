@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { labelT } from '$lib/i18n/labels';
 	/**
 	 * Settings → Appearance → Chat: the reading column and everything drawn inside it.
 	 * The column's measure, the face the story is set in, and the turns.
@@ -311,7 +312,7 @@
 					onchange={(e) => themeStore.update({ bodyFont: (e.target as HTMLSelectElement).value })}
 				>
 					{#each themeStore.bodyFonts as font (font.id)}
-						<option value={font.id}>{font.label}</option>
+						<option value={font.id}>{labelT(font.label)}</option>
 					{/each}
 				</Select>
 			</div>
