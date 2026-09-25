@@ -274,9 +274,9 @@
 	};
 
 	const roleLabels: Record<PromptRole, string> = {
-		system: 'System',
-		user: 'User',
-		assistant: 'Assistant'
+		system: 'pb.roleSystem',
+		user: 'pb.roleUser',
+		assistant: 'pb.roleAssistant'
 	};
 
 	// Make sure presets are loaded; the guard inside initialize() makes re-runs free.
