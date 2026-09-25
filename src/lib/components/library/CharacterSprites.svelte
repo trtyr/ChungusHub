@@ -176,8 +176,7 @@
 
 {#if items.length === 0}
 	<p class="text-xs font-ui text-text-muted">
-		Add pictures here. Each takes its name from the filename, and that name is what the engine
-		picks it by.
+		{i18n.t('spr.addPictures')}
 	</p>
 {/if}
 

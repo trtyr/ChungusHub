@@ -2,6 +2,7 @@
 	import { characterLibraryStore } from '$lib/stores/characterLibrary.svelte';
 	import { chatStore } from '$lib/stores/chat.svelte';
 	import { personaStore, LAST_PERSONA_REASON } from '$lib/stores/persona.svelte';
+	import { labelT } from '$lib/i18n/labels';
 	import { generalSettingsStore } from '$lib/stores/general-settings.svelte';
 	import { chatPersonaEntry } from '$lib/utils/chat-setup';
 	import { uiStore } from '$lib/stores/ui.svelte';
@@ -42,7 +43,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	let activeId = $derived(personaStore.activeEntry?.id ?? null);
 	// The app keeps at least one persona (architecture/library.md): the server refuses the
 	// last delete, so the menu item goes inert and says why rather than vanishing.
-	let deleteBlockedReason = $derived(personas.length > 1 ? undefined : LAST_PERSONA_REASON);
+	let deleteBlockedReason = $derived(personas.length > 1 ? undefined : labelT(LAST_PERSONA_REASON));
 
 	// Mirror the open entry into the workspace-focus store so the Chungus Assistant can
 	// auto-attach "the persona you're editing". Mirrors CharacterLibraryView.

@@ -70,7 +70,7 @@
 			</button>
 			<img
 				src={url}
-				alt={name ?? 'Portrait'}
+				alt={name ?? i18n.t('sb.portrait')}
 				class="portrait-image"
 				style="width: min(var(--picture-room), calc(var(--picture-height) * {aspect}))"
 				onload={measure}

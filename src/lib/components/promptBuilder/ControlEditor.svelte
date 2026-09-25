@@ -260,7 +260,7 @@
 		<div class="ce-inline">
 			<span class="ce-label">{i18n.t('ce2.default')}</span>
 			<Toggle checked={control.defaultOn ?? false} onchange={(v) => update({ defaultOn: v })} label={i18n.t('lbl.defaultState')} />
-			<span class="ce-note">{control.defaultOn ? 'On' : 'Off'}</span>
+			<span class="ce-note">{i18n.t(control.defaultOn ? 'common.on' : 'common.off')}</span>
 		</div>
 		<div class="ce-grid">
 			<div class="ce-field">

@@ -66,7 +66,7 @@
 		{#if portraitUrl}
 			<img
 				src={portraitUrl}
-				alt={`${name} portrait`}
+				alt={i18n.t('sb.portraitAlt', { name })}
 				class="avatar-image"
 				style={portraitFocusStyle(focus)}
 			/>

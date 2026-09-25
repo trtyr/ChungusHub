@@ -293,7 +293,7 @@
 				{#if !memoryMacroPresent}
 					<p class="memory-warn">
 						<Icon name="warning" class="w-3.5 h-3.5" />
-						The active preset has no <code>{'{{memory}}'}</code> item, so nothing would reach the model.
+						{i18n.t('mem.noMemoryItem')}
 						{i18n.t('mem.t59')}
 					</p>
 				{/if}
@@ -628,7 +628,6 @@
 
 	.memory-intro h3 { margin: 0.3rem 0 0; font-size: 1.05rem; font-weight: 700; color: var(--color-text-primary); }
 	.memory-intro p { margin: 0; font-size: 0.88rem; line-height: 1.5; }
-	.memory-intro code { background: var(--color-bg-tertiary); padding: 0.05rem 0.3rem; border-radius: var(--radius-sm); font-size: 0.78rem; color: var(--color-accent); }
 
 	.memory-primary-btn {
 		margin-top: 0.5rem;

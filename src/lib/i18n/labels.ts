@@ -105,6 +105,8 @@ const ZH: Record<string, string> = {
 	'Slate': '岩灰',
 	'completed': '已完成',
 	'in flight': '进行中',
+	'Your only persona: create another one before deleting this': '这是你唯一的身份：先创建另一个身份才能删除',
+	'Empty steering': '空引导',
 };
 
 /** Translate a store-sourced label into the active language; unknown labels pass through. */

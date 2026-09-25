@@ -43,9 +43,9 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	 * repeats 1:1 on purpose, because what it takes away is the corners, not the crop.
 	 */
 	const LENSES = [
-		{ id: 'tall', label: 'Tall', ratio: 2 / 3, radius: 'var(--radius-lg)' },
-		{ id: 'square', label: 'Square', ratio: 1, radius: 'var(--radius-lg)' },
-		{ id: 'circle', label: 'Circle', ratio: 1, radius: 'var(--radius-full)' }
+		{ id: 'tall', label: 'prf.lensTall', ratio: 2 / 3, radius: 'var(--radius-lg)' },
+		{ id: 'square', label: 'prf.lensSquare', ratio: 1, radius: 'var(--radius-lg)' },
+		{ id: 'circle', label: 'prf.lensCircle', ratio: 1, radius: 'var(--radius-full)' }
 	] as const;
 
 	type LensId = (typeof LENSES)[number]['id'];
@@ -241,7 +241,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					>
 						<img
 							src={sourceUrl}
-							alt="{name} portrait"
+							alt={i18n.t('sb.portraitAlt', { name })}
 							draggable="false"
 							style={portraitFocusStyle(draft)}
 						/>

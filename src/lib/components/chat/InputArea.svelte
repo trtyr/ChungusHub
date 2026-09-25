@@ -53,6 +53,7 @@
 		type CommandDef,
 		type CommandHost
 	} from '$lib/commands/registry';
+	import { labelT } from '$lib/i18n/labels';
 	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	interface Props {
@@ -207,7 +208,7 @@
 	let steeringActive = $derived(activeSteering.length > 0);
 	let steeringTitle = $derived.by(() => {
 		if (activeSteering.length === 0) return i18n.t('chat.steeringHint');
-		const first = noteLabel(activeSteering[0]);
+		const first = labelT(noteLabel(activeSteering[0]));
 		if (activeSteering.length === 1) return i18n.t('chat.steeringWith', { first });
 		return i18n.t('chat.steeringMore', { first, n: activeSteering.length - 1 });
 	});

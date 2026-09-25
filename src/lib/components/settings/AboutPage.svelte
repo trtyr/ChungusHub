@@ -364,7 +364,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		<div class="reach">
 			<p class="personal">
 				{i18n.t('ab.t31')}
-				Discord: the server above, or straight to me here.
+				{i18n.t('ab.discordLine')}
 			</p>
 			<button type="button" class="handle" onclick={copyHandle} title={i18n.t('ab.copyHandle')}>
 				<BrandGlyph name="discord" class="w-3.5 h-3.5 handle-glyph" />
@@ -431,9 +431,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	     travels with the app and is served beside the files it covers. -->
 	<p class="legal">
 		{i18n.t('ab.legalA')}
-		<a href={LINKS.license} target="_blank" rel="noopener noreferrer">AGPL-3.0</a>. The source is
-		on <a href={LINKS.repo} target="_blank" rel="noopener noreferrer">GitHub</a>. The typefaces and
-		notification sounds it ships with are not covered by that license: the typefaces are under
+		<a href={LINKS.license} target="_blank" rel="noopener noreferrer">AGPL-3.0</a>{i18n.t('ab.legalB')}<a href={LINKS.repo} target="_blank" rel="noopener noreferrer">GitHub</a>{i18n.t('ab.legalC')}
 		{i18n.t('ab.legalD2')}
 		<a href={LINKS.fontLicense} target="_blank" rel="noopener noreferrer">SIL Open Font License</a>,
 		{i18n.t('ab.legalD')}

@@ -273,7 +273,7 @@
 			showPassword = false;
 			changeOpen = false;
 		} catch (e) {
-			securityError = e instanceof Error ? e.message : 'Failed to set password';
+			securityError = e instanceof Error ? e.message : i18n.t('sec.setPassword');
 		} finally {
 			securityBusy = false;
 		}
