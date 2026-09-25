@@ -284,7 +284,7 @@
 				<div class="empty-orb w-14 h-14">
 					<Icon name="brain" class="w-7 h-7 text-text-muted" strokeWidth={1.5} />
 				</div>
-				<h3>Long-term memory for this story</h3>
+				<h3>{i18n.t('mem.ltTitle')}</h3>
 				<p>
 					As the chat grows, older turns are summarized scene by scene and dropped from the prompt,
 					so context stays roughly flat and the characters keep the thread. Nothing is lost: a turn
@@ -356,7 +356,7 @@
 			<!-- Auto/manual folding mode -->
 			<section class="memory-mode">
 				<div class="memory-mode-text">
-					<span class="memory-mode-label">Summarize automatically</span>
+					<span class="memory-mode-label">{i18n.t('mem.autoLabel')}</span>
 					<span class="memory-mode-help">
 						{#if autoExtract}
 							Older turns are summarized on their own as the story grows.
@@ -368,9 +368,9 @@
 				<div
 					class="memory-toggle"
 					class:is-on={autoExtract}
-					title={autoExtract ? 'Switch to manual' : 'Switch to automatic'}
+					title={autoExtract ? i18n.t('mem.autoTipOn') : i18n.t('mem.autoTipOff')}
 				>
-					<Toggle checked={autoExtract} onchange={toggleAutoExtract} label="Summarize automatically" />
+					<Toggle checked={autoExtract} onchange={toggleAutoExtract} label={i18n.t('mem.autoLabel')} />
 					<span>{autoExtract ? 'Auto' : 'Manual'}</span>
 				</div>
 			</section>
@@ -396,27 +396,27 @@
 				{/if}
 
 				<div class="memory-keys">
-					<div class="memory-key" title="Turns on this branch folded into summaries. They are ghosted in the transcript and reach the model as recall instead of raw text.">
+					<div class="memory-key" title={i18n.t('mem.keySummarizedTip')}>
 						<span class="memory-key-num">{shape.archived}</span>
-						<span class="memory-key-name"><span class="memory-key-dot is-archived"></span>Summarized</span>
+						<span class="memory-key-name"><span class="memory-key-dot is-archived"></span>{i18n.t('mem.keySummarized')}</span>
 					</div>
-					<div class="memory-key" title="Turns above the verbatim tail that the next pass can still fold.">
+					<div class="memory-key" title={i18n.t('mem.keyWaitingTip')}>
 						<span class="memory-key-num">{shape.waiting}</span>
-						<span class="memory-key-name"><span class="memory-key-dot is-waiting"></span>Waiting</span>
+						<span class="memory-key-name"><span class="memory-key-dot is-waiting"></span>{i18n.t('mem.keyWaiting')}</span>
 					</div>
-					<div class="memory-key" title="Turns still sent word-for-word: the recent tail this chat protects, plus anything a rebuild has to reach before it can be folded.">
+					<div class="memory-key" title={i18n.t('mem.keyVerbatimTip')}>
 						<span class="memory-key-num">{shape.verbatim}</span>
-						<span class="memory-key-name"><span class="memory-key-dot is-verbatim"></span>Verbatim</span>
+						<span class="memory-key-name"><span class="memory-key-dot is-verbatim"></span>{i18n.t('mem.keyVerbatim')}</span>
 					</div>
 				</div>
 
 				<div class="memory-shape-foot">
-					<span title={ladder ? `Summaries in play on this branch: ${ladder}. A merged one stands for a stretch of older summaries compacted together.` : 'Summaries in play on this branch.'}>
+					<span title={ladder ? i18n.t('mem.ladderTip', { ladder }) : i18n.t('mem.ladderTipPlain')}>
 						{episodes.length} {episodes.length === 1 ? 'summary' : 'summaries'}{#if merged > 0} · {merged} merged{/if}
 					</span>
 					<span
 						class="memory-cost"
-						title="What the memory block adds to every prompt on this branch. It is never trimmed to fit the context size, so live turns are dropped before it is."
+						title={i18n.t('mem.blockTip')}
 					>
 						<strong>{recallTokens.toLocaleString()}</strong> tokens / turn
 					</span>
@@ -433,14 +433,14 @@
 					{#if recallText}
 						<pre class="memory-recall">{recallText}</pre>
 					{:else}
-						<p class="memory-muted">Nothing yet. This is what the <code>{'{{memory}}'}</code> item will carry once the first turns are summarized.</p>
+						<p class="memory-muted">{i18n.t('mem.emptyYet')}</p>
 					{/if}
 				{/if}
 			</section>
 
 			<!-- Episodes -->
 			<section class="memory-section">
-				<h3 class="memory-section-title">The story so far</h3>
+				<h3 class="memory-section-title">{i18n.t('mem.soFar')}</h3>
 				{#if dormant.length > 0}
 					<p class="memory-muted">
 						{dormant.length}
@@ -454,7 +454,7 @@
 					{#if showDormant}
 						{#each dormant as e (e.id)}
 							<div class="memory-episode is-dormant">
-								<span class="memory-episode-mark" title={`Covers ${e.sourceMessageIds.length} turns on another branch`}>
+								<span class="memory-episode-mark" title={i18n.t('mem.coversOther', { n: e.sourceMessageIds.length })}>
 									<Icon name="branch" class="w-3 h-3" />
 								</span>
 								<span class="memory-episode-text">{e.content}</span>
@@ -477,7 +477,7 @@
 							     construction); the guard below is for the type, not a real state. -->
 							<span
 								class="memory-episode-mark"
-								title={`${e.layer === 0 ? 'Covers' : 'Merged summary · covers'} ${e.sourceMessageIds.length} turns${span ? `, #${span.from} to #${span.to}` : ''}`}
+								title={(e.layer === 0 ? i18n.t('mem.coversN', { n: e.sourceMessageIds.length }) : i18n.t('mem.mergedCovers', { n: e.sourceMessageIds.length })) + (span ? i18n.t('mem.spanTo', { from: span.from, to: span.to }) : '')}
 							>
 								<span class="memory-episode-n">
 									{#if e.layer > 0}<Icon name="archive" class="w-3 h-3" />{/if}
@@ -490,12 +490,12 @@
 									<textarea class="memory-episode-edit" bind:value={editingText} rows="5"></textarea>
 									<div class="memory-episode-actions">
 										<button type="button" class="memory-btn memory-btn-sm" onclick={saveEpisode}><Icon name="check" class="w-3 h-3" /> Save</button>
-										<button type="button" class="memory-btn memory-btn-sm" onclick={() => (editingId = null)}>Cancel</button>
+										<button type="button" class="memory-btn memory-btn-sm" onclick={() => (editingId = null)}>{i18n.t('common.cancel')}</button>
 									</div>
 								</div>
 							{:else}
 								<span class="memory-episode-text">{e.content}</span>
-								<button type="button" class="memory-icon-btn" onclick={() => startEdit(e)} aria-label="Edit this summary"><Icon name="pencil" class="w-3.5 h-3.5" /></button>
+								<button type="button" class="memory-icon-btn" onclick={() => startEdit(e)} aria-label={i18n.t('mem.editAria')}><Icon name="pencil" class="w-3.5 h-3.5" /></button>
 							{/if}
 						</div>
 					{/each}
@@ -519,7 +519,7 @@
 										<OverrideMark
 											overridden={!followsInherited(memoryStore.configOverride, featurePromptsStore.memoryDefaults, s.key)}
 											onRevert={() => commit(s.key, startingDefault(s.key))}
-											label="Changed from your starting defaults"
+											label={i18n.t('mem.changedDefaults')}
 										/>
 									</span>
 									<span class="memory-setting-val">{shown(s.key)}</span>
@@ -531,7 +531,7 @@
 									max={sliderMax(s.key)}
 									step="1"
 									value={shown(s.key)}
-									title="Double-click to reset to your starting defaults"
+									title={i18n.t('mem.resetDefaultsTip')}
 									oninput={(e) => drag(s.key, Number((e.currentTarget as HTMLInputElement).value))}
 									onchange={(e) => commit(s.key, Number((e.currentTarget as HTMLInputElement).value))}
 									use:rangeReset={{ defaultValue: startingDefault(s.key), apply: (v) => commit(s.key, v) }}
@@ -553,8 +553,8 @@
 
 <ConfirmDialog
 	open={enableConfirmOpen}
-	title="Read this story into memory"
-	message={`This chat has enough history for about ${priceOf(quoted)}, roughly ${quoted.total} model calls on the Memory engine's connection. They run in the background and you can stop at any point; everything summarized before you stop is kept.`}
+	title={i18n.t('mem.readTitle')}
+	message={i18n.t('mem.readAsk', { price: priceOf(quoted), n: quoted.total })}
 	confirmLabel="Start"
 	onConfirm={confirmEnable}
 	onCancel={() => (enableConfirmOpen = false)}
@@ -562,8 +562,8 @@
 
 <ConfirmDialog
 	open={summariseConfirmOpen}
-	title="Summarize the waiting turns"
-	message={`This runs about ${priceOf(quoted)}, roughly ${quoted.total} model calls on the Memory engine's connection. You can stop at any point and everything summarized so far is kept.`}
+	title={i18n.t('mem.sumTitle')}
+	message={i18n.t('mem.sumAsk', { price: priceOf(quoted), n: quoted.total })}
 	confirmLabel="Summarize"
 	onConfirm={confirmSummarise}
 	onCancel={() => (summariseConfirmOpen = false)}
@@ -571,8 +571,8 @@
 
 <ConfirmDialog
 	open={rebuildConfirmOpen}
-	title="Forget and rebuild"
-	message={`Discard the ${allSummaries} ${allSummaries === 1 ? 'summary' : 'summaries'} this chat holds and generate them again from the current branch? Any summary you edited by hand is replaced too. This costs about ${priceOf(quoted)}, roughly ${quoted.total} model calls.`}
+	title={i18n.t('mem.rebuildTitle')}
+	message={i18n.t('mem.rebuildAsk', { n: allSummaries, price: priceOf(quoted), calls: quoted.total })}
 	confirmLabel="Rebuild"
 	variant="danger"
 	holdMs={holdMsForBlast(allSummaries)}
@@ -583,8 +583,8 @@
 
 <ConfirmDialog
 	open={forgetConfirmOpen}
-	title="Forget this chat's memory"
-	message={`Delete the ${allSummaries} ${allSummaries === 1 ? 'summary' : 'summaries'} this chat holds, the ones on its other branches included, and send the whole thread word-for-word again? This cannot be undone, and rebuilding it later costs the same model calls over.`}
+	title={i18n.t('mem.forgetTitle')}
+	message={i18n.t('mem.forgetAsk', { n: allSummaries })}
 	confirmLabel="Forget"
 	variant="danger"
 	destructive
@@ -877,7 +877,6 @@
 	}
 
 	.memory-muted { font-family: var(--font-ui); font-size: 0.8rem; color: var(--color-text-muted); line-height: 1.45; }
-	.memory-muted code { background: var(--color-bg-tertiary); padding: 0.02rem 0.25rem; border-radius: var(--radius-sm); color: var(--color-accent); }
 
 	.memory-recall {
 		margin: 0;
