@@ -134,7 +134,7 @@
 
 	<div class="lbp-foot">
 		<span class="lbp-foot-count">
-			{linkedCount ? `${linkedCount} of ${books.length} linked` : 'Nothing linked yet'}
+			{linkedCount ? i18n.t('lbv.nOfLinked', { n: linkedCount, total: books.length }) : i18n.t('lbv.notLinked')}
 		</span>
 		<button type="button" class="lbp-foot-manage" onclick={openManager}>
 			Manage

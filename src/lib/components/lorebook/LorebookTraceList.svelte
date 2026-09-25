@@ -28,7 +28,7 @@
 	const REASONS: Record<LorebookStatus, string> = {
 		constant: 'Always active, no keyword needed',
 		keyword: 'Its keyword matched',
-		noMatch: 'Nothing matched its keywords',
+		noMatch: i18n.t('tr.noMatch'),
 		filtered: 'A keyword matched, then its filter refused',
 		rolledOut: 'Matched, then lost its trigger roll',
 		delayed: 'Waits for another entry to wake it, and none did',

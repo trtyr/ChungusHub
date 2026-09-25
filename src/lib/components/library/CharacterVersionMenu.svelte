@@ -240,8 +240,8 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 										title={pinned > 0
 										? i18n.t('vm.pinnedN', { n: pinned })
 											: confirmingDeleteId === version.id
-												? 'Click again to delete'
-												: 'Delete version'}
+												? i18n.t('vm.clickAgain')
+												: i18n.t('vm.deleteVersion')}
 										disabled={pinned > 0 || busy}
 										onclick={() => handleDelete(version.id)}
 									>

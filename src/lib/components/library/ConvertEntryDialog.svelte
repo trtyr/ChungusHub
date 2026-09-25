@@ -62,8 +62,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 >
 	<div class="flex flex-col gap-4">
 		<p class="cv-hint">
-			{entry.identity.name || 'This entry'} stays exactly as it is. A new {targetLabel} is created
-			with the portrait and the linked lorebooks, starting from this text.
+			{i18n.t('conv.staysPutFull', { name: entry.identity.name || i18n.t('pcf.untitled'), label: targetLabel })}
 		</p>
 
 		<div class="flex flex-col gap-2">
