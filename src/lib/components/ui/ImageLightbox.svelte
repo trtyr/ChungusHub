@@ -34,7 +34,8 @@
 		onClose: () => void;
 	}
 
-	let { images, index = $bindable(), alt = 'Image', countLabel, onClose }: Props = $props();
+	let { images, index = $bindable(), alt, countLabel, onClose }: Props = $props();
+	const altText = $derived(alt ?? i18n.t('ui.image'));
 
 	let portalEl: HTMLDivElement | null = $state(null);
 	let path = $derived(index === null ? null : (images[index] ?? null));
@@ -124,7 +125,7 @@
 		class="lightbox"
 		role="dialog"
 		aria-modal="true"
-		aria-label={alt}
+		aria-label={altText}
 		tabindex="-1"
 		use:focusTrap
 		onclick={handleBackdropClick}
@@ -148,7 +149,7 @@
 		<img
 			class="lightbox-image"
 			{src}
-			{alt}
+			alt={altText}
 			onpointerdown={onSwipeDown}
 			onpointerup={onSwipeUp}
 			onpointercancel={() => (swipe = null)}
