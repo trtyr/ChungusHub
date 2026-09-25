@@ -53,12 +53,12 @@
 
 	/** Resolved `connection · model · provider` for whatever serves a call target. */
 	function connectionLine(target: CallTarget): string {
-		const name = connectionStore.connectionFor(target)?.name ?? 'no connection';
-		const model = llmService.modelFor(target) || 'no model set';
+		const name = connectionStore.connectionFor(target)?.name ?? i18n.t('ce.noConn');
+		const model = llmService.modelFor(target) || i18n.t('ce.noModel');
 		const provider = llmService.providerFor(target);
 		const providerLabel = provider
 			? (llmService.getProviderMeta(provider)?.displayName ?? provider)
-			: 'no provider';
+			: i18n.t('ce.noProvider');
 		return `${name} · ${model} · ${providerLabel}`;
 	}
 

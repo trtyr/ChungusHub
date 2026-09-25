@@ -537,7 +537,7 @@
 						/>
 						{#if entry.keysecondary.length > 0}
 							<p class="mt-1.5 text-xs font-ui text-text-muted">
-								{LOREBOOK_LOGICS.find((l) => l.id === entry!.selectiveLogic)?.hint}
+								{i18n.t(LOREBOOK_LOGICS.find((l) => l.id === entry!.selectiveLogic)?.hint ?? '')}
 							</p>
 						{/if}
 					</div>

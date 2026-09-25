@@ -197,7 +197,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	</div>
 
 	{#if status === 'binding'}
-		<p class="status-line muted"><Icon name="radar" class="w-3.5 h-3.5" strokeWidth={1.75} /> Reading your key…</p>
+		<p class="status-line muted"><Icon name="radar" class="w-3.5 h-3.5" strokeWidth={1.75} /> {i18n.t('ch.readingKey')}</p>
 	{:else if error}
 		<p class="status-line err"><Icon name="warning" class="w-3.5 h-3.5" strokeWidth={1.75} /> {error}</p>
 		<!-- The verdict stays red: a mistyped URL is by far the likeliest cause and must keep

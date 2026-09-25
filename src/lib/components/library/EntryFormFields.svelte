@@ -423,7 +423,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					title={i18n.t('ef.openingTip')}
 				>
 					<Icon name="chat" class="w-3 h-3" />
-					Opening message
+					{i18n.t('ef.openingMsg')}
 				</span>
 			{:else if field.notSent}
 				<span

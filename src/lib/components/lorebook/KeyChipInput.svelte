@@ -253,7 +253,7 @@
 					</button>
 				{/each}
 			</div>
-			<p class="kp-note">{LOREBOOK_KEY_MODES.find((m) => m.id === effective.mode)?.hint}</p>
+			<p class="kp-note">{i18n.t(LOREBOOK_KEY_MODES.find((m) => m.id === effective.mode)?.hint ?? '')}</p>
 			<div class="kp-row">
 				<span class="kp-row-name">{i18n.t('lb.caseSensitive')}</span>
 				<Toggle

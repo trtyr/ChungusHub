@@ -24,10 +24,10 @@ import type { PortraitFocus } from '$lib/utils/portrait-focus';
  * AND_ANY=0, NOT_ALL=1, NOT_ANY=2, AND_ALL=3.
  */
 export const LOREBOOK_LOGICS: { id: number; label: string; hint: string }[] = [
-	{ id: 0, label: 'AND ANY', hint: 'A primary key matches AND at least one secondary key matches.' },
-	{ id: 3, label: 'AND ALL', hint: 'A primary key matches AND every secondary key matches.' },
-	{ id: 2, label: 'NOT ANY', hint: 'A primary key matches AND none of the secondary keys match.' },
-	{ id: 1, label: 'NOT ALL', hint: 'A primary key matches AND not all secondary keys match.' }
+	{ id: 0, label: 'lb.logicAndAnyL', hint: 'lb.logicAndAny' },
+	{ id: 3, label: 'lb.logicAndAllL', hint: 'lb.logicAndAll' },
+	{ id: 2, label: 'lb.logicNotAny', hint: 'lb.hNotAny' },
+	{ id: 1, label: 'lb.logicNotAll', hint: 'lb.hNotAll' }
 ];
 
 // ===== how one key is matched =====
@@ -43,7 +43,7 @@ export type LorebookKeyMode = 'substring' | 'word' | 'start' | 'regex';
 
 /** The three storable modes, in the order the chip's picker offers them. */
 export const LOREBOOK_KEY_MODES: { id: Exclude<LorebookKeyMode, 'regex'>; label: string; hint: string }[] = [
-	{ id: 'substring', label: 'lb.modeAnywhere', hint: 'Matches wherever the letters appear, even inside another word.' },
+	{ id: 'substring', label: 'lb.modeAnywhere', hint: 'lb.hAnywhere' },
 	{ id: 'word', label: 'lb.modeWholeWord2', hint: 'Matches only as its own word, so “art” stays out of “cartography”.' },
 	{ id: 'start', label: 'lb.modeWordStart', hint: 'Matches any word beginning with it: plurals, and other suffixes.' }
 ];

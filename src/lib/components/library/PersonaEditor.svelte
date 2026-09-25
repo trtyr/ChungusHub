@@ -371,7 +371,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						<div class="rounded-[var(--radius-lg)] border border-border-subtle bg-bg-secondary/40 transition-colors hover:border-border">
 							<div class="flex items-center gap-2 px-3 pt-2.5 pb-1">
 								<span class="flex-1 min-w-0 truncate text-sm font-ui font-medium text-text-primary">
-									Persona Description
+									{i18n.t('pe.personaDesc')}
 								</span>
 								{#if !personaSent}
 									<span

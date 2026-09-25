@@ -968,7 +968,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						onclick={() => { tagFilterMode = tagFilterMode === 'any' ? 'all' : 'any'; currentPage = 1; }}
 						title={tagFilterMode === 'any' ? i18n.t('clv.anyShowing') : i18n.t('clv.allShowing')}
 					>
-						{tagFilterMode === 'any' ? 'any of' : 'all of'}
+						{tagFilterMode === 'any' ? i18n.t('lb.anyOf') : i18n.t('lb.allOf')}
 					</button>
 				{/if}
 				{#each selectedTags as tag}

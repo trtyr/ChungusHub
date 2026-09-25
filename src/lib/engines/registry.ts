@@ -106,7 +106,7 @@ export const ENGINES: EngineDef[] = [
 			{
 				key: 'openingScene',
 				label: 'eng.l2',
-				hint: "Directs the opening scene. {{idea}} is the direction you typed, or a request to surprise you when you left it empty; {{scenario}} stays the character card's own field."
+				hint: "eng.x200"
 			}
 		],
 		enabled: {
@@ -175,15 +175,15 @@ export const ENGINES: EngineDef[] = [
 		id: 'sprites',
 		name: 'Sprites',
 		icon: 'image',
-		summary: "Shows one of the character's sprites for the newest reply",
+		summary: "eng.x201",
 		description:
-			"Reads the newest reply and picks one of the character's sprites for it, which is the picture shown beside the story. It spends a call on every reply, so it is off until you switch it on, and it stays idle for characters with no sprites.",
+			"eng.x202",
 		makesCalls: true,
 		prompts: [
 			{
 				key: 'sprites',
 				label: 'eng.l6',
-				hint: "Sent to read the newest reply. {{labels}} is this character's own sprite labels. How much story goes with it is yours: {{chatHistoryLast3}} for three turns, {{lastMessage}} for the reply alone.",
+				hint: "eng.x203",
 				requires: ['{{labels}}']
 			}
 		],

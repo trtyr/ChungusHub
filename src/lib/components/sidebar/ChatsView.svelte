@@ -289,7 +289,7 @@
 			let label: string | null = null;
 			if (chat.isFavorite && filterMode !== 'favorites') {
 				key = 'favorites';
-				label = 'Favorites';
+				label = i18n.t('svc.favorites');
 			} else if (timeGrouped) {
 				key = dayBucket(sortKey === 'created' ? chat.createdAt : activityAt(chat));
 				label = BUCKET_LABELS[key];
