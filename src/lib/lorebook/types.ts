@@ -43,9 +43,9 @@ export type LorebookKeyMode = 'substring' | 'word' | 'start' | 'regex';
 
 /** The three storable modes, in the order the chip's picker offers them. */
 export const LOREBOOK_KEY_MODES: { id: Exclude<LorebookKeyMode, 'regex'>; label: string; hint: string }[] = [
-	{ id: 'substring', label: 'Anywhere', hint: 'Matches wherever the letters appear, even inside another word.' },
-	{ id: 'word', label: 'Whole word', hint: 'Matches only as its own word, so “art” stays out of “cartography”.' },
-	{ id: 'start', label: 'Word start', hint: 'Matches any word beginning with it: plurals, and other suffixes.' }
+	{ id: 'substring', label: 'lb.modeAnywhere', hint: 'Matches wherever the letters appear, even inside another word.' },
+	{ id: 'word', label: 'lb.modeWholeWord2', hint: 'Matches only as its own word, so “art” stays out of “cartography”.' },
+	{ id: 'start', label: 'lb.modeWordStart', hint: 'Matches any word beginning with it: plurals, and other suffixes.' }
 ];
 
 /** One key's override of the entry's match defaults. An absent field inherits. */

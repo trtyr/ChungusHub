@@ -248,7 +248,7 @@
 						title={mode.hint}
 						onclick={() => setRule(key, { mode: mode.id === inherited.mode ? undefined : mode.id })}
 					>
-						{mode.label}
+						{i18n.t(mode.label)}
 						{#if mode.id === inherited.mode}<span class="kp-inherit">{i18n.t('lb.entryTag')}</span>{/if}
 					</button>
 				{/each}

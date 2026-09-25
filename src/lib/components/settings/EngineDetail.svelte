@@ -186,7 +186,7 @@
 			</span>
 			<div class="identity-text">
 				<span class="identity-name">{labelT(engine.name)}</span>
-				<InfoTip text={engine.description} />
+				<InfoTip text={i18n.t(engine.description)} />
 			</div>
 			<Toggle
 				checked={engine.enabled.get()}
@@ -235,8 +235,8 @@
 						<label for="steering-depth" class="slider-label">{i18n.t('eng.depth')}</label>
 						<span class="slider-value">
 							{featurePromptsStore.steeringDefaults.depth === 0
-								? 'after the newest turn'
-								: `${featurePromptsStore.steeringDefaults.depth} turns back`}
+								? i18n.t('ed.afterNewest')
+								: i18n.t('ed.turnsBack', { n: featurePromptsStore.steeringDefaults.depth })}
 						</span>
 					</div>
 					<input

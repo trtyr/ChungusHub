@@ -101,7 +101,7 @@ export interface AmbientSettingDef {
 export const AMBIENT_BASE_SETTINGS: AmbientSettingDef[] = [
 	{ key: 'density', label: 'amb.dDensity', kind: 'slider', min: 0.2, max: 2, step: 0.05, defaultValue: 1 },
 	{ key: 'speed', label: 'amb.dSpeed', kind: 'slider', min: 0.25, max: 2, step: 0.05, defaultValue: 1 },
-	{ key: 'visibility', label: 'Visibility', kind: 'slider', min: 0.05, max: 1, step: 0.05, defaultValue: 0.5 },
+	{ key: 'visibility', label: 'amb.dVisibility', kind: 'slider', min: 0.05, max: 1, step: 0.05, defaultValue: 0.5 },
 	{ key: 'overMessages', label: 'amb.dOverMessages', kind: 'toggle', min: 0, max: 1, step: 1, defaultValue: 0 }
 ];
 
@@ -111,37 +111,37 @@ export const AMBIENT_BASE_SETTINGS: AmbientSettingDef[] = [
  */
 export const AMBIENT_EFFECT_SETTINGS: Partial<Record<AmbientType, AmbientSettingDef[]>> = {
 	rain: [
-		{ key: 'splashes', label: 'Ground splashes', kind: 'toggle', min: 0, max: 1, step: 1, defaultValue: 1 }
+		{ key: 'splashes', label: 'amb.dGroundsplashes', kind: 'toggle', min: 0, max: 1, step: 1, defaultValue: 1 }
 	],
 	storm: [
-		{ key: 'lightning', label: 'Lightning', kind: 'slider', min: 0, max: 2, step: 0.1, defaultValue: 1 },
-		{ key: 'wind', label: 'Wind gusts', kind: 'slider', min: 0, max: 2, step: 0.1, defaultValue: 1 },
-		{ key: 'shake', label: 'Screen shake', kind: 'toggle', min: 0, max: 1, step: 1, defaultValue: 1 }
+		{ key: 'lightning', label: 'amb.dLightning', kind: 'slider', min: 0, max: 2, step: 0.1, defaultValue: 1 },
+		{ key: 'wind', label: 'amb.dWindgusts', kind: 'slider', min: 0, max: 2, step: 0.1, defaultValue: 1 },
+		{ key: 'shake', label: 'amb.dScreenshake', kind: 'toggle', min: 0, max: 1, step: 1, defaultValue: 1 }
 	],
 	blizzard: [
-		{ key: 'wind', label: 'Wind strength', kind: 'slider', min: 0, max: 2, step: 0.1, defaultValue: 1 }
+		{ key: 'wind', label: 'amb.dWindstrength', kind: 'slider', min: 0, max: 2, step: 0.1, defaultValue: 1 }
 	],
 	sandstorm: [
-		{ key: 'haze', label: 'Dust haze', kind: 'slider', min: 0, max: 2, step: 0.1, defaultValue: 1 }
+		{ key: 'haze', label: 'amb.dDusthaze', kind: 'slider', min: 0, max: 2, step: 0.1, defaultValue: 1 }
 	],
 	aurora: [
-		{ key: 'shimmer', label: 'Shimmer', kind: 'slider', min: 0, max: 2, step: 0.1, defaultValue: 1 }
+		{ key: 'shimmer', label: 'amb.dShimmer', kind: 'slider', min: 0, max: 2, step: 0.1, defaultValue: 1 }
 	],
 	wisps: [
-		{ key: 'trails', label: 'Trails', kind: 'toggle', min: 0, max: 1, step: 1, defaultValue: 1 }
+		{ key: 'trails', label: 'amb.dTrails', kind: 'toggle', min: 0, max: 1, step: 1, defaultValue: 1 }
 	],
 	filmgrain: [
-		{ key: 'scratches', label: 'Scratches', kind: 'toggle', min: 0, max: 1, step: 1, defaultValue: 1 },
-		{ key: 'vignette', label: 'Vignette', kind: 'toggle', min: 0, max: 1, step: 1, defaultValue: 1 }
+		{ key: 'scratches', label: 'amb.dScratches', kind: 'toggle', min: 0, max: 1, step: 1, defaultValue: 1 },
+		{ key: 'vignette', label: 'amb.dVignette', kind: 'toggle', min: 0, max: 1, step: 1, defaultValue: 1 }
 	],
 	sunshine: [
-		{ key: 'rays', label: 'God rays', kind: 'slider', min: 0, max: 2, step: 0.1, defaultValue: 1 }
+		{ key: 'rays', label: 'amb.dGodrays', kind: 'slider', min: 0, max: 2, step: 0.1, defaultValue: 1 }
 	],
 	starlight: [
-		{ key: 'meteors', label: 'Meteors', kind: 'slider', min: 0, max: 2, step: 0.1, defaultValue: 1 }
+		{ key: 'meteors', label: 'amb.dMeteors', kind: 'slider', min: 0, max: 2, step: 0.1, defaultValue: 1 }
 	],
 	fireplace: [
-		{ key: 'glow', label: 'Warm glow', kind: 'slider', min: 0, max: 2, step: 0.1, defaultValue: 1 }
+		{ key: 'glow', label: 'amb.dWarmglow', kind: 'slider', min: 0, max: 2, step: 0.1, defaultValue: 1 }
 	]
 };
 

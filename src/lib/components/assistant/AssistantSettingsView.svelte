@@ -108,7 +108,7 @@
 			<div class="as-section-head">
 				<h3 class="as-section-title">
 					<Icon name="scroll" class="w-3.5 h-3.5" />
-					Instructions
+					{i18n.t('asm.secInstructions')}
 				</h3>
 				<InfoTip
 					text={i18n.t('asm.instrTip')}
@@ -148,7 +148,7 @@
 			<div class="as-section-head">
 				<h3 class="as-section-title">
 					<Icon name="bookOpen" class="w-3.5 h-3.5" />
-					Skills
+					{i18n.t('asm.secSkills')}
 				</h3>
 				<InfoTip
 					text={i18n.t('asm.skillsTip')}
@@ -161,7 +161,7 @@
 			<div class="as-section-head">
 				<h3 class="as-section-title">
 					<Icon name="check" class="w-3.5 h-3.5" />
-					Approval
+					{i18n.t('asm.secApproval')}
 				</h3>
 				<InfoTip
 					text="A reviewed call is shown with the change it would make, and refusing one drops that call alone: the assistant carries on with the rest of its work. This sets what a new tab starts with; the pill beside the composer moves any tab on its own."
@@ -174,7 +174,7 @@
 			<div class="as-section-head">
 				<h3 class="as-section-title">
 					<Icon name="shield" class="w-3.5 h-3.5" />
-					Capabilities
+					{i18n.t('asm.secCapabilities')}
 				</h3>
 				<InfoTip
 					text={i18n.t('asm.toolsTip')}

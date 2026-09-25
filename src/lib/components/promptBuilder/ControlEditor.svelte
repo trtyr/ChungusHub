@@ -38,13 +38,13 @@
 		{ id: 'tags', label: i18n.t('ce2.typeTags') },
 	]);
 
-	const adviceOptions: { id: PromptControlAdvice | ''; label: string }[] = [
-		{ id: '', label: 'No badge' },
-		{ id: 'recommended', label: 'Recommended' },
-		{ id: 'optional', label: 'Optional' },
-		{ id: 'advanced', label: 'Advanced' },
-		{ id: 'troubleshooting', label: 'Only if trouble' }
-	];
+	const adviceOptions: { id: PromptControlAdvice | ''; label: string }[] = $derived([
+		{ id: '', label: i18n.t('ce2.advNone') },
+		{ id: 'recommended', label: i18n.t('ce2.advRecommended') },
+		{ id: 'optional', label: i18n.t('ce2.advOptional') },
+		{ id: 'advanced', label: i18n.t('ce2.advAdvanced') },
+		{ id: 'troubleshooting', label: i18n.t('ce2.advTrouble') }
+	]);
 
 	function update(patch: Partial<PromptControl>): void {
 		onChange({ ...control, ...patch });
