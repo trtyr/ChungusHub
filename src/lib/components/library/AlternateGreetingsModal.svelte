@@ -80,7 +80,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 							title={i18n.t('alt.swapTip')}
 						>
 							<Icon name="arrowLeft" class="w-3.5 h-3.5" />
-							Make first message
+							{i18n.t('alt.t67')}
 						</button>
 						<button
 							type="button"

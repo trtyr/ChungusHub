@@ -660,7 +660,7 @@
 			<div class="assistant-settings-drift">
 				<Icon name="settings" class="w-3.5 h-3.5 shrink-0" />
 				<span class="assistant-settings-drift-text">
-					Assistant settings changed since this session started, so it still runs on the old ones.
+					{i18n.t('asm.t5')}
 				</span>
 				<button type="button" onclick={applySettings} disabled={applyingSettings} title={i18n.t('asm.applyTip')}>
 					{applyingSettings ? 'Applying…' : 'Apply'}

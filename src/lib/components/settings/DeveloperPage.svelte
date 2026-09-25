@@ -23,7 +23,7 @@
 				<p class="hint">{i18n.t('dev.firstRunHint')}</p>
 				<button type="button" class="open-btn" onclick={openWelcomeDialog}>
 					<Icon name="sparkles" class="w-3.5 h-3.5" strokeWidth={1.75} />
-					Open the greeting
+					{i18n.t('dev.t41')}
 				</button>
 			</div>
 
@@ -37,7 +37,7 @@
 						onclick={() => generalSettingsStore.setAssistantCostSeen(false)}
 					>
 						<Icon name="refresh" class="w-3.5 h-3.5" strokeWidth={1.75} />
-						Show it again
+						{i18n.t('dev.t42')}
 					</button>
 				{:else}
 					<p class="armed">{i18n.t('dev.assistantArmed')}</p>

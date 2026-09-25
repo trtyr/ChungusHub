@@ -59,7 +59,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			<p class="text-xs font-ui text-error">{i18n.t('spr.collides', { clean })}</p>
 		{:else}
 			<p class="text-xs font-ui text-text-muted">
-				This is what the engine answers with to choose this sprite.
+				{i18n.t('sld.t72')}
 			</p>
 		{/if}
 

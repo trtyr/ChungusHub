@@ -156,7 +156,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		title: i18n.t(t.hint)
 	})));
 
-	const effortPills = $derived(reasoningEffortOptions.map((l) => ({ value: l as string, label: EFFORT_LABELS[l] })));
+	const effortPills = $derived(reasoningEffortOptions.map((l) => ({ value: l as string, label: i18n.t(EFFORT_LABELS[l]) })));
 	const effortCurrent = $derived(reasoningEffortOptions.includes(gen.reasoningEffort) ? gen.reasoningEffort : 'auto');
 
 	// Both token sliders ride a fixed ladder that splits every octave into 16 rungs, so
@@ -788,7 +788,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 								onchange={(e) => updateDialect((e.currentTarget as HTMLSelectElement).value as ReasoningDialect)}
 							>
 								{#each REASONING_DIALECTS as d (d.value)}
-									<option value={d.value}>{d.label}</option>
+									<option value={d.value}>{i18n.t(d.label)}</option>
 								{/each}
 							</Select>
 							{#if dialectHint}<p class="mode-hint">{dialectHint}</p>{/if}

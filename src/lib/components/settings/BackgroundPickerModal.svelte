@@ -161,8 +161,8 @@
 
 			{#if !loading && backgrounds.length === 0}
 				<p class="picker-note font-ui">
-					No backgrounds yet. Upload one below, or drop image files into the app's
-					defaults/backgrounds folder.
+					{i18n.t('bgm.t33')}
+
 				</p>
 			{/if}
 		{/if}

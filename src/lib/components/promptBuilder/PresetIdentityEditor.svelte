@@ -149,8 +149,8 @@
 			class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm"
 		/>
 		<p class="pi-hint">
-			The model and settings you actually tuned this on, so a reader knows what they are
-			deviating from when their results differ.
+			{i18n.t('pi.t89')}
+
 		</p>
 	</div>
 </div>

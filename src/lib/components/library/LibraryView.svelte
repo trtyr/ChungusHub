@@ -39,11 +39,11 @@
 			<Icon name="sparkles" class="w-4 h-4" />
 			<span class="library-flow-text">
 				{#if flowStep === 'character'}
-					New chat: choose a character
+					{i18n.t('lv.t65')}
 				{:else if flowCharacterName}
 					New chat with {flowCharacterName}: choose your persona
 				{:else}
-					New chat: choose your persona
+					{i18n.t('lv.t66')}
 				{/if}
 			</span>
 			<button

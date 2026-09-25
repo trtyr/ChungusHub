@@ -253,7 +253,7 @@
 			/>
 			<p class="ce-note">
 				Use <code class="text-accent">{'{{value}}'}</code> where the reader's text should appear.
-				Applied only when they typed something, so an empty field injects nothing and the framing never dangles.
+				{i18n.t('ce2.t81')}
 			</p>
 		</div>
 	{:else if control.type === 'toggle'}
@@ -404,7 +404,7 @@
 							placeholder={i18n.t('pcf.addOwn')}
 							class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm" />
 						<p class="ce-note">
-							What they type is injected exactly as written, alongside your options' texts.
+							{i18n.t('ce2.t82')}
 						</p>
 					</div>
 				{/if}

@@ -211,11 +211,11 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		<div class="rx-empty">
 			<EmptyState icon="filter" size="sm" title={i18n.t('rx.emptyTitle')}>
 				{i18n.t('rx.emptyHint')}
-				The saved messages are never touched.
+				{i18n.t('rxp.t44')}
 				{#snippet actions()}
 					<button type="button" class="rx-btn rx-btn-primary" onclick={handleAdd}>
 						<Icon name="plus" class="w-3.5 h-3.5" />
-						New rule
+						{i18n.t('rxp.t45')}
 					</button>
 					<button type="button" class="rx-btn" onclick={openImport}>
 						<Icon name="upload" class="w-3.5 h-3.5" />
@@ -223,7 +223,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					</button>
 					<button type="button" class="rx-btn" onclick={handleRestore}>
 						<Icon name="refresh" class="w-3.5 h-3.5" />
-						Restore defaults
+						{i18n.t('rxp.t46')}
 					</button>
 				{/snippet}
 			</EmptyState>
@@ -314,7 +314,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		</div>
 		{#if list.length > 1}
 			<p class="rx-order-note">
-				Rules run top to bottom, and each one sees the previous one's output.
+				{i18n.t('rxp.t47')}
 			</p>
 		{/if}
 	{/if}
@@ -382,12 +382,12 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 								<RegexRuleEditor {rule} bind:sampleText {lastReply}>
 									{#snippet footer()}
 										<p class="rx-carried-note">
-											This rule is the author's. A copy becomes yours to edit, and the
-											preset's own switches off so the two cannot both run.
+											{i18n.t('rxp.t48')}
+
 										</p>
 										<button type="button" class="rx-btn" onclick={() => copyCarried(rule)}>
 											<Icon name="copy" class="w-3.5 h-3.5" />
-											Copy to my rules
+											{i18n.t('rxp.t49')}
 										</button>
 									{/snippet}
 								</RegexRuleEditor>

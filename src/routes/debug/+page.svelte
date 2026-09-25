@@ -64,7 +64,7 @@
 		<div class="state">
 			{#if phase === 'denied'}
 				<p class="err">
-					This device isn't on the allowlist. Ask the host to allow its IP from
+					{i18n.t('xx.t109')}
 					Settings → Security.
 				</p>
 			{:else if phase === 'error'}

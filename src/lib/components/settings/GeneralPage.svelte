@@ -135,7 +135,7 @@
 						onclick={clearHistory}
 						disabled={clearing || historyCount === 0}
 					>
-						Clear input history
+						{i18n.t('gp.t18')}
 					</button>
 					<span class="text-xs font-ui text-text-muted">
 						{historyCount} {historyCount === 1 ? 'entry' : 'entries'} stored

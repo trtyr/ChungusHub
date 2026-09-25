@@ -99,8 +99,8 @@
 		<div class="se-inline-text">
 			<span class="se-label">{i18n.t('se.startsFolded')}</span>
 			<p class="se-note">
-				For a section a reader should only open on purpose. They can fold and unfold
-				whatever they like afterwards, and this only decides where it starts.
+				{i18n.t('se.t87')}
+
 			</p>
 		</div>
 		<Toggle
@@ -115,7 +115,7 @@
 			<Icon name="warning" class="w-3.5 h-3.5 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
 			<span>
 				No control names “{section.id}” yet, so this heading doesn't appear for readers.
-				Set a control's Section to this key.
+				{i18n.t('se.t88')}
 			</span>
 		</p>
 	{/if}

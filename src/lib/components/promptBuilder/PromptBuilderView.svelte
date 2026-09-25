@@ -795,7 +795,7 @@
 								     to the model too. -->
 								<div class="pb-field">
 									<label for="item-note-{item.id}" class="pb-label">
-										Author's note
+										{i18n.t('pbv.t83')}
 										<span class="pb-label-aside">never sent</span>
 									</label>
 									<textarea
@@ -1126,8 +1126,8 @@
 					class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm resize-none"
 				></textarea>
 				<p class="pb-sep-hint pb-opt-hint">
-					Sent as the final turn, right after the reply being extended. Clear it to send nothing,
-					and providers that support assistant prefill continue the reply natively.
+					{i18n.t('pbv.t84')}
+
 				</p>
 			</div>
 		</section>

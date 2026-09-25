@@ -320,7 +320,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					aria-pressed={favoritesOnly}
 				>
 					<Icon name="heart" class="w-3.5 h-3.5 {favoritesOnly ? 'fill-current' : ''}" />
-					Favorites only
+					{i18n.t('pv.t68')}
 				</button>
 			</div>
 		</BrowsePopover>
@@ -474,7 +474,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					{i18n.t('pv.noMatchesHint')}
 					{#snippet actions()}
 						<Button variant="ghost" size="sm" onclick={clearAllFilters}>
-							Clear all filters
+							{i18n.t('pv.t69')}
 						</Button>
 					{/snippet}
 				</EmptyState>

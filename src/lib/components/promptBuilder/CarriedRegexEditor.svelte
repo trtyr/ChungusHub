@@ -186,7 +186,7 @@
 									<span class="cr-foot-note">{i18n.t('pb.readerSwitch')}</span>
 									<button type="button" class="cr-remove" onclick={() => remove(rule.id)}>
 										<Icon name="trash" class="w-3.5 h-3.5" />
-										Remove from preset
+										{i18n.t('cre.t90')}
 									</button>
 								{/snippet}
 							</RegexRuleEditor>
@@ -201,8 +201,8 @@
 	{:else}
 		<div class="cr-empty">
 			<p>
-				No rules. A preset that prints its own panels usually carries the rules that style
-				them, so it looks right the moment somebody imports it.
+				{i18n.t('cre.t91')}
+
 			</p>
 		</div>
 	{/if}
@@ -210,7 +210,7 @@
 	<div class="cr-doors">
 		<button type="button" class="cr-add" onclick={addBlank}>
 			<Icon name="plus" class="w-3.5 h-3.5" strokeWidth={2} />
-			New rule
+			{i18n.t('cre.t92')}
 		</button>
 		<button
 			type="button"
@@ -220,11 +220,11 @@
 			disabled={regexRulesStore.rules.length === 0}
 		>
 			<Icon name="copy" class="w-3.5 h-3.5" strokeWidth={2} />
-			From my rules
+			{i18n.t('cre.t93')}
 		</button>
 		<button type="button" class="cr-door" onclick={() => fileInput?.click()}>
 			<Icon name="upload" class="w-3.5 h-3.5" strokeWidth={2} />
-			From a file
+			{i18n.t('cre.t94')}
 		</button>
 	</div>
 

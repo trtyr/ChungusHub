@@ -135,7 +135,7 @@
 			<div class="as-section-head">
 				<h3 class="as-section-title">
 					<Icon name="sparkles" class="w-3.5 h-3.5" />
-					Suggested Prompts
+					{i18n.t('asm.t0')}
 				</h3>
 				<InfoTip
 					text={i18n.t('asm.sugTip')}

@@ -102,9 +102,9 @@
 				{#if snapshot}
 					Counted {momentLabel(snapshot.takenAt)}
 				{:else if statsStore.loading}
-					Reading every message…
+					{i18n.t('stv.t106')}
 				{:else}
-					Everything you have written here
+					{i18n.t('stv.t107')}
 				{/if}
 			</span>
 		</div>

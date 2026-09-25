@@ -26,18 +26,18 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		type SnapshotManifest
 	} from '$shared/backups';
 
-	const INTERVALS = [
-		{ value: '6', label: 'Every 6 hours' },
-		{ value: '24', label: 'Once a day' },
-		{ value: '168', label: 'Once a week' }
-	];
+	const INTERVALS = $derived([
+		{ value: '6', label: i18n.t('bk.every6') },
+		{ value: '24', label: i18n.t('bk.onceDay') },
+		{ value: '168', label: i18n.t('bk.onceWeek') }
+	]);
 
 	/** What each kind is called on a row, and the shade it wears. */
 	const KIND_LABEL: Record<SnapshotManifest['kind'], string> = {
-		manual: 'By hand',
-		scheduled: 'Scheduled',
-		preUpgrade: 'Before upgrade',
-		preRestore: 'Before restore'
+		manual: 'bk.kindManual',
+		scheduled: 'bk.kindScheduled',
+		preUpgrade: 'bk.kindPreUpgrade',
+		preRestore: 'bk.kindPreRestore'
 	};
 
 	let settings = $derived(backupStore.settings);
@@ -245,7 +245,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				message="A restore is waiting. Close ChungusHub and start it again, and it puts your data back before anything else runs."
 			/>
 			<button type="button" class="link-btn pending-cancel" onclick={cancelPending} disabled={cancelling}>
-				Cancel the restore
+				{i18n.t('bk.t34')}
 			</button>
 		</div>
 	{/if}
@@ -327,7 +327,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				disabled={busy || !!job || !!pendingRestoreId}
 			/>
 			<Button size="sm" onclick={runBackup} disabled={busy || !!job || !!pendingRestoreId}>
-				Back up now
+				{i18n.t('bk.t35')}
 			</Button>
 		</div>
 
@@ -393,7 +393,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						<div class="body">
 							<div class="line-1">
 								<span class="when">{formatRelativeTime(s.createdAt)}</span>
-								<span class="kind kind-{s.kind}">{KIND_LABEL[s.kind]}</span>
+								<span class="kind kind-{s.kind}">{i18n.t(KIND_LABEL[s.kind])}</span>
 							</div>
 							<div class="line-2">
 								<span>{formatDate(s.createdAt)}</span>

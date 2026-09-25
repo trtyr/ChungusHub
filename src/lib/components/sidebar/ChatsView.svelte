@@ -798,7 +798,7 @@
 				{/if}
 				<button type="button" class="chats-new-button" onclick={handleNewChat}>
 					<Icon name="plus" class="w-4 h-4" />
-					New chat
+					{i18n.t('svc.t10')}
 				</button>
 			</div>
 		</div>
@@ -1045,24 +1045,24 @@
 						<Icon name="chat" class="w-8 h-8 mb-3 opacity-60" />
 						<p class="chats-empty-text">
 							{#if searchQuery && searchingMessages}
-								Searching messages…
+								{i18n.t('svc.t11')}
 							{:else if searchQuery}
 								No chats match "{searchQuery}"
 							{:else if filterMode === 'favorites'}
-								No favorites yet
+								{i18n.t('svc.t12')}
 							{:else if filterMode === 'duplicates'}
-								No identical chats
+								{i18n.t('svc.t13')}
 							{:else}
-								No chats yet
+								{i18n.t('svc.t14')}
 							{/if}
 						</p>
 						{#if searchQuery && !searchInMessages}
 							<button type="button" class="chats-empty-action" onclick={() => (searchInMessages = true)}>
-								Search inside messages too
+								{i18n.t('svc.t15')}
 							</button>
 						{:else if filterMode !== 'all'}
 							<button type="button" class="chats-empty-action" onclick={() => (filterMode = 'all')}>
-								Show all chats
+								{i18n.t('svc.t16')}
 							</button>
 						{/if}
 					</div>

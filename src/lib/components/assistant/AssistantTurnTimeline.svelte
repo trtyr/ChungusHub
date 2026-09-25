@@ -370,7 +370,7 @@
 				<!-- Deliberately no Retry: the actions above already happened, so re-running
 				     the turn would repeat them. Ask again for whatever is missing. -->
 				<div class="assistant-interrupted">
-					The server stopped while this turn was running. Everything above already happened.
+					{i18n.t('asm.t6')}
 				</div>
 			{/if}
 			{#if message.error}

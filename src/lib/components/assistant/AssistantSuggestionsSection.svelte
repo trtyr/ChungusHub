@@ -169,7 +169,7 @@
 <div class="sug-toolbar">
 	<button type="button" class="sug-ghost-btn" onclick={add}>
 		<Icon name="plus" class="w-3.5 h-3.5" />
-		Add prompt
+		{i18n.t('asm.t2')}
 	</button>
 	<button
 		type="button"
@@ -178,7 +178,7 @@
 		disabled={missingDefaults.length === 0}
 	>
 		<Icon name="restore" class="w-3.5 h-3.5" />
-		Add defaults
+		{i18n.t('asm.t3')}
 	</button>
 </div>
 

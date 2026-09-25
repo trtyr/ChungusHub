@@ -140,15 +140,15 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	{:else}
 		<div class="bl-empty">
 			<p>
-				No setups yet. Set the controls the way you'd recommend them on the Preset Controls page,
-				then capture that as a setup readers can apply in one click.
+				{i18n.t('pb.t85')}
+
 			</p>
 		</div>
 	{/if}
 
 	<button type="button" class="bl-add" onclick={add} disabled={controls.length === 0}>
 		<Icon name="plus" class="w-3.5 h-3.5" strokeWidth={2} />
-		Capture current values as a setup
+		{i18n.t('pb.t86')}
 	</button>
 </div>
 

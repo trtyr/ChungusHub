@@ -25,7 +25,7 @@
 			</span>
 		</span>
 		<span class="cap">
-			Token Count:
+			{i18n.t('mk.t80')}
 			<span class="val">
 				<span class="v raw-v">6</span>
 				<span class="v exp-v">22</span>

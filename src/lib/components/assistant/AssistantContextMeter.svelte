@@ -46,7 +46,7 @@
 		<span class="assistant-ctx-num">{fmtTokens(used)}{limit ? ` / ${fmtTokens(limit)} · ${pct}%` : ' ctx'}</span>
 		{#if pct !== null && pct >= 80}
 			<button type="button" class="assistant-ctx-newtab" onclick={onNewTab} title={i18n.t('asm.ctxNewTab')}>
-				New tab
+				{i18n.t('asm.t9')}
 			</button>
 		{/if}
 	</div>

@@ -181,7 +181,7 @@
 			{#if !standalone && !viewport.isMobile}
 				<button class="head-btn" type="button" onclick={popOut} title={i18n.t('dp.popOut')}>
 					<Icon name="restore" class="w-3.5 h-3.5" strokeWidth={1.75} />
-					Pop out
+					{i18n.t('dp.t108')}
 				</button>
 			{/if}
 			<button class="head-btn danger" type="button" onclick={() => promptLogStore.clear()} disabled={entries.length === 0}>

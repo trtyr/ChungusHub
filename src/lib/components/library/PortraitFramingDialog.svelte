@@ -273,7 +273,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		</div>
 
 		<p class="text-xs font-ui text-text-muted">
-			Drag to aim. Each shape previews the same framing in a different frame.
+			{i18n.t('pf.t77')}
 		</p>
 
 		<div class="flex items-center gap-3">

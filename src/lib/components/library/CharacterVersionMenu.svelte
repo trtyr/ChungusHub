@@ -175,8 +175,8 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		>
 			{#if versions.length === 0}
 				<p class="px-3 py-1.5 text-[11px] leading-relaxed font-ui text-text-muted">
-					Fork the current state into a named version before reworking it. Chats keep
-					the exact version they were played with; you can switch any time.
+					{i18n.t('cvm.t70')}
+
 				</p>
 			{:else}
 				<div class="max-h-64 overflow-y-auto">
@@ -288,7 +288,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			{:else}
 				<button type="button" class="version-new" onclick={() => (creating = true)}>
 					<Icon name="plus" class="w-3.5 h-3.5" />
-					New version from current
+					{i18n.t('cvm.t71')}
 				</button>
 			{/if}
 		</div>

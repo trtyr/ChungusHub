@@ -286,20 +286,20 @@
 				</div>
 				<h3>{i18n.t('mem.ltTitle')}</h3>
 				<p>
-					As the chat grows, older turns are summarized scene by scene and dropped from the prompt,
-					so context stays roughly flat and the characters keep the thread. Nothing is lost: a turn
-					is either still shown word-for-word or covered by a summary the model reads every turn.
+					{i18n.t('mem.t58')}
+
+
 				</p>
 				{#if !memoryMacroPresent}
 					<p class="memory-warn">
 						<Icon name="warning" class="w-3.5 h-3.5" />
 						The active preset has no <code>{'{{memory}}'}</code> item, so nothing would reach the model.
-						Add one in the Prompt Builder first (Standard Chungus ships with it).
+						{i18n.t('mem.t59')}
 					</p>
 				{/if}
 				<button type="button" class="memory-primary-btn" onclick={requestToggle} disabled={busy}>
 					<Icon name="brain" class="w-4 h-4" />
-					Enable for this chat
+					{i18n.t('mem.t60')}
 				</button>
 			</div>
 		{:else}
@@ -359,9 +359,9 @@
 					<span class="memory-mode-label">{i18n.t('mem.autoLabel')}</span>
 					<span class="memory-mode-help">
 						{#if autoExtract}
-							Older turns are summarized on their own as the story grows.
+							{i18n.t('mem.t61')}
 						{:else}
-							Waiting turns stay waiting until you summarize them yourself. Branch consistency is still kept automatically.
+							{i18n.t('mem.t62')}
 						{/if}
 					</span>
 				</div>
@@ -427,7 +427,7 @@
 			<section class="memory-section">
 				<button type="button" class="memory-settings-toggle" onclick={() => (showRecall = !showRecall)}>
 					<Icon name={showRecall ? 'chevronDown' : 'chevronRight'} class="w-3.5 h-3.5" />
-					What the model reads
+					{i18n.t('mem.t63')}
 				</button>
 				{#if showRecall}
 					{#if recallText}

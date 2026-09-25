@@ -564,7 +564,7 @@
 					}}
 				>
 					<Icon name="upload" class="w-3.5 h-3.5" />
-					Import World Info…
+					{i18n.t('lbv.t102')}
 				</button>
 				<button
 					type="button"
@@ -721,7 +721,7 @@
 					{#snippet actions()}
 						<Button variant="primary" size="sm" onclick={newBook}>
 							<Icon name="plus" class="w-4 h-4" />
-							New lorebook
+							{i18n.t('lbv.t103')}
 						</Button>
 						<Button variant="secondary" size="sm" onclick={() => fileInput?.click()}>
 							<Icon name="upload" class="w-4 h-4" />
@@ -746,7 +746,7 @@
 									resetPage();
 								}}
 							>
-								Clear search
+								{i18n.t('lbv.t104')}
 							</Button>
 						{/if}
 						{#if hidden.length > 0}
@@ -758,7 +758,7 @@
 									resetPage();
 								}}
 							>
-								Show all
+								{i18n.t('lbv.t105')}
 							</Button>
 						{/if}
 					{/snippet}

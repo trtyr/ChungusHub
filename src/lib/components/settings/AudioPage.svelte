@@ -112,8 +112,8 @@
 				     feature is worth turning on for someone who reads on a phone. -->
 				<p class="note">
 					Sounds reach you while ChungusHub is open behind another window or in another tab.
-					Leaving the browser entirely on a phone puts the page to sleep, and a sleeping page
-					cannot make a sound.
+					{i18n.t('aud.t36')}
+
 				</p>
 			</div>
 		{/if}

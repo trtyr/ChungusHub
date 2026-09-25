@@ -723,7 +723,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						aria-pressed={favoritesOnly}
 					>
 						<Icon name="heart" class="w-3.5 h-3.5 {favoritesOnly ? 'fill-current' : ''}" />
-						Favorites only
+						{i18n.t('clv.t73')}
 					</button>
 				</div>
 
@@ -938,7 +938,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					onclick={() => { moreOpen = false; handleImportClick(); }}
 				>
 					<Icon name="upload" class="w-3.5 h-3.5" />
-					Import cards…
+					{i18n.t('clv.t74')}
 				</button>
 				<button
 					type="button"
@@ -1165,7 +1165,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					{#snippet actions()}
 						<Button variant="primary" size="sm" onclick={handleCreateNew}>
 							<Icon name="plus" class="w-4 h-4" />
-							New character
+							{i18n.t('clv.t75')}
 						</Button>
 						<Button variant="secondary" size="sm" onclick={handleImportClick} disabled={importing}>
 							{#if importing}
@@ -1184,7 +1184,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					{i18n.t('clv.noMatchesHint')}
 					{#snippet actions()}
 						<Button variant="ghost" size="sm" onclick={clearAllFilters}>
-							Clear all filters
+							{i18n.t('clv.t76')}
 						</Button>
 					{/snippet}
 				</EmptyState>

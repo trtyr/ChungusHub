@@ -542,7 +542,7 @@
 							{i18n.t('pcv.noControlsBody')}
 						</EmptyState>
 						<p class="pcv-intro-note">
-							Craft them in the Prompt Builder under “Preset controls”, then watch this page become a form.
+							{i18n.t('pcv.t64')}
 						</p>
 					</div>
 				{:else}

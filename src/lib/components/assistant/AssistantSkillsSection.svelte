@@ -328,7 +328,7 @@
 								}}
 								disabled={item.busy}
 							>
-								Discard changes
+								{i18n.t('asm.t7')}
 							</button>
 						{/if}
 					</div>
@@ -363,7 +363,7 @@
 			</button>
 			<button type="button" class="skill-ghost-btn" onclick={addBlank}>
 				<Icon name="plus" class="w-3.5 h-3.5" />
-				New skill
+				{i18n.t('asm.t8')}
 			</button>
 		</div>
 		{#if items.length === 0}

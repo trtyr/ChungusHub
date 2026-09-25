@@ -1,8 +1,8 @@
 <script lang="ts">
+import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import InfoTip from '$lib/components/ui/InfoTip.svelte';
 	import type { ProviderMeta } from '$lib/services/llm/provider';
-	import { i18n } from '$lib/i18n/i18n.svelte';
 	import type { ProviderAccount, ProviderName } from '$lib/types/llm';
 	import { formatUsd } from '$lib/utils/modelFormat';
 
@@ -249,7 +249,7 @@
 
 			{#if account.isManagementKey}
 				<p class="ledger-warn">
-					This looks like a management/provisioning key, not an inference key, so generation will fail. Paste a key that starts with <code>sk-or-v1</code>.
+					{i18n.t('ch.t57')}
 				</p>
 			{/if}
 			{#if account.expiresAt}
@@ -678,13 +678,6 @@
 		color: var(--color-text-muted);
 	}
 
-	.ledger-warn code {
-		font-family: var(--font-mono);
-		font-size: 0.92em;
-		padding: 0.02rem 0.25rem;
-		border-radius: var(--radius-sm);
-		background: color-mix(in srgb, var(--color-bg-tertiary) 70%, transparent);
-	}
 
 	.connected {
 		display: flex;

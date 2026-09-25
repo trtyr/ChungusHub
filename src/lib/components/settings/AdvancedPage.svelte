@@ -148,7 +148,7 @@
 		{#if promptDebugPanel}
 			<button type="button" class="card-btn" onclick={() => uiStore.openDebugPanel()}>
 				<Icon name="wrench" class="w-3.5 h-3.5" strokeWidth={1.75} />
-				Open debug panel
+				{i18n.t('adv.t43')}
 				{#if logCount > 0}
 					<span class="open-panel-count">{logCount > 999 ? '999+' : logCount}</span>
 				{/if}

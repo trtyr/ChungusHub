@@ -320,14 +320,14 @@
 			{#if lastReply}
 				<button type="button" class="rx-borrow" onclick={() => (sampleText = lastReply)}>
 					<Icon name="sparkles" class="w-3 h-3" />
-					Use the last reply
+					{i18n.t('rxe.t78')}
 				</button>
 			{/if}
 			<span class="rx-try-spacer"></span>
 			{#if matchInfo}
 				<span class="rx-match-count" class:rx-match-zero={matchInfo.count === 0}>
 					{#if matchInfo.count === 0}
-						No matches
+						{i18n.t('rxe.t79')}
 					{:else}
 						{matchInfo.count}{matchInfo.capped ? '+' : ''}
 						match{matchInfo.count === 1 && !matchInfo.capped ? '' : 'es'}

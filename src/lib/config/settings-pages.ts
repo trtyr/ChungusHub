@@ -85,7 +85,7 @@ export interface SettingsRow {
 	label: string;
 	icon: SettingsRowIcon;
 	/** Live value shown on the root row; omit for rows with no one-line summary. */
-	preview?: () => string;
+	preview?: () => { key: string; params?: Record<string, string | number> };
 	/** A row that is not always there. Omit for the permanent ones. Read on every render of
 	 *  the root list, so a row can come and go while the list is on screen (split view). */
 	shown?: () => boolean;
@@ -96,21 +96,22 @@ export interface SettingsGroup {
 	rows: SettingsRow[];
 }
 
-function connectionsSummary(): string {
+function connectionsSummary(): { key: string; params?: Record<string, string | number> } {
 	const id = llmService.getPrimaryModel();
-	const model = id ? (id.split('/').pop() ?? id) : 'No model';
+	const model = id ? (id.split('/').pop() ?? id) : '';
 	const count = connectionStore.list().length;
-	return count > 1 ? `${model} · ${count} connections` : model;
+	if (!id) return { key: 'sp.sumNoModel' };
+	return count > 1 ? { key: 'sp.sumConns', params: { model, count } } : { key: 'sp.sumModel', params: { model } };
 }
 
-function enginesSummary(): string {
+function enginesSummary(): { key: string; params?: Record<string, string | number> } {
 	const on = ENGINES.filter((e) => e.enabled.get()).length;
-	return `${on} of ${ENGINES.length} on`;
+	return { key: 'sp.sumEngines', params: { on, total: ENGINES.length } };
 }
 
-function audioSummary(): string {
-	if (!audioSettingsStore.enabled) return 'Off';
-	return `${audioSettingsStore.activeCount} of ${SOUND_EVENTS.length} on`;
+function audioSummary(): { key: string; params?: Record<string, string | number> } {
+	if (!audioSettingsStore.enabled) return { key: 'sp.sumOff' };
+	return { key: 'sp.sumSounds', params: { on: audioSettingsStore.activeCount, total: SOUND_EVENTS.length } };
 }
 
 /**
@@ -118,11 +119,11 @@ function audioSummary(): string {
  * and the root row must not be the thing that goes and gets it, since every return to the root
  * re-renders these previews, which would make walking around Settings poll the backup store.
  */
-function backupsSummary(): string {
+function backupsSummary(): { key: string; params?: Record<string, string | number> } {
 	const { automatic, intervalHours } = backupStore.settings;
-	if (!automatic) return 'Automatic backups off';
-	if (intervalHours === 6) return 'Every 6 hours';
-	return intervalHours === 24 ? 'Once a day' : 'Once a week';
+	if (!automatic) return { key: 'sp.sumBackupsOff' };
+	if (intervalHours === 6) return { key: 'bk.every6' };
+	return intervalHours === 24 ? { key: 'bk.onceDay' } : { key: 'bk.onceWeek' };
 }
 
 export const SETTINGS_GROUPS: SettingsGroup[] = [
@@ -159,7 +160,7 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
 	{
 		label: 'sp.groupAbout',
 		rows: [
-			{ page: 'about', label: 'sp.rowAbout', icon: 'info', preview: () => APP_VERSION },
+			{ page: 'about', label: 'sp.rowAbout', icon: 'info', preview: () => ({ key: 'sp.sumVersion', params: { v: APP_VERSION } }) },
 			{
 				page: 'developer',
 				label: 'sp.rowDeveloper',

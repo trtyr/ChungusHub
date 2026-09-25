@@ -776,12 +776,12 @@
 				{#if total === 0}
 					<div class="py-14">
 						<EmptyState icon="feather" size="sm" title={i18n.t('lbw.noEntries')}>
-							Entries are facts injected into the story when their keywords come up, or on
-							every turn.
+							{i18n.t('lbw.t95')}
+
 							{#snippet actions()}
 								<Button variant="ghost" size="sm" onclick={addEntry}>
 									<Icon name="plus" class="w-3.5 h-3.5" />
-									Add the first entry
+									{i18n.t('lbw.t96')}
 								</Button>
 							{/snippet}
 						</EmptyState>
@@ -891,7 +891,7 @@
 								class="brw-bulk-link"
 								onclick={() => (selectedIds = new Set(entries.map((e) => e.id)))}
 							>
-								Select all
+								{i18n.t('lbw.t97')}
 							</button>
 							<span class="brw-bulk-spacer"></span>
 							<button
@@ -925,7 +925,7 @@
 											aria-haspopup="true"
 											aria-expanded={open}
 										>
-											Move to…
+											{i18n.t('lbw.t98')}
 										</button>
 									{/snippet}
 									<LorebookTransferPicker
@@ -946,7 +946,7 @@
 											aria-haspopup="true"
 											aria-expanded={open}
 										>
-											Copy to…
+											{i18n.t('lbw.t99')}
 										</button>
 									{/snippet}
 									<LorebookTransferPicker
@@ -984,7 +984,7 @@
 										onclick={() => (search = '')}
 										class="text-xs font-ui text-accent hover:underline"
 									>
-										Clear search
+										{i18n.t('lbw.t100')}
 									</button>
 								{/if}
 								{#if hidden.length > 0}
@@ -993,7 +993,7 @@
 										onclick={() => lorebookEntryPrefs.showAll()}
 										class="text-xs font-ui text-accent hover:underline"
 									>
-										Show all
+										{i18n.t('lbw.t101')}
 									</button>
 								{/if}
 							</div>

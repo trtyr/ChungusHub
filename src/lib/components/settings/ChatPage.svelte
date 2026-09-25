@@ -438,8 +438,8 @@
 
 	{#if isManuscript}
 		<p class="style-note">
-			Manuscript draws no cards and no portraits, so the shape, color and portrait
-			settings have nothing to style and are hidden until you pick another style.
+			{i18n.t('chatpg.t19')}
+
 		</p>
 	{:else}
 		<section class="card" data-setting="message-shape">
@@ -523,8 +523,8 @@
 						}}
 					/>
 					<p class="field-hint">
-						Fill, outline and shadow fade together, so the whole card dissolves at zero
-						and comes back as you set it. Rides on top of the Glass setting.
+						{i18n.t('chatpg.t20')}
+
 					</p>
 				</div>
 
@@ -772,8 +772,8 @@
 					}}
 				/>
 				<p class="field-hint">
-					Lifts the story off a background showing through a faded card. Dark behind light
-					text, light behind dark, so it never becomes a color to pick.
+					{i18n.t('chatpg.t22')}
+
 				</p>
 			</div>
 		</div>
@@ -880,8 +880,8 @@
 						}}
 					/>
 					<p class="field-hint">
-						How faint a turn goes once it has been folded into chat memory. Hovering one
-						always brings it back to full.
+						{i18n.t('chatpg.t23')}
+
 					</p>
 				</div>
 			{/if}

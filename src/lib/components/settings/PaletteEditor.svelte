@@ -222,8 +222,8 @@
 					{/each}
 				</div>
 				<p class="hint">
-					How far glass may go over them, which way shadows and the story's halo are mixed,
-					and what a phone paints its status bar.
+					{i18n.t('pal.t50')}
+
 				</p>
 			</div>
 
@@ -284,7 +284,7 @@
 						class="flex-1 palette-delete"
 						onclick={() => (confirmDelete = true)}
 					>
-						Delete palette
+						{i18n.t('pal.t51')}
 					</Button>
 				{/if}
 				{#if drifted}
@@ -294,7 +294,7 @@
 						class="flex-1"
 						onclick={() => themeStore.restorePalette(opened)}
 					>
-						Discard changes
+						{i18n.t('pal.t52')}
 					</Button>
 				{/if}
 				<Button variant="primary" size="lg" class="flex-1" onclick={onclose}>{i18n.t('common.close')}</Button>

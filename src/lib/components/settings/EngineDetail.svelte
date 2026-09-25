@@ -205,7 +205,7 @@
 					class="link-btn head-action"
 					onclick={() => uiStore.gotoSettingsPage('connections')}
 				>
-					Change on Connections
+					{i18n.t('ed.t53')}
 				</button>
 			{/if}
 		</div>
@@ -213,7 +213,7 @@
 			<p class="model-line">{connectionLine({ engine: engine.id })}</p>
 		{:else}
 			<p class="model-line">
-				No model call. The guidance you type rides the story generation itself.
+				{i18n.t('ed.t54')}
 			</p>
 		{/if}
 	</section>
@@ -260,7 +260,7 @@
 					/>
 				</div>
 				<p class="placement-note">
-					Guidance sharing a role and depth arrives as one wrapped block instead of scattered turns.
+					{i18n.t('ed.t55')}
 				</p>
 			</div>
 		</section>
@@ -309,9 +309,9 @@
 					</div>
 				{/each}
 				<p class="placement-note">
-					Copied into a chat when memory is switched on for it. Double-click a slider to put it
-					back to the shipped default. Chats that already have memory keep the numbers they were
-					enabled under; change those in the chat's own Memory panel.
+					{i18n.t('ed.t56')}
+
+
 				</p>
 			</div>
 		</section>

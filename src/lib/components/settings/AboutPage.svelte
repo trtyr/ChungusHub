@@ -276,13 +276,13 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					{:else}
 						<Icon name="refresh" class="w-3.5 h-3.5" strokeWidth={1.75} />
 					{/if}
-					Check for updates
+					{i18n.t('ab.t28')}
 				</Button>
 
 				{#if update.kind === 'current'}
 					<p class="verdict">
 						<Icon name="checkCircle" class="w-3.5 h-3.5 verdict-icon" strokeWidth={1.75} />
-						You are on the latest release.
+						{i18n.t('ab.t29')}
 					</p>
 				{:else if update.kind === 'ahead'}
 					<p class="verdict">
@@ -295,7 +295,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						{update.version} is out. You are on {APP_VERSION}.
 					</p>
 					<a class="release" href={update.url} target="_blank" rel="noopener noreferrer">
-						See what changed
+						{i18n.t('ab.t30')}
 						<Icon name="externalLink" class="w-3.5 h-3.5" strokeWidth={1.75} />
 					</a>
 				{/if}
@@ -363,7 +363,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		</div>
 		<div class="reach">
 			<p class="personal">
-				If you would rather talk to a person, or you simply have an idea to share, I am on
+				{i18n.t('ab.t31')}
 				Discord: the server above, or straight to me here.
 			</p>
 			<button type="button" class="handle" onclick={copyHandle} title={i18n.t('ab.copyHandle')}>
@@ -387,7 +387,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		{:else if !install}
 			<p class="loading">
 				<Spinner size="sm" />
-				Reading the folder…
+				{i18n.t('ab.t32')}
 			</p>
 		{:else}
 			{#if staleClient}

@@ -155,7 +155,8 @@
 											<Icon name={row.icon} class="w-4 h-4 drill-icon" strokeWidth={1.75} />
 											<span class="drill-label">{i18n.t(row.label)}</span>
 											{#if row.preview}
-												<span class="drill-value">{row.preview()}</span>
+												{@const p = row.preview()}
+											<span class="drill-value">{i18n.t(p.key, p.params)}</span>
 											{/if}
 											<Icon name="chevronRight" class="w-4 h-4 drill-chev" strokeWidth={2} />
 										</button>

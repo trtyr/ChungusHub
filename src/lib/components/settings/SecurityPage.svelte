@@ -384,7 +384,7 @@
 						<span class="row-label">{i18n.t('sec.requireApproval')}</span>
 						{#if !allowlistEnabled}
 							<span class="row-desc row-desc-warn">
-								Approval is off, anyone on your network can connect.
+								{i18n.t('sec.t37')}
 							</span>
 						{/if}
 					</div>
@@ -476,7 +476,7 @@
 						{#if !manualOpen}
 							<button class="manual-toggle" type="button" onclick={() => (manualOpen = true)}>
 								<Icon name="plus" class="w-3.5 h-3.5" strokeWidth={2} />
-								Add a device by address
+								{i18n.t('sec.t38')}
 							</button>
 						{:else}
 							<form
@@ -556,7 +556,7 @@
 								</button>
 							</div>
 							<button class="primary-btn" type="submit" disabled={securityBusy || !passwordValid}>
-								Set password
+								{i18n.t('sec.t39')}
 							</button>
 						</form>
 					</div>
@@ -621,7 +621,7 @@
 						{#if !changeOpen}
 							<button class="manual-toggle" type="button" onclick={() => (changeOpen = true)}>
 								<Icon name="lock" class="w-3.5 h-3.5" strokeWidth={2} />
-								Change password
+								{i18n.t('sec.t40')}
 							</button>
 						{:else}
 							<form
