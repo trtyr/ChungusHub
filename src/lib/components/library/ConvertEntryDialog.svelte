@@ -67,7 +67,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 
 		<div class="flex flex-col gap-2">
 			<label class="cv-label" for="convert-description">
-				{toPersona ? 'Persona Description' : 'Description'}
+				{toPersona ? i18n.t('pe.personaDesc') : i18n.t('ef.fDescription')}
 			</label>
 			<textarea
 				id="convert-description"

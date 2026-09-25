@@ -256,9 +256,9 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 
 	/** Human explanation for the read-only "Not sent to AI" badge, actionable where possible. */
 	function buildNotSentTitle(macro: string | undefined, inBlob: boolean): string {
-		if (!macro) return "Metadata: no preset macro places this field, so it's never sent to the AI.";
-		const alt = inBlob ? ' or {{character}}' : '';
-		return `Not sent to the AI. Add {{${macro}}}${alt} to the active preset to include it.`;
+		if (!macro) return i18n.t('ef.notSentMeta');
+		const alt = inBlob ? i18n.t('ef.orCharacter') : '';
+		return i18n.t('ef.notSentHow', { macro, alt });
 	}
 
 	// Image handlers
@@ -700,7 +700,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		<div class="space-y-3">
 			{@render sectionHeading(
 				'sprites',
-				'Sprites',
+				i18n.t('ef.secSprites'),
 				'image',
 				spritesOpen,
 				showSpriteSort ? spriteSortControl : undefined

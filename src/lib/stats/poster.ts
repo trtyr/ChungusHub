@@ -602,7 +602,7 @@ function drawCast(
 			ctx.fillStyle = palette.secondary;
 			ctx.font = `400 30px ${palette.sans}`;
 			ctx.textAlign = 'right';
-			ctx.fillText(plural(member.messages, 'turn'), PAD + INNER, y + 40);
+			ctx.fillText(i18n.t('p.nTurns', { n: member.messages }), PAD + INNER, y + 40);
 			ctx.textAlign = 'left';
 
 			// The bar keeps the ranking honest at a glance: everyone is drawn against the lead.
@@ -643,10 +643,10 @@ function drawTime(ctx: CanvasRenderingContext2D, palette: Palette, snapshot: Sta
 	drawHeatmap(ctx, snapshot, palette, 700);
 
 	let y = 990;
-	drawStatLine(ctx, palette, i18n.t('p.longestRun'), plural(snapshot.longest.days, 'day'), y);
+	drawStatLine(ctx, palette, i18n.t('p.longestRun'), i18n.t('p.nDaysOn', { n: snapshot.longest.days }), y);
 	y += 96;
 	if (snapshot.current.days > 0) {
-		drawStatLine(ctx, palette, i18n.t('p.runningNow'), plural(snapshot.current.days, 'day'), y);
+		drawStatLine(ctx, palette, i18n.t('p.runningNow'), i18n.t('p.nDaysOn', { n: snapshot.current.days }), y);
 	} else if (snapshot.stats.records.lastMessageAt) {
 		drawStatLine(ctx, palette, i18n.t('p.lastWrote'), dateLabel(snapshot.stats.records.lastMessageAt), y);
 	}
@@ -656,7 +656,7 @@ function drawTime(ctx: CanvasRenderingContext2D, palette: Palette, snapshot: Sta
 			ctx,
 			palette,
 			i18n.t('p.busiestDay', { d: dayLabel(snapshot.busiest.key) }),
-			plural(snapshot.busiest.count, 'message'),
+			i18n.t('p.nMsgs', { n: snapshot.busiest.count }),
 			y
 		);
 	}

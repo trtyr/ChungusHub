@@ -39,10 +39,10 @@
 
 	let {
 		open,
-		title = 'Confirm',
+		title = i18n.t('ui.confirmDefault'),
 		message,
-		confirmLabel = 'Confirm',
-		cancelLabel = 'Cancel',
+		confirmLabel = i18n.t('ui.confirmDefault'),
+		cancelLabel = i18n.t('common.cancel'),
 		variant = 'default',
 		holdMs = 0,
 		destructive = false,

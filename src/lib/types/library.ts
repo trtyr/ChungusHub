@@ -190,8 +190,8 @@ export const PERMANENT_TRAITS: Record<LibraryEntryType, PermanentTraitDef[]> = {
 		{ key: 'systemPrompt', label: 'ef.fSysPrompt', macro: 'charPrompt' },
 		{ key: 'postHistoryInstructions', label: 'ef.fPostHist', macro: 'charInstruction' },
 		{ key: 'characterVersion', label: 'ef.fVersion', macro: 'charVersion' },
-		{ key: 'creator', label: 'Created by', macro: 'charCreator' },
-		{ key: 'creatorNotes', label: "Creator's Notes", macro: 'charCreatorNotes' }
+		{ key: 'creator', label: 'ef.fCreatedBy', macro: 'charCreator' },
+		{ key: 'creatorNotes', label: 'ef.fCreatorNotes', macro: 'charCreatorNotes' }
 	],
 	// Personas are a single free-text field (see PersonasView). Everything the
 	// protagonist needs lives in this one description, placed verbatim by {{persona}}.
