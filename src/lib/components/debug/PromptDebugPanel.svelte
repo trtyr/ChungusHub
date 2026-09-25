@@ -19,6 +19,7 @@
 		statusLabel,
 		toolTokens
 	} from '$lib/debug/format';
+	import { labelT } from '$lib/i18n/labels';
 	import type { PromptLogEntry } from '$lib/debug/types';
 	import CopyButton from './CopyButton.svelte';
 	import PromptMessageCard from './PromptMessageCard.svelte';
@@ -221,7 +222,7 @@
 						onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && pick(entry.id)}
 					>
 						<div class="row-top">
-							<span class="status-dot" style={`background:${statusColor(entry.status)}`} title={statusLabel(entry.status)}></span>
+							<span class="status-dot" style={`background:${statusColor(entry.status)}`} title={labelT(statusLabel(entry.status))}></span>
 							<span class="src-badge" style={`color:${sourceColor(entry.source)}; background:color-mix(in srgb, ${sourceColor(entry.source)} 15%, transparent)`}>
 								{entry.source}{entry.iteration ? ` · #${entry.iteration}` : ''}
 							</span>
@@ -313,7 +314,7 @@
 					<div class="stats">
 						<div class="stat">
 							<span class="k">{i18n.t('dbg.kStatus')}</span>
-							<span class="v st">{statusLabel(entry.status)}</span>
+							<span class="v st">{labelT(statusLabel(entry.status))}</span>
 						</div>
 						<div class="stat">
 							<span class="k">{i18n.t('dbg.kPrompt')} · {i18n.t(size.reported ? 'dbg.kReported' : 'dbg.kEstimated')}</span>

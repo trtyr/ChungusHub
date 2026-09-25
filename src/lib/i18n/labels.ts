@@ -94,7 +94,17 @@ const ZH: Record<string, string> = {
 	'Muted text': '弱化文字',
 	'Text on panels': '面板上的文字',
 	'Text on your turn': '你的回合上的文字',
-	'Text on their turn': '对方回合上的文字'
+	'Text on their turn': '对方回合上的文字',
+	'Crimson': '深红',
+	'Amber': '琥珀',
+	'Emerald': '翠绿',
+	'Sky': '天蓝',
+	'Violet': '紫罗兰',
+	'Rose': '玫红',
+	'Teal': '青碧',
+	'Slate': '岩灰',
+	'completed': '已完成',
+	'in flight': '进行中',
 };
 
 /** Translate a store-sourced label into the active language; unknown labels pass through. */

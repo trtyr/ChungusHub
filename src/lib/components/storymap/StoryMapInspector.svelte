@@ -2,6 +2,7 @@
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { BRANCH_COLORS } from '$lib/utils/branch-labels';
+	import { labelT } from '$lib/i18n/labels';
 	import type { StoryMapNode } from '$lib/utils/story-map-layout';
 	import type { BranchLabel } from '$lib/types/chat';
 
@@ -129,8 +130,8 @@
 					class="swatch"
 					class:is-on={labelColor === c.key}
 					style="--sw: {c.hex};"
-					title={c.label}
-					aria-label={c.label}
+					title={labelT(c.label)}
+					aria-label={labelT(c.label)}
 					aria-pressed={labelColor === c.key}
 					onclick={() => (labelColor = c.key)}
 				></button>
