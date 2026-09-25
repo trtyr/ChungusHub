@@ -337,11 +337,11 @@ class MemoryStore {
 			return { kind: 'working', label: i18n.t('mem.stStory'), outstanding: this.outstandingCalls };
 		}
 		if (this.status === 'rebuilding') {
-			return { kind: 'working', label: 'Re-reading from the start…', outstanding: this.outstandingCalls };
+			return { kind: 'working', label: i18n.t('mem.stReread'), outstanding: this.outstandingCalls };
 		}
 		const idle: MemoryStandingState = { kind: 'idle', label: i18n.t('mem.stUpToDate'), outstanding: 0 };
 		if (!this.active) return idle;
-		if (this.status === 'error') return { kind: 'error', label: 'Something went wrong', outstanding: 0 };
+		if (this.status === 'error') return { kind: 'error', label: i18n.t('mem.stError'), outstanding: 0 };
 		if (this.pending > 0 && this.canSummarise) {
 			return {
 				kind: 'behind',

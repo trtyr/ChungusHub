@@ -22,24 +22,24 @@ export type SortOption =
 	| 'random';
 
 export const SORT_OPTIONS: { id: SortOption; label: string }[] = [
-	{ id: 'a-z', label: 'A → Z' },
-	{ id: 'z-a', label: 'Z → A' },
-	{ id: 'newest', label: 'Newest' },
-	{ id: 'oldest', label: 'Oldest' },
-	{ id: 'most-content', label: 'Most Content' },
-	{ id: 'least-content', label: 'Least Content' }
+	{ id: 'a-z', label: 'brw.az' },
+	{ id: 'z-a', label: 'brw.za' },
+	{ id: 'newest', label: 'brw.newest' },
+	{ id: 'oldest', label: 'brw.oldest' },
+	{ id: 'most-content', label: 'brw.mostContent' },
+	{ id: 'least-content', label: 'brw.leastContent' }
 ];
 
 /** Characters get chat-aware sorts on top of the shared set: chats are bound to
  *  characters, so these mean nothing on the Personas tab. */
 export const CHARACTER_SORT_OPTIONS: { id: SortOption; label: string }[] = [
 	...SORT_OPTIONS,
-	{ id: 'most-chats', label: 'Most Chats' },
-	{ id: 'least-chats', label: 'Least Chats' },
-	{ id: 'most-messages', label: 'Most Messages' },
-	{ id: 'least-messages', label: 'Least Messages' },
+	{ id: 'most-chats', label: 'brw.mostChats' },
+	{ id: 'least-chats', label: 'brw.leastChats' },
+	{ id: 'most-messages', label: 'brw.mostMsgs' },
+	{ id: 'least-messages', label: 'brw.leastMsgs' },
 	{ id: 'recent', label: 'Recent' },
-	{ id: 'random', label: 'Random' }
+	{ id: 'random', label: 'brw.random' }
 ];
 
 export const PER_PAGE_OPTIONS = [25, 50, 100, 200, 500, 1000];

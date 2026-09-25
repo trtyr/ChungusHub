@@ -831,7 +831,7 @@
 												class:is-active={lorebookEntryPrefs.sort === option.id}
 												onclick={() => lorebookEntryPrefs.setSort(option.id)}
 											>
-												{option.label}
+												{i18n.t(option.label)}
 											</button>
 										{/each}
 									</div>

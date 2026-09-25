@@ -374,7 +374,7 @@
 		<div class="ce-field">
 			<div class="ce-inline ce-inline--between">
 				<span class="ce-label">{i18n.t('ce2.options')}</span>
-				<button type="button" class="ce-add-option" onclick={addOption}>+ Add option</button>
+				<button type="button" class="ce-add-option" onclick={addOption}>{i18n.t('ce2.addOption')}</button>
 			</div>
 			{#if control.type === 'tags'}
 				<div class="ce-field">

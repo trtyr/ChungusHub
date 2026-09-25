@@ -402,7 +402,7 @@
 						{#if pin}<span class="badge-lbl">{i18n.t('pr.in')}</span>{pin}{/if}{#if pin && pout}<span class="badge-sep">·</span>{/if}{#if pout}<span class="badge-lbl">{i18n.t('pr.out')}</span>{pout}{/if}
 					</span>
 				{/if}
-				{#if formatContext(row.contextLength)}<span class="badge"><span class="badge-lbl">ctx</span>{formatContext(row.contextLength)}</span>{/if}
+				{#if formatContext(row.contextLength)}<span class="badge"><span class="badge-lbl">{i18n.t('pr.ctx')}</span>{formatContext(row.contextLength)}</span>{/if}
 				{#each row.quants as q (q)}<span class="badge badge-quant">{q}</span>{/each}
 				{#if latencyLabel(row.latencyP50)}<span class="badge" title={i18n.t('pr.latTip')}><span class="badge-lbl">{i18n.t('pr.lat')}</span>{latencyLabel(row.latencyP50)}</span>{/if}
 				{#if throughputLabel(row.throughputP50)}<span class="badge" title={i18n.t('pr.throughputTip')}>{throughputLabel(row.throughputP50)}</span>{/if}

@@ -41,15 +41,15 @@
 	import { i18n, type Lang } from '$lib/i18n/i18n.svelte';
 
 	const CONTRAST_OPTIONS: { value: ContrastLevel; label: string }[] = [
-		{ value: 'soft', label: 'Soft' },
-		{ value: 'standard', label: 'Standard' },
-		{ value: 'high', label: 'High' }
+		{ value: 'soft', label: 'if.glassSoft' },
+		{ value: 'standard', label: 'if.glassStandard' },
+		{ value: 'high', label: 'if.contrastHigh' }
 	];
 
 	const GLASS_OPTIONS: { value: GlassLevel; label: string }[] = [
 		{ value: 'off', label: 'Off' },
-		{ value: 'subtle', label: 'Subtle' },
-		{ value: 'full', label: 'Full' }
+		{ value: 'subtle', label: 'if.glassSubtle' },
+		{ value: 'full', label: 'if.glassFull' }
 	];
 
 	let appearance = $derived(themeStore.appearance);

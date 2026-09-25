@@ -95,8 +95,8 @@
 		const buckets: { label: string; min: number }[] = [
 			{ label: i18n.t('asm.histToday'), min: startOfToday },
 			{ label: i18n.t('asm.histYesterday'), min: startOfToday - dayMs },
-			{ label: 'Previous 7 days', min: startOfToday - 7 * dayMs },
-			{ label: 'Older', min: -Infinity }
+			{ label: i18n.t('asm.histWeek'), min: startOfToday - 7 * dayMs },
+			{ label: i18n.t('asm.histOlder'), min: -Infinity }
 		];
 		return buckets
 			.map((bucket, i) => ({

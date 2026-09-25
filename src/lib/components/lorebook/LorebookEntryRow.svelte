@@ -242,9 +242,9 @@
 	// emptied box is a real edit rather than a draft waiting to parse.
 	type TimedField = 'sticky' | 'cooldown' | 'delay';
 	const TIMED: { field: TimedField; label: string }[] = [
-		{ field: 'sticky', label: 'Sticky' },
-		{ field: 'cooldown', label: 'Cooldown' },
-		{ field: 'delay', label: 'Delay' }
+		{ field: 'sticky', label: 'ler.trSticky' },
+		{ field: 'cooldown', label: 'ler.trCooldown' },
+		{ field: 'delay', label: 'ler.trDelay' }
 	];
 	function timedValue(field: TimedField): string {
 		const v = entry?.[field];
@@ -765,7 +765,7 @@
 											aria-pressed={triggerOn(t.id)}
 											onclick={() => toggleTrigger(t.id)}
 										>
-											{t.label}
+											{i18n.t(t.label)}
 										</button>
 									{/each}
 								</div>

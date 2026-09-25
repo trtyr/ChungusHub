@@ -22,14 +22,14 @@ const SETTINGS_KEY = 'lorebookEntryPrefs';
  *  Also the validity list a stored value is read back through, so an option that goes away
  *  cannot leave a device on it. */
 export const LOREBOOK_ENTRY_SORT_OPTIONS: { id: LorebookEntrySort; label: string }[] = [
-	{ id: 'order', label: 'Order' },
-	{ id: 'order-desc', label: 'Reverse order' },
-	{ id: 'a-z', label: 'A → Z' },
-	{ id: 'z-a', label: 'Z → A' },
-	{ id: 'longest', label: 'Longest' },
-	{ id: 'shortest', label: 'Shortest' },
-	{ id: 'most-keys', label: 'Most keys' },
-	{ id: 'fewest-keys', label: 'Fewest keys' }
+	{ id: 'order', label: 'ler.sortOrder' },
+	{ id: 'order-desc', label: 'ler.sortOrderDesc' },
+	{ id: 'a-z', label: 'ler.sortAz' },
+	{ id: 'z-a', label: 'ler.sortZa' },
+	{ id: 'longest', label: 'ler.sortLongest' },
+	{ id: 'shortest', label: 'ler.sortShortest' },
+	{ id: 'most-keys', label: 'ler.sortMostKeys' },
+	{ id: 'fewest-keys', label: 'ler.sortFewestKeys' }
 ];
 
 /** The three natures, worded and ordered exactly as the entry row's own behavior switch

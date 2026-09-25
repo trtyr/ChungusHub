@@ -95,7 +95,7 @@
 		{#if content}
 			<pre class="body">{content}</pre>
 		{:else}
-			<p class="empty">(no text content)</p>
+			<p class="empty">{i18n.t('dbg.noTextContent')}</p>
 		{/if}
 
 		{#if toolCalls.length}

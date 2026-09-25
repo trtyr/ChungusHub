@@ -176,11 +176,11 @@
 						<span class="preview-meta-sep">·</span>
 						<span class="preview-meta-branch">
 							<Icon name="branch" class="w-3 h-3" />
-							{offPathCount} off it
+							{i18n.t('sb.offIt', { n: offPathCount })}
 						</span>
 					{/if}
 					<span class="preview-meta-sep">·</span>
-					<span>started {formatDate(chat.createdAt)}</span>
+					<span>{i18n.t('sb.startedAt')} {formatDate(chat.createdAt)}</span>
 				</p>
 			</div>
 		</header>

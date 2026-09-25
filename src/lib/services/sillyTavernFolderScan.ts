@@ -334,8 +334,8 @@ export function planGroups(scan: FolderScan, labels: PlanLabels = {}): PlanGroup
 			label: 'st.gChats',
 			items: [...chatsByCharacter].map(([character, files]) => folderItem(character, files))
 		},
-		{ id: 'worlds', label: 'Lorebooks', items: scan.worlds.map(fileItem) },
-		{ id: 'backgrounds', label: 'Backgrounds', items: scan.backgrounds.map(fileItem) }
+		{ id: 'worlds', label: 'st.gLorebooks', items: scan.worlds.map(fileItem) },
+		{ id: 'backgrounds', label: 'st.gBackgrounds', items: scan.backgrounds.map(fileItem) }
 	];
 	return groups.filter((group) => group.items.length > 0);
 }

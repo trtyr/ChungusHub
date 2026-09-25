@@ -705,7 +705,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 								class:is-active={sortOption === opt.id}
 								onclick={() => applySort(opt.id)}
 							>
-								{opt.label}
+								{i18n.t(opt.label)}
 							</button>
 						{/each}
 					</div>
