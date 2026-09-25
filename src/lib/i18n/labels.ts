@@ -150,7 +150,7 @@ const ZH: Record<string, string> = {
 	"System default": '系统默认',
 	"Deletes zero-width characters and the BOM: invisible marks that silently break search, copy/paste, and token counts.": '删除零宽字符与 BOM：这些不可见标记会悄悄破坏搜索、复制粘贴和 token 计数。',
 	"Turns no-break spaces into plain ones. They look identical but wrap and tokenize differently.": '将不换行空格转为普通空格。两者看起来一样，但换行与分词方式不同。',
-	"Softens em dashes between words into \", \": dialogue dashes and interrupted speech (\"Don't you dare—\") stay intact.": '将词间的长破折号弱化为「, 」：对白破折号与被打断的话（「你敢……」）保持原样。',
+	"Softens em dashes between words into \", \": dialogue dashes and interrupted speech (\"Don't you dare—\") stay intact.": '将词间的长破折号弱化为「, 」：对白破折号与被打断的话（「你敢……」）保持原样。', // em-dash: data
 	"Settles … characters and runs of four-plus dots into a plain \"...\": exactly three dots pass through untouched.": '将 … 字符与四个以上的连续点规整为普通「...」：恰好三个点保持原样。',
 	"Collapses three or more consecutive line breaks into one blank line: reads the same, costs fewer prompt tokens.": '将三个及以上的连续换行折叠为一个空行：阅读体验不变，提示词 token 更省。',
 	"Straightens typographic double quotes so dialogue stops flip-flopping between quote styles mid-story.": '将排印弯双引号拉直，避免对白在故事中途在两种引号样式间来回切换。',
