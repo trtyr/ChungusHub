@@ -35,11 +35,15 @@ export function formatUsd(amount?: number | null): string {
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 /** Knowledge-cutoff / date string "2024-04" or ISO → "Apr 2024" (raw when unparseable). */
-export function formatMonthYear(value?: string): string | null {
+const MONTH_KEYS = ['mf.jan', 'mf.feb', 'mf.mar', 'mf.apr', 'mf.may', 'mf.jun', 'mf.jul', 'mf.aug', 'mf.sep', 'mf.oct', 'mf.nov', 'mf.dec'];
+
+export function formatMonthYear(value?: string, t?: (key: string) => string): string | null {
 	if (!value) return null;
 	const m = /^(\d{4})-(\d{2})/.exec(value);
 	if (!m) return value;
-	const month = MONTHS[parseInt(m[2], 10) - 1];
+	const i = parseInt(m[2], 10) - 1;
+	if (t && i >= 0 && i < 12) return `${t(MONTH_KEYS[i])} ${m[1]}`;
+	const month = MONTHS[i];
 	return month ? `${month} ${m[1]}` : value;
 }
 

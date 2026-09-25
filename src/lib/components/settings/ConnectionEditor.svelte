@@ -486,7 +486,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				{@const ctx = formatContext(info.contextLength)}
 				{@const inPrice = formatPricePerMillion(info.pricing?.prompt)}
 				{@const outPrice = formatPricePerMillion(info.pricing?.completion)}
-				{@const cutoff = formatMonthYear(info.knowledgeCutoff)}
+				{@const cutoff = formatMonthYear(info.knowledgeCutoff, i18n.t)}
 				{@const vision = !!info.inputModalities?.includes('image')}
 				{@const tools = !!info.supportedParameters?.includes('tools')}
 				{@const hasStats = !!(ctx || inPrice || outPrice || cutoff)}
