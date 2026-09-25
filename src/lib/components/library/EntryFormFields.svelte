@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { labelT } from '$lib/i18n/labels';
 	import { tick, type Snippet } from 'svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import { imageService, imageRejectionReason } from '$lib/services/imageService';
@@ -491,7 +492,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		aria-label={i18n.t('ef.sortSprites')}
 	>
 		{#each SPRITE_SORT_OPTIONS as option (option.id)}
-			<option value={option.id}>{option.label}</option>
+			<option value={option.id}>{labelT(option.label)}</option>
 		{/each}
 	</Select>
 {/snippet}

@@ -138,7 +138,7 @@
 					>
 						<span class="event-text">
 							<span class="event-label">{labelT(event.label)}</span>
-							<span class="event-desc">{event.description}</span>
+							<span class="event-desc">{labelT(event.description)}</span>
 						</span>
 						<span class="event-tone" class:is-silent={current === null}>
 							{current ? toneLabel(current) : i18n.t('audio.none')}

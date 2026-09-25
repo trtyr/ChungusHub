@@ -11,6 +11,7 @@
 	 * on the Connections page, each engine's own assignment included (its Engine
 	 * models fold).
 	 */
+	import { labelT } from '$lib/i18n/labels';
 	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import Toggle from '$lib/components/ui/Toggle.svelte';
@@ -40,7 +41,7 @@
 								<Icon name={engine.icon} class="w-4 h-4" strokeWidth={1.75} />
 							</span>
 							<span class="row-text">
-								<span class="row-name">{engine.name}</span>
+								<span class="row-name">{labelT(engine.name)}</span>
 								<span class="row-summary">{engine.summary}</span>
 							</span>
 							<Icon name="chevronRight" class="w-4 h-4 row-chev" strokeWidth={2} />

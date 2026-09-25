@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { labelT } from '$lib/i18n/labels';
 	import Icon from '$lib/components/ui/Icon.svelte';
 import { i18n } from '$lib/i18n/i18n.svelte';
 	import { toastStore } from '$lib/stores/toast.svelte';
@@ -173,7 +174,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				class="w-full flex items-center gap-2.5 px-3 py-1.5 text-xs font-ui text-text-secondary hover:bg-bg-tertiary hover:text-text-primary transition-colors"
 			>
 				<Icon name={CONVERT_ACTION[entryType].icon} class="w-3.5 h-3.5" />
-				{CONVERT_ACTION[entryType].label}
+				{labelT(CONVERT_ACTION[entryType].label)}
 			</button>
 		{/if}
 		{#if onExport}

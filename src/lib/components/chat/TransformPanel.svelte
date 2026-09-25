@@ -23,6 +23,7 @@
 	 * Approve swaps the text in, close/Escape/error leave the composer byte-for-byte
 	 * untouched.
 	 */
+	import { labelT } from '$lib/i18n/labels';
 	import { onMount } from 'svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
@@ -218,10 +219,10 @@
 	}
 </script>
 
-<section class="transform-panel surface-float" aria-label={engine.name}>
+<section class="transform-panel surface-float" aria-label={labelT(engine.name)}>
 	<div class="head">
 		<Icon name={engine.icon} class="w-3.5 h-3.5 shrink-0 text-text-muted" />
-		<span class="head-title font-ui">{engine.name}</span>
+		<span class="head-title font-ui">{labelT(engine.name)}</span>
 		{#if headNote}
 			<span
 				class="head-note font-ui"

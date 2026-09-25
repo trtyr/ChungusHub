@@ -14,6 +14,7 @@
 	 * button and nothing to lose by leaving. Reset returns a field to the
 	 * shipped default.
 	 */
+	import { labelT } from '$lib/i18n/labels';
 	import { onDestroy } from 'svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import InfoTip from '$lib/components/ui/InfoTip.svelte';
@@ -184,7 +185,7 @@
 				<Icon name={engine.icon} class="w-5 h-5" strokeWidth={1.75} />
 			</span>
 			<div class="identity-text">
-				<span class="identity-name">{engine.name}</span>
+				<span class="identity-name">{labelT(engine.name)}</span>
 				<InfoTip text={engine.description} />
 			</div>
 			<Toggle
