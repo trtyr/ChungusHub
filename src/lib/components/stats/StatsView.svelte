@@ -163,16 +163,16 @@
 					<div class="tile">
 						<span class="tile-figure">{count(stats.library.chats)}</span>
 						<span class="tile-label">{i18n.t('stv.chatsLabel')}</span>
-						<span class="tile-note">{i18n.t('stv.chatsNote', { characters: plural(stats.library.characters, 'character') })}</span>
+						<span class="tile-note">{i18n.t('stv.chatsNote', { characters: i18n.t('stv.nCharacters', { n: stats.library.characters }) })}</span>
 					</div>
 					<div class="tile">
 						<span class="tile-figure">{count(snapshot.days.length)}</span>
 						<span class="tile-label">{i18n.t('stv.daysLabel')}</span>
 						<span class="tile-note">
 							{#if snapshot.current.days > 0}
-								{i18n.t('stv.daysNoteNow', { n: plural(snapshot.current.days, 'day') })}
+								{i18n.t('stv.daysNoteNow', { n: i18n.t('stv.nDays', { n: snapshot.current.days }) })}
 							{:else}
-								{i18n.t('stv.daysNoteRun', { n: plural(snapshot.longest.days, 'day') })}
+								{i18n.t('stv.daysNoteRun', { n: i18n.t('stv.nDays', { n: snapshot.longest.days }) })}
 							{/if}
 						</span>
 					</div>
@@ -193,13 +193,13 @@
 					<div class="facts">
 						{#if snapshot.busiest}
 							<div class="fact">
-								<span class="fact-value">{plural(snapshot.busiest.count, 'message')}</span>
+								<span class="fact-value">{i18n.t('stv.nMessages', { n: snapshot.busiest.count })}</span>
 								<span class="fact-label">{i18n.t('stv.busiestDay')} · {dayLabel(snapshot.busiest.key)}</span>
 							</div>
 						{/if}
 						{#if snapshot.longest.days > 0 && snapshot.longest.from}
 							<div class="fact">
-								<span class="fact-value">{plural(snapshot.longest.days, 'day')}</span>
+								<span class="fact-value">{i18n.t('stv.nDays', { n: snapshot.longest.days })}</span>
 								<span class="fact-label">
 									{i18n.t('stv.longestRun')} · {snapshot.longest.days > 1
 										? i18n.t('stv.started', { d: dayLabel(snapshot.longest.from) })
@@ -209,7 +209,7 @@
 						{/if}
 						{#if snapshot.current.days > 0 && snapshot.current.from}
 							<div class="fact">
-								<span class="fact-value">{plural(snapshot.current.days, 'day')}</span>
+								<span class="fact-value">{i18n.t('stv.nDays', { n: snapshot.current.days })}</span>
 								<span class="fact-label">{i18n.t('stv.runningNow')} · {i18n.t('stv.since')} {dayLabel(snapshot.current.from)}</span>
 							</div>
 						{:else if stats.records.lastMessageAt}
@@ -269,7 +269,7 @@
 									text={i18n.t('stv.longestChatTip')}
 								/></span
 							>
-							<span class="row-value">{plural(stats.shape.longestStory, 'turn')}</span>
+							<span class="row-value">{i18n.t('stv.nTurns2', { n: stats.shape.longestStory })}</span>
 						</div>
 						{#if stats.library.memoryEpisodes > 0}
 							<div class="row">
@@ -290,7 +290,7 @@
 								>
 								<span class="row-value">
 									{count(stats.library.lorebookEntries)}<span class="row-sub"
-										>across {plural(stats.library.lorebooks, 'book')}</span
+										>{i18n.t('stv.across')} {i18n.t('stv.nBooks', { n: stats.library.lorebooks })}</span
 									>
 								</span>
 							</div>
@@ -308,7 +308,7 @@
 										text={i18n.t('stv.longestReplyTip')}
 									/></span
 								>
-								<span class="row-value">{plural(stats.records.longestReply.words, 'word')}</span>
+								<span class="row-value">{i18n.t('stv.nWords', { n: stats.records.longestReply.words })}</span>
 							</div>
 						{/if}
 						{#if stats.records.longestUserTurn}
@@ -318,7 +318,7 @@
 										text={i18n.t('stv.longestYoursTip')}
 									/></span
 								>
-								<span class="row-value">{plural(stats.records.longestUserTurn.words, 'word')}</span>
+								<span class="row-value">{i18n.t('stv.nWords', { n: stats.records.longestUserTurn.words })}</span>
 							</div>
 						{/if}
 						{#if stats.records.firstMessageAt}
@@ -352,11 +352,8 @@
 										/></span
 									>
 									<span class="row-value">
-										{span(stats.measured.generationMs)} in total<span class="row-sub"
-											>{span(generationAverage)} on average, over {plural(
-												stats.measured.generationTurns,
-												'measured turn'
-											)}</span
+										{span(stats.measured.generationMs)} {i18n.t('stv.inTotal')}<span class="row-sub"
+											>{i18n.t('stv.avgOver', { n: i18n.t('stv.nMeasured', { n: stats.measured.generationTurns }) })}</span
 										>
 									</span>
 								</div>
@@ -369,8 +366,8 @@
 										/></span
 									>
 									<span class="row-value">
-										{span(firstTokenAverage)} on average<span class="row-sub"
-											>over {plural(stats.measured.firstTokenTurns, 'measured turn')}</span
+										{span(firstTokenAverage)} {i18n.t('stv.onAvg')}<span class="row-sub"
+											>{i18n.t('stv.avgOver', { n: i18n.t('stv.nMeasured', { n: stats.measured.firstTokenTurns }) })}</span
 										>
 									</span>
 								</div>
@@ -383,8 +380,8 @@
 										/></span
 									>
 									<span class="row-value">
-										{span(stats.measured.reasoningMs)} in total<span class="row-sub"
-											>over {plural(stats.measured.reasoningTurns, 'reasoning turn')}</span
+										{span(stats.measured.reasoningMs)} {i18n.t('stv.inTotal')}<span class="row-sub"
+											>{i18n.t('stv.avgOver', { n: i18n.t('stv.nMeasured', { n: stats.measured.reasoningTurns }) })}</span
 										>
 									</span>
 								</div>
@@ -399,7 +396,7 @@
 									<span class="row-value">
 										{count(stats.measured.promptTokens)}<span class="row-sub"
 											>{#if promptTokenAverage !== null}{count(promptTokenAverage)} per request on
-												average, {/if}over {plural(stats.measured.promptTokenTurns, 'measured turn')}</span
+												average, {/if}over {i18n.t('stv.nMeasured', { n: stats.measured.promptTokenTurns })}</span
 										>
 									</span>
 								</div>
@@ -414,7 +411,7 @@
 									<span class="row-value">
 										{count(stats.measured.completionTokens)}<span class="row-sub"
 											>{#if completionTokenAverage !== null}{count(completionTokenAverage)} per reply on
-												average, {/if}over {plural(stats.measured.completionTokenTurns, 'measured turn')}</span
+												average, {/if}over {i18n.t('stv.nMeasured', { n: stats.measured.completionTokenTurns })}</span
 										>
 									</span>
 								</div>

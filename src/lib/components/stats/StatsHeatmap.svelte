@@ -117,7 +117,7 @@
 			`${key.getFullYear()}-${`${key.getMonth() + 1}`.padStart(2, '0')}-${`${key.getDate()}`.padStart(2, '0')}`
 		);
 		if (count === null) return label;
-		return count ? i18n.t('st.onDay', { n: plural(count, 'message'), label }) : i18n.t('st.nothingOn', { label });
+		return count ? i18n.t('st.onDay', { n: i18n.t('stv.nMessages', { n: count }), label }) : i18n.t('st.nothingOn', { label });
 	}
 </script>
 

@@ -28,7 +28,7 @@
 			<div
 				class="slot"
 				class:is-prime={inPrime(hour)}
-				title={i18n.t('st.msgsAt', { n: plural(value, 'message'), hour: hourLabel(hour) })}
+				title={i18n.t('st.msgsAt', { n: i18n.t('stv.nMessages', { n: value }), hour: hourLabel(hour) })}
 			>
 				<div class="bar" style="height: {Math.max(value > 0 ? 6 : 2, (value / peak) * 100)}%"></div>
 			</div>
