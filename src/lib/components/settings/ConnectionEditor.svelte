@@ -572,7 +572,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 							/>
 						</div>
 						{#if cachingCtl.mode === 'explicit'}
-							<Toggle checked={gen.promptCaching} onchange={(v) => updateGen('promptCaching', v)} label="Prompt caching" />
+							<Toggle checked={gen.promptCaching} onchange={(v) => updateGen('promptCaching', v)} label={i18n.t('lbl.promptCaching')} />
 						{:else}
 							<span class="caching-auto-note">{i18n.t('ce.autoAlways')}</span>
 						{/if}
@@ -589,7 +589,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 								options={CACHE_TTL_OPTIONS}
 								current={gen.cacheTtl}
 								onpick={(v) => updateGen('cacheTtl', v as GenerationSettings['cacheTtl'])}
-								label="Cache lifetime"
+								label={i18n.t('lbl.cacheLifetime')}
 							/>
 						</div>
 					{/if}
@@ -610,7 +610,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 							options={TIER_OPTIONS}
 							current={gen.serviceTier}
 							onpick={(v) => updateGen('serviceTier', v as ServiceTier)}
-							label="Service tier"
+							label={i18n.t('lbl.serviceTier')}
 						/>
 					</div>
 				</div>
@@ -749,7 +749,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 							options={VERBOSITY_OPTIONS}
 							current={gen.verbosity}
 							onpick={(v) => updateGen('verbosity', v as GenerationSettings['verbosity'])}
-							label="Verbosity"
+							label={i18n.t('lbl.verbosity')}
 						/>
 					</div>
 				{/if}
@@ -761,7 +761,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 							text={i18n.t('ce.streamTip')}
 						/>
 					</div>
-					<Toggle checked={gen.streamResponses} onchange={(v) => updateGen('streamResponses', v)} label="Stream response" />
+					<Toggle checked={gen.streamResponses} onchange={(v) => updateGen('streamResponses', v)} label={i18n.t('lbl.streamResponse')} />
 				</div>
 
 				<div class="sub">
@@ -773,7 +773,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 								text={i18n.t('ce.catchThinkingTip')}
 							/>
 						</div>
-						<Toggle checked={gen.parseReasoning} onchange={(v) => updateGen('parseReasoning', v)} label="Auto-parse reasoning" />
+						<Toggle checked={gen.parseReasoning} onchange={(v) => updateGen('parseReasoning', v)} label={i18n.t('lbl.autoParseReasoning')} />
 					</div>
 					{#if declaresReasoning}
 						<!-- BYO endpoints: these stacks disagree on which field carries the
@@ -809,7 +809,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 								options={effortPills}
 								current={effortCurrent}
 								onpick={(v) => updateGen('reasoningEffort', v as GenerationSettings['reasoningEffort'])}
-								label="Reasoning effort"
+								label={i18n.t('lbl.reasoningEffort')}
 							/>
 						</div>
 					{/if}
@@ -821,7 +821,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 									text={i18n.t('ce.showReasoningTip')}
 								/>
 							</div>
-							<Toggle checked={gen.showReasoning} onchange={(v) => updateGen('showReasoning', v)} label="Show reasoning" />
+							<Toggle checked={gen.showReasoning} onchange={(v) => updateGen('showReasoning', v)} label={i18n.t('lbl.showReasoning')} />
 						</div>
 					{/if}
 				</div>
@@ -836,7 +836,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 									text={i18n.t('ce.sendImagesTip')}
 								/>
 							</div>
-							<Toggle checked={gen.sendImages} onchange={(v) => updateGen('sendImages', v)} label="Send images" />
+							<Toggle checked={gen.sendImages} onchange={(v) => updateGen('sendImages', v)} label={i18n.t('lbl.sendImages')} />
 						</div>
 						{#if showImageDetail}
 							<div class="row-block">
@@ -848,7 +848,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 									options={IMAGE_DETAIL_OPTIONS}
 									current={gen.imageDetail}
 									onpick={(v) => updateGen('imageDetail', v as GenerationSettings['imageDetail'])}
-									label="Image detail"
+									label={i18n.t('lbl.imageDetail')}
 								/>
 							</div>
 						{/if}

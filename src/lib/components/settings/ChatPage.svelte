@@ -288,7 +288,7 @@
 					options={SPACING_OPTIONS}
 					current={appearance.messageSpacing}
 					onpick={(v) => themeStore.update({ messageSpacing: v as MessageSpacing })}
-					label="Space between messages"
+					label={i18n.t('lbl.spaceBetween')}
 				/>
 			</div>
 		</div>
@@ -476,7 +476,7 @@
 						options={PADDING_OPTIONS}
 						current={appearance.bubblePadding}
 						onpick={(v) => themeStore.update({ bubblePadding: v as BubblePadding })}
-						label="Inner padding"
+						label={i18n.t('lbl.innerPadding')}
 					/>
 				</div>
 
@@ -486,7 +486,7 @@
 						options={BORDER_OPTIONS}
 						current={appearance.bubbleBorder}
 						onpick={(v) => themeStore.update({ bubbleBorder: v as BubbleBorder })}
-						label="Outline"
+						label={i18n.t('lbl.outline')}
 					/>
 				</div>
 
@@ -496,7 +496,7 @@
 						options={SHADOW_OPTIONS}
 						current={appearance.bubbleShadow}
 						onpick={(v) => themeStore.update({ bubbleShadow: v as BubbleShadow })}
-						label="Shadow"
+						label={i18n.t('lbl.shadow')}
 					/>
 				</div>
 
@@ -572,7 +572,7 @@
 							<ColorSwatchPicker
 								value={appearance.userBubbleTint}
 								oninput={(hex) => themeStore.update({ userBubbleTint: hex })}
-								label="Your message tint color"
+								label={i18n.t('lbl.yourTint')}
 							/>
 							<span class="slider-value">{pct(appearance.userBubbleTintStrength)}</span>
 						</span>
@@ -601,7 +601,7 @@
 							<ColorSwatchPicker
 								value={appearance.assistantBubbleTint}
 								oninput={(hex) => themeStore.update({ assistantBubbleTint: hex })}
-								label="Character message tint color"
+								label={i18n.t('lbl.charTint')}
 							/>
 							<span class="slider-value">{pct(appearance.assistantBubbleTintStrength)}</span>
 						</span>
@@ -637,7 +637,7 @@
 					<span class="slider-label">{i18n.t('chatpg.showPortraits')}</span>
 					<Toggle
 						checked={appearance.showAvatars}
-						label="Show portraits"
+						label={i18n.t('lbl.showPortraits')}
 						onchange={(on) => themeStore.update({ showAvatars: on })}
 					/>
 				</div>
@@ -651,7 +651,7 @@
 								options={AVATAR_SHAPES}
 								current={appearance.avatarShape}
 								onpick={(v) => themeStore.update({ avatarShape: v as AvatarShape })}
-								label="Portrait shape"
+								label={i18n.t('lbl.portraitShape')}
 							/>
 						</div>
 					{/if}
@@ -790,7 +790,7 @@
 				<span class="slider-label">{i18n.t('chatpg.showSpeaker')}</span>
 				<Toggle
 					checked={appearance.showSpeakerName}
-					label="Show speaker name"
+					label={i18n.t('lbl.showSpeaker')}
 					onchange={(on) => themeStore.update({ showSpeakerName: on })}
 				/>
 			</div>
@@ -802,7 +802,7 @@
 						options={SPEAKER_LABELS}
 						current={appearance.speakerLabel}
 						onpick={(v) => themeStore.update({ speakerLabel: v as SpeakerLabel })}
-						label="Name style"
+						label={i18n.t('lbl.nameStyle')}
 					/>
 				</div>
 
@@ -812,7 +812,7 @@
 					<span class="slider-label">{i18n.t('chatpg.smallCaps')}</span>
 					<Toggle
 						checked={appearance.speakerCaps}
-						label="Small caps"
+						label={i18n.t('lbl.smallCaps')}
 						onchange={(on) => themeStore.update({ speakerCaps: on })}
 					/>
 				</div>
@@ -824,7 +824,7 @@
 					options={ACTION_OPTIONS}
 					current={appearance.messageActions}
 					onpick={(v) => themeStore.update({ messageActions: v as ActionVisibility })}
-					label="Message actions"
+					label={i18n.t('lbl.messageActions')}
 				/>
 			</div>
 
@@ -832,7 +832,7 @@
 				<span class="slider-label">{i18n.t('chatpg.compactActions')}</span>
 				<Toggle
 					checked={appearance.compactActions}
-					label="Compact actions"
+					label={i18n.t('lbl.compactActions')}
 					onchange={(on) => themeStore.update({ compactActions: on })}
 				/>
 			</div>
@@ -841,7 +841,7 @@
 				<span class="slider-label">{i18n.t('chatpg.keepInView')}</span>
 				<Toggle
 					checked={appearance.floatingActions}
-					label="Keep actions in view"
+					label={i18n.t('lbl.keepInView')}
 					onchange={(on) => themeStore.update({ floatingActions: on })}
 				/>
 			</div>
@@ -852,7 +852,7 @@
 					options={PAGER_OPTIONS}
 					current={appearance.branchPager}
 					onpick={(v) => themeStore.update({ branchPager: v as PagerVisibility })}
-					label="Branch arrows"
+					label={i18n.t('lbl.branchArrows')}
 				/>
 			</div>
 
@@ -900,7 +900,7 @@
 				<span class="slider-label">{i18n.t('chatpg.showNumbers')}</span>
 				<Toggle
 					checked={appearance.showMessageNumbers}
-					label="Show message numbers"
+					label={i18n.t('lbl.showNumbers')}
 					onchange={(on) => themeStore.update({ showMessageNumbers: on })}
 				/>
 			</div>
@@ -909,7 +909,7 @@
 				<span class="slider-label">{i18n.t('chatpg.showTimestamps')}</span>
 				<Toggle
 					checked={appearance.showTimestamps}
-					label="Show timestamps"
+					label={i18n.t('lbl.showTimestamps')}
 					onchange={(on) => themeStore.update({ showTimestamps: on })}
 				/>
 			</div>
@@ -921,7 +921,7 @@
 						options={TIMESTAMP_FORMATS}
 						current={appearance.timestampFormat}
 						onpick={(v) => themeStore.update({ timestampFormat: v as TimestampFormat })}
-						label="Timestamp format"
+						label={i18n.t('lbl.timestampFormat')}
 					/>
 				</div>
 
@@ -932,7 +932,7 @@
 							options={CLOCK_FORMATS}
 							current={appearance.clockFormat}
 							onpick={(v) => themeStore.update({ clockFormat: v as ClockFormat })}
-							label="Clock"
+							label={i18n.t('lbl.clock')}
 						/>
 					</div>
 				{/if}
@@ -942,7 +942,7 @@
 				<span class="slider-label">{i18n.t('chatpg.showModel')}</span>
 				<Toggle
 					checked={appearance.showModelName}
-					label="Show model name"
+					label={i18n.t('lbl.showModel')}
 					onchange={(on) => themeStore.update({ showModelName: on })}
 				/>
 			</div>
@@ -951,7 +951,7 @@
 				<span class="slider-label">{i18n.t('chatpg.showTokens')}</span>
 				<Toggle
 					checked={appearance.showTokenCount}
-					label="Show token count"
+					label={i18n.t('lbl.showTokens')}
 					onchange={(on) => themeStore.update({ showTokenCount: on })}
 				/>
 			</div>
@@ -960,7 +960,7 @@
 				<span class="slider-label">{i18n.t('chatpg.showReasoningTokens')}</span>
 				<Toggle
 					checked={appearance.showReasoningTokenCount}
-					label="Show reasoning token count"
+					label={i18n.t('lbl.showReasoningTokens')}
 					onchange={(on) => themeStore.update({ showReasoningTokenCount: on })}
 				/>
 			</div>
@@ -969,7 +969,7 @@
 				<span class="slider-label">{i18n.t('chatpg.showGenTime')}</span>
 				<Toggle
 					checked={appearance.showGenerationTime}
-					label="Show generation time"
+					label={i18n.t('lbl.showGenTime')}
 					onchange={(on) => themeStore.update({ showGenerationTime: on })}
 				/>
 			</div>

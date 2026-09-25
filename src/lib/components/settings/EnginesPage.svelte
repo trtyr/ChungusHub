@@ -11,6 +11,7 @@
 	 * on the Connections page, each engine's own assignment included (its Engine
 	 * models fold).
 	 */
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import Toggle from '$lib/components/ui/Toggle.svelte';
 	import EngineDetail from './EngineDetail.svelte';
@@ -47,7 +48,7 @@
 						<Toggle
 							checked={engine.enabled.get()}
 							onchange={(v) => engine.enabled.set(v)}
-							label="Enable {engine.name}"
+							label={i18n.t('lbl.enableNamed', { name: engine.name })}
 						/>
 					</div>
 				{/each}

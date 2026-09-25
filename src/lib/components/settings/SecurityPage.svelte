@@ -351,7 +351,7 @@
 				<Toggle
 					checked={networkEnabled}
 					disabled={securityBusy}
-					label="Open on the network"
+					label={i18n.t('lbl.openNetwork')}
 					onchange={toggleNetwork}
 				/>
 			</div>
@@ -391,7 +391,7 @@
 					<Toggle
 						checked={allowlistEnabled}
 						disabled={securityBusy}
-						label="Require approval"
+						label={i18n.t('lbl.requireApproval')}
 						onchange={toggleAllowlist}
 					/>
 				</div>

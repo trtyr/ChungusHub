@@ -83,7 +83,7 @@
 			<Toggle
 				checked={saveDrafts}
 				onchange={(v) => generalSettingsStore.setSaveDrafts(v)}
-				label="Save unsent drafts"
+				label={i18n.t('lbl.saveDrafts')}
 			/>
 		</div>
 	</section>
@@ -100,7 +100,7 @@
 			<Toggle
 				checked={inputHistory}
 				onchange={(v) => generalSettingsStore.setInputHistory(v)}
-				label="Recall sent messages with ↑ / ↓"
+				label={i18n.t('lbl.recallSent')}
 			/>
 		</div>
 
@@ -113,7 +113,7 @@
 						options={SCOPE_OPTIONS}
 						current={historyScope}
 						onpick={(v) => generalSettingsStore.setInputHistoryScope(v as InputHistoryScope)}
-						label="Recall from"
+						label={i18n.t('lbl.recallFrom')}
 					/>
 				</div>
 				<div class="row-block">
@@ -157,7 +157,7 @@
 			<Toggle
 				checked={autoExpandReasoning}
 				onchange={(v) => generalSettingsStore.setAutoExpandReasoning(v)}
-				label="Auto-expand the reasoning box"
+				label={i18n.t('lbl.autoExpandReasoning')}
 			/>
 		</div>
 	</section>
@@ -174,7 +174,7 @@
 			<Toggle
 				checked={transcriptPaging}
 				onchange={(v) => generalSettingsStore.setTranscriptPaging(v)}
-				label="Load long chats in parts"
+				label={i18n.t('lbl.loadLongChats')}
 			/>
 		</div>
 
@@ -199,7 +199,7 @@
 						options={LOAD_MODE_OPTIONS}
 						current={transcriptLoadMode}
 						onpick={(v) => generalSettingsStore.setTranscriptLoadMode(v as TranscriptLoadMode)}
-						label="Earlier turns arrive"
+						label={i18n.t('lbl.earlierArrive')}
 					/>
 				</div>
 			</div>
@@ -218,7 +218,7 @@
 			<Toggle
 				checked={followStream}
 				onchange={(v) => generalSettingsStore.setFollowStream(v)}
-				label="Follow replies as they stream"
+				label={i18n.t('lbl.followStream')}
 			/>
 		</div>
 	</section>
@@ -235,7 +235,7 @@
 			<Toggle
 				checked={assistantLauncher}
 				onchange={(v) => generalSettingsStore.setAssistantLauncher(v)}
-				label="Floating assistant button"
+				label={i18n.t('lbl.assistantButton')}
 			/>
 		</div>
 	</section>
@@ -252,7 +252,7 @@
 			<Toggle
 				checked={libraryOpenChatRow}
 				onchange={(v) => generalSettingsStore.setLibraryOpenChatRow(v)}
-				label="Show the open chat's character and persona"
+				label={i18n.t('lbl.showChatIdentity')}
 			/>
 		</div>
 	</section>
@@ -269,7 +269,7 @@
 			<Toggle
 				checked={storyMapWheelPans}
 				onchange={(v) => generalSettingsStore.setStoryMapWheelPans(v)}
-				label="Scroll moves the map instead of zooming"
+				label={i18n.t('lbl.scrollPansMap')}
 			/>
 		</div>
 	</section>
@@ -290,7 +290,7 @@
 					<Toggle
 						checked={settingsSplitView}
 						onchange={(v) => generalSettingsStore.setSettingsSplitView(v)}
-						label="Split view on wide screens"
+						label={i18n.t('lbl.splitView')}
 					/>
 				</div>
 			</section>

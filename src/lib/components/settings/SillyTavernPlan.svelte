@@ -141,7 +141,7 @@
 					<TriTick
 						{chosen}
 						{total}
-						label="Import {group.label.toLowerCase()}"
+						label={i18n.t('lbl.importNamed', { what: i18n.t(group.label).toLowerCase() })}
 						onchange={(on) => {
 							for (const item of group.items) importRun.setKeys(item.keys, on);
 						}}

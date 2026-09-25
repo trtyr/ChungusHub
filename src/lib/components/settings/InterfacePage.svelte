@@ -416,7 +416,7 @@
 				<span class="slider-label">{i18n.t('if.reduceAnimations')}</span>
 				<Toggle
 					checked={appearance.motion === 'reduced'}
-					label="Reduce animations"
+					label={i18n.t('lbl.reduceAnimations')}
 					onchange={(on) => themeStore.update({ motion: on ? 'reduced' : 'full' })}
 				/>
 			</div>

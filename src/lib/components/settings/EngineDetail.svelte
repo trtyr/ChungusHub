@@ -190,7 +190,7 @@
 			<Toggle
 				checked={engine.enabled.get()}
 				onchange={(v) => engine.enabled.set(v)}
-				label="Enable {engine.name}"
+				label={i18n.t('lbl.enableNamed', { name: engine.name })}
 			/>
 		</div>
 	</section>
@@ -255,7 +255,7 @@
 						options={STEERING_ROLES.map((role) => ({ value: role, label: role }))}
 						current={featurePromptsStore.steeringDefaults.role}
 						onpick={(value) => featurePromptsStore.setSteeringDefaultRole(value as SteeringRole)}
-						label="Default steering role"
+						label={i18n.t('lbl.steeringRole')}
 					/>
 				</div>
 				<p class="placement-note">
@@ -332,7 +332,7 @@
 					<Toggle
 						checked={featurePromptsStore.spritesRereadOnEdit}
 						onchange={(v) => featurePromptsStore.setSpritesRereadOnEdit(v)}
-						label="Read a reply again after I edit it"
+						label={i18n.t('lbl.rereadOnEdit')}
 					/>
 				</div>
 				<div class="toggle-row" use:toggleRow>
@@ -340,7 +340,7 @@
 					<Toggle
 						checked={featurePromptsStore.spritesRereadOnContinue}
 						onchange={(v) => featurePromptsStore.setSpritesRereadOnContinue(v)}
-						label="Read a reply again after Continue extends it"
+						label={i18n.t('lbl.rereadOnContinue')}
 					/>
 				</div>
 			</div>

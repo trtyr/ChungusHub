@@ -248,7 +248,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						</span>
 						<Toggle
 							checked={rule.enabled}
-							label="Enable {rule.name}"
+							label={i18n.t('lbl.enableNamed', { name: rule.name })}
 							onchange={(on) => regexRulesStore.updateRule(rule.id, { enabled: on })}
 						/>
 						<button
@@ -343,7 +343,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						<div class="rx-carried-row">
 							<Toggle
 								checked={on}
-								label="Enable {rule.name}"
+								label={i18n.t('lbl.enableNamed', { name: rule.name })}
 								onchange={(next) => regexRulesStore.setCarriedEnabled(rule, next)}
 							/>
 							<button

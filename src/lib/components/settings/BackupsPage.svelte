@@ -267,7 +267,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			<Toggle
 				checked={settings.automatic}
 				onchange={(v) => backupStore.setAutomatic(v)}
-				label="Back up on a schedule"
+				label={i18n.t('lbl.scheduleBackup')}
 			/>
 		</div>
 
@@ -277,7 +277,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					options={INTERVALS}
 					current={String(settings.intervalHours)}
 					onpick={(v) => backupStore.setInterval(Number(v) as BackupInterval)}
-					label="How often"
+					label={i18n.t('lbl.howOften')}
 				/>
 				<div class="steppers">
 					<label class="stepper">
