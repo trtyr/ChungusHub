@@ -337,7 +337,7 @@
 			>
 				<Icon name="chevronLeft" class="w-4 h-4" strokeWidth={2} />
 			</button>
-			<span class="lbd-title">Global Settings</span>
+			<span class="lbd-title">{i18n.t('lv2.globalSettings')}</span>
 		</div>
 	{:else if books.length > 0}
 		<!-- Toolbar: search front and center, two quiet disclosures, one primary action.

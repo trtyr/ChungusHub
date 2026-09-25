@@ -860,7 +860,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		<!-- Sampling parameters -->
 		<section class="card" data-setting="generation">
 			<div class="card-head">
-				<span class="card-title">Sampling Parameters</span>
+				<span class="card-title">{i18n.t('ce.samplingTitle')}</span>
 				<InfoTip
 					text={i18n.t('ce.samplingTip')}
 				/>

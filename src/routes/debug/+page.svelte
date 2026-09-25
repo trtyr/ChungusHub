@@ -7,6 +7,7 @@
 	 * broadcast to every listening socket (architecture/tokenizer-debug.md), so this page
 	 * boots the socket and the theme and nothing else: no chats, no library, no presets.
 	 */
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import PromptDebugPanel from '$lib/components/debug/PromptDebugPanel.svelte';
 	import { db } from '$lib/services/database';
 	import { themeStore } from '$lib/stores/theme.svelte';
@@ -69,7 +70,7 @@
 			{:else if phase === 'error'}
 				<p class="err">{error}</p>
 			{:else}
-				<p>Connecting to the shared prompt log…</p>
+				<p>{i18n.t('dbg.connecting')}</p>
 			{/if}
 		</div>
 	{/if}

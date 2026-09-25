@@ -387,7 +387,7 @@
      heading carries the identity the old dialog title held, plus the model. -->
 <div class="routing">
 	<div class="routing-head">
-		<span class="card-title">Provider Routing</span>
+		<span class="card-title">{i18n.t('pr.routingTitle2')}</span>
 		<span class="routing-model">{model}</span>
 	</div>
 
