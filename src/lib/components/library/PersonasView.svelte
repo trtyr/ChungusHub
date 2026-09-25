@@ -447,7 +447,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			{#if favoritesOnly}
 				<span class="brw-chip">
 					<Icon name="heart" class="w-2.5 h-2.5 fill-current" />
-					Favorites
+					{i18n.t('svc.favorites')}
 					<button type="button" class="brw-chip-x" onclick={toggleFavoritesOnly} aria-label={i18n.t('clv.removeFavFilter')}>
 						<Icon name="close" class="w-2.5 h-2.5" />
 					</button>

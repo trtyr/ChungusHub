@@ -45,7 +45,7 @@ export type LorebookKeyMode = 'substring' | 'word' | 'start' | 'regex';
 export const LOREBOOK_KEY_MODES: { id: Exclude<LorebookKeyMode, 'regex'>; label: string; hint: string }[] = [
 	{ id: 'substring', label: 'lb.modeAnywhere', hint: 'lb.hAnywhere' },
 	{ id: 'word', label: 'lb.modeWholeWord2', hint: 'lb.hWholeWord2' },
-	{ id: 'start', label: 'lb.modeWordStart', hint: 'Matches any word beginning with it: plurals, and other suffixes.' }
+	{ id: 'start', label: 'lb.modeWordStart', hint: 'lb.hPrefix' }
 ];
 
 /** One key's override of the entry's match defaults. An absent field inherits. */

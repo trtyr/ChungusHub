@@ -43,12 +43,12 @@ export const APPROVAL_MODES: ApprovalModeInfo[] = [
 		label: 'Auto',
 		describe: 'Every call is applied as the assistant works, deletes included.',
 		hint: 'Every call is applied directly, deletes included.',
-		badge: 'No review',
+		badge: 'ap.noReview',
 		warning: {
-			title: 'Switch to Auto?',
+			title: 'ap.switchAuto',
 			message:
 				'Auto applies every call as the assistant works, deletes included: characters, personas, lorebooks and messages can be removed without a prompt. The turn lists what was done, and deleted content is not recoverable from the app. Worth choosing when you are giving the assistant work you have already scoped.',
-			confirmLabel: 'Use Auto'
+			confirmLabel: 'ap.useAuto'
 		}
 	}
 ];

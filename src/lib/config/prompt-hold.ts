@@ -34,16 +34,16 @@ interface HoldGateShape {
 export const HOLD_GATES = [
 	{
 		id: 'send',
-		name: 'Send',
-		confirm: 'Send message',
+		name: 'ph.send',
+		confirm: 'ph.sendMsg',
 		icon: 'arrowRight'
 	},
 	{
 		// Both names, because the button says one on a reply and the other on a turn of the
 		// reader's own, and a reader looking for either has to find this switch.
 		id: 'regenerate',
-		name: 'Retry / Regenerate',
-		confirm: 'Regenerate',
+		name: 'ph.retry',
+		confirm: 'ph.regen',
 		icon: 'refresh'
 	},
 	{
@@ -61,7 +61,7 @@ export const HOLD_GATES = [
 	{
 		id: 'impersonate',
 		name: engineById('impersonate').name,
-		confirm: 'Ghostwrite',
+		confirm: 'ph.ghost',
 		icon: engineById('impersonate').icon
 	}
 ] as const satisfies readonly HoldGateShape[];
