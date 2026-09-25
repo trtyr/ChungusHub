@@ -378,7 +378,7 @@
 				{#if mi === messages.length - 1 && activeId && !runtime.busy}
 					<button type="button" class="assistant-retry-btn" onclick={onRetry}>
 						<Icon name="refresh" class="w-3.5 h-3.5" />
-						Retry
+						{i18n.t('common.retry')}
 					</button>
 				{/if}
 			{/if}
@@ -389,7 +389,7 @@
 {#if activeId && !runtime.busy && store.canContinue(activeId)}
 	<button type="button" class="assistant-retry-btn" onclick={onContinue} title={i18n.t('asm.ttResume')}>
 		<Icon name="arrowRight" class="w-3.5 h-3.5" />
-		Continue
+		{i18n.t('common.continue2')}
 	</button>
 {/if}
 

@@ -468,7 +468,7 @@
 								aria-checked={nature === 'keyword'}
 								onclick={() => setNature('keyword')}
 							>
-								Keyword
+								{i18n.t('lb.keyword')}
 							</button>
 							<button
 								type="button"

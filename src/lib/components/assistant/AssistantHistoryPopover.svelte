@@ -129,7 +129,7 @@
 		/>
 		<button type="button" class="assistant-history-new" onclick={onNewSession} title={i18n.t('asm.histNew')}>
 			<Icon name="plus" class="w-3.5 h-3.5" />
-			New
+			{i18n.t('common.new')}
 		</button>
 	</div>
 	<div class="assistant-history-list">

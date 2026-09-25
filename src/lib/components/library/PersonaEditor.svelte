@@ -276,7 +276,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			{#snippet badge()}
 				{#if isActive && !isNew}
 					<span class="shrink-0 text-[10px] font-ui px-2 py-0.5 rounded-full bg-accent/15 text-accent border border-accent/30">
-						Default
+						{i18n.t('pe.defaultBadge')}
 					</span>
 				{/if}
 			{/snippet}
@@ -284,7 +284,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				{#if !isActive}
 					<Button variant="secondary" size="sm" onclick={handleSetActive}>
 						<Icon name="user" class="w-4 h-4" />
-						Start new chats as this
+						{i18n.t('pe.startNewAs')}
 					</Button>
 				{/if}
 			{/snippet}

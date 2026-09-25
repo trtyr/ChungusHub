@@ -413,7 +413,7 @@
 										onclick={() => doAllow(attempt.ip)}
 										disabled={busy}
 									>
-										Allow
+										{i18n.t('mk.allow')}
 									</button>
 								</div>
 							{/each}
@@ -496,7 +496,7 @@
 									use:focusOnMount
 								/>
 								<button class="primary-btn" type="submit" disabled={busy || !newIp.trim()}>
-									Allow
+									{i18n.t('mk.allow')}
 								</button>
 							</form>
 						{/if}

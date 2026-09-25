@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 
 	let { text, live = false }: { text: string; live?: boolean } = $props();
@@ -12,7 +13,7 @@
 		<!-- No live dot: the activity line at the foot of the turn owns liveness, and a second
 		     pulse beside this title would be the same word twice. The title still says which
 		     block is currently filling. -->
-		<span class="thinking-title">{live ? 'Thinking…' : 'Thought process'}</span>
+		<span class="thinking-title">{live ? i18n.t('asm.thinking') : i18n.t('asm.thoughtProcess')}</span>
 	</button>
 	{#if expanded}
 		<div class="thinking-body">{text}</div>

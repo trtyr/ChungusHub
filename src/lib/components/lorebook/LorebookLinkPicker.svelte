@@ -137,7 +137,7 @@
 			{linkedCount ? i18n.t('lbv.nOfLinked', { n: linkedCount, total: books.length }) : i18n.t('lbv.notLinked')}
 		</span>
 		<button type="button" class="lbp-foot-manage" onclick={openManager}>
-			Manage
+			{i18n.t('common.manage')}
 			<Icon name="arrowRight" class="w-3 h-3" />
 		</button>
 	</div>

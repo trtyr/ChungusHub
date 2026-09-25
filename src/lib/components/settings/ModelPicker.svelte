@@ -281,7 +281,7 @@
 					title={i18n.t('mp.groupByVendor')}
 				>
 					<Icon name="folder" class="w-3.5 h-3.5" strokeWidth={1.75} />
-					Group
+					{i18n.t('stv.groupBy')}
 				</button>
 			</div>
 

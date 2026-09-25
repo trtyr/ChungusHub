@@ -600,7 +600,7 @@
 					<!-- |global so the fade-out still plays when the whole status row leaves. -->
 					<span class="pb-status-saved" transition:fade|global={{ duration: 250 }}>
 						<span class="pb-dot pb-dot--saved"></span>
-						Saved
+						{i18n.t('common.saved')}
 					</span>
 				{/if}
 			</div>

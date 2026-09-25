@@ -294,7 +294,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 									<div class="rx-foot-group">
 										<button type="button" class="rx-btn" onclick={() => handleDuplicate(rule)}>
 											<Icon name="copy" class="w-3.5 h-3.5" />
-											Duplicate
+											{i18n.t('common.duplicate')}
 										</button>
 										<button type="button" class="rx-btn" onclick={() => exportOne(rule)} title={i18n.t('rx.exportTip')}>
 											<Icon name="download" class="w-3.5 h-3.5" />

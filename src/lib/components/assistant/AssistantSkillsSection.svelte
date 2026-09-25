@@ -351,7 +351,7 @@
 		<div class="skills-toolbar">
 			<button type="button" class="skill-ghost-btn" onclick={openDefaults}>
 				<Icon name="bookOpen" class="w-3.5 h-3.5" />
-				Defaults
+				{i18n.t('common.defaults')}
 			</button>
 			<button type="button" class="skill-ghost-btn" onclick={() => fileInput?.click()}>
 				<Icon name="upload" class="w-3.5 h-3.5" />
@@ -359,7 +359,7 @@
 			</button>
 			<button type="button" class="skill-ghost-btn" onclick={openExport} disabled={exportable.length === 0}>
 				<Icon name="download" class="w-3.5 h-3.5" />
-				Export
+				{i18n.t('common.export')}
 			</button>
 			<button type="button" class="skill-ghost-btn" onclick={addBlank}>
 				<Icon name="plus" class="w-3.5 h-3.5" />

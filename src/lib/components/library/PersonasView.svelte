@@ -355,7 +355,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						aria-pressed={viewMode === 'grid'}
 					>
 						<Icon name="grid" class="w-3.5 h-3.5" />
-						Grid
+						{i18n.t('clv.viewGrid')}
 					</button>
 					<button
 						type="button"
@@ -365,7 +365,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						aria-pressed={viewMode === 'gallery'}
 					>
 						<Icon name="gallery" class="w-3.5 h-3.5" />
-						Gallery
+						{i18n.t('clv.viewGallery')}
 					</button>
 					<button
 						type="button"
@@ -375,7 +375,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						aria-pressed={viewMode === 'list'}
 					>
 						<Icon name="list" class="w-3.5 h-3.5" />
-						List
+						{i18n.t('clv.viewList')}
 					</button>
 				</div>
 			</div>

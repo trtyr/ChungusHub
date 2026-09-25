@@ -96,8 +96,8 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			</div>
 			<p class="ex-hint">
 				{format === 'png'
-					? 'A SillyTavern card with the portrait as its art.'
-					: 'A SillyTavern JSON card: text only, no portrait.'}
+					? i18n.t('ex.hintPng')
+					: i18n.t('ex.hintJson')}
 			</p>
 		</div>
 

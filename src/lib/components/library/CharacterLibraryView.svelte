@@ -960,7 +960,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		<!-- Active filters: a summary line that only exists while something narrows the list -->
 		{#if filtersActive}
 			<div class="brw-chips">
-				<span class="brw-chips-count"><b>{processedEntries.length}</b> of {sectionEntries.length}</span>
+				<span class="brw-chips-count">{i18n.t('clv.countOf', { n: processedEntries.length, m: sectionEntries.length })}</span>
 				{#if selectedTags.length > 1}
 					<button
 						type="button"
@@ -982,7 +982,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				{#if favoritesOnly}
 					<span class="brw-chip">
 						<Icon name="heart" class="w-2.5 h-2.5 fill-current" />
-						Favorites
+						{i18n.t('svc.favorites')}
 						<button type="button" class="brw-chip-x" onclick={toggleFavoritesOnly} aria-label={i18n.t('clv.removeFavFilter')}>
 							<Icon name="close" class="w-2.5 h-2.5" />
 						</button>
@@ -1097,7 +1097,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 								onclick={submitAddTags}
 								disabled={!addTagsValue.trim()}
 							>
-								Add
+								{i18n.t('common.add')}
 							</Button>
 						</div>
 					</div>

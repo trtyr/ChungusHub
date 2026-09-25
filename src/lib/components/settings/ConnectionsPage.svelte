@@ -188,7 +188,7 @@
 				/>
 				<button type="button" class="new-btn" onclick={newConnection}>
 					<Icon name="plus" class="w-3.5 h-3.5" strokeWidth={2} />
-					New
+					{i18n.t('common.new')}
 				</button>
 			</div>
 

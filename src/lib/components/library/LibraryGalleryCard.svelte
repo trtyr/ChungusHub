@@ -172,7 +172,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			<h3 class="font-ui font-semibold text-[15px] text-white truncate" style="text-shadow: 0 1px 4px rgb(0 0 0 / 0.85), 0 0 2px rgb(0 0 0 / 0.5);">{name}</h3>
 			{#if active}
 				<span class="shrink-0 text-[10px] font-ui px-1.5 py-0.5 rounded-full bg-accent/14 text-accent border border-accent/30 backdrop-blur-sm">
-					Default
+					{i18n.t('pe.defaultBadge')}
 				</span>
 			{/if}
 		</div>

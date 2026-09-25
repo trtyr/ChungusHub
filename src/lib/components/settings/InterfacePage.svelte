@@ -443,7 +443,7 @@
 					class:seg-lift={!ownScene}
 					onclick={() => chatSceneStore.release()}
 				>
-					Everywhere
+					{i18n.t('lb.scopeEverywhere')}
 				</button>
 				<button
 					type="button"
@@ -484,14 +484,14 @@
 						<span class="bg-hero-name">{backgroundName}</span>
 						<div class="bg-hero-actions">
 							<button type="button" class="bg-hero-btn" onclick={() => (backgroundPickerOpen = true)}>
-								Change
+								{i18n.t('common.change')}
 							</button>
 							<button
 								type="button"
 								class="bg-hero-btn"
 								onclick={() => backgroundStore.setBackground(null)}
 							>
-								Remove
+								{i18n.t('common.remove')}
 							</button>
 						</div>
 					</div>

@@ -571,7 +571,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		<!-- Name -->
 		<div>
 			<label for="name-{entityId}" class="block text-sm font-ui font-medium text-text-primary mb-1.5">
-				Name
+				{i18n.t('ef.nameLabel')}
 			</label>
 			<input
 				id="name-{entityId}"
@@ -586,7 +586,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		<!-- Tags -->
 		<div>
 			<span class="block text-sm font-ui font-medium text-text-primary mb-1.5">
-				Tags
+				{i18n.t('ef.tagsLabel')}
 			</span>
 			<div class="flex flex-wrap gap-2 items-center">
 				{#each tags || [] as tag, i}
