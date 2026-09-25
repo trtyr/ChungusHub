@@ -11,6 +11,7 @@
   Pure CSS animation; it exists only while the tip is open.
 -->
 <script lang="ts">
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 </script>
 
@@ -36,7 +37,7 @@
 		</div>
 		<div class="block">
 			<span class="ln"><span class="tag">&lt;style&gt;</span><span class="mark">static</span></span>
-			<span class="ln">Keep the pace steady.</span>
+			<span class="ln">{i18n.t('mk.pace')}</span>
 			<span class="ln"><span class="tag">&lt;/style&gt;</span></span>
 		</div>
 	</div>

@@ -11,6 +11,7 @@
   Pure CSS animation; it exists only while the tip is open.
 -->
 <script lang="ts">
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 </script>
 
@@ -35,7 +36,7 @@
 	<div class="item">
 		<div class="item-head">
 			<span class="role-chip">System</span>
-			<span class="name">Character brief</span>
+			<span class="name">{i18n.t('mk.charBrief')}</span>
 		</div>
 		<div class="item-body">
 			<span class="line raw-line">You are <span class="macro">{'{{char}}'}</span>.</span>
@@ -49,7 +50,7 @@
 	     The toggle only changes the count; resolution always happens at send time. -->
 	<div class="note">
 		<Icon name="check" class="w-3 h-3" strokeWidth={2.25} />
-		<span>Always sent with macros resolved. This only changes the count.</span>
+		<span>{i18n.t('mk.macrosResolved')}</span>
 	</div>
 </div>
 

@@ -1,3 +1,7 @@
+<script lang="ts">
+	import { i18n } from '$lib/i18n/i18n.svelte';
+</script>
+
 <!--
   MergeRolesMockup: animated demo for the "Merge consecutive roles" toggle.
 
@@ -26,12 +30,12 @@
 	<div class="cards">
 		<div class="card system s1">
 			<span class="badge">system</span>
-			<span class="txt">You are the narrator.</span>
+			<span class="txt">{i18n.t('mk.narrator')}</span>
 		</div>
 		<div class="card system s2">
 			<span class="seam"></span>
 			<span class="badge">system</span>
-			<span class="txt">Always reply in second person.</span>
+			<span class="txt">{i18n.t('mk.secondPerson')}</span>
 		</div>
 		<div class="card user u1">
 			<span class="badge">user</span>

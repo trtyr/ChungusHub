@@ -538,12 +538,7 @@
 								/>
 							</div>
 						{/each}
-						<p class="memory-muted">
-							Raising these is free: anything pushed out of play is kept and comes back. Lowering
-							<em>Summaries per layer</em> or <em>Compaction layers</em> is not, since the summaries over
-							the new limit are merged into tighter ones and the originals go. Those merges are model
-							calls, so they wait at the top of the panel until you run them.
-						</p>
+						<p class="memory-muted">{i18n.t('mem.layerRaiseNote')}</p>
 					</div>
 				{/if}
 			</section>

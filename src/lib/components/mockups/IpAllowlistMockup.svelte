@@ -12,6 +12,7 @@
   Pure CSS animation; it exists only while the tip is open.
 -->
 <script lang="ts">
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 </script>
 
@@ -22,7 +23,7 @@
 			<span class="notch"></span>
 			<div class="scr denied">
 				<span class="scr-dot"></span>
-				<span class="scr-title">Not allowed</span>
+				<span class="scr-title">{i18n.t('mk.notAllowed')}</span>
 				<span class="scr-ip">192.168.1.23</span>
 				<span class="scr-hint">asking to join…</span>
 			</div>
@@ -59,7 +60,7 @@
 			<span class="zone-label">Allowed</span>
 			<div class="row host-row">
 				<span class="host-dot"></span>
-				<span class="row-txt">This computer</span>
+				<span class="row-txt">{i18n.t('sec.thisDevice')}</span>
 				<span class="row-tag">always</span>
 			</div>
 			<div class="zone ok-zone">
@@ -73,7 +74,7 @@
 
 	<div class="note">
 		<Icon name="check" class="w-3 h-3" strokeWidth={2.25} />
-		<span>This computer is always allowed, so you can never lock yourself out.</span>
+		<span>{i18n.t('mk.hostAlways')}</span>
 	</div>
 </div>
 
