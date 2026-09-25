@@ -84,9 +84,9 @@
 	});
 
 	const NATURE_HINTS: Record<Nature, string> = {
-		always: 'Injected every turn, ignoring keywords.',
-		keyword: 'Fires when its keywords appear in recent messages.',
-		off: 'Dormant: never scanned, never injected.'
+		always: 'ler.hNatAlways',
+		keyword: 'ler.hNatKeyword',
+		off: 'ler.hNatOff'
 	};
 
 	const logicGlyph: Record<number, string> = {
@@ -362,7 +362,7 @@
 						? i18n.t('ler.offClickToEnable')
 						: entry.constant
 							? i18n.t('ler.alwaysActive')
-							: i18n.t('ler.keywordOff')}
+							: i18n.t('ler.keyword')}
 					onclick={toggleDisable}
 				>
 					<span class="lbr-dot lbr-dot-{nature}"></span>
@@ -458,7 +458,7 @@
 								aria-checked={nature === 'always'}
 								onclick={() => setNature('always')}
 							>
-								<Icon name="pin" class="w-3.5 h-3.5" />Always
+								<Icon name="pin" class="w-3.5 h-3.5" />{i18n.t('ler.natAlways')}
 							</button>
 							<button
 								type="button"
@@ -478,10 +478,10 @@
 								aria-checked={nature === 'off'}
 								onclick={() => setNature('off')}
 							>
-								Off
+								{i18n.t('ler.natOff')}
 							</button>
 						</div>
-						<p class="text-xs font-ui text-text-muted">{NATURE_HINTS[nature]}</p>
+						<p class="text-xs font-ui text-text-muted">{i18n.t(NATURE_HINTS[nature])}</p>
 					</div>
 				</div>
 

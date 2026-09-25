@@ -331,7 +331,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				<div class="job-text">
 					<span class="job-phase">{job.phase}</span>
 					{#if job.filesTotal > 0}
-						<span class="job-count">{job.filesDone} of {job.filesTotal} files</span>
+						<span class="job-count">{i18n.t('bk.nOfMFiles', { n: job.filesDone, m: job.filesTotal })}</span>
 					{/if}
 				</div>
 			</div>

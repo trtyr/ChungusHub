@@ -443,7 +443,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	<!-- Active filters: a summary line that only exists while something narrows the list -->
 	{#if filtersActive}
 		<div class="brw-chips">
-			<span class="brw-chips-count"><b>{processedEntries.length}</b> of {personas.length}</span>
+			<span class="brw-chips-count"><b>{processedEntries.length}</b> {i18n.t('clv.ofM', { m: personas.length })}</span>
 			{#if favoritesOnly}
 				<span class="brw-chip">
 					<Icon name="heart" class="w-2.5 h-2.5 fill-current" />
@@ -541,7 +541,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			{#if totalPages > 1}
 				<div class="brw-pager">
 					<span class="brw-pager-count">
-						Showing {(safePage - 1) * perPage + 1}-{Math.min(safePage * perPage, processedEntries.length)} of {processedEntries.length}
+						{i18n.t('clv.showingOf', { a: (safePage - 1) * perPage + 1, b: Math.min(safePage * perPage, processedEntries.length), m: processedEntries.length })}
 					</span>
 					<LibraryPager page={safePage} {totalPages} onPage={(p) => (currentPage = p)} />
 				</div>

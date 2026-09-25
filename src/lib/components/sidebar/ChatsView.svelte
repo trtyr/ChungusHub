@@ -771,7 +771,7 @@
 				<h2 class="overlay-subject">{i18n.t('svc.title')}</h2>
 				<span class="overlay-facts">
 					{#if visibleChats.length !== scopedChats.length}
-						{visibleChats.length} of {scopedChats.length} chats
+						{i18n.t('svc.nOfMChats', { n: visibleChats.length, m: scopedChats.length })}
 					{:else}
 						{scopedChats.length} chat{scopedChats.length === 1 ? '' : 's'}
 					{/if}
@@ -1047,7 +1047,7 @@
 							{#if searchQuery && searchingMessages}
 								{i18n.t('svc.t11')}
 							{:else if searchQuery}
-								No chats match "{searchQuery}"
+								{i18n.t('svc.noChatsMatch', { q: searchQuery })}
 							{:else if filterMode === 'favorites'}
 								{i18n.t('svc.t12')}
 							{:else if filterMode === 'duplicates'}

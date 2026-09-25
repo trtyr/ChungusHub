@@ -249,7 +249,7 @@
 				onclick={onToggleFavorite}
 			>
 				<Icon name="heart" class="w-3.5 h-3.5 {chat.isFavorite ? 'fill-current' : ''}" />
-				{chat.isFavorite ? 'Favorited' : 'Favorite'}
+				{i18n.t(chat.isFavorite ? 'sb.favorited' : 'sb.favorite')}
 			</button>
 			<button type="button" class="preview-action preview-action-danger" onclick={onDelete}>
 				<Icon name="trash" class="w-3.5 h-3.5" />

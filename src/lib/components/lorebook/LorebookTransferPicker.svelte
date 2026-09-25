@@ -51,7 +51,7 @@
 </script>
 
 <p class="lbt-head">
-	{mode === 'move' ? 'Move' : 'Copy'} {count} {count === 1 ? 'entry' : 'entries'} to…
+	{i18n.t(mode === 'move' ? 'ltp.move' : 'ltp.copy')} {i18n.t('ltp.nEntries', { n: count })}…
 </p>
 
 <!-- Nothing to search or order in a list of one; past that, finding one name in a long

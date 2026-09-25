@@ -346,7 +346,7 @@
 				<p class="memory-warn">
 					<Icon name="warning" class="w-3.5 h-3.5" />
 					The active preset has no <code>{'{{memory}}'}</code> item, so memory is inert here: nothing is
-					summarized and every turn is still sent in full. Add one in the Prompt Builder to switch it on.
+					o switch it on.
 				</p>
 			{/if}
 

@@ -41,7 +41,7 @@
 				{#if flowStep === 'character'}
 					{i18n.t('lv.t65')}
 				{:else if flowCharacterName}
-					New chat with {flowCharacterName}: choose your persona
+					{i18n.t('lv.newChatPersona', { name: flowCharacterName })}
 				{:else}
 					{i18n.t('lv.t66')}
 				{/if}

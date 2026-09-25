@@ -51,7 +51,7 @@
 		{/if}
 
 		<div class="sp-head">
-			<span class="sp-count">{selected.length} of {rows.length} selected</span>
+			<span class="sp-count">{i18n.t('asm.nOfMSel', { n: selected.length, m: rows.length })}</span>
 			<div class="sp-bulk">
 				<button type="button" class="sp-bulk-btn" onclick={() => (selected = rows.map((r) => r.key))} disabled={selected.length === rows.length}>{i18n.t('asm.spAll')}</button>
 				<button type="button" class="sp-bulk-btn" onclick={() => (selected = [])} disabled={selected.length === 0}>{i18n.t('asm.spNone')}</button>

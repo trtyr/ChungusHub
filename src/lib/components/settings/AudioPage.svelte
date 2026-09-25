@@ -111,7 +111,7 @@
 				<!-- Said on the page rather than hidden in a tooltip: it decides whether the
 				     feature is worth turning on for someone who reads on a phone. -->
 				<p class="note">
-					Sounds reach you while ChungusHub is open behind another window or in another tab.
+					b.
 					{i18n.t('aud.t36')}
 
 				</p>

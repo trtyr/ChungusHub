@@ -261,7 +261,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		</div>
 		<div class="card-body">
 			<p class="note">
-				Nothing is checked in the background. The check asks GitHub for its latest release,
+				se,
 				from the computer running ChungusHub, and sends nothing else.
 			</p>
 			<div class="update">
@@ -430,11 +430,11 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	     be claiming one it does not hold. Each notice is linked, not just named, because it
 	     travels with the app and is served beside the files it covers. -->
 	<p class="legal">
-		ChungusHub is free software under the
+		{i18n.t('ab.legalA')}
 		<a href={LINKS.license} target="_blank" rel="noopener noreferrer">AGPL-3.0</a>. The source is
 		on <a href={LINKS.repo} target="_blank" rel="noopener noreferrer">GitHub</a>. The typefaces and
 		notification sounds it ships with are not covered by that license: the typefaces are under
-		the
+		{i18n.t('ab.legalD2')}
 		<a href={LINKS.fontLicense} target="_blank" rel="noopener noreferrer">SIL Open Font License</a>,
 		{i18n.t('ab.legalD')}
 		<a href={LINKS.soundCredits} target="_blank" rel="noopener noreferrer">Creative Commons</a>{i18n.t('ab.legalE')}

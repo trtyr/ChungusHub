@@ -385,7 +385,7 @@
 					{#if missing.length}
 						<p class="prompt-broken">
 							<Icon name="warning" class="w-3.5 h-3.5" />
-							Missing {missing.join(', ')}. The engine refuses to run without it, so put it back or press Reset.
+							{i18n.t('ed.missingReset', { items: missing.join(', ') })}
 						</p>
 					{/if}
 					{#if keys.length}

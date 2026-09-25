@@ -71,7 +71,7 @@
 		title={justCopied ? i18n.t('chat.copied') : i18n.t('common.copy')}
 	>
 		<Icon name={justCopied ? 'check' : 'copy'} class="w-3.5 h-3.5" strokeWidth={1.75} />
-		<span class="action-label">{justCopied ? 'Copied' : 'Copy'}</span>
+		<span class="action-label">{i18n.t(justCopied ? 'ma.copied' : 'ma.copy')}</span>
 	</button>
 
 	{#if showRegenerate && onRegenerate}

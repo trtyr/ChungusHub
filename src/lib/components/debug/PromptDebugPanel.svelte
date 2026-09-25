@@ -356,7 +356,7 @@
 					{#if !size.reported && images.length}
 						<p class="note">
 							The estimate covers text and tool schemas only. The {images.length} image attachment{images.length === 1 ? '' : 's'}
-							below also cost tokens, priced by the provider from dimensions we don't have.
+							
 						</p>
 					{/if}
 					{#if entry.error}

@@ -93,7 +93,7 @@
 			<span class="pi-cover-title">{i18n.t('pi.cover')}</span>
 			<p class="pi-cover-hint">
 				The face of the preset, and the picture a PNG card is. Framed 3:4 portrait, anything
-				else is centre-cropped to fit. A JSON export has nowhere to keep it.
+				
 			</p>
 			{#if coverUrl}
 				<button type="button" class="pi-cover-clear" disabled={busy} onclick={removeCover}>{i18n.t('pi.remove')}</button>

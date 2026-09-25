@@ -499,7 +499,7 @@
 					<button type="button" class="bg-hero-empty" onclick={() => (backgroundPickerOpen = true)}>
 						<span class="bg-hero-empty-title font-ui">{i18n.t('if.chooseBackground')}</span>
 						<span class="bg-hero-empty-hint font-ui">
-							Pick one of the bundled scenes, or bring your own image.
+							{i18n.t('if.t25')}
 						</span>
 					</button>
 				{/if}

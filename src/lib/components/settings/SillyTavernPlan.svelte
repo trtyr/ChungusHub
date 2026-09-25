@@ -157,7 +157,7 @@
 						<!-- The full count stays put and the chosen one leads, so a group half
 						     switched off reads as a fraction of something rather than as a number
 						     that shrank while nobody was looking. -->
-						<span class="group-count">{chosen === total ? total : `${chosen} of ${total}`}</span>
+						<span class="group-count">{chosen === total ? total : i18n.t('st.nOfM', { n: chosen, m: total })}</span>
 					</button>
 				</div>
 
