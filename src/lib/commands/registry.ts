@@ -41,10 +41,10 @@ export type CommandGroup = 'write' | 'story' | 'chat' | 'open';
 
 /** Group order and headings in the palette. Display only; nothing derives behaviour here. */
 export const COMMAND_GROUPS: { id: CommandGroup; label: string }[] = [
-	{ id: 'write', label: 'Write' },
-	{ id: 'story', label: 'Story' },
-	{ id: 'chat', label: 'Chat' },
-	{ id: 'open', label: 'Open' }
+	{ id: 'write', label: 'cmd.grpWrite' },
+	{ id: 'story', label: 'cmd.grpStory' },
+	{ id: 'chat', label: 'cmd.grpChat' },
+	{ id: 'open', label: 'cmd.grpOpen' }
 ];
 
 /**
@@ -114,7 +114,7 @@ export const COMMANDS: CommandDef[] = [
 		aliases: ['send'],
 		group: 'write',
 		icon: 'user',
-		describe: 'Add a turn of yours without asking for a reply',
+		describe: 'cmd.say',
 		arg: { label: 'text', required: true },
 		unavailable: (ctx) => (ctx.chatId ? null : NO_CHAT),
 		run: (text) => messageStore.insertDummyMessage('user', text)
@@ -125,7 +125,7 @@ export const COMMANDS: CommandDef[] = [
 		name: 'continue',
 		group: 'story',
 		icon: 'feather',
-		describe: 'Extend the newest reply where it stops',
+		describe: 'cmd.continue',
 		unavailable: (ctx) => (ctx.canContinue ? null : 'The newest turn must be a reply'),
 		run: (_arg, ctx) => ctx.host.continueMessage()
 	},
@@ -134,7 +134,7 @@ export const COMMANDS: CommandDef[] = [
 		aliases: ['regenerate'],
 		group: 'story',
 		icon: 'refresh',
-		describe: 'Generate the newest turn again',
+		describe: 'cmd.retry',
 		unavailable: (ctx) => (ctx.canRegenerateLast ? null : ctx.regenerateLastHint),
 		run: (_arg, ctx) => ctx.host.regenerateLast()
 	},
@@ -144,7 +144,7 @@ export const COMMANDS: CommandDef[] = [
 		name: 'swipe',
 		group: 'story',
 		icon: 'refresh',
-		describe: 'Add an alternate reply to swipe between',
+		describe: 'cmd.swipe',
 		unavailable: (ctx) =>
 			ctx.canSwipeLast ? null : 'The newest turn must be a reply, or a turn of yours',
 		run: (_arg, ctx) => ctx.host.swipeLast()
@@ -154,7 +154,7 @@ export const COMMANDS: CommandDef[] = [
 		aliases: ['scene'],
 		group: 'story',
 		icon: 'sparkles',
-		describe: 'Write another opening scene beside the ones already there',
+		describe: 'cmd.opening',
 		// Optional: an empty direction is the surprise, which is the whole reason the popover
 		// this stands in for needs no Random button.
 		arg: { label: 'direction', required: false },
@@ -175,7 +175,7 @@ export const COMMANDS: CommandDef[] = [
 		name: 'branch',
 		group: 'story',
 		icon: 'branch',
-		describe: 'Write an alternate of the newest turn by hand',
+		describe: 'cmd.branchHand',
 		unavailable: (ctx) => (ctx.lastTurnId ? null : 'This chat has no turns yet'),
 		run: (_arg, ctx) => {
 			messageStore.branchTargetId = ctx.lastTurnId;
@@ -185,7 +185,7 @@ export const COMMANDS: CommandDef[] = [
 		name: 'canon',
 		group: 'story',
 		icon: 'crown',
-		describe: 'Mark this timeline canon, or unmark it',
+		describe: 'cmd.canon',
 		unavailable: (ctx) => (ctx.activeLeafId ? null : NO_CHAT),
 		run: async (_arg, ctx) => {
 			const already = ctx.canonLeafId === ctx.activeLeafId;
@@ -198,7 +198,7 @@ export const COMMANDS: CommandDef[] = [
 		aliases: ['note', 'inject'],
 		group: 'story',
 		icon: 'compass',
-		describe: 'Guide the next reply once, then it is spent',
+		describe: 'cmd.steer',
 		arg: { label: 'guidance', required: true },
 		unavailable: () =>
 			featurePromptsStore.steeringEnabled ? null : 'Steering is switched off in Settings → Engines',
@@ -220,7 +220,7 @@ export const COMMANDS: CommandDef[] = [
 		name: 'new',
 		group: 'chat',
 		icon: 'plus',
-		describe: 'Start another chat with this character',
+		describe: 'cmd.new',
 		unavailable: (ctx) =>
 			ctx.characterEntryId ? null : "This story's character is gone from the library",
 		run: (_arg, ctx) => {
@@ -235,7 +235,7 @@ export const COMMANDS: CommandDef[] = [
 		aliases: ['renamechat'],
 		group: 'chat',
 		icon: 'pencil',
-		describe: "Change this chat's title",
+		describe: 'cmd.rename',
 		arg: { label: 'title', required: true },
 		unavailable: (ctx) => (ctx.chatId ? null : NO_CHAT),
 		run: async (title, ctx) => {
@@ -247,7 +247,7 @@ export const COMMANDS: CommandDef[] = [
 		name: 'duplicate',
 		group: 'chat',
 		icon: 'copy',
-		describe: 'Copy this chat whole and open the copy',
+		describe: 'cmd.duplicate',
 		unavailable: (ctx) => (ctx.chatId ? null : NO_CHAT),
 		run: (_arg, ctx) => ctx.host.requestDuplicate()
 	},
@@ -255,7 +255,7 @@ export const COMMANDS: CommandDef[] = [
 		name: 'home',
 		group: 'chat',
 		icon: 'home',
-		describe: 'Close the chat and go back to the landing screen',
+		describe: 'cmd.home',
 		run: () => {
 			if (messageStore.warnIfBusy()) return;
 			void chatStore.goHome();
@@ -267,7 +267,7 @@ export const COMMANDS: CommandDef[] = [
 		name: 'find',
 		group: 'open',
 		icon: 'search',
-		describe: "Search this story's messages",
+		describe: 'cmd.find',
 		arg: { label: 'text', required: false },
 		unavailable: (ctx) => (ctx.chatId ? null : NO_CHAT),
 		run: (text) => {
@@ -283,7 +283,7 @@ export const COMMANDS: CommandDef[] = [
 		aliases: ['turn'],
 		group: 'open',
 		icon: 'target',
-		describe: 'Put the keyboard on a turn by its number',
+		describe: 'cmd.go',
 		arg: { label: 'number', required: true },
 		unavailable: (ctx) => (ctx.chatId ? null : NO_CHAT),
 		run: (text) => {
@@ -296,7 +296,7 @@ export const COMMANDS: CommandDef[] = [
 		name: 'character',
 		group: 'open',
 		icon: 'user',
-		describe: "Open this story's character in the Library editor",
+		describe: 'cmd.character',
 		unavailable: (ctx) =>
 			ctx.characterEntryId ? null : "This story's character is gone from the library",
 		run: (_arg, ctx) => uiStore.openLibraryEntry(ctx.characterEntryId!, 'character', flush)
@@ -305,7 +305,7 @@ export const COMMANDS: CommandDef[] = [
 		name: 'persona',
 		group: 'open',
 		icon: 'userCheck',
-		describe: 'Open the persona you are playing in the Library editor',
+		describe: 'cmd.persona',
 		unavailable: (ctx) => (ctx.personaEntryId ? null : 'You have no persona set'),
 		run: (_arg, ctx) => uiStore.openLibraryEntry(ctx.personaEntryId!, 'persona', flush)
 	},
@@ -313,21 +313,21 @@ export const COMMANDS: CommandDef[] = [
 		name: 'map',
 		group: 'open',
 		icon: 'sitemap',
-		describe: 'Open the Story Map',
+		describe: 'cmd.map',
 		run: () => uiStore.openOverlay('storymap', flush)
 	},
 	{
 		name: 'chats',
 		group: 'open',
 		icon: 'chat',
-		describe: 'Open the Chats browser',
+		describe: 'cmd.chats',
 		run: () => uiStore.openChats()
 	},
 	{
 		name: 'memory',
 		group: 'open',
 		icon: 'brain',
-		describe: 'Open Chat Memory',
+		describe: 'cmd.memory',
 		run: () => uiStore.openOverlay('memory', flush)
 	},
 	{
@@ -335,35 +335,35 @@ export const COMMANDS: CommandDef[] = [
 		aliases: ['world'],
 		group: 'open',
 		icon: 'bookOpen',
-		describe: 'Open Lorebooks',
+		describe: 'cmd.lorebook',
 		run: () => uiStore.openLorebooks(flush)
 	},
 	{
 		name: 'library',
 		group: 'open',
 		icon: 'users',
-		describe: 'Open the Library',
+		describe: 'cmd.library',
 		run: () => uiStore.openLibrary(flush)
 	},
 	{
 		name: 'assistant',
 		group: 'open',
 		icon: 'sparkles',
-		describe: 'Open the Chungus Assistant',
+		describe: 'cmd.assistant',
 		run: () => uiStore.openAssistant()
 	},
 	{
 		name: 'settings',
 		group: 'open',
 		icon: 'settings',
-		describe: 'Open Settings',
+		describe: 'cmd.settings',
 		run: () => uiStore.openSettings(flush)
 	},
 	{
 		name: 'debug',
 		group: 'open',
 		icon: 'flask',
-		describe: 'Open the prompt debug panel',
+		describe: 'cmd.debug',
 		run: () => uiStore.openDebugPanel(flush)
 	}
 ];

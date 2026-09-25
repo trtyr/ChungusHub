@@ -10,6 +10,7 @@
 	 *
 	 * See architecture/chat-sessions.md for the mode itself.
 	 */
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import type { CommandDef } from '$lib/commands/registry';
 
@@ -41,7 +42,7 @@
 <div class="command-palette surface-float" bind:this={listElement}>
 	{#each groups as group (group.id)}
 		{#if group.label}
-			<div class="command-group">{group.label}</div>
+			<div class="command-group">{i18n.t(group.label)}</div>
 		{/if}
 		{#each group.commands as command (command.name)}
 			{@const refused = refusalFor(command)}
@@ -65,7 +66,7 @@
 						>{/if}
 				</span>
 				<span class="command-describe" class:command-describe--warn={refused !== null}>
-					{refused ?? command.describe}
+					{refused ?? i18n.t(command.describe)}
 				</span>
 			</button>
 		{/each}
