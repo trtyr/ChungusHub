@@ -94,7 +94,7 @@ class MessageStore {
 
 		try {
 			const state = chatStore.currentChatState;
-			if (!state) throw new Error('No active chat');
+			if (!state) throw new Error(i18n.t('chat.noActive'));
 
 			// The turn is BUILT here and inserted further down, after the hold releases: a
 			// review the reader cancels has to leave the chat exactly as they found it, and a
@@ -245,14 +245,14 @@ class MessageStore {
 	): Promise<void> {
 		if (this.warnIfBusy()) return;
 		const state = chatStore.currentChatState;
-		if (!state) throw new Error('No active chat');
+		if (!state) throw new Error(i18n.t('chat.noActive'));
 
 		// Look the message up across the whole tree, not just the active path, so the story map
 		// can edit off-path branch nodes too. The chat only ever passes active-path ids, so its
 		// behaviour is unchanged (same object, same code path). `save_only` leaves the active leaf
 		// alone; `create_branch` moves it onto the fork it just wrote, exactly as in chat.
 		const message = state.allMessages.find((m) => m.id === messageId);
-		if (!message) throw new Error('Message not found');
+		if (!message) throw new Error(i18n.t('chat.msgNotFound'));
 
 		// An in-place rewrite keeps the id, so the summary covering it now describes text that
 		// is gone. Coverage resolution catches that on its own (the row's `edited_at` outdates
@@ -338,14 +338,14 @@ class MessageStore {
 	async deleteMessage(messageId: string, action: DeleteAction): Promise<void> {
 		if (this.warnIfBusy()) return;
 		const state = chatStore.currentChatState;
-		if (!state) throw new Error('No active chat');
+		if (!state) throw new Error(i18n.t('chat.noActive'));
 
 		// Tree-wide lookup so the story map can prune off-path branches. The active-leaf
 		// navigation below is gated on whether the deletion actually touches the branch we're
 		// viewing, so pruning an off-path branch never yanks the current view. The chat only
 		// deletes active-path messages, so it keeps its exact prior behaviour.
 		const message = state.allMessages.find((m) => m.id === messageId);
-		if (!message) throw new Error('Message not found');
+		if (!message) throw new Error(i18n.t('chat.msgNotFound'));
 
 		this.isProcessing = true;
 		try {
@@ -537,7 +537,7 @@ class MessageStore {
 	async navigateToBranch(messageId: string): Promise<void> {
 		if (this.warnIfBusy()) return;
 		const state = chatStore.currentChatState;
-		if (!state) throw new Error('No active chat');
+		if (!state) throw new Error(i18n.t('chat.noActive'));
 
 		// Find the deepest leaf starting from this message
 		const messages = await chatStore.freshMessages(state.chat.id);
@@ -574,7 +574,7 @@ class MessageStore {
 	async navigateToSibling(messageId: string, direction: 'prev' | 'next'): Promise<void> {
 		if (this.warnIfBusy()) return;
 		const state = chatStore.currentChatState;
-		if (!state) throw new Error('No active chat');
+		if (!state) throw new Error(i18n.t('chat.noActive'));
 
 		// Fetch fresh data to avoid stale reference issues
 		const messages = await chatStore.freshMessages(state.chat.id);
@@ -737,7 +737,7 @@ class MessageStore {
 	async continueMessage(): Promise<void> {
 		if (this.isProcessing) return;
 		const state = chatStore.currentChatState;
-		if (!state) throw new Error('No active chat');
+		if (!state) throw new Error(i18n.t('chat.noActive'));
 		const leaf = state.activePath[state.activePath.length - 1];
 		if (!leaf || leaf.role !== 'assistant') {
 			toastStore.warning(i18n.t('t.continueNeedsReply'));
@@ -896,7 +896,7 @@ class MessageStore {
 		const state = chatStore.currentChatState;
 		if (!state) {
 			this.isProcessing = false;
-			throw new Error('No active chat');
+			throw new Error(i18n.t('chat.noActive'));
 		}
 
 		this.abortController = new AbortController();
@@ -1028,7 +1028,7 @@ class MessageStore {
 	async insertDummyMessage(role: 'user' | 'assistant', content = ''): Promise<void> {
 		if (this.warnIfBusy()) return;
 		const state = chatStore.currentChatState;
-		if (!state) throw new Error('No active chat');
+		if (!state) throw new Error(i18n.t('chat.noActive'));
 
 		const dummyMessage = await this.createMessage({
 			chatId: state.chat.id,

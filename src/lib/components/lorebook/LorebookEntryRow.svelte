@@ -283,7 +283,7 @@
 	let atDepth = $derived((entry?.position ?? LOREBOOK_POSITION_BLOCK) === LOREBOOK_POSITION_AT_DEPTH);
 	/** A SillyTavern position this app has no place for: named rather than quietly read as ours. */
 	let foreignPosition = $derived(
-		entry?.position == null ? '' : (ST_POSITION_NAMES[entry.position] ?? '')
+		entry?.position == null ? '' : labelT(ST_POSITION_NAMES[entry.position] ?? '')
 	);
 
 	// One part per knob that is set, in the order the fold's blocks appear in.

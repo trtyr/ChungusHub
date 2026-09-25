@@ -15,6 +15,7 @@
  * what to do with the answer.
  */
 
+import { i18n } from '$lib/i18n/i18n.svelte';
 import type { LLMMessage } from '$lib/types/llm';
 import type { Message } from '$lib/types/chat';
 import { llmService } from '$lib/services/llm/provider';
@@ -66,7 +67,7 @@ export async function readSprite(params: SpriteReadParams): Promise<string> {
 	if (!featurePromptsStore.spritesEnabled) {
 		throw new Error('Sprites is turned off in Settings → Engines');
 	}
-	if (labels.length === 0) throw new Error('This character has no sprites to choose between');
+	if (labels.length === 0) throw new Error(i18n.t('spr.noneToPick'));
 	if (messages.length === 0) throw new Error('There is no turn to read');
 	// The harder half of the registry's `requires` (architecture/engines.md): the editor warns
 	// about a template that drops {{labels}}, and this refuses to run one. Without it the model

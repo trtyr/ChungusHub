@@ -10,12 +10,14 @@
  * "copied" state must await it and only flip that state on success: a checkmark over
  * an empty clipboard is worse than a button that visibly failed.
  */
+import { i18n } from "$lib/i18n/i18n.svelte";
+
 export async function copyText(text: string): Promise<void> {
 	if (navigator.clipboard) {
 		await navigator.clipboard.writeText(text);
 		return;
 	}
-	if (!selectionCopy(text)) throw new Error('This browser refused the copy.');
+	if (!selectionCopy(text)) throw new Error(i18n.t('ui.copyRefused'));
 }
 
 /** `execCommand('copy')` over a throwaway textarea, the pre-secure-context path. */

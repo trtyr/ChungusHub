@@ -16,6 +16,7 @@
  * is the prompt hold, and that is a gate on the request rather than a surface of its own.
  */
 
+import { i18n } from '$lib/i18n/i18n.svelte';
 import type { LLMMessage } from '$lib/types/llm';
 import type { Message, ImpersonatePerspective } from '$lib/types/chat';
 import { llmService } from '$lib/services/llm/provider';
@@ -101,6 +102,6 @@ export async function runComposerTransform(opts: ComposerTransformParams): Promi
 	const result = await llmService.complete({ engine: kind }, { messages: approved, source: kind, signal });
 
 	const text = result.content.trim();
-	if (!text) throw new Error('The transform returned an empty result');
+	if (!text) throw new Error(i18n.t('rx.emptyResult'));
 	return text;
 }

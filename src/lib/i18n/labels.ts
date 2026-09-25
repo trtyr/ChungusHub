@@ -8,6 +8,9 @@ import { i18n } from './i18n.svelte';
 
 const ZH: Record<string, string> = {
 	'Getting around': '移动',
+	'Author’s note, bottom (SillyTavern)': '作者注·底部（SillyTavern 格式）',
+	'Author’s note, top (SillyTavern)': '作者注·顶部（SillyTavern 格式）',
+	'After the character (SillyTavern)': '角色之后（SillyTavern 格式）',
 	'Every call is applied directly, deletes included.': '每次调用都直接应用，包括删除。',
 	'Every call is applied as the assistant works, deletes included.': '助手工作时直接应用每次调用，包括删除。',
 	'Every call that changes something is shown first, with the change it makes.': '每一次会改动东西的调用都先展示，连同它的改动。',

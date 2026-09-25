@@ -5,6 +5,7 @@
  * thumbnails are now uploaded to and served from the server so every device
  * shares the same character art. Same public API as before.
  */
+import { i18n } from '$lib/i18n/i18n.svelte';
 import { apiGet, apiSend, apiUpload, fileUrl, getClientId } from '$lib/services/transport';
 
 /** Which entity an image belongs to. Decides its images/<category>/ folder server-side. */
@@ -76,14 +77,14 @@ export function isImageFile(file: Blob): boolean {
  */
 export function imageRejectionReason(file: Blob): string | null {
 	const named = file instanceof File && file.name ? `"${file.name}"` : null;
-	if (!isImageFile(file)) return `${named ?? 'This file'} is not an image file.`;
+	if (!isImageFile(file)) return i18n.t(named ? 'img.notImageNamed' : 'img.notImage', named ? { name: named } : undefined);
 	// An SVG is a document, not pixels: stored under a category that keeps original bytes it
 	// would be served back as image/svg+xml, a page that runs on this app's own origin.
 	if (file.type === 'image/svg+xml') {
-		return `${named ?? 'This file'} is an SVG. Use a png, jpg or webp instead.`;
+		return i18n.t(named ? 'img.svgNamed' : 'img.svg', named ? { name: named } : undefined);
 	}
 	if (file.size > MAX_SOURCE_BYTES) {
-		return `${named ?? 'This image'} is ${megabytes(file.size)}; the limit is ${megabytes(MAX_SOURCE_BYTES)}.`;
+		return i18n.t(named ? 'img.tooBigNamed' : 'img.tooBig', named ? { name: named, size: megabytes(file.size), limit: megabytes(MAX_SOURCE_BYTES) } : { size: megabytes(file.size), limit: megabytes(MAX_SOURCE_BYTES) });
 	}
 	return null;
 }

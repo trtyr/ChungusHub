@@ -8,6 +8,7 @@
  * Nothing here touches the network at import time, so it is safe during
  * prerendering. The browser-only bits guard on `typeof window`.
  */
+import { i18n } from '$lib/i18n/i18n.svelte';
 import type { AssistantMessage, AssistantStep, NavTarget } from '$lib/types/assistant';
 import type { SentAttachment } from '$shared/assistant-attachments';
 import type { BackupsPayload } from '$shared/backups';
@@ -1385,7 +1386,7 @@ export interface LlmRequest {
 export async function llmComplete(req: LlmRequest): Promise<LlmResult> {
 	await connectWs();
 	if (!ws || ws.readyState !== WebSocket.OPEN) {
-		throw new Error('Not connected to server');
+		throw new Error(i18n.t('tp.notConnected'));
 	}
 
 	const id = crypto.randomUUID();
@@ -1464,7 +1465,7 @@ function abortError(): Error {
 export async function assistantStream(req: AssistantStreamRequest): Promise<AssistantDone> {
 	await connectWs();
 	if (!ws || ws.readyState !== WebSocket.OPEN) {
-		throw new Error('Not connected to server');
+		throw new Error(i18n.t('tp.notConnected'));
 	}
 
 	const id = crypto.randomUUID();
@@ -1536,7 +1537,7 @@ export async function assistantStream(req: AssistantStreamRequest): Promise<Assi
 export async function assistantStatus(sessionIds: string[]): Promise<AssistantRunningTurn[]> {
 	await connectWs();
 	if (!ws || ws.readyState !== WebSocket.OPEN) {
-		throw new Error('Not connected to server');
+		throw new Error(i18n.t('tp.notConnected'));
 	}
 	const id = crypto.randomUUID();
 	return new Promise((resolve, reject) => {
@@ -1560,7 +1561,7 @@ export async function assistantStatus(sessionIds: string[]): Promise<AssistantRu
 export async function llmStatus(chatIds: string[]): Promise<LiveChatGeneration[]> {
 	await connectWs();
 	if (!ws || ws.readyState !== WebSocket.OPEN) {
-		throw new Error('Not connected to server');
+		throw new Error(i18n.t('tp.notConnected'));
 	}
 	const id = crypto.randomUUID();
 	return new Promise((resolve, reject) => {
@@ -1576,7 +1577,7 @@ export async function llmStatus(chatIds: string[]): Promise<LiveChatGeneration[]
  * running and the reader would think they had ended it.
  */
 export function stopGeneration(id: string): void {
-	if (!ws || ws.readyState !== WebSocket.OPEN) throw new Error('Not connected to server');
+	if (!ws || ws.readyState !== WebSocket.OPEN) throw new Error(i18n.t('tp.notConnected'));
 	ws.send(JSON.stringify({ t: 'llm-cancel', id }));
 }
 
@@ -1589,7 +1590,7 @@ export function stopGeneration(id: string): void {
 export async function assistantApprove(sessionId: string, askId: string, approved: number[]): Promise<void> {
 	await connectWs();
 	if (!ws || ws.readyState !== WebSocket.OPEN) {
-		throw new Error('Not connected to server');
+		throw new Error(i18n.t('tp.notConnected'));
 	}
 	ws.send(JSON.stringify({ t: 'assistant-approve', assistantSessionId: sessionId, askId, approved }));
 }
@@ -1599,7 +1600,7 @@ export async function assistantApprove(sessionId: string, askId: string, approve
 export async function assistantAnswer(sessionId: string, askId: string, answers: AssistantQuestionAnswer[]): Promise<void> {
 	await connectWs();
 	if (!ws || ws.readyState !== WebSocket.OPEN) {
-		throw new Error('Not connected to server');
+		throw new Error(i18n.t('tp.notConnected'));
 	}
 	ws.send(JSON.stringify({ t: 'assistant-answer', assistantSessionId: sessionId, askId, answers }));
 }
@@ -1612,7 +1613,7 @@ export async function assistantAnswer(sessionId: string, askId: string, answers:
 export async function assistantCancel(sessionId: string): Promise<void> {
 	await connectWs();
 	if (!ws || ws.readyState !== WebSocket.OPEN) {
-		throw new Error('Not connected to server');
+		throw new Error(i18n.t('tp.notConnected'));
 	}
 	ws.send(JSON.stringify({ t: 'assistant-cancel', assistantSessionId: sessionId }));
 }
