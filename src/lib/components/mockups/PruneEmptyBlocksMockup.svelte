@@ -46,7 +46,7 @@
 	     happens at send time; the template text is never modified. -->
 	<div class="note">
 		<Icon name="check" class="w-3 h-3" strokeWidth={2.25} />
-		<span>Prunes only what's sent. Your template text is never edited.</span>
+		<span>{i18n.t('mk.prunesSent')}</span>
 	</div>
 </div>
 

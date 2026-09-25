@@ -2253,7 +2253,7 @@ export const zh: Record<string, string> = {
 	'mk.allowed': '已允许',
 	'mk.off': '关',
 	'mk.on': '开',
-	'mk.prunesSent': "只修剪已发送的内容。",
+	'mk.prunesSent': '只修剪已发送的内容。你的模板文字不会被编辑。',
 	'mk.notAllowed': '不允许访问',
 	'mk.hostAlways': '本机始终被允许，因此你不会把自己锁在外面。',
 	'mk.narrator': '你是叙述者。',

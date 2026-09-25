@@ -2349,7 +2349,7 @@ export const en: Record<string, string> = {
 	'mk.allowed': 'Allowed',
 	'mk.off': 'Off',
 	'mk.on': 'On',
-	'mk.prunesSent': "Prunes only what's sent.",
+	'mk.prunesSent': "Prunes only what's sent. Your template text is never edited.",
 	'mk.notAllowed': 'Not allowed',
 	'mk.hostAlways': 'This computer is always allowed, so you can never lock yourself out.',
 	'mk.narrator': 'You are the narrator.',
