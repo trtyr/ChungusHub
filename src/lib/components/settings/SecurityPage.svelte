@@ -124,7 +124,7 @@
 		try {
 			applyAccess(await getAccessInfo());
 		} catch (e) {
-			accessError = e instanceof Error ? e.message : 'Failed to load access list';
+			accessError = e instanceof Error ? e.message : i18n.t('sec.loadAccess');
 		}
 	}
 

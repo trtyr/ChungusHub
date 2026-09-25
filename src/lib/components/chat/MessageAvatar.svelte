@@ -61,7 +61,7 @@
 		class:clickable
 		onclick={handleClick}
 		disabled={!clickable}
-		aria-label={clickable ? `View ${name} portrait` : `${name} portrait`}
+		aria-label={clickable ? i18n.t('sb.viewPortrait', { name }) : i18n.t('sb.portraitAlt', { name })}
 	>
 		{#if portraitUrl}
 			<img
