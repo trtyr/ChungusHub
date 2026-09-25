@@ -74,3 +74,6 @@ temp.md
 # Cache
 .cache/
 .turbo/
+
+# pi session state (goals, events) — machine-local, not repo content
+.pi/
