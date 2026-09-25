@@ -20,7 +20,7 @@
 	let { days, now }: { days: ActiveDay[]; now: number } = $props();
 
 	/** Monday first, so a weekend reads as the pair of rows at the bottom. */
-	const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+	const WEEKDAYS = ['stv.wMon', 'stv.wTue', 'stv.wWed', 'stv.wThu', 'stv.wFri', 'stv.wSat', 'stv.wSun'];
 
 	let scroller = $state<HTMLDivElement | null>(null);
 	let byDay = $derived(new Map(days.map((d) => [d.at, d.count])));

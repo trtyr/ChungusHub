@@ -30,6 +30,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	} from '$lib/types/llm';
 	import Toggle from '$lib/components/ui/Toggle.svelte';
 	import { formatPricePerMillion, formatContext, formatMonthYear } from '$lib/utils/modelFormat';
+	import { labelT } from '$lib/i18n/labels';
 	import {
 		SAMPLING_SLIDERS,
 		SERVICE_TIERS,
@@ -495,8 +496,8 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						{#if hasStats}
 							<div class="spec-stats">
 								{#if ctx}<div class="stat"><span class="stat-label">{i18n.t('ce.statContext')}</span><span class="stat-value">{ctx}</span></div>{/if}
-								{#if inPrice}<div class="stat"><span class="stat-label">{i18n.t('ce.statInput')}</span><span class="stat-value">{inPrice}</span></div>{/if}
-								{#if outPrice}<div class="stat"><span class="stat-label">{i18n.t('ce.statOutput')}</span><span class="stat-value">{outPrice}</span></div>{/if}
+								{#if inPrice}<div class="stat"><span class="stat-label">{i18n.t('ce.statInput')}</span><span class="stat-value">{labelT(inPrice)}</span></div>{/if}
+								{#if outPrice}<div class="stat"><span class="stat-label">{i18n.t('ce.statOutput')}</span><span class="stat-value">{labelT(outPrice)}</span></div>{/if}
 								{#if cutoff}<div class="stat"><span class="stat-label">{i18n.t('ce.statKnowledge')}</span><span class="stat-value">{cutoff}</span></div>{/if}
 							</div>
 						{/if}

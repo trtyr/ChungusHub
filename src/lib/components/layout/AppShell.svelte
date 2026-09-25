@@ -228,7 +228,7 @@
 				phase = 'maintenance';
 				return;
 			}
-			error = e instanceof Error ? e.message : 'Failed to initialize application';
+			error = e instanceof Error ? e.message : i18n.t('app.initFail');
 			console.error('Initialization error:', e);
 			phase = 'error';
 		}

@@ -46,7 +46,7 @@
 				phase = 'denied';
 				return;
 			}
-			error = e instanceof Error ? e.message : 'Failed to open the debug window';
+			error = e instanceof Error ? e.message : i18n.t('dbg.openFail');
 			console.error('Debug window initialization error:', e);
 			phase = 'error';
 		}

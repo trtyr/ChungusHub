@@ -124,6 +124,7 @@ const ZH: Record<string, string> = {
 	"Not valid JSON.": 'JSON 无效。',
 	"No regex rules found. Expected a rules export or a SillyTavern regex script.": '未找到正则规则。需要规则导出或 SillyTavern 正则脚本。',
 	"Not a lorebook: expected a JSON object.": '不是世界书：应为 JSON 对象。',
+	'Free': '免费',
 };
 
 /** Translate a store-sourced label into the active language; unknown labels pass through. */

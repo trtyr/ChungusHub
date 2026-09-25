@@ -39,7 +39,7 @@ export interface CapabilityGroup {
 export const CAPABILITY_GROUPS: CapabilityGroup[] = [
 	{
 		id: 'core',
-		label: 'Core',
+		label: 'cap.grpcore',
 		alwaysOn: true,
 		whenToReach:
 			'reading anything, finding the id for it, and putting a question to the user when the answer is only theirs to give. The file tools read what the user attached to this conversation as reference material: read-only, addressed by line number, and search first on anything long.',
@@ -60,7 +60,7 @@ export const CAPABILITY_GROUPS: CapabilityGroup[] = [
 	},
 	{
 		id: 'navigation',
-		label: 'Navigation',
+		label: 'cap.grpnavigation',
 		defaultOff: true,
 		whenToReach:
 			'pointing the user at the app itself. The `setting` kind is a read-only catalog of the app\'s own settings (read it with the Core tools): answer "what does X do" from it and `navigate` the user to the control. You never change app settings yourself. `navigate` also jumps to a character, persona, message, or chat.',
@@ -70,7 +70,7 @@ export const CAPABILITY_GROUPS: CapabilityGroup[] = [
 	},
 	{
 		id: 'writing',
-		label: 'Writing',
+		label: 'cap.grpwriting',
 		whenToReach:
 			'creating and changing characters, personas, lorebook records and messages (one target at a time, or every match of a filter at once). It also covers an entry\'s ART (edit_character_images): copying a picture from an upload, or from another entry, is a write and not a look.',
 		describe:
@@ -79,7 +79,7 @@ export const CAPABILITY_GROUPS: CapabilityGroup[] = [
 	},
 	{
 		id: 'deleting',
-		label: 'Deleting',
+		label: 'cap.grpdeleting',
 		experimental: true,
 		whenToReach: 'removing an entry, a whole book, or a message. Permanent.',
 		describe:
@@ -88,35 +88,35 @@ export const CAPABILITY_GROUPS: CapabilityGroup[] = [
 	},
 	{
 		id: 'lorebook',
-		label: 'Lorebook',
+		label: 'cap.grplorebook',
 		whenToReach: 'the world facts a chat injects: reading any book in full, writing its entries, and linking a book to a character or persona so it fires at all.',
 		describe: 'Reading and writing lorebook entries, and linking a book to a character so it actually injects.',
 		tools: ['read_lorebook_entries', 'create_lorebook_entry', 'edit_lorebook_entry', 'delete_lorebook_entry', 'manage_entry_lorebooks']
 	},
 	{
 		id: 'memory',
-		label: 'Memory',
+		label: 'cap.grpmemory',
 		whenToReach: "a chat's long-term memory: what is folded away, and correcting a summary that misremembers.",
 		describe: 'Reading what a chat has folded into long-term memory, and correcting a summary that misremembers.',
 		tools: ['read_memory_state', 'edit_memory_episode']
 	},
 	{
 		id: 'story',
-		label: 'Story operations',
+		label: 'cap.grpstoryoperations',
 		whenToReach: 'running the workspace around a story: starting a chat, steering the next generation, switching the active persona, retitling, and a character\'s alternate openings.',
 		describe: 'Starting chats, steering the next reply, switching the active persona, renaming, and alternate greetings.',
 		tools: ['create_chat', 'add_steering', 'set_active_persona', 'rename_chat', 'manage_greetings']
 	},
 	{
 		id: 'versions',
-		label: 'Versions',
+		label: 'cap.grpversions',
 		whenToReach: "a character's named variants. Leave them alone unless the user brings them up.",
 		describe: "Reading and managing a character's named variants.",
 		tools: ['read_character_versions', 'manage_character_versions']
 	},
 	{
 		id: 'images',
-		label: 'Images',
+		label: 'cap.grpimages',
 		defaultOff: true,
 		whenToReach:
 			'LOOKING at the art a character or persona owns. Every read already reports WHAT art an entry has, so reach for this only when the pictures themselves matter; a read also attaches the portrait while this is on, so an entry you have just read needs no second call to see.',
@@ -126,7 +126,7 @@ export const CAPABILITY_GROUPS: CapabilityGroup[] = [
 	},
 	{
 		id: 'diagnostics',
-		label: 'Diagnostics',
+		label: 'cap.grpdiagnostics',
 		whenToReach: '"why did the last generation say that" and "what is eating my context": the captured prompt log, and which connection serves each routing point.',
 		describe: 'The captured prompt log and which connection serves each routing point, for "why did the last reply say that".',
 		tools: ['read_prompt_log', 'read_prompt_entry', 'read_connection_state']
@@ -162,19 +162,19 @@ export const DEFAULT_ENABLED_GROUPS: readonly string[] = CAPABILITY_GROUPS.filte
 export const CAPABILITY_PRESETS: { id: string; label: string; describe: string; groups: readonly string[] }[] = [
 	{
 		id: 'simple',
-		label: 'Simple',
+		label: 'cap.grpsimple',
 		describe: 'Everything the story itself needs: writing, the lorebook, memory, story operations and versions. Nothing that deletes.',
 		groups: ['core', 'writing', 'lorebook', 'memory', 'story', 'versions']
 	},
 	{
 		id: 'standard',
-		label: 'Standard',
+		label: 'cap.grpstandard',
 		describe: 'Simple, plus looking at the art your entries own. Every family except Navigation, Deleting and Diagnostics.',
 		groups: ['core', 'writing', 'lorebook', 'memory', 'story', 'versions', 'images']
 	},
 	{
 		id: 'full',
-		label: 'Full',
+		label: 'cap.grpfull',
 		describe: 'Standard, plus jumping you around the app, the prompt log and connection reads. Only the experimental Deleting family stays off.',
 		groups: CAPABILITY_GROUPS.filter((g) => !g.experimental).map((g) => g.id)
 	}

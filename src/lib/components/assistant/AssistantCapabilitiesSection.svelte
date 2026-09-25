@@ -103,7 +103,7 @@
 	{#each catalog?.groups ?? [] as group (group.id)}
 		<div class="cap-card" use:toggleRow>
 			<div class="cap-text">
-				<span class="cap-name">{group.label}</span>
+				<span class="cap-name">{i18n.t(group.label)}</span>
 				{#if group.experimental}
 					<span class="cap-experimental">{i18n.t('asm.experimental')}</span>
 				{/if}
