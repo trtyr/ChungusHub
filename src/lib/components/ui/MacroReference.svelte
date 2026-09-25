@@ -81,7 +81,7 @@
 		<Icon name="sparkles" class="w-3.5 h-3.5 shrink-0 text-accent" />
 		<span class="text-sm font-ui font-semibold text-text-primary">{i18n.t('ui.availableMacros')}</span>
 		<span class="hidden sm:inline text-xs font-ui text-text-muted">
-			Click to copy · a macro resolves wherever its data exists
+			{i18n.t('ui.clickCopyLine')}
 		</span>
 	</summary>
 
@@ -125,7 +125,7 @@
 					</div>
 				{:else}
 					<p class="text-[11px] font-ui text-text-muted italic">
-						No controls yet. Add one above to expose its macro here.
+						{i18n.t('ui.noControlsYet')}
 					</p>
 				{/if}
 			</div>

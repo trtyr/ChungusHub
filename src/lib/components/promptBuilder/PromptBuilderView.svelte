@@ -641,7 +641,7 @@
 				</span>
 			{/if}
 			<span class="pb-sec-spacer"></span>
-			<MockupTip text="Only changes the token count shown here, never what gets sent. Raw counts the text as written, Expanded counts what it weighs once resolved.">
+			<MockupTip text={i18n.t('pbv.tipCounts')}>
 				{#snippet trigger()}
 					<button
 						type="button"
@@ -824,7 +824,7 @@
 		<section class="pb-sec">
 			<div class="pb-sec-head">
 				<span class="pb-sec-title">{i18n.t('pbv.controls')}</span>
-				<InfoTip text="Widgets on the Preset Controls page, each bound to a macro you can drop into the prompt items above." />
+				<InfoTip text={i18n.t('pbv.tipWidgets')} />
 				{#if (currentPreset.controls?.length ?? 0) > 0}
 					<span class="pb-sec-meta">{currentPreset.controls?.length}</span>
 				{/if}
@@ -913,7 +913,7 @@
 		<section class="pb-sec">
 			<div class="pb-sec-head">
 				<span class="pb-sec-title">{i18n.t('pbv.sections')}</span>
-				<InfoTip text="Headings on the Preset Controls page. A control joins one by naming its key, and declaring it here gives that key a title, an icon and a place in the order." />
+				<InfoTip text={i18n.t('pbv.tipHeadings')} />
 				{#if sections.length > 0}
 					<span class="pb-sec-meta">{sections.length}</span>
 				{/if}
@@ -1036,7 +1036,7 @@
 		<section class="pb-sec">
 			<div class="pb-sec-head">
 				<span class="pb-sec-title">{i18n.t('pbv.carriedRegex')}</span>
-				<InfoTip text="Rules that ship inside the preset, run on top of the reader's own, and withdraw when the preset does. Each switch is the position its rule arrives in; a reader can move it, but the rule stays yours." />
+				<InfoTip text={i18n.t('pbv.tipRules')} />
 				{#if (currentPreset.regexRules?.length ?? 0) > 0}
 					<span class="pb-sec-meta">{currentPreset.regexRules?.length}</span>
 				{/if}
@@ -1050,7 +1050,7 @@
 		<section class="pb-sec">
 			<div class="pb-sec-head">
 				<span class="pb-sec-title">{i18n.t('pbv.identity')}</span>
-				<InfoTip text="What a reader meets before they touch a single control." />
+				<InfoTip text={i18n.t('pbv.tipFirstMeet')} />
 			</div>
 			<PresetIdentityEditor meta={currentPreset.meta} onChange={setMeta} />
 		</section>
@@ -1070,7 +1070,7 @@
 				<div class="pb-prune-text">
 					<span class="pb-prune-title">{i18n.t('pbv.pruneEmpty')}</span>
 					<MockupTip
-						text="Drops a plain <tag> block, framing and all, when every macro inside it resolves empty. Static-only blocks are never touched."
+						text={i18n.t('pbv.tipTagBlock')}
 					>
 						<PruneEmptyBlocksMockup />
 					</MockupTip>
