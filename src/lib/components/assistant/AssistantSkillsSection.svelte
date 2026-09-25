@@ -226,7 +226,7 @@
 			if (file.size > 2 * 1024 * 1024) throw new Error('skill files must be smaller than 2 MB');
 			stage('import', parseSkillsFile(await file.text()));
 		} catch (e) {
-			toastStore.failed(`import "${file.name}"`, e);
+			toastStore.failed(i18n.t('f.importNamed3', { name: file.name }), e);
 		}
 	}
 

@@ -36,23 +36,23 @@ export interface ScopeChoice {
  *  that show one note at a time. */
 export function scopeChoices(target: SteeringTarget): ScopeChoice[] {
 	return [
-		{ scope: 'global', label: 'Global', hint: 'Every chat, every character', available: true },
+		{ scope: 'global', label: i18n.t('ste.global'), hint: i18n.t('ste.globalHint'), available: true },
 		{
 			scope: 'character',
-			label: 'Character',
-			hint: 'Any chat with this character',
+			label: i18n.t('role.character'),
+			hint: i18n.t('ste.charHint'),
 			available: target.characterId !== null
 		},
 		{
 			scope: 'version',
-			label: 'Version',
-			hint: 'Only while the chat stays pinned to this version',
+			label: i18n.t('vm.versions'),
+			hint: i18n.t('ste.versionHint'),
 			available: target.characterVersionId !== null
 		},
 		{
 			scope: 'chat',
-			label: 'This chat',
-			hint: 'This story only',
+			label: i18n.t('ste.thisChat'),
+			hint: i18n.t('ste.chatHint'),
 			available: target.chatId !== null
 		}
 	];
@@ -66,7 +66,7 @@ export function versionChoices(target: SteeringTarget): { id: string; label: str
 	if (!target.characterId) return [];
 	return characterLibraryStore
 		.versionsFor(target.characterId)
-		.map((v) => ({ id: v.id, label: v.name.trim() || 'Unnamed version' }));
+		.map((v) => ({ id: v.id, label: v.name.trim() || i18n.t('ste.unnamedVersion') }));
 }
 
 /** A version's own name, no owner prefix: for the picker, where the character is
@@ -74,7 +74,7 @@ export function versionChoices(target: SteeringTarget): { id: string; label: str
 export function versionLabel(id: string): string {
 	const version = characterLibraryStore.getVersion(id);
 	if (!version) return i18n.t('chat.deletedVersion');
-	return version.name.trim() || 'Unnamed version';
+	return version.name.trim() || i18n.t('ste.unnamedVersion');
 }
 
 /** The id a scope binds to for a given target: null for global, and null for a bound
@@ -93,13 +93,13 @@ export function scopeIdFor(scope: SteeringScope, target: SteeringTarget): string
 export function bindingLabel(note: SteeringNote): string {
 	switch (note.scope) {
 		case 'global':
-			return 'Global';
+			return i18n.t('ste.global');
 		case 'character':
-			return note.scopeId ? characterName(note.scopeId) : 'Unbound character';
+			return note.scopeId ? characterName(note.scopeId) : i18n.t('ste.unboundChar');
 		case 'version':
-			return note.scopeId ? versionName(note.scopeId) : 'Unbound version';
+			return note.scopeId ? versionName(note.scopeId) : i18n.t('ste.unboundVersion');
 		case 'chat':
-			return note.scopeId ? chatTitle(note.scopeId) : 'Unbound chat';
+			return note.scopeId ? chatTitle(note.scopeId) : i18n.t('ste.unboundChat');
 	}
 }
 
@@ -112,7 +112,7 @@ export function bindingIsForeign(note: SteeringNote, target: SteeringTarget): bo
 
 function characterName(id: string): string {
 	const entry = characterLibraryStore.entries.find((e) => e.id === id && e.type === 'character');
-	return entry?.identity.name?.trim() || (entry ? 'Unnamed character' : 'Deleted character');
+	return entry?.identity.name?.trim() || (entry ? i18n.t('setup.unnamedPersona') : i18n.t('chat.deletedVersion'));
 }
 
 function versionName(id: string): string {
@@ -125,5 +125,5 @@ function versionName(id: string): string {
 
 function chatTitle(id: string): string {
 	const chat = chatStore.chats.find((c) => c.id === id);
-	return chat?.title?.trim() || (chat ? 'Untitled chat' : 'Deleted chat');
+	return chat?.title?.trim() || (chat ? i18n.t('lbw.untitledChat') : i18n.t('chat.deletedVersion'));
 }

@@ -248,7 +248,7 @@
 				landed.push(book.id);
 				toastStore.success(i18n.t('t.importedBook', { name: book.name, n: book.entries.length }));
 			} catch (err) {
-				toastStore.failed(`import "${file.name}"`, err);
+				toastStore.failed(i18n.t('f.importNamed3', { name: file.name }), err);
 			}
 		}
 		// One book opens so it never has to be hunted for; a batch does not, since thirty

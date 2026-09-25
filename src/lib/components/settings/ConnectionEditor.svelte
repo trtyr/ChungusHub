@@ -676,10 +676,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				{/if}
 			</div>
 			{#if contextBudgetDead}
-				<p class="mode-hint warn">
-					The {gen.maxTokens.toLocaleString()}-token response reserve eats this entire window, leaving nothing for
-					the prompt. Lower the max tokens or raise the context window.
-				</p>
+				<p class="mode-hint warn">{i18n.t('ce.budgetWarn', { n: gen.maxTokens.toLocaleString() })}</p>
 			{/if}
 			{#if ctxOverModelWindow}
 				<p class="mode-hint warn">

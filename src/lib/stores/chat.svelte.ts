@@ -591,7 +591,7 @@ class ChatStore {
 		try {
 			await db.deleteChat(chatId);
 		} catch (e) {
-			toastStore.failed(`delete "${chat.title}"`, e);
+			toastStore.failed(i18n.t('f.delNamed', { name: chat.title ?? '' }), e);
 			return;
 		}
 		const wasActive = this.activeChatId === chatId;
@@ -646,7 +646,7 @@ class ChatStore {
 		if (streaming) {
 			toastStore.warning(i18n.t('t.keptStreaming', { name: streaming.title ?? '' }));
 		}
-		if (failure) toastStore.failed(`delete "${failure.title}"`, failure.cause);
+		if (failure) toastStore.failed(i18n.t('f.delNamed', { name: failure.title ?? '' }), failure.cause);
 	}
 
 	/**

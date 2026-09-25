@@ -53,12 +53,12 @@ export function dayBucket(timestamp: number, now: number = Date.now()): DayBucke
 export function formatRelativeTime(timestamp: number, now: number = Date.now()): string {
 	const diff = now - timestamp;
 	if (diff < 45_000) return i18n.t('date.justNow');
-	if (diff < 3_600_000) return `${Math.max(1, Math.floor(diff / 60_000))}m ago`;
-	if (diff < 86_400_000) return `${Math.floor(diff / 3_600_000)}h ago`;
+	if (diff < 3_600_000) return i18n.t('date.minAgo', { n: Math.max(1, Math.floor(diff / 60_000)) });
+	if (diff < 86_400_000) return i18n.t('date.hourAgo', { n: Math.floor(diff / 3_600_000) });
 
 	// Past 24 hours at least one midnight has been crossed, so this is never 0.
 	const days = calendarDaysAgo(timestamp, now);
-	if (days === 1) return 'Yesterday';
-	if (days < 7) return `${days}d ago`;
+	if (days === 1) return i18n.t('date.yesterday');
+	if (days < 7) return i18n.t('date.daysAgo', { n: days });
 	return formatDate(timestamp);
 }

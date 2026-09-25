@@ -123,7 +123,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			if (entry) await characterLibraryStore.updateEntryImage(entry.id, file);
 		} catch (error) {
 			console.error('Saving the persona image failed:', error);
-			toastStore.failed(`save "${file.name}"`, error);
+			toastStore.failed(i18n.t('f.saveNamed', { name: file.name }), error);
 		} finally {
 			imageLoading = false;
 			input.value = '';

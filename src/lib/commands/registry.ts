@@ -223,7 +223,7 @@ export const COMMANDS: CommandDef[] = [
 		icon: 'plus',
 		describe: 'cmd.new',
 		unavailable: (ctx) =>
-			ctx.characterEntryId ? null : "This story's character is gone from the library",
+			ctx.characterEntryId ? null : i18n.t('cmd.charGone'),
 		run: (_arg, ctx) => {
 			// Same guard as the menu row: createChat opens the chat it makes, which swaps out
 			// the state a running stream writes into.
@@ -299,7 +299,7 @@ export const COMMANDS: CommandDef[] = [
 		icon: 'user',
 		describe: 'cmd.character',
 		unavailable: (ctx) =>
-			ctx.characterEntryId ? null : "This story's character is gone from the library",
+			ctx.characterEntryId ? null : i18n.t('cmd.charGone'),
 		run: (_arg, ctx) => uiStore.openLibraryEntry(ctx.characterEntryId!, 'character', flush)
 	},
 	{

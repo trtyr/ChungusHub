@@ -335,8 +335,8 @@
 						>
 							<Icon name="sparkles" class="w-3.5 h-3.5" /> {summariseLabel}
 						</button>
-						<button type="button" class="memory-btn" onclick={askRebuild}><Icon name="refresh" class="w-3.5 h-3.5" /> Forget and rebuild</button>
-						<button type="button" class="memory-btn memory-btn-danger" onclick={() => (forgetConfirmOpen = true)}><Icon name="trash" class="w-3.5 h-3.5" /> Forget</button>
+						<button type="button" class="memory-btn" onclick={askRebuild}><Icon name="refresh" class="w-3.5 h-3.5" /> {i18n.t('mem.rebuildTitle')}</button>
+						<button type="button" class="memory-btn memory-btn-danger" onclick={() => (forgetConfirmOpen = true)}><Icon name="trash" class="w-3.5 h-3.5" /> {i18n.t('mem.forgetBtn')}</button>
 					{/if}
 				</div>
 			</section>
@@ -580,7 +580,7 @@
 	open={forgetConfirmOpen}
 	title={i18n.t('mem.forgetTitle')}
 	message={i18n.t('mem.forgetAsk', { n: allSummaries })}
-	confirmLabel="Forget"
+	confirmLabel={i18n.t('mem.forgetBtn')}
 	variant="danger"
 	destructive
 	holdMs={holdMsForBlast(allSummaries)}

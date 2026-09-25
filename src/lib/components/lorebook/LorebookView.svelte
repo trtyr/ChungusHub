@@ -200,7 +200,7 @@
 		try {
 			await lorebookStore.setCover(selectedBook.id, file);
 		} catch (error) {
-			toastStore.failed(`save "${file.name}"`, error);
+			toastStore.failed(i18n.t('f.saveNamed', { name: file.name }), error);
 		} finally {
 			coverBusy = false;
 		}

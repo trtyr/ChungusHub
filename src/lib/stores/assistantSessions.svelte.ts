@@ -591,7 +591,7 @@ class AssistantSessionStore {
 		try {
 			await db.deleteAssistantSession(sessionId);
 		} catch (e) {
-			toastStore.failed(`delete "${session.title}"`, e);
+			toastStore.failed(i18n.t('f.delNamed', { name: session.title ?? '' }), e);
 			return;
 		}
 
@@ -614,7 +614,7 @@ class AssistantSessionStore {
 		try {
 			await db.updateAssistantSession({ id: sessionId, title: clean });
 		} catch (e) {
-			toastStore.failed(`rename the session to "${clean}"`, e);
+			toastStore.failed(i18n.t('f.renameSessionTo', { name: clean }), e);
 			return;
 		}
 		this.bumpSession(sessionId, { title: clean });

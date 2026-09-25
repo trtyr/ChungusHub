@@ -92,7 +92,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			newName = '';
 			creating = false;
 		} catch (error) {
-			toastStore.failed(`create the version "${name}"`, error);
+			toastStore.failed(i18n.t('f.createVersion', { name }), error);
 		} finally {
 			busy = false;
 		}
@@ -125,7 +125,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			await characterLibraryStore.renameVersion(id, name);
 			renamingId = null;
 		} catch (error) {
-			toastStore.failed(`rename the version to "${name}"`, error);
+			toastStore.failed(i18n.t('f.renameVersion', { name }), error);
 		} finally {
 			busy = false;
 		}

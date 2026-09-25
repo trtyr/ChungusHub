@@ -53,6 +53,8 @@ const MAX_VISIBLE = 3;
 
 /** An embedded reason past this is a stack trace or a page of provider JSON, and neither is
  *  something the reader can act on. */
+import { i18n } from '$lib/i18n/i18n.svelte';
+
 const REASON_CAP = 160;
 
 /** Fold a caught value into the tail of a sentence: no surrounding whitespace, no trailing
@@ -74,7 +76,8 @@ function reasonText(cause: unknown): string {
  */
 export function failureText(act: string, cause?: unknown): string {
 	const reason = reasonText(cause);
-	return reason ? `Couldn't ${act}: ${reason}` : `Couldn't ${act}`;
+	const verb = act.startsWith('f.') || act.startsWith('t.') ? i18n.t(act) : act;
+	return reason ? `${verb}失败：${reason}` : `${verb}失败`;
 }
 
 class ToastStore {

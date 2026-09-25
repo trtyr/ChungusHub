@@ -47,7 +47,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			onClose();
 		} catch (error) {
 			console.error('Converting the entry failed:', error);
-			toastStore.failed(`create a ${targetLabel} from this`, error);
+			toastStore.failed(i18n.t('f.createFrom', { label: targetLabel }), error);
 		} finally {
 			busy = false;
 		}

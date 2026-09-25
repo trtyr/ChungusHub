@@ -451,7 +451,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				parsed.push({ result, hasBook, importBook: hasBook });
 			} catch (error) {
 				console.error(`Failed to import ${file.name}:`, error);
-				toastStore.failed(`import "${file.name}"`, error);
+				toastStore.failed(i18n.t('f.importNamed3', { name: file.name }), error);
 			}
 		}
 		input.value = '';
@@ -491,7 +491,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			} catch (error) {
 				const name = item.result.character.name || 'character';
 				console.error(`Failed to import ${name}:`, error);
-				toastStore.failed(`import "${name}"`, error);
+				toastStore.failed(i18n.t('f.importNamed3', { name }), error);
 			}
 		}
 		if (successCount > 0) {

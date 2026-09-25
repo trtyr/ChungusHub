@@ -625,7 +625,7 @@
 		if (stale) {
 			toastStore.error(i18n.t('t.memoryDangling', { name: chat.title ?? '' }));
 		} else {
-			toastStore.failed(`duplicate "${chat.title}"`, e);
+			toastStore.failed(i18n.t('f.dupNamed', { name: chat.title ?? '' }), e);
 		}
 	}
 

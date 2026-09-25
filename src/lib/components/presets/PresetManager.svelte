@@ -118,7 +118,7 @@
 
 	async function selectPreset(presetId: string): Promise<void> {
 		if (!presetId || presetId === activeId) return;
-		await run('switch the preset', () => presetService.activatePreset(presetId));
+		await run('f.switchPreset', () => presetService.activatePreset(presetId));
 	}
 
 	async function createPreset(): Promise<void> {
@@ -157,7 +157,7 @@
 
 	async function copyJson(): Promise<void> {
 		if (!activePreset) return;
-		await run('copy the preset JSON', async () => {
+		await run('f.presetJsonCopied', async () => {
 			await copyText(presetService.exportPresetJson(activePreset.id));
 			toastStore.success(i18n.t('t.presetJsonCopied'));
 		});
@@ -254,7 +254,7 @@
 			holdMs: holdMsForBlast(n)
 		});
 		if (!ok) return;
-		await run('restore the default presets', async () => {
+		await run('t.defaultsRestored', async () => {
 			await presetService.restoreDefaults();
 			toastStore.success(i18n.t('t.defaultsRestored'));
 		});
@@ -296,7 +296,7 @@
 			type="button"
 			class="pm-save"
 			disabled={busy}
-			onclick={() => run('save the preset', async () => { await onSave?.(); })}
+			onclick={() => run('t.presetSaved', async () => { await onSave?.(); })}
 		>
 			<Icon name="check" class="w-3.5 h-3.5" strokeWidth={2} />
 			Save
