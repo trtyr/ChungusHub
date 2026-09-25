@@ -511,7 +511,7 @@
 										aria-expanded={descriptionExpanded}
 										onclick={() => (descriptionExpanded = !descriptionExpanded)}
 									>
-										{descriptionExpanded ? 'Show less' : 'Read more'}
+										{i18n.t(descriptionExpanded ? 'pcv.showLess' : 'pcv.readMore')}
 									</button>
 								{/if}
 							{/if}
@@ -606,12 +606,12 @@
 						{#if modifiedCount > 0}
 							<span class="pcv-status-dot"></span>
 							<span class="pcv-status-text">
-								{modifiedCount} control{modifiedCount === 1 ? '' : 's'} changed from {selectedSetup ? `“${selectedSetup.name}”` : "the author's defaults"}
+								{i18n.t('pcv.changedFrom', { n: modifiedCount, name: selectedSetup ? selectedSetup.name : i18n.t('pcv.authorDefaults') })}
 							</span>
 							<button type="button" class="pcv-status-reset" onclick={resetAll}>{i18n.t('pcv.resetAll')}</button>
 						{:else}
 							<span class="pcv-status-text pcv-status-text--calm">
-								{selectedSetup ? `Every control matches “${selectedSetup.name}”` : "Every control is on the author's defaults"}
+								{selectedSetup ? i18n.t('pcv.allMatch', { name: selectedSetup.name }) : i18n.t('pcv.allDefaults')}
 							</span>
 						{/if}
 						<span class="pcv-status-spacer"></span>
