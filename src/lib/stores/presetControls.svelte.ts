@@ -84,7 +84,7 @@ class PresetControlsStore {
 			// Boot already orders these (architecture/preset-authoring.md), so this throws rather
 			// than degrades, and the old flat row is still on disk to run against next boot.
 			if (presets.length === 0) {
-				throw new Error('Preset control values cannot be carried over before the presets load.');
+				throw new Error(i18n.t('pcv.carryBeforeSave'));
 			}
 			for (const preset of presets) seeded[preset.id] = { ...global };
 		}

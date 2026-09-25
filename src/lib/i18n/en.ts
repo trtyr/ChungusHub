@@ -917,7 +917,7 @@ export const en: Record<string, string> = {
 	'lib.onlySpriteDefault': 'Only a sprite can be the default.',
 	'lib.noActiveVersion': 'Import file marks no active character version.',
 	'ph.alreadyWaiting': 'A prompt is already waiting for review.',
-	'pcv.carryBeforeSave': 'Preset control values cannot be carried over before the preset has been saved.',
+	'pcv.carryBeforeSave': 'Preset control values cannot be carried over before the presets load.',
 	'rx.fileTooBig': 'Rule files must be smaller than 2 MB.',
 	'chat.newNoCharacter': 'New chat: this story has no library character',
 	'ce.addKeyToLoad': 'Add your API key to load models.',
