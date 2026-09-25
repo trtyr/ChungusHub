@@ -16,6 +16,7 @@
 	 * and what gets saved is always the card being looked at.
 	 */
 	import Dialog from '$lib/components/ui/Dialog.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Toggle from '$lib/components/ui/Toggle.svelte';
 	import Alert from '$lib/components/ui/Alert.svelte';
@@ -120,7 +121,7 @@
 		return new Promise((resolve, reject) => {
 			canvas?.toBlob((blob) => {
 				if (blob) resolve(blob);
-				else reject(new Error('Could not encode the picture'));
+				else reject(new Error(i18n.t('st.encodeFail')));
 			}, 'image/png');
 		});
 	}
@@ -141,24 +142,24 @@
 			// Clipboard images need a secure context and a browser that takes them. Failing
 			// loud here is right: silently doing nothing would read as a broken button.
 			if (!navigator.clipboard || typeof ClipboardItem === 'undefined') {
-				throw new Error('This browser cannot copy images. Save it instead.');
+				throw new Error(i18n.t('st.copyFail'));
 			}
 			await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-			toastStore.success('Picture copied');
+			toastStore.success(i18n.t('st.copied'));
 		} catch (e) {
 			toastStore.failed('copy the picture', e);
 		}
 	}
 </script>
 
-<Dialog open={showing} onClose={() => (open = false)} title="Make a picture" size="md">
+<Dialog open={showing} onClose={() => (open = false)} title={i18n.t('st.makePicture')} size="md">
 	<div class="poster-body">
 		{#if error}
-			<Alert message="Could not draw the picture. {error}" />
+			<Alert message={i18n.t('st.drawFail', { error })} />
 		{/if}
 
 		{#if cards.length > 1}
-			<div class="chips" role="tablist" aria-label="Pick a picture">
+			<div class="chips" role="tablist" aria-label={i18n.t('st.pickPicture')}>
 				{#each cards as card, i (card.id)}
 					<button
 						type="button"
@@ -179,25 +180,25 @@
 				bind:this={canvas}
 				width={POSTER_WIDTH}
 				height={POSTER_HEIGHT}
-				aria-label="{current?.label ?? 'Your stats'} as a picture"
+				aria-label={i18n.t('st.asPicture', { label: current?.label ?? i18n.t('welcome.yourStats') })}
 			></canvas>
 		</div>
 
 		{#if showsNames}
 			<label class="switch">
-				<Toggle checked={!anonymous} onchange={(next) => (anonymous = !next)} label="Show character names" />
+				<Toggle checked={!anonymous} onchange={(next) => (anonymous = !next)} label={i18n.t('st.showNames')} />
 				<span class="switch-text">
-					<span class="switch-title">Show character names</span>
+					<span class="switch-title">{i18n.t('st.showNames')}</span>
 					<span class="switch-note">
-						Off replaces every name with a placeholder. Portraits go with them.
+						{i18n.t('st.namesOff')}
 					</span>
 				</span>
 			</label>
 		{/if}
 
 		<div class="actions">
-			<Button variant="secondary" onclick={copy} disabled={drawing}>Copy</Button>
-			<Button variant="primary" onclick={save} disabled={drawing}>Save as PNG</Button>
+			<Button variant="secondary" onclick={copy} disabled={drawing}>{i18n.t('st.copy')}</Button>
+			<Button variant="primary" onclick={save} disabled={drawing}>{i18n.t('st.savePng')}</Button>
 		</div>
 	</div>
 </Dialog>

@@ -12,6 +12,7 @@
 	 * caller states the total separately, so nothing goes missing silently.
 	 */
 	import { characterLibraryStore } from '$lib/stores/characterLibrary.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { imageService } from '$lib/services/imageService';
 	import { portraitFocusAim } from '$lib/utils/portrait-focus';
 	import { count, plural, monthYearLabel } from '$lib/stats/format';
@@ -47,7 +48,7 @@
 	});
 
 	function nameFor(index: number, real: string): string {
-		return anonymous ? `Character ${index + 1}` : real;
+		return anonymous ? i18n.t('st.castN', { n: index + 1 }) : real;
 	}
 </script>
 

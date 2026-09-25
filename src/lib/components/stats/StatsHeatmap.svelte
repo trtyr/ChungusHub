@@ -14,6 +14,7 @@
 	 * square in it.
 	 */
 	import { dayLabel, plural } from '$lib/stats/format';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import { startOfLocalDay, nextLocalDay, type ActiveDay } from '$lib/stats/derive';
 
 	let { days, now }: { days: ActiveDay[]; now: number } = $props();
@@ -116,7 +117,7 @@
 			`${key.getFullYear()}-${`${key.getMonth() + 1}`.padStart(2, '0')}-${`${key.getDate()}`.padStart(2, '0')}`
 		);
 		if (count === null) return label;
-		return count ? `${plural(count, 'message')} on ${label}` : `Nothing on ${label}`;
+		return count ? i18n.t('st.onDay', { n: plural(count, 'message'), label }) : i18n.t('st.nothingOn', { label });
 	}
 </script>
 
@@ -166,11 +167,11 @@
 	</div>
 
 	<div class="legend">
-		<span>Quieter</span>
+		<span>{i18n.t('st.quieter')}</span>
 		{#each [0, 1, 2, 3, 4] as step (step)}
 			<div class="cell legend-cell" data-level={step}></div>
 		{/each}
-		<span>Busier</span>
+		<span>{i18n.t('st.busier')}</span>
 	</div>
 </div>
 

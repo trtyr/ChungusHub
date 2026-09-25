@@ -18,6 +18,7 @@
 	 * stop lining up with their labels.
 	 */
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import Alert from '$lib/components/ui/Alert.svelte';
 	import EmptyState from '$lib/components/ui/EmptyState.svelte';
@@ -96,7 +97,7 @@
 <div class="stats-panel">
 	<header class="overlay-header">
 		<div class="overlay-crumb">
-			<h2 class="overlay-subject">Your Writing So Far</h2>
+			<h2 class="overlay-subject">{i18n.t('stv.title')}</h2>
 			<span class="overlay-facts">
 				{#if snapshot}
 					Counted {momentLabel(snapshot.takenAt)}
@@ -116,15 +117,15 @@
 				disabled={!snapshot || snapshot.stats.effort.messages === 0}
 			>
 				<Icon name="image" class="w-4 h-4" strokeWidth={2} />
-				<span>Make a picture</span>
+				<span>{i18n.t('stv.makePicture')}</span>
 			</button>
 			<button
 				type="button"
 				class="overlay-action-btn"
 				onclick={() => void statsStore.refresh()}
 				disabled={statsStore.loading}
-				title="Count again"
-				aria-label="Count again"
+				title={i18n.t('stv.countAgain')}
+				aria-label={i18n.t('stv.countAgain')}
 			>
 				<Icon name="refresh" class="w-4 h-4" strokeWidth={2} />
 			</button>
@@ -133,13 +134,12 @@
 
 	<div class="body panel-scroll">
 		{#if statsStore.error}
-			<Alert message="Could not count your library. {statsStore.error}" />
+			<Alert message={i18n.t('stv.countFail', { error: statsStore.error ?? '' })} />
 		{:else if !snapshot}
 			<div class="waiting"><Spinner /></div>
 		{:else if snapshot.stats.effort.messages === 0}
-			<EmptyState icon="chart" title="Nothing to count yet">
-				Start a chat and this fills up on its own: every word, every night you wrote, everyone
-				you wrote with.
+			<EmptyState icon="chart" title={i18n.t('stv.nothingTitle')}>
+				{i18n.t('stv.nothingBody')}
 			</EmptyState>
 		{:else}
 			{@const stats = snapshot.stats}
@@ -148,47 +148,47 @@
 				<!-- The one number, and the sentence that makes it mean something. -->
 				<section class="hero">
 					<div class="hero-figure">{count(stats.effort.words)}</div>
-					<div class="hero-unit">words written</div>
+					<div class="hero-unit">{i18n.t('stv.wordsUnit')}</div>
 					{#if comparison}
-						<p class="hero-note">About as long as {comparisonLabel(comparison)}.</p>
+						<p class="hero-note">{i18n.t('stv.heroNote', { comparison: comparisonLabel(comparison) })}</p>
 					{/if}
 				</section>
 
 				<div class="tiles">
 					<div class="tile">
 						<span class="tile-figure">{count(stats.effort.messages)}</span>
-						<span class="tile-label">turns</span>
-						<span class="tile-note">{count(stats.story.messages)} of them on the branch you are reading</span>
+						<span class="tile-label">{i18n.t('stv.turnsLabel')}</span>
+						<span class="tile-note">{i18n.t('stv.turnsNote', { n: count(stats.story.messages) })}</span>
 					</div>
 					<div class="tile">
 						<span class="tile-figure">{count(stats.library.chats)}</span>
-						<span class="tile-label">{stats.library.chats === 1 ? 'chat' : 'chats'}</span>
-						<span class="tile-note">with {plural(stats.library.characters, 'character')}</span>
+						<span class="tile-label">{i18n.t('stv.chatsLabel')}</span>
+						<span class="tile-note">{i18n.t('stv.chatsNote', { characters: plural(stats.library.characters, 'character') })}</span>
 					</div>
 					<div class="tile">
 						<span class="tile-figure">{count(snapshot.days.length)}</span>
-						<span class="tile-label">days written on</span>
+						<span class="tile-label">{i18n.t('stv.daysLabel')}</span>
 						<span class="tile-note">
 							{#if snapshot.current.days > 0}
-								{plural(snapshot.current.days, 'day')} running right now
+								{i18n.t('stv.daysNoteNow', { n: plural(snapshot.current.days, 'day') })}
 							{:else}
-								Longest run: {plural(snapshot.longest.days, 'day')}
+								{i18n.t('stv.daysNoteRun', { n: plural(snapshot.longest.days, 'day') })}
 							{/if}
 						</span>
 					</div>
 					<div class="tile">
 						<span class="tile-figure">{count(stats.effort.userWords)}</span>
-						<span class="tile-label">words of your own</span>
+						<span class="tile-label">{i18n.t('stv.ownWords')}</span>
 						<span class="tile-note">
 							{#if share(stats.effort.userWords, stats.effort.words) !== null}
-								{share(stats.effort.userWords, stats.effort.words)}% of the page is you
+								{i18n.t('stv.shareNote', { n: share(stats.effort.userWords, stats.effort.words) ?? 0 })}
 							{/if}
 						</span>
 					</div>
 				</div>
 
 				<section class="block">
-					<h3 class="block-title">Day by day</h3>
+					<h3 class="block-title">{i18n.t('stv.dayByDay')}</h3>
 					<StatsHeatmap days={snapshot.days} now={snapshot.takenAt} />
 					<div class="facts">
 						{#if snapshot.busiest}
@@ -223,16 +223,16 @@
 
 				{#if castTotal > 0}
 					<section class="block">
-						<h3 class="block-title">Your cast</h3>
+						<h3 class="block-title">{i18n.t('stv.yourCast')}</h3>
 						<StatsCast cast={stats.cast} />
 						{#if castTotal > 6}
-							<p class="block-note">Showing the six you have written most with, of {count(castTotal)}.</p>
+							<p class="block-note">{i18n.t('stv.castNote', { n: count(castTotal) })}</p>
 						{/if}
 					</section>
 				{/if}
 
 				<section class="block">
-					<h3 class="block-title">When you write</h3>
+					<h3 class="block-title">{i18n.t('stv.whenYouWrite')}</h3>
 					<StatsClock hours={snapshot.hours} prime={snapshot.prime} />
 					<div class="facts">
 						{#if snapshot.prime}
@@ -253,20 +253,20 @@
 				</section>
 
 				<section class="block">
-					<h3 class="block-title">The shape of it</h3>
+					<h3 class="block-title">{i18n.t('stv.shape')}</h3>
 					<div class="rows">
 						<div class="row">
 							<span class="row-label"
-								>Turns you left behind <InfoTip
-									text="Rerolls you swiped past, forks you left, greetings you did not pick, and everything written below them."
+								>{i18n.t('stv.leftBehind')} <InfoTip
+									text={i18n.t('stv.leftBehindTip')}
 								/></span
 							>
 							<span class="row-value">{count(stats.shape.abandoned)}</span>
 						</div>
 						<div class="row">
 							<span class="row-label"
-								>Longest single chat <InfoTip
-									text="The most turns one chat holds along the branch it is open at."
+								>{i18n.t('stv.longestChat')} <InfoTip
+									text={i18n.t('stv.longestChatTip')}
 								/></span
 							>
 							<span class="row-value">{plural(stats.shape.longestStory, 'turn')}</span>
@@ -274,8 +274,8 @@
 						{#if stats.library.memoryEpisodes > 0}
 							<div class="row">
 								<span class="row-label"
-									>Scenes your chats remember <InfoTip
-										text="Summaries chat memory has written, so a scene can still reach the model long after it scrolled out of the prompt."
+									>{i18n.t('stv.scenes')} <InfoTip
+										text={i18n.t('stv.scenesTip')}
 									/></span
 								>
 								<span class="row-value">{count(stats.library.memoryEpisodes)}</span>
@@ -284,8 +284,8 @@
 						{#if stats.library.lorebookEntries > 0}
 							<div class="row">
 								<span class="row-label"
-									>Lorebook entries in your library <InfoTip
-										text="Every entry across every lorebook you hold, whether you wrote it here or brought it in."
+									>{i18n.t('stv.loreEntries')} <InfoTip
+										text={i18n.t('stv.loreEntriesTip')}
 									/></span
 								>
 								<span class="row-value">
@@ -299,13 +299,13 @@
 				</section>
 
 				<section class="block">
-					<h3 class="block-title">Records</h3>
+					<h3 class="block-title">{i18n.t('stv.records')}</h3>
 					<div class="rows">
 						{#if stats.records.longestReply}
 							<div class="row">
 								<span class="row-label"
-									>Longest reply you were sent <InfoTip
-										text="The most words a model put in one turn, anywhere in your library."
+									>{i18n.t('stv.longestReply')} <InfoTip
+										text={i18n.t('stv.longestReplyTip')}
 									/></span
 								>
 								<span class="row-value">{plural(stats.records.longestReply.words, 'word')}</span>
@@ -314,8 +314,8 @@
 						{#if stats.records.longestUserTurn}
 							<div class="row">
 								<span class="row-label"
-									>Longest thing you wrote in one go <InfoTip
-										text="The most words you put in one turn before sending it."
+									>{i18n.t('stv.longestYours')} <InfoTip
+										text={i18n.t('stv.longestYoursTip')}
 									/></span
 								>
 								<span class="row-value">{plural(stats.records.longestUserTurn.words, 'word')}</span>
@@ -324,8 +324,8 @@
 						{#if stats.records.firstMessageAt}
 							<div class="row">
 								<span class="row-label"
-									>First words here <InfoTip
-										text="The date on the oldest turn you hold. An imported chat keeps the day it was written, not the day it arrived."
+									>{i18n.t('stv.firstWords')} <InfoTip
+										text={i18n.t('stv.firstWordsTip')}
 									/></span
 								>
 								<span class="row-value">{dateLabel(stats.records.firstMessageAt)}</span>
@@ -337,7 +337,7 @@
 				<!-- Deliberately last, and deliberately fenced: these cover only the turns that
 				     recorded a number, which on an imported library is a fraction of it. -->
 				<section class="block">
-					<h3 class="block-title">What it cost</h3>
+					<h3 class="block-title">{i18n.t('stv.cost')}</h3>
 					{#if stats.measured.generationTurns === 0 && stats.measured.promptTokenTurns === 0}
 						<p class="block-note">
 							Nothing here recorded what it cost. Turns generated in ChungusHub from now on will.
@@ -347,8 +347,8 @@
 							{#if generationAverage !== null}
 								<div class="row">
 									<span class="row-label"
-										>Time spent waiting for replies <InfoTip
-											text="Every reply's generation added up, each one timed from the moment it was asked for to its last word."
+										>{i18n.t('stv.waitTotal')} <InfoTip
+											text={i18n.t('stv.waitTotalTip')}
 										/></span
 									>
 									<span class="row-value">
@@ -364,8 +364,8 @@
 							{#if firstTokenAverage !== null}
 								<div class="row">
 									<span class="row-label"
-										>Wait before the first word appears <InfoTip
-											text="How long a reply takes to start arriving. It is the opening slice of the wait above, not an extra one."
+										>{i18n.t('stv.waitFirst')} <InfoTip
+											text={i18n.t('stv.waitFirstTip')}
 										/></span
 									>
 									<span class="row-value">
@@ -378,8 +378,8 @@
 							{#if stats.measured.reasoningTurns > 0}
 								<div class="row">
 									<span class="row-label"
-										>Time models spent thinking <InfoTip
-											text="Reasoning time, on the models that think before they answer. It is part of the wait, not on top of it."
+										>{i18n.t('stv.thinkTime')} <InfoTip
+											text={i18n.t('stv.thinkTimeTip')}
 										/></span
 									>
 									<span class="row-value">
@@ -392,8 +392,8 @@
 							{#if stats.measured.promptTokenTurns > 0}
 								<div class="row">
 									<span class="row-label"
-										>Tokens sent <InfoTip
-											text="What each request carried: the whole assembled prompt, not just the words you typed."
+										>{i18n.t('stv.tokensSent')} <InfoTip
+											text={i18n.t('stv.tokensSentTip')}
 										/></span
 									>
 									<span class="row-value">
@@ -407,8 +407,8 @@
 							{#if stats.measured.completionTokenTurns > 0}
 								<div class="row">
 									<span class="row-label"
-										>Tokens written back <InfoTip
-											text="What came back, counted by the provider that generated it rather than by this app."
+										>{i18n.t('stv.tokensBack')} <InfoTip
+											text={i18n.t('stv.tokensBackTip')}
 										/></span
 									>
 									<span class="row-value">

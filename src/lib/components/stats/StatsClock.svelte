@@ -27,7 +27,7 @@
 			<div
 				class="slot"
 				class:is-prime={inPrime(hour)}
-				title="{plural(value, 'message')} at {hourLabel(hour)}"
+				title={`${plural(value, 'message')} · ${hourLabel(hour)}`}
 			>
 				<div class="bar" style="height: {Math.max(value > 0 ? 6 : 2, (value / peak) * 100)}%"></div>
 			</div>
