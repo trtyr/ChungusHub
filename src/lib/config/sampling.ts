@@ -47,14 +47,14 @@ export interface SamplingSlider {
 }
 
 export const SAMPLING_SLIDERS: SamplingSlider[] = [
-	{ key: 'temperature', supportedKey: 'temperature', apiField: 'temperature', label: 'Temperature', min: 0, max: 2, step: 0.01, neutral: 1, alwaysSend: true, base: true, info: 'Lower = focused & predictable, higher = diverse & creative.' },
-	{ key: 'topP', supportedKey: 'top_p', apiField: 'top_p', label: 'Top P', min: 0, max: 1, step: 0.01, neutral: 1, info: 'Nucleus sampling: keep the likeliest tokens up to probability P. 1 = off.' },
-	{ key: 'topK', supportedKey: 'top_k', apiField: 'top_k', label: 'Top K', min: 0, max: 200, step: 1, int: true, neutral: 0, info: 'Keep only the K likeliest tokens each step. 0 = off.' },
-	{ key: 'minP', supportedKey: 'min_p', apiField: 'min_p', label: 'Min P', min: 0, max: 1, step: 0.01, neutral: 0, info: "Drop tokens below this fraction of the top token's probability. 0 = off." },
-	{ key: 'topA', supportedKey: 'top_a', apiField: 'top_a', label: 'Top A', min: 0, max: 1, step: 0.01, neutral: 0, info: "Adaptive cutoff scaled by the top token's probability. 0 = off." },
-	{ key: 'repetitionPenalty', supportedKey: 'repetition_penalty', apiField: 'repetition_penalty', label: 'Repetition Penalty', min: 0, max: 2, step: 0.01, neutral: 1, info: 'Penalize reused tokens. 1 = off; higher reduces repetition.' },
-	{ key: 'frequencyPenalty', supportedKey: 'frequency_penalty', apiField: 'frequency_penalty', label: 'Frequency Penalty', min: -2, max: 2, step: 0.01, neutral: 0, info: 'Penalize tokens by how often they appear. 0 = off.' },
-	{ key: 'presencePenalty', supportedKey: 'presence_penalty', apiField: 'presence_penalty', label: 'Presence Penalty', min: -2, max: 2, step: 0.01, neutral: 0, info: 'Penalize tokens that already appeared at all. 0 = off.' }
+	{ key: 'temperature', supportedKey: 'temperature', apiField: 'temperature', label: 'smp.temperature', min: 0, max: 2, step: 0.01, neutral: 1, alwaysSend: true, base: true, info: 'smp.dTemperature' },
+	{ key: 'topP', supportedKey: 'top_p', apiField: 'top_p', label: 'smp.topP', min: 0, max: 1, step: 0.01, neutral: 1, info: 'smp.dTopP' },
+	{ key: 'topK', supportedKey: 'top_k', apiField: 'top_k', label: 'smp.topK', min: 0, max: 200, step: 1, int: true, neutral: 0, info: 'smp.dTopK' },
+	{ key: 'minP', supportedKey: 'min_p', apiField: 'min_p', label: 'smp.minP', min: 0, max: 1, step: 0.01, neutral: 0, info: 'smp.dMinP' },
+	{ key: 'topA', supportedKey: 'top_a', apiField: 'top_a', label: 'smp.topA', min: 0, max: 1, step: 0.01, neutral: 0, info: 'smp.dTopA' },
+	{ key: 'repetitionPenalty', supportedKey: 'repetition_penalty', apiField: 'repetition_penalty', label: 'smp.repPen', min: 0, max: 2, step: 0.01, neutral: 1, info: 'smp.dRepPen' },
+	{ key: 'frequencyPenalty', supportedKey: 'frequency_penalty', apiField: 'frequency_penalty', label: 'smp.freqPen', min: -2, max: 2, step: 0.01, neutral: 0, info: 'smp.dFreqPen' },
+	{ key: 'presencePenalty', supportedKey: 'presence_penalty', apiField: 'presence_penalty', label: 'smp.presPen', min: -2, max: 2, step: 0.01, neutral: 0, info: 'smp.dPresPen' }
 ];
 
 /**
@@ -66,7 +66,7 @@ export const SAMPLING_SLIDERS: SamplingSlider[] = [
  */
 export const DECLARABLE_PARAMS: { key: string; label: string; info: string }[] = [
 	...SAMPLING_SLIDERS.filter((p) => !p.base).map((p) => ({ key: p.supportedKey, label: p.label, info: p.info })),
-	{ key: 'seed', label: 'Seed', info: 'A fixed seed makes the same prompt reproduce the same output.' }
+	{ key: 'seed', label: 'smp.seed', info: 'smp.dSeed' }
 ];
 
 /**
@@ -102,20 +102,20 @@ export const REASONING_DIALECTS: {
 }[] = [
 	{
 		value: 'none',
-		label: 'None',
-		hint: 'No reasoning control, and nothing added to the request.',
+		label: 'smp.dNone',
+		hint: 'smp.dNoneHint',
 		policy: null
 	},
 	{
 		value: 'reasoning_effort',
 		label: 'reasoning_effort',
-		hint: 'A flat reasoning_effort field. vLLM, Ollama, llama.cpp and NVIDIA NIM read this one.',
+		hint: 'smp.dEffortHint',
 		policy: { efforts: { off: 'none', low: 'low', medium: 'medium', high: 'high' } }
 	},
 	{
 		value: 'reasoning-object',
 		label: 'reasoning.effort',
-		hint: 'A nested reasoning object. Gateways built on OpenRouter’s request shape read this one.',
+		hint: 'smp.dObjectHint',
 		policy: {
 			efforts: { off: 'none', minimal: 'minimal', low: 'low', medium: 'medium', high: 'high', max: 'max' },
 			effortField: 'reasoning-object',
@@ -141,9 +141,9 @@ export function resolveReasoningPolicy(
 }
 
 export const SERVICE_TIERS: { value: ServiceTier; label: string; hint: string }[] = [
-	{ value: 'default', label: 'Default', hint: 'Standard routing and pricing.' },
-	{ value: 'flex', label: 'Flex', hint: 'Lower cost, higher latency.' },
-	{ value: 'priority', label: 'Priority', hint: 'Faster, higher cost.' }
+	{ value: 'default', label: 'smp.tDefault', hint: 'smp.dTierDefault' },
+	{ value: 'flex', label: 'smp.tFlex', hint: 'smp.dTierFlex' },
+	{ value: 'priority', label: 'smp.tPriority', hint: 'smp.dTierPriority' }
 ];
 
 /** Model-id authors whose providers honor service tiers (OpenRouter's allowlist). */

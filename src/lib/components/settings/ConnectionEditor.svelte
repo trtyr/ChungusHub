@@ -121,7 +121,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		resolveReasoningPolicy(meta?.reasoning ?? null, conn?.reasoningDialect ?? 'none')
 	);
 	const dialectHint = $derived(
-		conn ? REASONING_DIALECTS.find((d) => d.value === conn.reasoningDialect)?.hint : undefined
+		conn ? i18n.t(REASONING_DIALECTS.find((d) => d.value === conn.reasoningDialect)?.hint ?? '') : undefined
 	);
 
 	const reasoningEffortOptions = $derived(effortOptions(reasoningPolicy));
@@ -886,7 +886,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 									class="chip"
 									class:is-active-tint={declared.includes(p.key)}
 									aria-pressed={declared.includes(p.key)}
-									title={`${p.label}: ${p.info}`}
+									title={`${i18n.t(p.label)}: ${i18n.t(p.info)}`}
 									onclick={() => toggleDeclared(p.key)}
 								>
 									{p.key}
@@ -903,8 +903,8 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					<div class="slider-block">
 						<div class="slider-top">
 							<div class="slider-label-wrap">
-								<label for={`gen-${p.key}`} class="slider-label">{p.label}</label>
-								<InfoTip text={p.info} />
+								<label for={`gen-${p.key}`} class="slider-label">{i18n.t(p.label)}</label>
+								<InfoTip text={i18n.t(p.info)} />
 							</div>
 							<span class="slider-value">{p.int ? gen[p.key] : gen[p.key].toFixed(2)}</span>
 						</div>
