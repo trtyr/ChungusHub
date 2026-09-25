@@ -8,6 +8,17 @@ import { i18n } from './i18n.svelte';
 
 const ZH: Record<string, string> = {
 	'Getting around': '移动',
+	'Persona Description': '用户角色描述',
+	"Creator's Notes": '作者注释',
+	'Created by': '作者',
+	'Character Version': '角色版本',
+	'Post-History Instructions': '历史后指令',
+	'System Prompt': '系统提示词',
+	'First Message': '首条消息',
+	'Examples of dialogue': '示例对话',
+	'Scenario': '场景',
+	'Personality summary': '性格摘要',
+	'Description': '描述',
 	'Author’s note, bottom (SillyTavern)': '作者注·底部（SillyTavern 格式）',
 	'Author’s note, top (SillyTavern)': '作者注·顶部（SillyTavern 格式）',
 	'After the character (SillyTavern)': '角色之后（SillyTavern 格式）',

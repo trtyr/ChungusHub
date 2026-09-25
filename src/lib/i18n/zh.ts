@@ -1466,7 +1466,7 @@ export const zh: Record<string, string> = {
 	'ltp.copy': '复制',
 	'ltp.nEntries': '{n} 个条目',
 	'ui.pruneBody': '当块内所有宏都解析为空时，将整个块（含标签与框文）从提示词中修剪。纯静态块与未知宏名永不触碰。',
-	'ab.updatePrivacy': '后台不做任何检查。检查会向 GitHub 请求最新版本——请求来自运行 ChungusHub 的这台电脑，不发送其他任何内容。',
+	'ab.updatePrivacy': '后台不做任何检查。检查会向 GitHub 请求最新版本：请求来自运行 ChungusHub 的这台电脑，不发送其他任何内容。',
 	'ab.legalD2': '提示音遵循',
 	'aud.background': 'ChungusHub 在后台或其他标签页打开时声音仍会送达。',
 	'mem.emptyBody': '还没有内容。这是最初几个回合被摘要后 memory 宏将承载的内容，此时每个回合仍完整发送。在提示词构建器中添加一个即可更改。',

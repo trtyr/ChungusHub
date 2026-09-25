@@ -182,20 +182,20 @@ export interface PermanentTraitDef {
  */
 export const PERMANENT_TRAITS: Record<LibraryEntryType, PermanentTraitDef[]> = {
 	character: [
-		{ key: 'description', label: 'ef.fDescription', macro: 'description', inBlob: true },
-		{ key: 'personality', label: 'ef.fPersonality', macro: 'personality', inBlob: true },
-		{ key: 'scenario', label: 'ef.fScenario', macro: 'scenario', inBlob: true },
-		{ key: 'exampleDialogue', label: 'ef.fExample', macro: 'mesExamples', inBlob: true },
-		{ key: 'firstMessage', label: 'ef.fFirstMsg', macro: 'charFirstMessage', seedsChat: true },
-		{ key: 'systemPrompt', label: 'ef.fSysPrompt', macro: 'charPrompt' },
-		{ key: 'postHistoryInstructions', label: 'ef.fPostHist', macro: 'charInstruction' },
-		{ key: 'characterVersion', label: 'ef.fVersion', macro: 'charVersion' },
-		{ key: 'creator', label: 'ef.fCreatedBy', macro: 'charCreator' },
-		{ key: 'creatorNotes', label: 'ef.fCreatorNotes', macro: 'charCreatorNotes' }
+		{ key: 'description', label: 'Description', macro: 'description', inBlob: true },
+		{ key: 'personality', label: 'Personality summary', macro: 'personality', inBlob: true },
+		{ key: 'scenario', label: 'Scenario', macro: 'scenario', inBlob: true },
+		{ key: 'exampleDialogue', label: 'Examples of dialogue', macro: 'mesExamples', inBlob: true },
+		{ key: 'firstMessage', label: 'First Message', macro: 'charFirstMessage', seedsChat: true },
+		{ key: 'systemPrompt', label: 'System Prompt', macro: 'charPrompt' },
+		{ key: 'postHistoryInstructions', label: 'Post-History Instructions', macro: 'charInstruction' },
+		{ key: 'characterVersion', label: 'Character Version', macro: 'charVersion' },
+		{ key: 'creator', label: 'Created by', macro: 'charCreator' },
+		{ key: 'creatorNotes', label: "Creator's Notes", macro: 'charCreatorNotes' }
 	],
 	// Personas are a single free-text field (see PersonasView). Everything the
 	// protagonist needs lives in this one description, placed verbatim by {{persona}}.
-	persona: [{ key: 'description', label: 'ef.fPersonaDesc', macro: 'persona' }]
+	persona: [{ key: 'description', label: 'Persona Description', macro: 'persona' }]
 };
 
 /** The whole-sheet blob macro per entry type: the badge treats its presence as "field sent". */

@@ -412,7 +412,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		<div class="flex items-center gap-2 px-3 pt-2.5 pb-1">
 			<div class="flex-1 min-w-0 flex items-center gap-2">
 				<span class="min-w-0 truncate text-sm font-ui font-medium text-text-primary">
-					{i18n.t(field.label)}
+					{labelT(field.label)}
 				</span>
 				{@render headerExtra?.()}
 			</div>
