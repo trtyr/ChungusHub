@@ -1841,6 +1841,8 @@ export const zh: Record<string, string> = {
 	'asm.panelPlaceholder': '给 Chungus 助手发消息…',
 	'asm.stopAssistant': '停止助手',
 	'asm.dblRename': '双击重命名',
+	'st.twice': '两倍篇幅',
+	'st.nTimes': '{n} 倍篇幅',
 	'st.castN': '角色 {n}',
 	'st.msgsAt': '{n} 条消息，时间 {hour}',
 	'st.onDay': '{label}：{n} 条消息',

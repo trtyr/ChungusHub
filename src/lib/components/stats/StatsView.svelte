@@ -150,7 +150,7 @@
 					<div class="hero-figure">{count(stats.effort.words)}</div>
 					<div class="hero-unit">{i18n.t('stv.wordsUnit')}</div>
 					{#if comparison}
-						<p class="hero-note">{i18n.t('stv.heroNote', { comparison: comparisonLabel(comparison) })}</p>
+						<p class="hero-note">{i18n.t('stv.heroNote', { comparison: comparisonLabel(comparison, comparison.times === 2 ? i18n.t('st.twice') : comparison.times > 2 ? i18n.t('st.nTimes', { n: count(comparison.times) }) : undefined) })}</p>
 					{/if}
 				</section>
 

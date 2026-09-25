@@ -119,8 +119,8 @@ export function bookComparison(words: number): BookComparison | null {
 }
 
 /** "The Hobbit" / "The Hobbit, twice over" / "The Hobbit, 5 times over". */
-export function comparisonLabel(comparison: BookComparison): string {
+export function comparisonLabel(comparison: BookComparison, timesWord?: string): string {
 	if (comparison.times === 1) return comparison.title;
-	if (comparison.times === 2) return `${comparison.title}, twice over`;
-	return `${comparison.title}, ${count(comparison.times)} times over`;
+	const word = timesWord ?? `${count(comparison.times)} times over`;
+	return `${comparison.title}, ${word}`;
 }

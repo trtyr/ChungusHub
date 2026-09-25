@@ -1937,6 +1937,8 @@ export const en: Record<string, string> = {
 	'asm.panelPlaceholder': 'Message the Chungus Assistant…',
 	'asm.stopAssistant': 'Stop the assistant',
 	'asm.dblRename': 'Double-click to rename',
+	'st.twice': 'twice over',
+	'st.nTimes': '{n} times over',
 	'st.castN': 'Character {n}',
 	'st.msgsAt': "{n} message(s) at {hour}",
 	'st.onDay': '{n} message(s) on {label}',
