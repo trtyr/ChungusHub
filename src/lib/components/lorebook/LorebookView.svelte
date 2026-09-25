@@ -650,7 +650,7 @@
 							for="lb-name-{selectedBook.id}"
 							class="block text-sm font-ui font-medium text-text-primary mb-1.5"
 						>
-							Name
+							{i18n.t('ef.nameLabel')}
 						</label>
 						<input
 							bind:this={nameEl}

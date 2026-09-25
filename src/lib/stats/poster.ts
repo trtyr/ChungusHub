@@ -569,7 +569,7 @@ function drawCast(
 
 	ctx.fillStyle = palette.secondary;
 	ctx.font = `500 34px ${palette.sans}`;
-	ctx.fillText(i18n.t('p.leadTurns', { n: plural(lead.messages, 'turn'), w: count(lead.words) }), POSTER_WIDTH / 2, 856);
+	ctx.fillText(i18n.t('p.leadTurns', { n: i18n.t('p.nTurns', { n: lead.messages }), w: count(lead.words) }), POSTER_WIDTH / 2, 856);
 
 	ctx.fillStyle = palette.muted;
 	ctx.font = `400 30px ${palette.sans}`;

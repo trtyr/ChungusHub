@@ -431,7 +431,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					title={field.notSentTitle}
 				>
 					<Icon name="eyeOff" class="w-3 h-3" />
-					Not sent to AI
+					{i18n.t('ef.notSentAI')}
 				</span>
 			{/if}
 		</div>
@@ -636,7 +636,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						onclick={handleAddTag}
 					>
 						<Icon name="plus" class="w-3.5 h-3.5" />
-						Add tag
+						{i18n.t('ef.addTag')}
 					</Button>
 				{/if}
 			</div>

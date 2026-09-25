@@ -1427,6 +1427,8 @@ export const zh: Record<string, string> = {
 	'common.discard': '放弃',
 	'common.duplicate': '复制',
 	'sb.open': '打开',
+	'ef.tagsLabel': '标签',
+	'dbg.previewUnavailable': '预览不可用',
 	'cmd.say': '添加一条你的回合，不请求回复',
 	'cmd.continue': '从最新回复停下的地方继续',
 	'cmd.retry': '重新生成最新回合',

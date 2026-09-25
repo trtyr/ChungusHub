@@ -86,7 +86,7 @@
 							/>
 						{/if}
 						<span class="shot-name">{fileName(path)}</span>
-						{#if previewFailed.includes(path)}<span class="shot-note">preview unavailable</span>{/if}
+						{#if previewFailed.includes(path)}<span class="shot-note">{i18n.t('dbg.previewUnavailable')}</span>{/if}
 					</button>
 				{/each}
 			</div>

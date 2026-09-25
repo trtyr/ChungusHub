@@ -344,7 +344,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 
 					<div>
 						<label for="persona-name-{entry.id}" class="block text-sm font-ui font-medium text-text-primary mb-1.5">
-							Name
+							{i18n.t('ef.nameLabel')}
 						</label>
 						<input
 							id="persona-name-{entry.id}"
@@ -379,7 +379,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 										title={i18n.t('pe.notSentTip')}
 									>
 										<Icon name="eyeOff" class="w-3 h-3" />
-										Not sent to AI
+										{i18n.t('ef.notSentAI')}
 									</span>
 								{/if}
 							</div>

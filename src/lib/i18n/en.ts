@@ -1449,6 +1449,8 @@ export const en: Record<string, string> = {
 	'common.discard': 'Discard',
 	'common.duplicate': 'Duplicate',
 	'sb.open': 'Open',
+	'ef.tagsLabel': 'Tags',
+	'dbg.previewUnavailable': 'preview unavailable',
 	'cmd.say': 'Add a turn of yours without asking for a reply',
 	'cmd.continue': 'Extend the newest reply where it stops',
 	'cmd.retry': 'Generate the newest turn again',
