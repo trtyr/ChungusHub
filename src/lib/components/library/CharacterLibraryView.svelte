@@ -978,7 +978,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				{#each selectedTags as tag}
 					<span class="brw-chip">
 						{tag}
-						<button type="button" class="brw-chip-x" onclick={() => toggleTag(tag)} aria-label="Remove {tag}">
+						<button type="button" class="brw-chip-x" onclick={() => toggleTag(tag)} aria-label={i18n.t('clv.removeTag', { tag })}>
 							<Icon name="close" class="w-2.5 h-2.5" />
 						</button>
 					</span>

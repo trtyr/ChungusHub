@@ -238,7 +238,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				class="version"
 				bind:this={versionEl}
 				onclick={tapVersion}
-				aria-label="Version {APP_VERSION}"
+				aria-label={i18n.t('ab.versionAria', { v: APP_VERSION })}
 			>
 				{APP_VERSION}
 			</button>

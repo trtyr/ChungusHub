@@ -257,7 +257,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						type="button"
 						class="framing-lens"
 						class:on={l.id === lensId}
-						aria-label="{l.label} preview"
+						aria-label={i18n.t('lbv.previewAria', { label: l.label })}
 						aria-pressed={l.id === lensId}
 						onpointerdown={(e) => e.stopPropagation()}
 						onclick={() => pickLens(l.id)}

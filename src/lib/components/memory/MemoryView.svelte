@@ -277,7 +277,7 @@
 	<div class="memory-body">
 		{#if !chat}
 			<div class="memory-empty">
-				<EmptyState icon="brain" size="sm">Open a chat to manage its memory.</EmptyState>
+				<EmptyState icon="brain" size="sm">{i18n.t('mem.openChatHint')}</EmptyState>
 			</div>
 		{:else if !enabled}
 			<div class="memory-intro">
