@@ -381,8 +381,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 							</div>
 						{/each}
 						<p class="text-xs font-ui leading-relaxed text-text-muted">
-							Only new chats; the ones already going keep what they have. Nothing here is written
-							into an exported card.
+							{i18n.t('ee.newChatsOnly')}
 						</p>
 					</div>
 				{/if}

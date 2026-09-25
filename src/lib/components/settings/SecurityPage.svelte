@@ -466,8 +466,7 @@
 
 						{#if !otherDeviceCount && !recent.length}
 							<p class="empty-hint">
-								No other devices yet. Open ChungusHub on one and it will appear above, waiting for
-								your approval.
+								{i18n.t('sec.noDevices')}
 							</p>
 						{/if}
 					</div>

@@ -62,7 +62,7 @@
 					{images.length}
 				</span>
 			{/if}
-			{#if edited}<span class="edited">edited</span>{/if}
+			{#if edited}<span class="edited">{i18n.t('prc.edited')}</span>{/if}
 			<span class="meta">{lineCount.toLocaleString()} ln · ~{tokens.toLocaleString()} tok</span>
 		</button>
 		<button

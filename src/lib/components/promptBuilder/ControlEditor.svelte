@@ -27,16 +27,16 @@
 
 	let { control, macroError, sections = [], onChange }: Props = $props();
 
-	const typeOptions: { id: PromptControlType; label: string }[] = [
-		{ id: 'text', label: 'Text (single line)' },
-		{ id: 'textarea', label: 'Text (multi-line)' },
-		{ id: 'toggle', label: 'Toggle (on/off)' },
-		{ id: 'slider', label: 'Slider (number)' },
-		{ id: 'range', label: 'Range (two numbers)' },
-		{ id: 'select', label: 'Select (dropdown)' },
-		{ id: 'radio', label: 'Radio (buttons)' },
-		{ id: 'tags', label: 'Tags (many of)' }
-	];
+	const typeOptions: { id: PromptControlType; label: string }[] = $derived([
+		{ id: 'text', label: i18n.t('ce2.typeText') },
+		{ id: 'textarea', label: i18n.t('ce2.typeTextarea') },
+		{ id: 'toggle', label: i18n.t('ce2.typeToggle') },
+		{ id: 'slider', label: i18n.t('ce2.typeSlider') },
+		{ id: 'range', label: i18n.t('ce2.typeRange') },
+		{ id: 'select', label: i18n.t('ce2.typeSelect') },
+		{ id: 'radio', label: i18n.t('ce2.typeRadio') },
+		{ id: 'tags', label: i18n.t('ce2.typeTags') },
+	]);
 
 	const adviceOptions: { id: PromptControlAdvice | ''; label: string }[] = [
 		{ id: '', label: 'No badge' },
@@ -153,7 +153,7 @@
 		<!-- Section. Free text with the declared sections offered: type a new name and the
 		     control lands in an ad-hoc group, pick a declared one and it joins that section. -->
 		<div class="ce-field">
-			<label for="ctrl-group-{control.id}" class="ce-label">Section <span class="ce-optional">(optional)</span></label>
+			<label for="ctrl-group-{control.id}" class="ce-label">{i18n.t('ce2.sectionWord')} <span class="ce-optional">{i18n.t('ce2.optionalWord')}</span></label>
 			<input
 				id="ctrl-group-{control.id}"
 				type="text"
@@ -368,10 +368,7 @@
 				placeholder={'e.g. Write between {{min}} and {{max}} words.  (empty = "min to max")'}
 				class="input-base w-full px-3 py-2 text-text-primary font-mono text-sm"
 			/>
-			<p class="ce-note">
-				Use <code class="text-accent">{'{{min}}'}</code> and <code class="text-accent">{'{{max}}'}</code>
-				for the two ends the reader picked.
-			</p>
+			<p class="ce-note">{i18n.t('ce2.minmax')}</p>
 		</div>
 	{:else if control.type === 'select' || control.type === 'radio' || control.type === 'tags'}
 		<div class="ce-field">

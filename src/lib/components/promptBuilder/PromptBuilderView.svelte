@@ -783,7 +783,7 @@
 										<div class="pb-lint">
 											<Icon name="warning" class="w-3.5 h-3.5 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
 											<span>
-												{unboundMacros.map((m) => `{{${m}}}`).join(', ')}. No control or system macro provides {unboundMacros.length > 1 ? 'these' : 'this'}, so {unboundMacros.length > 1 ? 'they' : 'it'} will appear literally in the output. Add a matching control below, or remove the reference.
+								{i18n.t('pbv.unboundBody', { list: unboundListFor(item.content), these: unboundMacros.length > 1 ? 'these' : 'this', they: unboundMacros.length > 1 ? 'they' : 'it' })}
 											</span>
 										</div>
 									{/if}
@@ -796,7 +796,7 @@
 								<div class="pb-field">
 									<label for="item-note-{item.id}" class="pb-label">
 										{i18n.t('pbv.t83')}
-										<span class="pb-label-aside">never sent</span>
+										<span class="pb-label-aside">{i18n.t('pbv.neverSent')}</span>
 									</label>
 									<textarea
 										id="item-note-{item.id}"
@@ -1105,7 +1105,7 @@
 					class="input-base px-2.5 py-1 text-sm font-ui w-28"
 				/>
 			</div>
-			<p class="pb-sep-hint">Replaces &lt;START&gt; between example-dialogue blocks.</p>
+			<p class="pb-sep-hint">{i18n.t('pbv.sepHint')}</p>
 
 			<!-- The instruction Continue appends after the reply it extends. Per-preset because
 			     it is prompt text like everything else here: it ships and saves with the preset,

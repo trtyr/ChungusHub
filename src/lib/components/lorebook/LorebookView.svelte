@@ -761,7 +761,7 @@
 							<Icon name="search" class="w-4 h-4 text-text-muted flex-shrink-0" />
 							<span class="strip-title">{i18n.t('lbst.textLabel')}</span>
 							<span class="strip-sum">
-								<span class="strip-part">see what this book fires on</span>
+								<span class="strip-part">{i18n.t('lbw.seesFires')}</span>
 							</span>
 							<span class="strip-chev" class:is-open={testerOpen}>
 								<Icon name="chevronDown" class="w-4 h-4" />

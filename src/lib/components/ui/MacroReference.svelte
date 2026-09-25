@@ -114,7 +114,7 @@
 					<span class="text-xs font-ui font-semibold uppercase tracking-wide text-text-secondary">
 						{i18n.t('ui.t17')}
 					</span>
-					<span class="text-[11px] font-ui text-text-muted">widgets you wired up above</span>
+					<span class="text-[11px] font-ui text-text-muted">{i18n.t('ui.wiredAbove')}</span>
 					<span class="flex-1 border-t border-border-subtle/60"></span>
 				</div>
 				{#if controls.length > 0}

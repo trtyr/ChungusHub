@@ -422,9 +422,7 @@
 						</div>
 						{#if measuredShare !== null && measuredShare < 100}
 							<p class="block-note">
-								These figures only include replies with a recorded timing ({measuredShare}% of the
-								total). Opening greetings and imported messages without time data are excluded
-								rather than estimated.
+								{i18n.t('stv.timingNote', { share: measuredShare })}
 							</p>
 						{/if}
 					{/if}

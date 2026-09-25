@@ -228,7 +228,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	<header class="identity">
 		<img class="mark" src="/mark.svg" alt="" />
 		<h2 class="name">ChungusHub</h2>
-		<p class="tagline">A self-hosted workspace for long-form roleplay.</p>
+		<p class="tagline">{i18n.t('ab.tagline')}</p>
 		<!-- Also the one door to the Developer page: seven taps open it, seven close it.
 		     Nothing names it, and nothing should; the labels thrown off the side count the
 		     taps down without saying what is at the end of them. -->
@@ -413,10 +413,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					<code>{install.dataDir}</code>
 					<Icon name="copy" class="w-3 h-3" strokeWidth={1.75} />
 				</button>
-				<p class="where-note">
-					{sizeLine} Everything you have written lives in there: your stories, your characters, your
-					pictures and your API keys.
-				</p>
+				<p class="where-note">{i18n.t('ab.whereNote', { line: sizeLine })}</p>
 			</div>
 
 			<div class="details">

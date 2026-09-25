@@ -81,9 +81,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 
 		{#if toPersona}
 			<p class="cv-hint">
-				A persona is this one field. The scenario, the opening message, the example dialogue, the
-				card metadata, versions, sprites, gallery art and tags are the character's own and do not
-				come along.
+			{i18n.t('conv.personaScope')}
 			</p>
 		{/if}
 

@@ -450,10 +450,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					<code>{backupStore.location}</code>
 					<Icon name="copy" class="w-3 h-3" strokeWidth={1.75} />
 				</button>
-				<p class="where-note">
-					{totalLine}. This folder holds your stories and your API keys, so treat it the way you
-					treat the app itself.
-				</p>
+				<p class="where-note">{i18n.t('bk.whereNote', { line: totalLine })}</p>
 			</div>
 		{/if}
 	</section>

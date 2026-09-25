@@ -314,10 +314,7 @@
 					{#if busy}<span class="memory-spinner"></span>{/if}
 					<span>{standing.label}</span>
 					{#if progress && busy}
-						<span class="memory-status-detail">
-							· pass {progress.batchesDone + 1}{#if progress.promotionsDone > 0} · {progress.promotionsDone} merged{/if} · {progress.pending}
-							turns waiting
-						</span>
+						<span class="memory-status-detail">{i18n.t('mem.passDetail', { pass: progress.batchesDone + 1, merged: progress.promotionsDone > 0 ? i18n.t('mem.mergedN', { n: progress.promotionsDone }) : '', waiting: progress.pending })}</span>
 					{/if}
 				</div>
 				<div class="memory-actions">
@@ -443,13 +440,7 @@
 				<h3 class="memory-section-title">{i18n.t('mem.soFar')}</h3>
 				{#if dormant.length > 0}
 					<p class="memory-muted">
-						{dormant.length}
-						{dormant.length === 1 ? 'summary belongs' : 'summaries belong'} to other branches of this chat, or to turns
-						currently kept verbatim. They are not in play here and nothing was lost: walk back to those turns and they
-						apply again.
-						<button type="button" class="memory-inline-btn" onclick={() => (showDormant = !showDormant)}>
-							{showDormant ? 'Hide' : 'Show'}
-						</button>
+						{dormant.length === 1 ? i18n.t('mem.dormantOne', { n: dormant.length }) : i18n.t('mem.dormantMany', { n: dormant.length })}
 					</p>
 					{#if showDormant}
 						{#each dormant as e (e.id)}
@@ -464,8 +455,7 @@
 				{/if}
 				{#if timeline.length === 0}
 					<p class="memory-muted">
-						No summaries yet. The first one lands once {config.batchSize} turns sit above the {config.verbatimTail}
-						kept verbatim.
+						{i18n.t('mem.noSumYet', { batch: config.batchSize, tail: config.verbatimTail })}
 					</p>
 				{:else}
 					{#each timeline as e (e.id)}
@@ -912,16 +902,6 @@
 	}
 	.memory-episode.is-dormant .memory-episode-mark { color: var(--color-text-muted); }
 
-	.memory-inline-btn {
-		border: 0;
-		background: transparent;
-		padding: 0;
-		font: inherit;
-		font-weight: 700;
-		color: var(--color-accent);
-		cursor: pointer;
-	}
-	.memory-inline-btn:hover { text-decoration: underline; }
 	.memory-episode-mark {
 		display: inline-flex;
 		flex-direction: column;

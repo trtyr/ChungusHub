@@ -65,7 +65,6 @@
 			{#if phase === 'denied'}
 				<p class="err">
 					{i18n.t('xx.t109')}
-					Settings → Security.
 				</p>
 			{:else if phase === 'error'}
 				<p class="err">{error}</p>

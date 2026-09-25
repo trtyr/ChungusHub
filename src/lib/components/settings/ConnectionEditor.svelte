@@ -680,8 +680,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			{/if}
 			{#if ctxOverModelWindow}
 				<p class="mode-hint warn">
-					Larger than this model's {modelInfo!.contextLength!.toLocaleString()}-token window, so the provider may reject
-					or silently truncate the prompt.
+					{i18n.t('ce.windowOver', { n: modelInfo!.contextLength!.toLocaleString() })}
 				</p>
 			{/if}
 		</section>

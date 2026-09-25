@@ -504,8 +504,7 @@
 							</p>
 						{:else}
 							<p class="mt-1.5 text-xs font-ui text-text-muted">
-								Click a keyword to change how it matches. <code class="ed-macro">/pattern/i</code> is a
-								regular expression.
+								{i18n.t('lb.howMatch2')}
 							</p>
 						{/if}
 					</div>

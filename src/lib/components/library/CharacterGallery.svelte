@@ -114,7 +114,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	</button>
 </div>
 
-<ImageLightbox {images} bind:index={viewerIndex} alt="Gallery image" onClose={() => (viewerIndex = null)} />
+<ImageLightbox {images} bind:index={viewerIndex} alt={i18n.t('gal.imageAlt')} onClose={() => (viewerIndex = null)} />
 
 <style>
 	/* A touch screen has no hover to reveal the corner actions with, so they stay put there.

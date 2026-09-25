@@ -479,7 +479,7 @@
 		<div class="card-body">
 			<div class="bg-hero" class:bg-hero-unset={!backgroundUrl}>
 				{#if backgroundUrl}
-					<img class="bg-hero-img" src={backgroundUrl} alt="Current workspace background" />
+					<img class="bg-hero-img" src={backgroundUrl} alt={i18n.t('if.bgAlt')} />
 					<div class="bg-hero-scrim">
 						<span class="bg-hero-name">{backgroundName}</span>
 						<div class="bg-hero-actions">
