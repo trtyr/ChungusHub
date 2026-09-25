@@ -471,7 +471,7 @@ function drawWriting(ctx: CanvasRenderingContext2D, palette: Palette, snapshot: 
 	const stats = snapshot.stats;
 	drawEyebrow(ctx, palette, 'WHAT YOU WROTE', 216);
 
-	drawHero(ctx, palette, count(stats.effort.words), 'words written', 566, 200);
+	drawHero(ctx, palette, count(stats.effort.words), i18n.t('p.wordsWritten'), 566, 200);
 
 	const comparison = bookComparison(stats.effort.words);
 	if (comparison) {
@@ -517,7 +517,7 @@ function drawWriting(ctx: CanvasRenderingContext2D, palette: Palette, snapshot: 
 
 		ctx.fillStyle = palette.text;
 		ctx.font = `600 30px ${palette.sans}`;
-		ctx.fillText(`You · ${count(stats.effort.userWords)} words`, PAD, barY + barH + 52);
+		ctx.fillText(i18n.t('p.youWords', { n: count(stats.effort.userWords) }), PAD, barY + barH + 52);
 
 		// "Everyone else", not "your cast": the remainder holds system turns too, and the
 		// two sides of one bar must sum to the total it is drawn against.
@@ -532,7 +532,7 @@ function drawWriting(ctx: CanvasRenderingContext2D, palette: Palette, snapshot: 
 
 		ctx.fillStyle = palette.secondary;
 		ctx.font = `400 30px ${palette.sans}`;
-		ctx.fillText(`${yourShare}% of every word on the page is yours.`, PAD, barY + barH + 116);
+		ctx.fillText(i18n.t('p.yourShare', { pct: yourShare }), PAD, barY + barH + 116);
 	}
 }
 
@@ -569,11 +569,11 @@ function drawCast(
 
 	ctx.fillStyle = palette.secondary;
 	ctx.font = `500 34px ${palette.sans}`;
-	ctx.fillText(`${plural(lead.messages, 'turn')} · ${count(lead.words)} words`, POSTER_WIDTH / 2, 856);
+	ctx.fillText(i18n.t('p.leadTurns', { n: plural(lead.messages, 'turn'), w: count(lead.words) }), POSTER_WIDTH / 2, 856);
 
 	ctx.fillStyle = palette.muted;
 	ctx.font = `400 30px ${palette.sans}`;
-	ctx.fillText(`With you since ${monthYearLabel(lead.firstAt)}`, POSTER_WIDTH / 2, 906);
+	ctx.fillText(i18n.t('p.withSince', { d: monthYearLabel(lead.firstAt) }), POSTER_WIDTH / 2, 906);
 	ctx.textAlign = 'left';
 
 	const runners = named.slice(1);
@@ -617,7 +617,7 @@ function drawCast(
 	} else {
 		// A cast of one still fills its page: the figures between the two of you.
 		let y = 1060;
-		drawStatLine(ctx, palette, 'Chats together', count(lead.chats), y);
+		drawStatLine(ctx, palette, i18n.t('p.chatsTogether'), count(lead.chats), y);
 		y += 96;
 		drawStatLine(ctx, palette, 'Words between you', count(lead.words), y);
 		y += 96;
@@ -643,10 +643,10 @@ function drawTime(ctx: CanvasRenderingContext2D, palette: Palette, snapshot: Sta
 	drawHeatmap(ctx, snapshot, palette, 700);
 
 	let y = 990;
-	drawStatLine(ctx, palette, 'Longest run', plural(snapshot.longest.days, 'day'), y);
+	drawStatLine(ctx, palette, i18n.t('p.longestRun'), plural(snapshot.longest.days, 'day'), y);
 	y += 96;
 	if (snapshot.current.days > 0) {
-		drawStatLine(ctx, palette, 'Running right now', plural(snapshot.current.days, 'day'), y);
+		drawStatLine(ctx, palette, i18n.t('p.runningNow'), plural(snapshot.current.days, 'day'), y);
 	} else if (snapshot.stats.records.lastMessageAt) {
 		drawStatLine(ctx, palette, 'Last wrote', dateLabel(snapshot.stats.records.lastMessageAt), y);
 	}

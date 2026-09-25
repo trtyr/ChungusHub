@@ -395,8 +395,8 @@
 									>
 									<span class="row-value">
 										{count(stats.measured.promptTokens)}<span class="row-sub"
-											>{#if promptTokenAverage !== null}{count(promptTokenAverage)} per request on
-												average, {/if}over {i18n.t('stv.nMeasured', { n: stats.measured.promptTokenTurns })}</span
+											>{#if promptTokenAverage !== null}{count(promptTokenAverage)} {i18n.t('stv.perReq')} {i18n.t('stv.onAvg')}
+												{/if}over {i18n.t('stv.nMeasured', { n: stats.measured.promptTokenTurns })}</span
 										>
 									</span>
 								</div>
@@ -410,8 +410,8 @@
 									>
 									<span class="row-value">
 										{count(stats.measured.completionTokens)}<span class="row-sub"
-											>{#if completionTokenAverage !== null}{count(completionTokenAverage)} per reply on
-												average, {/if}over {i18n.t('stv.nMeasured', { n: stats.measured.completionTokenTurns })}</span
+											>{#if completionTokenAverage !== null}{count(completionTokenAverage)} {i18n.t('stv.perRep')} {i18n.t('stv.onAvg')}
+												{/if}over {i18n.t('stv.nMeasured', { n: stats.measured.completionTokenTurns })}</span
 										>
 									</span>
 								</div>
