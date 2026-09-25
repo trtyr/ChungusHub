@@ -609,7 +609,7 @@
 
 	{#if storyPreset && currentPreset}
 		<ChatOverrideNotice
-			subject="the active preset"
+			subject={i18n.t('pbv.activePreset')}
 			using={storyPreset.name}
 			instead={currentPreset.name}
 		/>
@@ -621,17 +621,17 @@
 		<div class="pb-sec-head">
 			<span class="pb-sec-title">{i18n.t('pbv.items')}</span>
 			{#if totalEnabledTokens > 0}
-				<span class="pb-sec-meta">{totalEnabledTokens.toLocaleString()} tokens</span>
+				<span class="pb-sec-meta">{i18n.t('pbv.nTokens', { n: totalEnabledTokens.toLocaleString() })}</span>
 			{/if}
 			{#if overBudget || trimmedMessages > 0}
 				<span
 					class="pb-warn-chip"
 					title={overBudget
 						? i18n.t('pbv.overCtxWarn')
-						: `${trimmedMessages} older chat ${trimmedMessages === 1 ? 'turn is' : 'turns are'} dropped to fit the context size, so the rows below add up to more than the total.`}
+						: i18n.t('pbv.trimmedWarn', { n: trimmedMessages })}
 				>
 					<Icon name="warning" class="w-3.5 h-3.5" strokeWidth={1.5} />
-					{overBudget ? 'over budget' : `${trimmedMessages} trimmed`}
+					{i18n.t(overBudget ? 'pbv.overBudget' : 'pbv.nTrimmed', { n: trimmedMessages })}
 				</span>
 			{/if}
 			{#if itemsWithUnboundMacros > 0}

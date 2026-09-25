@@ -118,9 +118,9 @@
 			class="font-ui text-xs text-white/85 truncate"
 			style="text-shadow: 0 1px 3px rgb(0 0 0 / 0.75);"
 		>
-			{count === 0 ? 'Empty' : `${count} ${count === 1 ? 'entry' : 'entries'}`}
+			{i18n.t(count === 0 ? 'lbw.emptyBook' : count === 1 ? 'lbw.oneEntry' : 'lbw.nEntries', { n: count })}
 			{#if links > 0}
-				<span class="opacity-60"> · </span>{links} linked
+				<span class="opacity-60"> · </span>{i18n.t('lbw.nLinked', { n: links })}
 			{:else if !book.global}
 				<span class="opacity-60"> · </span><span class="italic">{i18n.t('lbv.notLinked')}</span>
 			{/if}

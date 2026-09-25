@@ -345,8 +345,7 @@
 			{#if !memoryMacroPresent}
 				<p class="memory-warn">
 					<Icon name="warning" class="w-3.5 h-3.5" />
-					The active preset has no <code>{'{{memory}}'}</code> item, so memory is inert here: nothing is
-					o switch it on.
+					{i18n.t('mem.noMemoryInert')}
 				</p>
 			{/if}
 
@@ -409,13 +408,13 @@
 
 				<div class="memory-shape-foot">
 					<span title={ladder ? i18n.t('mem.ladderTip', { ladder }) : i18n.t('mem.ladderTipPlain')}>
-						{episodes.length} {episodes.length === 1 ? 'summary' : 'summaries'}{#if merged > 0} · {merged} merged{/if}
+						{i18n.t(episodes.length === 1 ? 'mem.oneSummary' : 'mem.nSummaries', { n: episodes.length })}{#if merged > 0} · {i18n.t('mem.nMerged', { n: merged })}{/if}
 					</span>
 					<span
 						class="memory-cost"
 						title={i18n.t('mem.blockTip')}
 					>
-						<strong>{recallTokens.toLocaleString()}</strong> tokens / turn
+						<strong>{recallTokens.toLocaleString()}</strong> {i18n.t('mem.tokensPerTurn')}
 					</span>
 				</div>
 			</section>
@@ -749,7 +748,6 @@
 		background: color-mix(in srgb, var(--color-warning) 12%, transparent);
 		border: 1px solid color-mix(in srgb, var(--color-warning) 30%, transparent);
 	}
-	.memory-warn code { background: var(--color-bg-tertiary); padding: 0.02rem 0.25rem; border-radius: var(--radius-sm); color: var(--color-accent); }
 
 	/* One card for the whole reading: the bar, its key, then the store's own two figures under
 	   a rule. */

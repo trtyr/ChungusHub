@@ -52,7 +52,7 @@
 	// row holds to: a name line and one line under it, which is exactly this row's content.
 	let contentFloor = $derived(showCover ? 'min-h-20' : 'min-h-12');
 	let count = $derived(book.entries.length);
-	let size = $derived(count === 0 ? 'Empty' : `${count} ${count === 1 ? 'entry' : 'entries'}`);
+	let size = $derived(i18n.t(count === 0 ? 'lbw.emptyBook' : count === 1 ? 'lbw.oneEntry' : 'lbw.nEntries', { n: count }));
 
 	function press() {
 		if (selectionMode) onToggleSelect?.(book.id);
