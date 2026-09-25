@@ -67,7 +67,7 @@
 			out.push(
 				block(
 					'tools',
-					`{i18n.t('dbg.toolDefs')} · ${counts}`,
+					`${i18n.t('dbg.toolDefs')} · ${counts}`,
 					JSON.stringify(a.tools ?? [], null, 2),
 					JSON.stringify(b.tools ?? [], null, 2),
 					!a.tools?.length ? 'b' : !b.tools?.length ? 'a' : null

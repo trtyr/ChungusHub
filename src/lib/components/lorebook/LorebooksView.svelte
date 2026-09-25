@@ -394,7 +394,7 @@
 									resetPage();
 								}}
 							>
-								{labelT(option.label)}
+								{i18n.t(option.label)}
 							</button>
 						{/each}
 					</div>

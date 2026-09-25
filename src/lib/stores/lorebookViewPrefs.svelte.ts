@@ -24,13 +24,13 @@ const SETTINGS_KEY = 'lorebookSort';
 /** The orders offered, in the order they are offered. Also the validity list a stored value is
  *  read back through, so an option that goes away cannot leave a device on it. */
 export const LOREBOOK_SORT_OPTIONS: { id: LorebookSortOrder; label: string }[] = [
-	{ id: 'a-z', label: 'A → Z' },
-	{ id: 'z-a', label: 'Z → A' },
-	{ id: 'newest', label: 'Newest' },
-	{ id: 'oldest', label: 'Oldest' },
-	{ id: 'updated', label: 'Recently edited' },
-	{ id: 'most-entries', label: 'Most entries' },
-	{ id: 'fewest-entries', label: 'Fewest entries' }
+	{ id: 'a-z', label: 'lv.sortAz' },
+	{ id: 'z-a', label: 'lv.sortZa' },
+	{ id: 'newest', label: 'lv.sortNewest' },
+	{ id: 'oldest', label: 'lv.sortOldest' },
+	{ id: 'updated', label: 'lv.sortUpdated' },
+	{ id: 'most-entries', label: 'lv.sortMostEntries' },
+	{ id: 'fewest-entries', label: 'lv.sortFewestEntries' }
 ];
 
 const VIEW_MODES: ViewMode[] = ['grid', 'list', 'gallery'];

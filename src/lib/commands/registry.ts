@@ -116,7 +116,7 @@ export const COMMANDS: CommandDef[] = [
 		group: 'write',
 		icon: 'user',
 		describe: 'cmd.say',
-		arg: { label: 'text', required: true },
+		arg: { label: 'cmd.pText', required: true },
 		unavailable: (ctx) => (ctx.chatId ? null : i18n.t(NO_CHAT_KEY)),
 		run: (text) => messageStore.insertDummyMessage('user', text)
 	},
@@ -200,7 +200,7 @@ export const COMMANDS: CommandDef[] = [
 		group: 'story',
 		icon: 'compass',
 		describe: 'cmd.steer',
-		arg: { label: 'guidance', required: true },
+		arg: { label: 'cmd.pGuidance', required: true },
 		unavailable: () =>
 			featurePromptsStore.steeringEnabled ? null : i18n.t('cmd.steeringOff'),
 		run: async (text, ctx) => {
@@ -237,7 +237,7 @@ export const COMMANDS: CommandDef[] = [
 		group: 'chat',
 		icon: 'pencil',
 		describe: 'cmd.rename',
-		arg: { label: 'title', required: true },
+		arg: { label: 'cmd.pTitle', required: true },
 		unavailable: (ctx) => (ctx.chatId ? null : i18n.t(NO_CHAT_KEY)),
 		run: async (title, ctx) => {
 			await chatStore.updateChatTitle(ctx.chatId!, title.trim());
@@ -285,7 +285,7 @@ export const COMMANDS: CommandDef[] = [
 		group: 'open',
 		icon: 'target',
 		describe: 'cmd.go',
-		arg: { label: 'number', required: true },
+		arg: { label: 'cmd.pNumber', required: true },
 		unavailable: (ctx) => (ctx.chatId ? null : i18n.t(NO_CHAT_KEY)),
 		run: (text) => {
 			const ordinal = Number(text.trim());

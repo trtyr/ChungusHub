@@ -47,7 +47,7 @@
 	];
 
 	const GLASS_OPTIONS: { value: GlassLevel; label: string }[] = [
-		{ value: 'off', label: 'Off' },
+		{ value: 'off', label: 'if.glassOff' },
 		{ value: 'subtle', label: 'if.glassSubtle' },
 		{ value: 'full', label: 'if.glassFull' }
 	];
