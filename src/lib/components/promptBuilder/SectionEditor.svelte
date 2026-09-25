@@ -7,6 +7,7 @@
   is meant to be edited, and it can say anything.
 -->
 <script lang="ts">
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import Toggle from '$lib/components/ui/Toggle.svelte';
 	import { SECTION_ICONS, isSectionIcon } from '$lib/config/section-icons';
@@ -29,13 +30,13 @@
 <div class="se">
 	<div class="se-grid">
 		<div class="se-field">
-			<label for="sec-title-{section.id}" class="se-label">Title</label>
+			<label for="sec-title-{section.id}" class="se-label">{i18n.t('se.title')}</label>
 			<input
 				id="sec-title-{section.id}"
 				type="text"
 				value={section.title}
 				oninput={(e) => update({ title: (e.target as HTMLInputElement).value })}
-				placeholder="Shown as the heading"
+				placeholder={i18n.t('se.titlePh')}
 				class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm"
 			/>
 		</div>
@@ -48,33 +49,33 @@
 				type="text"
 				value={section.id}
 				readonly
-				title="Controls point at this. Renaming it would cut them all loose at once, so it is fixed once created."
+				title={i18n.t('se.nameFixed')}
 				class="input-base w-full px-3 py-2 text-text-muted font-mono text-sm"
 			/>
 		</div>
 	</div>
 
 	<div class="se-field">
-		<label for="sec-note-{section.id}" class="se-label">Note <span class="se-optional">(optional)</span></label>
+		<label for="sec-note-{section.id}" class="se-label">{i18n.t('se.note')} <span class="se-optional">{i18n.t('ce2.optional')}</span></label>
 		<input
 			id="sec-note-{section.id}"
 			type="text"
 			value={section.description ?? ''}
 			oninput={(e) => update({ description: (e.target as HTMLInputElement).value || undefined })}
-			placeholder="One sentence under the heading"
+			placeholder={i18n.t('se.notePh')}
 			class="input-base w-full px-3 py-2 text-text-primary font-ui text-sm"
 		/>
 	</div>
 
 	<div class="se-field">
-		<span class="se-label">Icon</span>
+		<span class="se-label">{i18n.t('se.icon')}</span>
 		<div class="se-icons">
 			<button
 				type="button"
 				class="se-icon"
 				class:is-picked={!isSectionIcon(section.icon)}
-				title="No icon"
-				aria-label="No icon"
+				title={i18n.t('se.noIcon')}
+				aria-label={i18n.t('se.noIcon')}
 				onclick={() => update({ icon: undefined })}
 			>
 				<Icon name="close" class="w-4 h-4" strokeWidth={1.5} />
@@ -96,7 +97,7 @@
 
 	<div class="se-inline">
 		<div class="se-inline-text">
-			<span class="se-label">Starts folded</span>
+			<span class="se-label">{i18n.t('se.startsFolded')}</span>
 			<p class="se-note">
 				For a section a reader should only open on purpose. They can fold and unfold
 				whatever they like afterwards, and this only decides where it starts.
