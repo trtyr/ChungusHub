@@ -23,6 +23,7 @@
 	 * of editing would be the app's most expensive misclick. Escape still cancels, from this
 	 * component's own listener, which is the same shape `TransformPanel` uses.
 	 */
+	import { labelT } from '$lib/i18n/labels';
 	import Dialog from '$lib/components/ui/Dialog.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
@@ -290,7 +291,7 @@
 					     so a stray Enter reads the prompt rather than sending it. ⌘/Ctrl+Enter is
 					     the key that sends, from anywhere in here. -->
 					<Button variant="primary" size="sm" disabled={blocker !== ''} onclick={send}>
-						{pending.gate.confirm}
+						{labelT(pending.gate.confirm)}
 					</Button>
 				</div>
 			</div>

@@ -5,6 +5,7 @@
 	import { promptLogStore } from '$lib/debug/promptLog.svelte';
 	import { promptHoldStore } from '$lib/stores/promptHold.svelte';
 	import { HOLD_GATES } from '$lib/config/prompt-hold';
+	import { labelT } from '$lib/i18n/labels';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import InfoTip from '$lib/components/ui/InfoTip.svelte';
 	import PillRow from '$lib/components/ui/PillRow.svelte';
@@ -169,12 +170,12 @@
 				<div class="toggle-row" use:toggleRow>
 					<span class="gate-label">
 						<Icon name={gate.icon} class="w-3.5 h-3.5 shrink-0 text-text-muted" strokeWidth={1.75} />
-						{gate.name}
+						{labelT(gate.name)}
 					</span>
 					<Toggle
 						checked={promptHoldStore.armed(gate.id)}
 						onchange={(v) => promptHoldStore.setGate(gate.id, v)}
-						label={i18n.t('adv.holdForReview', { name: gate.name })}
+						label={i18n.t('adv.holdForReview', { name: labelT(gate.name) })}
 					/>
 				</div>
 			{/each}

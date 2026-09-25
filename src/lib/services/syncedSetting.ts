@@ -7,6 +7,7 @@
  * to per-device localStorage: read/write a JSON value by key, and register a
  * reload that fires on every incoming `settings` broadcast.
  */
+import { i18n } from '$lib/i18n/i18n.svelte';
 import { db } from '$lib/services/database';
 import { toastStore } from '$lib/stores/toast.svelte';
 
@@ -44,7 +45,7 @@ export function writeSetting(key: string, value: unknown): Promise<void> {
 		// The store already moved, so a silent failure means this device shows a value no
 		// other device (and not the next boot) will ever agree with. Say it out loud.
 		console.error(`[settings] write failed for "${key}":`, error);
-		toastStore.error(`Couldn't save "${key}". The change is on screen but not stored.`);
+		toastStore.error(i18n.t('sv.saveFail', { key }));
 	});
 }
 

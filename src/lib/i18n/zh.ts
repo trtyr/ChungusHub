@@ -887,6 +887,8 @@ export const zh: Record<string, string> = {
 	'f.startBackup': '开始备份',
 	'f.startRestore': '开始恢复',
 	'f.createPersona': '创建该用户角色',
+	'sv.saveFail': '无法保存「{key}」。改动显示在屏幕上，但未存储。',
+	'sv.soundBlocked': '浏览器正在拦截声音。到 设置 → 音频 播放一声试听以允许。',
 	'cmd.say': '添加一条你的回合，不请求回复',
 	'cmd.continue': '从最新回复停下的地方继续',
 	'cmd.retry': '重新生成最新回合',

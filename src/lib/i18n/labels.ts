@@ -8,6 +8,11 @@ import { i18n } from './i18n.svelte';
 
 const ZH: Record<string, string> = {
 	'Getting around': '移动',
+	'Every call is applied directly, deletes included.': '每次调用都直接应用，包括删除。',
+	'Every call is applied as the assistant works, deletes included.': '助手工作时直接应用每次调用，包括删除。',
+	'Every call that changes something is shown first, with the change it makes.': '每一次会改动东西的调用都先展示，连同它的改动。',
+	'Check this draft before it goes out': '这条发出前先检查一遍',
+	'Check the draft': '检查草稿',
 	'Alert': '提醒',
 	'Bell': '铃铛',
 	'Blip': '哔声',

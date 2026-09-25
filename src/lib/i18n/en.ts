@@ -909,6 +909,8 @@ export const en: Record<string, string> = {
 	'f.startBackup': 'start the backup',
 	'f.startRestore': 'start the restore',
 	'f.createPersona': 'create that persona',
+	'sv.saveFail': "Couldn't save \"{key}\". The change is on screen but not stored.",
+	'sv.soundBlocked': 'Your browser is blocking sound. Play a tone from Settings → Audio to allow it.',
 	'cmd.say': 'Add a turn of yours without asking for a reply',
 	'cmd.continue': 'Extend the newest reply where it stops',
 	'cmd.retry': 'Generate the newest turn again',

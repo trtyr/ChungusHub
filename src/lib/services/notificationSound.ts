@@ -11,6 +11,7 @@
  * is resumed from any gesture while sounds are on, and a play that finds it still suspended
  * says so once rather than swallowing it.
  */
+import { i18n } from '$lib/i18n/i18n.svelte';
 import { toastStore } from '$lib/stores/toast.svelte';
 import { audioSettingsStore } from '$lib/stores/audio-settings.svelte';
 import { toneGain, toneUrl, type SoundEventId, type ToneId } from '$lib/config/sound-events';
@@ -132,7 +133,7 @@ async function playTone(tone: ToneId, volume: number): Promise<void> {
 	if (ac.state !== 'running') {
 		if (!blockedWarned) {
 			blockedWarned = true;
-			toastStore.warning('Your browser is blocking sound. Play a tone from Settings → Audio to allow it.');
+			toastStore.warning(i18n.t('sv.soundBlocked'));
 		}
 		return;
 	}
