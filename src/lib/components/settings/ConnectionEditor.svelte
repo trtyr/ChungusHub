@@ -88,13 +88,13 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	const gen = $derived(conn?.generation ?? DEFAULT_GENERATION_SETTINGS);
 	const routedModels = $derived(conn && !isRoutingEmpty(conn.routing) ? new Set([conn.model]) : new Set<string>());
 
-	const POST_PROCESSING_OPTIONS: { value: PromptPostProcessingMode; label: string; hint?: string }[] = [
+	const POST_PROCESSING_OPTIONS: { value: PromptPostProcessingMode; label: string; hint?: string }[] = $derived([
 		{ value: 'none', label: i18n.t('ce.ppNone'), hint: i18n.t('ce.ppNoneH') },
 		{ value: 'merge', label: i18n.t('ce.ppMerge') },
 		{ value: 'semi-strict', label: i18n.t('ce.ppSemi'), hint: i18n.t('ce.ppSemiH') },
 		{ value: 'strict', label: i18n.t('ce.ppStrict'), hint: i18n.t('ce.ppStrictH') },
 		{ value: 'single-user', label: i18n.t('ce.ppSingle'), hint: i18n.t('ce.ppSingleH') }
-	];
+	]);
 
 	const postProcessingHint = $derived(
 		conn ? POST_PROCESSING_OPTIONS.find((o) => o.value === conn.postProcessing)!.hint : undefined
@@ -132,29 +132,29 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	const showImageDetail = $derived(imageDetailVisible(meta?.media ?? null, modelInfo) && gen.sendImages);
 	const cachingCtl = $derived(cachingControl(meta?.caching ?? null));
 
-	const VERBOSITY_OPTIONS: { value: string; label: string; title?: string }[] = [
+	const VERBOSITY_OPTIONS: { value: string; label: string; title?: string }[] = $derived([
 		{ value: 'auto', label: i18n.t('ce.verbAuto'), title: i18n.t('ce.verbAutoT') },
 		{ value: 'low', label: i18n.t('ce.verbLow'), title: i18n.t('ce.verbLowT') },
 		{ value: 'medium', label: i18n.t('ce.verbMedium'), title: i18n.t('ce.verbMediumT') },
 		{ value: 'high', label: i18n.t('ce.verbHigh'), title: i18n.t('ce.verbHighT') }
-	];
+	]);
 
-	const IMAGE_DETAIL_OPTIONS: { value: string; label: string; title?: string }[] = [
+	const IMAGE_DETAIL_OPTIONS: { value: string; label: string; title?: string }[] = $derived([
 		{ value: 'auto', label: i18n.t('ce.imgAuto'), title: i18n.t('ce.imgAutoT') },
 		{ value: 'low', label: i18n.t('ce.imgLow'), title: i18n.t('ce.imgLowT') },
 		{ value: 'high', label: i18n.t('ce.imgHigh'), title: i18n.t('ce.imgHighT') }
-	];
+	]);
 
-	const CACHE_TTL_OPTIONS: { value: string; label: string; title?: string }[] = [
+	const CACHE_TTL_OPTIONS: { value: string; label: string; title?: string }[] = $derived([
 		{ value: '5m', label: i18n.t('ce.ttl5m'), title: i18n.t('ce.ttl5mT') },
 		{ value: '1h', label: i18n.t('ce.ttl1h'), title: i18n.t('ce.ttl1hT') }
-	];
+	]);
 
-	const TIER_OPTIONS: { value: string; label: string; title?: string }[] = SERVICE_TIERS.map((t) => ({
+	const TIER_OPTIONS: { value: string; label: string; title?: string }[] = $derived(SERVICE_TIERS.map((t) => ({
 		value: t.value,
 		label: i18n.t(t.label),
 		title: i18n.t(t.hint)
-	}));
+	})));
 
 	const effortPills = $derived(reasoningEffortOptions.map((l) => ({ value: l as string, label: EFFORT_LABELS[l] })));
 	const effortCurrent = $derived(reasoningEffortOptions.includes(gen.reasoningEffort) ? gen.reasoningEffort : 'auto');
@@ -214,7 +214,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			: meta?.baseUrlEditable
 				? 'No models. Is the server running with a model loaded?'
 				: status === 'valid'
-					? 'No models returned by the provider.'
+					? i18n.t('ce.noModels')
 					: i18n.t('ce.addKeyToLoad')
 	);
 

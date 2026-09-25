@@ -194,15 +194,15 @@
 						{#if snapshot.busiest}
 							<div class="fact">
 								<span class="fact-value">{plural(snapshot.busiest.count, 'message')}</span>
-								<span class="fact-label">busiest day · {dayLabel(snapshot.busiest.key)}</span>
+								<span class="fact-label">{i18n.t('stv.busiestDay')} · {dayLabel(snapshot.busiest.key)}</span>
 							</div>
 						{/if}
 						{#if snapshot.longest.days > 0 && snapshot.longest.from}
 							<div class="fact">
 								<span class="fact-value">{plural(snapshot.longest.days, 'day')}</span>
 								<span class="fact-label">
-									longest run · {snapshot.longest.days > 1
-										? `started ${dayLabel(snapshot.longest.from)}`
+									{i18n.t('stv.longestRun')} · {snapshot.longest.days > 1
+										? i18n.t('stv.started', { d: dayLabel(snapshot.longest.from) })
 										: dayLabel(snapshot.longest.from)}
 								</span>
 							</div>
@@ -210,12 +210,12 @@
 						{#if snapshot.current.days > 0 && snapshot.current.from}
 							<div class="fact">
 								<span class="fact-value">{plural(snapshot.current.days, 'day')}</span>
-								<span class="fact-label">running right now · since {dayLabel(snapshot.current.from)}</span>
+								<span class="fact-label">{i18n.t('stv.runningNow')} · {i18n.t('stv.since')} {dayLabel(snapshot.current.from)}</span>
 							</div>
 						{:else if stats.records.lastMessageAt}
 							<div class="fact">
 								<span class="fact-value">{dateLabel(stats.records.lastMessageAt)}</span>
-								<span class="fact-label">last wrote</span>
+								<span class="fact-label">{i18n.t('stv.lastWrote')}</span>
 							</div>
 						{/if}
 					</div>
@@ -240,13 +240,13 @@
 								<span class="fact-value">
 									{hourLabel(snapshot.prime[0])} to {hourLabel((snapshot.prime[1] + 1) % 24)}
 								</span>
-								<span class="fact-label">half of everything lands here</span>
+								<span class="fact-label">{i18n.t('stv.halfHere')}</span>
 							</div>
 						{/if}
 						{#if peakHour !== null}
 							<div class="fact">
 								<span class="fact-value">{hourLabel(peakHour)} to {hourLabel((peakHour + 1) % 24)}</span>
-								<span class="fact-label">your single busiest hour</span>
+								<span class="fact-label">{i18n.t('stv.busiestHour')}</span>
 							</div>
 						{/if}
 					</div>

@@ -422,7 +422,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			<div class="details">
 				<Button variant="secondary" size="sm" onclick={copyEnvironment}>
 					<Icon name="copy" class="w-3.5 h-3.5" strokeWidth={1.75} />
-					Copy details
+					{i18n.t('ab.copyDetails')}
 				</Button>
 			</div>
 		{/if}
@@ -439,8 +439,8 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		notification sounds it ships with are not covered by that license: the typefaces are under
 		the
 		<a href={LINKS.fontLicense} target="_blank" rel="noopener noreferrer">SIL Open Font License</a>,
-		the sounds under
-		<a href={LINKS.soundCredits} target="_blank" rel="noopener noreferrer">Creative Commons</a>.
+		{i18n.t('ab.legalD')}
+		<a href={LINKS.soundCredits} target="_blank" rel="noopener noreferrer">Creative Commons</a>{i18n.t('ab.legalE')}
 	</p>
 </div>
 

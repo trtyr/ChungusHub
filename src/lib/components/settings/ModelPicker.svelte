@@ -294,7 +294,7 @@
 							{#if models.length === 0}
 								{emptyHint}
 							{:else}
-								No models match "{search}"
+								{i18n.t('mp.noMatch', { search })}
 							{/if}
 						</div>
 					{/if}
@@ -366,7 +366,7 @@
 					onclick={pickCustom}
 				>
 					<Icon name="plus" class="custom-icon" strokeWidth={2} />
-					<span class="custom-text">Use <span class="custom-id">{customId}</span></span>
+					<span class="custom-text">{i18n.t('mp.use')} <span class="custom-id">{customId}</span></span>
 				</button>
 			{/if}
 		</div>

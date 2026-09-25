@@ -175,7 +175,7 @@
 	async function exportFile(): Promise<void> {
 		const preset = activePreset;
 		if (!preset) return;
-		await run(`export "${preset.name}"`, async () => {
+		await run(i18n.t('f.exportNamed', { name: preset.name }), async () => {
 			const json = presetService.exportPresetJson(preset.id);
 			triggerDownload(presetFilename(preset.name, 'json'), new Blob([json], { type: 'application/json' }));
 			toastStore.success(i18n.t('t.exported', { name: preset.name }));
@@ -186,7 +186,7 @@
 	async function exportCard(): Promise<void> {
 		const preset = activePreset;
 		if (!preset) return;
-		await run(`export "${preset.name}" as a card`, async () => {
+		await run(i18n.t('f.exportCard', { name: preset.name }), async () => {
 			await exportPresetCard(preset, presetFilename(preset.name, 'png'));
 			toastStore.success(i18n.t('t.exportedCard', { name: preset.name }));
 		});
@@ -202,7 +202,7 @@
 		const file = input.files?.[0];
 		input.value = '';
 		if (!file) return;
-		await run(`import "${file.name}"`, async () => {
+		await run(i18n.t('f.importNamed4', { name: file.name }), async () => {
 			const isPng = file.type === 'image/png' || file.name.toLowerCase().endsWith('.png');
 			const limit = isPng ? 8 : 2;
 			if (file.size > limit * 1024 * 1024) {
