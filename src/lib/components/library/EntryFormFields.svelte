@@ -195,15 +195,15 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	});
 
 	// Placeholders for the permanent character-card fields.
-	const namePlaceholder = 'Character name';
+	const namePlaceholder = i18n.t('ef.namePh');
 	const TRAIT_PLACEHOLDERS: Partial<Record<TraitKey, string>> = {
-		description: 'Who they are: appearance, presence, how they carry themselves…',
-		firstMessage: "The character's opening message that starts the scene…",
-		creator: 'Who made this card…',
-		creatorNotes: 'Notes on how to use this character…',
-		personality: 'Core personality traits, how they interact with others…',
+		description: i18n.t('ef.phDesc'),
+		firstMessage: i18n.t('ef.phFirstMsg'),
+		creator: i18n.t('ef.phCreator'),
+		creatorNotes: i18n.t('ef.phNotes'),
+		personality: i18n.t('ef.phPersonality'),
 		scenario: i18n.t('ef.scenarioPh'),
-		exampleDialogue: 'Sample exchanges that show how the character speaks…'
+		exampleDialogue: i18n.t('ef.phExample')
 	};
 
 	function getTraitPlaceholder(key: TraitKey, label: string): string {
@@ -228,7 +228,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	// {{char}}: / {{user}}: convention the field's macro resolution expects.
 	const TRAIT_HINTS: Partial<Record<TraitKey, string>> = {
 		exampleDialogue:
-			'Separate distinct example chats with <START>. Prefix lines with {{char}}: and {{user}}: to show who speaks.'
+			i18n.t('ef.hintExample')
 	};
 
 	let permanentFields = $derived(
@@ -412,7 +412,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		<div class="flex items-center gap-2 px-3 pt-2.5 pb-1">
 			<div class="flex-1 min-w-0 flex items-center gap-2">
 				<span class="min-w-0 truncate text-sm font-ui font-medium text-text-primary">
-					{field.label}
+					{i18n.t(field.label)}
 				</span>
 				{@render headerExtra?.()}
 			</div>
@@ -652,7 +652,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	<div class="min-w-0 space-y-5 lg:border-l lg:border-border-subtle lg:pl-6">
 		<!-- Character Card: the essentials. -->
 		<div class="space-y-3">
-			{@render sectionHeading('card', 'Character Card', 'user', cardOpen)}
+			{@render sectionHeading('card', i18n.t('ef.secCard'), 'user', cardOpen)}
 			{#if cardOpen}
 				{@const description = pf('description')}
 				{@const firstMessage = pf('firstMessage')}
@@ -663,7 +663,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 
 		<!-- Card details: everything else, with the two short metadata fields side by side. -->
 		<div class="space-y-3">
-			{@render sectionHeading('details', 'Card details', 'bookOpen', detailsOpen)}
+			{@render sectionHeading('details', i18n.t('ef.secDetails'), 'bookOpen', detailsOpen)}
 			{#if detailsOpen}
 				{@const personality = pf('personality')}
 				{@const scenario = pf('scenario')}
@@ -690,7 +690,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 
 		<!-- Gallery: extra art tied to this character. -->
 		<div class="space-y-3">
-			{@render sectionHeading('gallery', 'Gallery', 'image', galleryOpen)}
+			{@render sectionHeading('gallery', i18n.t('ef.secGallery'), 'image', galleryOpen)}
 			{#if galleryOpen}
 				<CharacterGallery {gallery} onAdd={onGalleryAdd} onRemove={onGalleryRemove} />
 			{/if}

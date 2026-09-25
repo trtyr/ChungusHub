@@ -93,7 +93,7 @@ function recordEntries(snapshot: StatsSnapshot): RecordEntry[] {
 	if (snapshot.busiest) {
 		entries.push({
 			value: count(snapshot.busiest.count),
-			label: `messages on your busiest day, ${dayLabel(snapshot.busiest.key)}`
+			label: i18n.t('p.busiestDayMsg', { d: dayLabel(snapshot.busiest.key) })
 		});
 	}
 	if (shape.longestStory > 0) {
@@ -469,7 +469,7 @@ function drawFace(
 /** What you wrote: the one big number, the four that frame it, and whose words they were. */
 function drawWriting(ctx: CanvasRenderingContext2D, palette: Palette, snapshot: StatsSnapshot): void {
 	const stats = snapshot.stats;
-	drawEyebrow(ctx, palette, 'WHAT YOU WROTE', 216);
+	drawEyebrow(ctx, palette, i18n.t('p.secWriting'), 216);
 
 	drawHero(ctx, palette, count(stats.effort.words), i18n.t('p.wordsWritten'), 566, 200);
 
@@ -477,7 +477,7 @@ function drawWriting(ctx: CanvasRenderingContext2D, palette: Palette, snapshot: 
 	if (comparison) {
 		ctx.fillStyle = palette.muted;
 		ctx.font = `400 36px ${palette.serif}`;
-		wrap(ctx, `About as long as ${comparisonLabel(comparison)}.`, INNER).forEach((line, i) => {
+		wrap(ctx, i18n.t('p.aboutLong', { c: comparisonLabel(comparison) }), INNER).forEach((line, i) => {
 			ctx.fillText(line, PAD, 726 + i * 50);
 		});
 	}
@@ -485,10 +485,10 @@ function drawWriting(ctx: CanvasRenderingContext2D, palette: Palette, snapshot: 
 	const gap = 26;
 	const tileWidth = (INNER - gap) / 2;
 	const tiles: [string, string][] = [
-		[count(stats.effort.messages), stats.effort.messages === 1 ? 'turn' : 'turns'],
-		[count(stats.library.chats), stats.library.chats === 1 ? 'chat' : 'chats'],
-		[count(snapshot.days.length), snapshot.days.length === 1 ? 'day written on' : 'days written on'],
-		[count(stats.effort.userWords), 'words of your own']
+		[count(stats.effort.messages), i18n.t('p.nTurns', { n: stats.effort.messages })],
+		[count(stats.library.chats), i18n.t('p.nChats', { n: stats.library.chats })],
+		[count(snapshot.days.length), i18n.t('p.nDaysOn', { n: snapshot.days.length })],
+		[count(stats.effort.userWords), i18n.t('p.ownWords')]
 	];
 	tiles.forEach(([figure, label], i) => {
 		const x = PAD + (i % 2) * (tileWidth + gap);
@@ -499,7 +499,7 @@ function drawWriting(ctx: CanvasRenderingContext2D, palette: Palette, snapshot: 
 	// drawn as one split bar because a share is a shape before it is a number.
 	const yourShare = share(stats.effort.userWords, stats.effort.words);
 	if (yourShare !== null) {
-		drawEyebrow(ctx, palette, 'WHOSE WORDS', 1408, 24);
+		drawEyebrow(ctx, palette, i18n.t('p.secWhose'), 1408, 24);
 
 		const barY = 1472;
 		const barH = 56;
@@ -524,7 +524,7 @@ function drawWriting(ctx: CanvasRenderingContext2D, palette: Palette, snapshot: 
 		ctx.fillStyle = palette.muted;
 		ctx.textAlign = 'right';
 		ctx.fillText(
-			`Everyone else · ${count(stats.effort.words - stats.effort.userWords)} words`,
+			i18n.t('p.elseWords', { n: count(stats.effort.words - stats.effort.userWords) }),
 			PAD + INNER,
 			barY + barH + 52
 		);
@@ -547,7 +547,7 @@ function drawCast(
 	const label = (index: number, id: string): string =>
 		options.anonymous ? `Character ${index + 1}` : options.names[id];
 
-	drawEyebrow(ctx, palette, 'YOUR CAST', 216);
+	drawEyebrow(ctx, palette, i18n.t('p.secCast'), 216);
 
 	const lead = named[0];
 	const leadName = label(0, lead.characterId);
@@ -619,23 +619,23 @@ function drawCast(
 		let y = 1060;
 		drawStatLine(ctx, palette, i18n.t('p.chatsTogether'), count(lead.chats), y);
 		y += 96;
-		drawStatLine(ctx, palette, 'Words between you', count(lead.words), y);
+		drawStatLine(ctx, palette, i18n.t('p.wordsBetween'), count(lead.words), y);
 		y += 96;
-		drawStatLine(ctx, palette, 'First wrote', dateLabel(lead.firstAt), y);
+		drawStatLine(ctx, palette, i18n.t('p.firstWrote'), dateLabel(lead.firstAt), y);
 		y += 96;
-		drawStatLine(ctx, palette, 'Last wrote', dateLabel(lead.lastAt), y);
+		drawStatLine(ctx, palette, i18n.t('p.lastWrote'), dateLabel(lead.lastAt), y);
 	}
 }
 
 /** When you wrote: the calendar, the runs that come off it, and the shape of a day. */
 function drawTime(ctx: CanvasRenderingContext2D, palette: Palette, snapshot: StatsSnapshot): void {
-	drawEyebrow(ctx, palette, 'WHEN YOU WROTE', 216);
+	drawEyebrow(ctx, palette, i18n.t('p.secWhen'), 216);
 
 	drawHero(
 		ctx,
 		palette,
 		count(snapshot.days.length),
-		snapshot.days.length === 1 ? 'day written on' : 'days written on',
+		i18n.t('p.nDaysOn', { n: snapshot.days.length }),
 		540,
 		190
 	);
@@ -648,14 +648,14 @@ function drawTime(ctx: CanvasRenderingContext2D, palette: Palette, snapshot: Sta
 	if (snapshot.current.days > 0) {
 		drawStatLine(ctx, palette, i18n.t('p.runningNow'), plural(snapshot.current.days, 'day'), y);
 	} else if (snapshot.stats.records.lastMessageAt) {
-		drawStatLine(ctx, palette, 'Last wrote', dateLabel(snapshot.stats.records.lastMessageAt), y);
+		drawStatLine(ctx, palette, i18n.t('p.lastWrote'), dateLabel(snapshot.stats.records.lastMessageAt), y);
 	}
 	y += 96;
 	if (snapshot.busiest) {
 		drawStatLine(
 			ctx,
 			palette,
-			`Busiest day, ${dayLabel(snapshot.busiest.key)}`,
+			i18n.t('p.busiestDay', { d: dayLabel(snapshot.busiest.key) }),
 			plural(snapshot.busiest.count, 'message'),
 			y
 		);
@@ -672,7 +672,7 @@ function drawHours(ctx: CanvasRenderingContext2D, palette: Palette, snapshot: St
 		ctx.fillStyle = palette.secondary;
 		ctx.font = `500 36px ${palette.sans}`;
 		ctx.fillText(
-			`Half of it lands between ${hourLabel(prime[0])} and ${hourLabel((prime[1] + 1) % 24)}.`,
+			i18n.t('p.halfBetween', { a: hourLabel(prime[0]), b: hourLabel((prime[1] + 1) % 24) }),
 			PAD,
 			1320
 		);
@@ -706,7 +706,7 @@ function drawHours(ctx: CanvasRenderingContext2D, palette: Palette, snapshot: St
 
 /** For the record: the superlatives, one leading the page and the rest in a grid. */
 function drawRecords(ctx: CanvasRenderingContext2D, palette: Palette, snapshot: StatsSnapshot): void {
-	drawEyebrow(ctx, palette, 'FOR THE RECORD', 216);
+	drawEyebrow(ctx, palette, i18n.t('p.secRecords'), 216);
 
 	const [lead, ...rest] = recordEntries(snapshot);
 
@@ -745,7 +745,7 @@ function drawRecords(ctx: CanvasRenderingContext2D, palette: Palette, snapshot: 
 	});
 
 	if (snapshot.stats.records.firstMessageAt !== null) {
-		drawStatLine(ctx, palette, 'First words here', dateLabel(snapshot.stats.records.firstMessageAt), 1580);
+		drawStatLine(ctx, palette, i18n.t('p.firstWords'), dateLabel(snapshot.stats.records.firstMessageAt), 1580);
 	}
 }
 
