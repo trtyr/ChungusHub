@@ -36,7 +36,7 @@ export type MacroGroup = 'names' | 'context' | 'time' | 'character-field' | 'mem
 export const MACRO_GROUPS: readonly { id: MacroGroup; label: string; hint: string }[] = [
 	{ id: 'names', label: 'mac.grpNames', hint: 'mac.hNames' },
 	{ id: 'context', label: 'mac.grpContext', hint: 'mac.hContext' },
-	{ id: 'time', label: 'mac.grpTime', hint: "the reader's own clock, read as the prompt is built" },
+	{ id: 'time', label: 'mac.grpTime', hint: 'mac.hTime' },
 	{ id: 'character-field', label: 'mac.grpFields', hint: 'mac.hFields' },
 	{ id: 'memory', label: 'mac.grpMemory', hint: 'mac.hMemory' }
 ];
@@ -80,8 +80,8 @@ export const MACROS: readonly MacroDef[] = [
 	// ----- Engine-owned (resolved from real story + chat state, everywhere) -----
 	{ name: 'user', description: 'mac.d0', engine: true, group: 'names' },
 	{ name: 'char', description: 'mac.d1', engine: true, group: 'names' },
-	{ name: 'persona', description: "The active persona's description.", engine: true, group: 'context' },
-	{ name: 'character', description: "The active character's full profile (the whole-sheet blob).", engine: true, group: 'context' },
+	{ name: 'persona', description: 'mac.dPersona', engine: true, group: 'context' },
+	{ name: 'character', description: 'mac.dCharacter', engine: true, group: 'context' },
 	{ name: 'lorebook', description: 'mac.d2', engine: true, group: 'context' },
 	{ name: 'memory', description: 'mac.d3', engine: true, group: 'context' },
 	{ name: 'chatHistory', description: 'mac.d4', engine: true, structural: true, group: 'context' },
@@ -97,27 +97,27 @@ export const MACROS: readonly MacroDef[] = [
 	{ name: 'isodate', description: 'mac.d13', engine: true, group: 'time' },
 
 	// ----- Per-field character macros (place one card field individually) -----
-	{ name: 'description', description: "The character's description field, on its own.", engine: true, group: 'character-field' },
-	{ name: 'personality', description: "The character's personality-summary field, on its own.", engine: true, group: 'character-field' },
-	{ name: 'charFirstMessage', description: "The character's opening message field, on its own.", engine: true, group: 'character-field' },
-	{ name: 'mesExamples', description: "The character's example dialogue, block-formatted: <START> markers become the preset's example separator.", engine: true, group: 'character-field' },
-	{ name: 'mesExamplesRaw', description: "The character's example dialogue exactly as the card wrote it, unformatted.", engine: true, group: 'character-field' },
-	{ name: 'charPrompt', description: "The character card's own system-prompt override.", engine: true, group: 'character-field' },
-	{ name: 'charInstruction', description: "The card's post-history instructions (jailbreak).", engine: true, group: 'character-field' },
-	{ name: 'charVersion', description: "The character card's version tag.", engine: true, group: 'character-field' },
-	{ name: 'charCreatorNotes', description: "The card's creator notes.", engine: true, group: 'character-field' },
+	{ name: 'description', description: 'mac.dDescField', engine: true, group: 'character-field' },
+	{ name: 'personality', description: 'mac.dPersonalityField', engine: true, group: 'character-field' },
+	{ name: 'charFirstMessage', description: 'mac.dFirstMsgField', engine: true, group: 'character-field' },
+	{ name: 'mesExamples', description: 'mac.dMesExamples', engine: true, group: 'character-field' },
+	{ name: 'mesExamplesRaw', description: 'mac.dMesExamplesRaw', engine: true, group: 'character-field' },
+	{ name: 'charPrompt', description: 'mac.dCharPrompt', engine: true, group: 'character-field' },
+	{ name: 'charInstruction', description: 'mac.dCharInstruction', engine: true, group: 'character-field' },
+	{ name: 'charVersion', description: 'mac.dCharVersion', engine: true, group: 'character-field' },
+	{ name: 'charCreatorNotes', description: 'mac.dCreatorNotes', engine: true, group: 'character-field' },
 	// SillyTavern names the notes macro but has none for the credit beside it, so this one
 	// stays in the same char* family rather than inventing a second shape for one field.
-	{ name: 'charCreator', description: "Who made the card (its Created by field).", engine: true, group: 'character-field' },
+	{ name: 'charCreator', description: 'mac.dCreator', engine: true, group: 'character-field' },
 	// Belongs to the character card, and only to it. The opening-scene engine carries
 	// its own typed direction in the call-site key {{idea}} precisely so it never
 	// shadows this one (see generateOpeningScene in stores/messages.svelte.ts).
-	{ name: 'scenario', description: "The character's scenario field.", engine: true, group: 'character-field' },
+	{ name: 'scenario', description: 'mac.dScenario', engine: true, group: 'character-field' },
 
 	// ----- Memory pipeline flow (extraction / promotion) -----
 	{ name: 'deepMemory', description: 'mac.d14', group: 'memory' },
 	{ name: 'recentEpisodes', description: 'mac.d15', group: 'memory' },
-	{ name: 'batch', description: "The new scene's messages to digest.", group: 'memory' },
+	{ name: 'batch', description: 'mac.dBatch', group: 'memory' },
 	{ name: 'sceneLength', description: 'mac.d16', group: 'memory' },
 	{ name: 'mergeMode', description: 'mac.d17', group: 'memory' },
 	{ name: 'higherContext', description: 'mac.d18', group: 'memory' },
