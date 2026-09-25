@@ -100,7 +100,7 @@
 			<h2 class="overlay-subject">{i18n.t('stv.title')}</h2>
 			<span class="overlay-facts">
 				{#if snapshot}
-					Counted {momentLabel(snapshot.takenAt)}
+					{i18n.t('stv.counted', { when: momentLabel(snapshot.takenAt) })}
 				{:else if statsStore.loading}
 					{i18n.t('stv.t106')}
 				{:else}

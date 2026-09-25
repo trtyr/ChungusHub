@@ -1017,7 +1017,7 @@
 		<section class="pb-sec">
 			<div class="pb-sec-head">
 				<span class="pb-sec-title">{i18n.t('pbv.setups')}</span>
-				<InfoTip text="A named snapshot of every control value, applied by a reader in one click. It saves you shipping the same preset five times over." />
+				<InfoTip text={i18n.t('pbv.tipSetups')} />
 				{#if (currentPreset.bundles?.length ?? 0) > 0}
 					<span class="pb-sec-meta">{currentPreset.bundles?.length}</span>
 				{/if}

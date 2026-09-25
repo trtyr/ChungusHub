@@ -69,15 +69,15 @@
 			<div class="detail">
 				<div class="line">
 					<span class="name">{name}</span>
-					<span class="figure">{plural(row.member.messages, 'turn')}</span>
+					<span class="figure">{i18n.t('stv.nTurns', { n: row.member.messages })}</span>
 				</div>
 				<div class="track" aria-hidden="true">
 					<div class="fill" style="width: {Math.max(3, (row.member.messages / top) * 100)}%"></div>
 				</div>
 				<span class="meta">
-					{plural(row.member.chats, 'chat')} · {count(row.member.words)} words · since {monthYearLabel(
+					{i18n.t('stv.nChatsW', { n: row.member.chats })} · {i18n.t('stv.nWords', { n: count(row.member.words) })} · {i18n.t('stv.since2', { d: monthYearLabel(
 						row.member.firstAt
-					)}
+					) })}
 				</span>
 			</div>
 		</li>
