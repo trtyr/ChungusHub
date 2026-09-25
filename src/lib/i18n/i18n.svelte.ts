@@ -54,5 +54,6 @@ export const i18n = new I18nStore();
 // reactive lang swaps any rendered strings. Module-scope registration = the
 // boot-time store pattern, so another device's switch lands here via the
 // `settings` broadcast without a reload.
-void i18n.reload();
+// Boot errors (db not ready under tests, offline) leave the zh default standing.
+void i18n.reload().catch(() => {});
 registerSettingsReload(() => i18n.reload());

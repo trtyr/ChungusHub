@@ -287,13 +287,11 @@ export function depthInverted(rule: RuleReach): boolean {
  *  editor's own reach line. */
 export function depthSentence(rule: RuleReach): string | null {
 	const { minDepth: min, maxDepth: max } = rule;
-	/** "the newest turn" for one, "the newest 3 turns" for more. */
-	const newest = (n: number) => (n === 1 ? i18n.t('rx.newestOne') : i18n.t('rx.newestN', { n }));
 	if (min === undefined && max === undefined) return null;
 	if (depthInverted(rule)) return i18n.t('rx.reachesNone');
 	if (min !== undefined && max !== undefined) return i18n.t('rx.onlyRange', { min, max });
-	if (min !== undefined) return min === 0 ? null : i18n.t('rx.skips', { n: newest(min) });
-	return i18n.t('rx.onlyNewest', { n: newest(max! + 1) });
+	if (min !== undefined) return min === 0 ? null : min === 1 ? i18n.t('rx.skip1') : i18n.t('rx.skipN', { n: min });
+	return max === 0 ? i18n.t('rx.only1') : i18n.t('rx.onlyN', { n: max! + 1 });
 }
 
 /** Whether a rule can reach anything at all. An empty target or scope list makes it a
@@ -307,12 +305,10 @@ export function isRuleInert(rule: RuleReach): boolean {
  *  rules. Forking it is how two lists start describing the same rule differently. */
 export function routingSentence(rule: RuleReach): string {
 	if (isRuleInert(rule)) {
-		return depthInverted(rule)
-			? i18n.t('rx.inertDepth')
-			: i18n.t('rx.inertPick');
+		return depthInverted(rule) ? i18n.t('rx.inertInverted') : i18n.t('rx.inertEmpty');
 	}
-	const who = rule.targets.map((t) => (t === 'user' ? i18n.t('rxe.roleUser') : i18n.t('rxe.roleAssistant'))).join(' & ');
-	const where = rule.scopes.map((s) => (s === 'display' ? i18n.t('rxe.scopeDisplay') : i18n.t('rxe.scopePrompt'))).join(' & ');
+	const who = rule.targets.map((t) => i18n.t(t === 'user' ? 'rx.whoUser' : 'rx.whoAssistant')).join(' & ');
+	const where = rule.scopes.map((sc) => i18n.t(sc === 'display' ? 'rx.whereDisplay' : 'rx.wherePrompt')).join(' & ');
 	const depth = depthSentence(rule);
 	return i18n.t('rx.routingLine', { who, where, depth: depth ? ` · ${depth}` : '' });
 }

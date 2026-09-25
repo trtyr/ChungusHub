@@ -1,5 +1,17 @@
-import { describe, test, expect } from 'bun:test';
-import { dayBucket, formatDate, formatRelativeTime } from './date';
+import { describe, test, expect, mock, afterAll } from 'bun:test';
+import { en } from '../i18n/en';
+
+const t = (key: string, params?: Record<string, string | number>): string => {
+	let text = en[key] ?? key;
+	if (params) for (const [name, value] of Object.entries(params)) text = text.replaceAll(`{${name}}`, String(value));
+	return text;
+};
+
+// The util reads i18n at call time; in tests we stub the store so sentences come out in
+// English (the dictionary's reference corpus) instead of the zh default.
+mock.module('$lib/i18n/i18n.svelte', () => ({ i18n: { lang: 'en', t } }));
+const { dayBucket, formatDate, formatRelativeTime } = await import('./date');
+
 
 /** A local-time timestamp, so the tests read the same way the UI does. */
 function at(y: number, m: number, d: number, h = 12, min = 0): number {
@@ -58,4 +70,10 @@ describe('formatRelativeTime', () => {
 		expect(formatRelativeTime(at(2026, 7, 21), now)).toBe('3d ago');
 		expect(formatRelativeTime(at(2026, 7, 1), now)).toBe(formatDate(at(2026, 7, 1)));
 	});
+});
+
+afterAll(async () => {
+	// Put the real store back so later files resolve it, not this file's English stub.
+	const real = await import('$lib/i18n/i18n.svelte');
+	mock.module('$lib/i18n/i18n.svelte', () => ({ i18n: real.i18n }));
 });

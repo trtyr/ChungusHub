@@ -24,7 +24,7 @@ import {
 	resolveCoverage,
 	type Coverage
 } from './branching';
-import { describeMemoryImpact } from './impact-copy';
+import { describeMemoryImpact, enT } from './impact-copy';
 import { buildRecall } from './recall';
 import {
 	resolveConfig,
@@ -1234,7 +1234,7 @@ describe('naming and pricing a change before it happens', () => {
 		expect(i.survivors).toBe(6);
 		expect(i.reread).toBe(1);
 		expect(i.passes).toBe(0);
-		const lines = describeMemoryImpact(i, { mode: 'delete', auto: true });
+		const lines = describeMemoryImpact(i, { mode: 'delete', auto: true }, enT);
 		expect(lines.join(' ')).toContain('nothing is re-read');
 		expect(lines.join(' ')).not.toContain('pass');
 	});
@@ -1265,7 +1265,7 @@ describe('naming and pricing a change before it happens', () => {
 		expect(i.dropped).toBe(0);
 		expect(i.droppedStored).toBe(1);
 		expect(i.reread).toBe(0);
-		expect(describeMemoryImpact(i, { mode: 'delete', auto: true })).toEqual([
+		expect(describeMemoryImpact(i, { mode: 'delete', auto: true }, enT)).toEqual([
 			'1 other stored summary of these turns goes with them.'
 		]);
 	});
@@ -1277,25 +1277,25 @@ describe('naming and pricing a change before it happens', () => {
 		const i = changeImpact(PATH, cov, ['m14'], { removed: false, batchSize: 8, verbatimTail: 12 });
 		expect(i.dropped).toBe(0);
 		expect(i.droppedStored).toBe(1);
-		const lines = describeMemoryImpact(i, { mode: 'edit', auto: true });
+		const lines = describeMemoryImpact(i, { mode: 'edit', auto: true }, enT);
 		expect(lines.join(' ')).not.toContain('other branches');
 		expect(lines.join(' ')).not.toContain('lost for good');
 	});
 
 	test('the confirmation says what it costs and who pays it back', () => {
-		const rewrite = describeMemoryImpact(impact(['m5'], false), { mode: 'edit', auto: true });
+		const rewrite = describeMemoryImpact(impact(['m5'], false), { mode: 'edit', auto: true }, enT);
 		expect(rewrite[0]).toContain('#4 to #11');
 		expect(rewrite[0]).toContain('Saving');
 		expect(rewrite[1]).toContain('next reply');
 		// Manual mode has no next-reply trigger, so it must not promise one.
-		const manual = describeMemoryImpact(impact(['m5'], false), { mode: 'edit', auto: false });
+		const manual = describeMemoryImpact(impact(['m5'], false), { mode: 'edit', auto: false }, enT);
 		expect(manual[1]).toContain('Memory panel');
 		expect(manual[1]).not.toContain('next reply');
 		// A whole span going: no re-read to promise, and it says so instead of going quiet.
-		const gone = describeMemoryImpact(impact(span(3, 10), true), { mode: 'delete', auto: true });
+		const gone = describeMemoryImpact(impact(span(3, 10), true), { mode: 'delete', auto: true }, enT);
 		expect(gone).toHaveLength(2);
 		expect(gone[1]).toContain('nothing is re-read');
-		expect(describeMemoryImpact(impact(['m27'], false), { mode: 'edit', auto: true })).toEqual([]);
+		expect(describeMemoryImpact(impact(['m27'], false), { mode: 'edit', auto: true }, enT)).toEqual([]);
 	});
 
 	test('every sentence agrees with itself at one', () => {
@@ -1303,7 +1303,7 @@ describe('naming and pricing a change before it happens', () => {
 		// verb there is the first thing a reader notices.
 		const one = describeMemoryImpact(
 			{ dropped: 1, droppedStored: 1, paused: 1, survivors: 8, reread: 8, passes: 1, span: { from: 4, to: 11 } },
-			{ mode: 'edit', auto: true }
+			{ mode: 'edit', auto: true }, enT
 		);
 		expect(one[0]).toBe('Turns #4 to #11 are summarized in memory. Saving drops that summary, and the 1 summary behind it pauses.');
 		expect(one[1]).toBe('Nothing is lost: your next reply re-reads 8 turns (1 pass), and the paused one returns.');
@@ -1311,7 +1311,7 @@ describe('naming and pricing a change before it happens', () => {
 		// A one-turn episode is reachable: a short batch closing a one-turn hole writes exactly one.
 		const single = describeMemoryImpact(
 			{ dropped: 1, droppedStored: 0, paused: 0, survivors: 0, reread: 0, passes: 0, span: { from: 7, to: 7 } },
-			{ mode: 'delete', auto: true }
+			{ mode: 'delete', auto: true }, enT
 		);
 		expect(single[0]).toContain('Turn #7 is summarized');
 		expect(single[1]).toContain('turns it describes are going too');
@@ -1322,7 +1322,7 @@ describe('naming and pricing a change before it happens', () => {
 		// will spend, so the sentence must not name a single reply.
 		const heavy = describeMemoryImpact(
 			{ dropped: 1, droppedStored: 0, paused: 2, survivors: 108, reread: 108, passes: 9, span: { from: 1, to: 108 } },
-			{ mode: 'edit', auto: true }
+			{ mode: 'edit', auto: true }, enT
 		);
 		expect(heavy[1]).toContain('next few replies');
 		expect(heavy[1]).not.toContain('next reply re-reads');
@@ -1332,7 +1332,7 @@ describe('naming and pricing a change before it happens', () => {
 		expect(() =>
 			describeMemoryImpact(
 				{ dropped: 1, droppedStored: 0, paused: 0, survivors: 0, reread: 0, passes: 0, span: null },
-				{ mode: 'edit', auto: true }
+				{ mode: 'edit', auto: true }, enT
 			)
 		).toThrow('no turn span');
 	});

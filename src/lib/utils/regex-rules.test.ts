@@ -1,3 +1,15 @@
+import { describe, test, expect, mock, afterAll } from 'bun:test';
+import { en } from '../i18n/en';
+
+const t = (key: string, params?: Record<string, string | number>): string => {
+	let text = en[key] ?? key;
+	if (params) for (const [name, value] of Object.entries(params)) text = text.replaceAll(`{${name}}`, String(value));
+	return text;
+};
+
+// The util reads i18n at call time; in tests we stub the store so sentences come out in
+// English (the dictionary's reference corpus) instead of the zh default.
+mock.module('$lib/i18n/i18n.svelte', () => ({ i18n: { lang: 'en', t } }));
 /**
  * Tests for the regex-rules engine. Run with `bun test`.
  *
@@ -8,10 +20,8 @@
  * scripts, and the shipped em-dash rule doesn't mangle dialogue dashes.
  */
 
-import { describe, expect, test } from 'bun:test';
 
-import {
-	applyPromptRegex,
+const { applyPromptRegex,
 	applyRegexRules,
 	createRegexRule,
 	DEFAULT_REGEX_RULES,
@@ -26,8 +36,8 @@ import {
 	routingSentence,
 	rulesWithCarried,
 	serializeRegexRules,
-	type RegexRule
-} from './regex-rules';
+	} = await import('./regex-rules');
+type RegexRule = import('./regex-rules').RegexRule;
 
 function rule(over: Partial<RegexRule> = {}): RegexRule {
 	return createRegexRule({ pattern: 'foo', replacement: 'bar', targets: ['user', 'assistant'], ...over });
@@ -495,4 +505,10 @@ describe('a carried rule the author shipped off', () => {
 	test('a shipped-on rule stops when the reader switches it off', () => {
 		expect(run({ always: false })).toBe('foo baz');
 	});
+});
+
+afterAll(async () => {
+	// Put the real store back so later files resolve it, not this file's English stub.
+	const real = await import('$lib/i18n/i18n.svelte');
+	mock.module('$lib/i18n/i18n.svelte', () => ({ i18n: real.i18n }));
 });
