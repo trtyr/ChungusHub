@@ -108,11 +108,11 @@ export const MEMORY_CONFIG_FIELDS: {
 	max: number;
 	help: string;
 }[] = [
-	{ key: 'verbatimTail', label: 'Keep verbatim', min: 1, max: 60, help: 'Most-recent messages always shown to the model word-for-word, never folded.' },
-	{ key: 'batchSize', label: 'Messages per summary', min: 2, max: 40, help: 'How many turns each episode summary covers. One model pass per batch.' },
-	{ key: 'maxPerLayer', label: 'Summaries per layer', min: 3, max: 40, help: 'Before the oldest are merged into a tighter layer above.' },
-	{ key: 'promoteCount', label: 'Merged at a time', min: 2, max: 20, help: 'How many old summaries merge into one on compaction.' },
-	{ key: 'maxLayers', label: 'Compaction layers', min: 1, max: 6, help: 'Depth of the summary ladder. The top layer compacts in place.' }
+	{ key: 'verbatimTail', label: 'mem.cfVerbatim', min: 1, max: 60, help: 'mem.cfVerbatimH' },
+	{ key: 'batchSize', label: 'mem.cfBatch', min: 2, max: 40, help: 'mem.cfBatchH' },
+	{ key: 'maxPerLayer', label: 'mem.cfLayer', min: 3, max: 40, help: 'mem.cfLayerH' },
+	{ key: 'promoteCount', label: 'mem.cfMerge', min: 2, max: 20, help: 'mem.cfMergeH' },
+	{ key: 'maxLayers', label: 'mem.cfLayers', min: 1, max: 6, help: 'mem.cfLayersH' }
 ];
 
 /** promoteCount can never exceed maxPerLayer (resolveConfig clamps it), and a slider whose

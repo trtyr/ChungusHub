@@ -94,9 +94,9 @@
 
 <ConfirmDialog
 	open={!!pending}
-	title={pending?.warning?.title ?? ''}
-	message={pending?.warning?.message ?? ''}
-	confirmLabel={pending?.warning?.confirmLabel ?? ''}
+	title={pending?.warning ? i18n.t(pending.warning.title) : ''}
+	message={pending?.warning ? i18n.t(pending.warning.message) : ''}
+	confirmLabel={pending?.warning ? i18n.t(pending.warning.confirmLabel) : ''}
 	variant="danger"
 	onConfirm={() => pending && void commitMode(pending.mode)}
 	onCancel={() => (pending = null)}

@@ -268,18 +268,18 @@ export const SHORTCUTS: ShortcutDef[] = [
 	{ id: 'turn-edit', group: 'turns', label: 'sc.tEdit', chips: ['E'] },
 	{ id: 'turn-branch', group: 'turns', label: 'sc.tBranch', chips: ['B'] },
 	{ id: 'turn-regenerate', group: 'turns', label: 'sc.tRegen', chips: ['R'] },
-	{ id: 'turn-copy', group: 'turns', label: 'Copy', chips: ['C'] },
-	{ id: 'turn-delete', group: 'turns', label: 'Delete', chips: ['Del'] },
+	{ id: 'turn-copy', group: 'turns', label: 'sc.tCopy', chips: ['C'] },
+	{ id: 'turn-delete', group: 'turns', label: 'sc.tDelete', chips: ['Del'] },
 
 	// ===== In the composer =====
-	{ id: 'send', group: 'composer', label: 'Send message', chips: ['Enter'] },
-	{ id: 'newline', group: 'composer', label: 'New line', chips: ['Shift', 'Enter'] },
+	{ id: 'send', group: 'composer', label: 'sc.cSend', chips: ['Enter'] },
+	{ id: 'newline', group: 'composer', label: 'sc.cNewLine', chips: ['Shift', 'Enter'] },
 	// Owned by the composer rather than bound here: Enter belongs to whatever box has focus, so
 	// a window-level match would also fire from the assistant's composer, a rename field or a
 	// dialog. Living there is also what lets it read the menu row's own gate.
-	{ id: 'regenerate-last', group: 'composer', label: 'Regenerate the newest reply', chips: ['mod', 'Enter'] },
-	{ id: 'commands', group: 'composer', label: 'Commands (empty composer)', chips: ['/'] },
-	{ id: 'history', group: 'composer', label: 'Input history (empty composer)', chips: ['↑', '↓'] },
+	{ id: 'regenerate-last', group: 'composer', label: 'sc.cRegen', chips: ['mod', 'Enter'] },
+	{ id: 'commands', group: 'composer', label: 'sc.cCommands', chips: ['/'] },
+	{ id: 'history', group: 'composer', label: 'sc.cInputHist', chips: ['↑', '↓'] },
 
 	// ===== Help =====
 	{

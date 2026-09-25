@@ -307,7 +307,7 @@
 								<span class="assistant-approval-badge">{choice.badge}</span>
 							{/if}
 						</span>
-						<span class="assistant-approval-item-hint">{choice.hint}</span>
+						<span class="assistant-approval-item-hint">{i18n.t(choice.hint)}</span>
 					</button>
 				{/each}
 			</div>
@@ -315,9 +315,9 @@
 	</div>
 	<ConfirmDialog
 		open={!!pendingMode}
-		title={pendingMode?.warning?.title ?? ''}
-		message={pendingMode?.warning?.message ?? ''}
-		confirmLabel={pendingMode?.warning?.confirmLabel ?? ''}
+		title={pendingMode?.warning ? i18n.t(pendingMode.warning.title) : ''}
+		message={pendingMode?.warning ? i18n.t(pendingMode.warning.message) : ''}
+		confirmLabel={pendingMode?.warning ? i18n.t(pendingMode.warning.confirmLabel) : ''}
 		variant="danger"
 		onConfirm={() => {
 			if (pendingMode) onApprovalMode(pendingMode.mode);

@@ -504,8 +504,8 @@
 							<div class="memory-setting">
 								<div class="memory-setting-head">
 									<span class="memory-setting-label">
-										<label for="mem-{s.key}">{s.label}</label>
-										<span class="memory-help-icon" title={s.help}><Icon name="info" class="w-3.5 h-3.5" /></span>
+										<label for="mem-{s.key}">{i18n.t(s.label)}</label>
+										<span class="memory-help-icon" title={i18n.t(s.help)}><Icon name="info" class="w-3.5 h-3.5" /></span>
 										<OverrideMark
 											overridden={!followsInherited(memoryStore.configOverride, featurePromptsStore.memoryDefaults, s.key)}
 											onRevert={() => commit(s.key, startingDefault(s.key))}

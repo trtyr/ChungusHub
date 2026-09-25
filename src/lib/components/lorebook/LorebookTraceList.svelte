@@ -40,15 +40,15 @@
 		sticky: 'tr.rSticky',
 		cooldown: 'tr.rCooldown',
 		tooEarly: i18n.t('tr.tooEarly'),
-		groupLost: 'Another entry in its group took the slot'
+		groupLost: 'tr.rGroupLost'
 	};
 
 	function reasonFor(record: LorebookEntryRecord): string {
 		if (record.status === 'rolledOut' && record.probability != null) {
-			return `Matched, then lost its ${record.probability}% roll`;
+			return i18n.t('tr.rPct', { p: record.probability });
 		}
 		if (record.status === 'groupLost' && record.lostTo) {
-			return `Lost the “${record.lostTo.group}” group to ${record.lostTo.title || 'another entry'}`;
+			return i18n.t('tr.rGroupTo', { g: record.lostTo.group, t: record.lostTo.title || i18n.t('tr.another') });
 		}
 		return REASONS[record.status];
 	}
@@ -57,8 +57,8 @@
 	function placementOf(record: LorebookEntryRecord): string {
 		if (!record.placedAt) return '';
 		const { role, depth } = record.placedAt;
-		const where = depth === 0 ? 'after the last turn' : `${depth} ${depth === 1 ? 'turn' : 'turns'} back`;
-		return `in the chat, ${where}, as ${role}`;
+		const where = depth === 0 ? i18n.t('tr.lastTurn') : i18n.t('tr.nBack', { n: depth });
+		return i18n.t('tr.inChatAs', { where, role });
 	}
 
 	/** Where a key was found, in the reader's terms. */

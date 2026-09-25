@@ -56,7 +56,7 @@
 	const SORTS: { mode: SortMode; label: string }[] = [
 		{ mode: 'off', label: i18n.t('common.off') },
 		{ mode: 'price', label: i18n.t('pr.cheapest') },
-		{ mode: 'throughput', label: 'Fastest' },
+		{ mode: 'throughput', label: i18n.t('pr.fastest') },
 		{ mode: 'latency', label: i18n.t('pr.lowestLatency') }
 	];
 
