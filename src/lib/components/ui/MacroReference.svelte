@@ -90,16 +90,16 @@
 			<div class="space-y-2">
 				<div class="flex items-baseline gap-2">
 					<span class="text-xs font-ui font-semibold uppercase tracking-wide text-text-secondary">
-						{group.label}
+						{i18n.t(group.label)}
 					</span>
-					<span class="text-[11px] font-ui text-text-muted">{group.hint}</span>
+					<span class="text-[11px] font-ui text-text-muted">{i18n.t(group.hint)}</span>
 					<span class="flex-1 border-t border-border-subtle/60"></span>
 				</div>
 				<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2">
 					{#each group.macros as macro (macro.name)}
 						{@render macroChip(
 							macro.name,
-							macro.description,
+							i18n.t(macro.description),
 							macro.structural ? 'structural' : undefined
 						)}
 					{/each}

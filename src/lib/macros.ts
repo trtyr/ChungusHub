@@ -13,6 +13,7 @@
  * never silently gated. Flow values always win on a name collision.
  */
 
+import { i18n } from '$lib/i18n/i18n.svelte';
 import type {
 	CharacterTraits,
 	PermanentTraitDef,
@@ -33,11 +34,11 @@ export type MacroGroup = 'names' | 'context' | 'time' | 'character-field' | 'mem
 
 /** Ordered group metadata for the macro reference UIs. */
 export const MACRO_GROUPS: readonly { id: MacroGroup; label: string; hint: string }[] = [
-	{ id: 'names', label: 'Names', hint: 'inline name references' },
-	{ id: 'context', label: 'Story & context', hint: 'profiles, world info, history, memory' },
-	{ id: 'time', label: 'Date & time', hint: "the reader's own clock, read as the prompt is built" },
-	{ id: 'character-field', label: 'Character fields', hint: 'one card field at a time' },
-	{ id: 'memory', label: 'Memory pipeline', hint: 'filled while the memory engine runs, literal anywhere else' }
+	{ id: 'names', label: 'mac.grpNames', hint: 'mac.hNames' },
+	{ id: 'context', label: 'mac.grpContext', hint: 'mac.hContext' },
+	{ id: 'time', label: 'mac.grpTime', hint: "the reader's own clock, read as the prompt is built" },
+	{ id: 'character-field', label: 'mac.grpFields', hint: 'mac.hFields' },
+	{ id: 'memory', label: 'mac.grpMemory', hint: 'mac.hMemory' }
 ];
 
 export interface MacroDef {
@@ -77,23 +78,23 @@ export interface MacroDef {
  */
 export const MACROS: readonly MacroDef[] = [
 	// ----- Engine-owned (resolved from real story + chat state, everywhere) -----
-	{ name: 'user', description: 'Persona / protagonist name.', engine: true, group: 'names' },
-	{ name: 'char', description: 'Character name (resolved per-character inside their own fields).', engine: true, group: 'names' },
+	{ name: 'user', description: 'mac.d0', engine: true, group: 'names' },
+	{ name: 'char', description: 'mac.d1', engine: true, group: 'names' },
 	{ name: 'persona', description: "The active persona's description.", engine: true, group: 'context' },
 	{ name: 'character', description: "The active character's full profile (the whole-sheet blob).", engine: true, group: 'context' },
-	{ name: 'lorebook', description: 'Lorebook entries, keyword-matched against recent messages.', engine: true, group: 'context' },
-	{ name: 'memory', description: 'Chat-memory recall block (episode summaries).', engine: true, group: 'context' },
-	{ name: 'chatHistory', description: 'Every turn, as native-role messages. Prompt items only: anywhere else it resolves to nothing.', engine: true, structural: true, group: 'context' },
-	{ name: 'chatHistoryLastN', description: 'Only the newest N turns, as a plain transcript. Write the number: {{chatHistoryLast20}}.', engine: true, parameterized: true, group: 'context' },
-	{ name: 'lastMessage', description: 'The newest turn, as inline text. A copy: the turn itself still rides {{chatHistory}}.', engine: true, group: 'context' },
-	{ name: 'lastUserMessage', description: 'The newest user turn, as inline text.', engine: true, group: 'context' },
-	{ name: 'lastCharMessage', description: 'The newest character turn, as inline text.', engine: true, group: 'context' },
+	{ name: 'lorebook', description: 'mac.d2', engine: true, group: 'context' },
+	{ name: 'memory', description: 'mac.d3', engine: true, group: 'context' },
+	{ name: 'chatHistory', description: 'mac.d4', engine: true, structural: true, group: 'context' },
+	{ name: 'chatHistoryLastN', description: 'mac.d5', engine: true, parameterized: true, group: 'context' },
+	{ name: 'lastMessage', description: 'mac.d6', engine: true, group: 'context' },
+	{ name: 'lastUserMessage', description: 'mac.d7', engine: true, group: 'context' },
+	{ name: 'lastCharMessage', description: 'mac.d8', engine: true, group: 'context' },
 
-	{ name: 'time', description: 'Current local time, e.g. 6:02 PM.', engine: true, group: 'time' },
-	{ name: 'date', description: 'Current local date, e.g. August 22, 2026.', engine: true, group: 'time' },
-	{ name: 'weekday', description: 'Current day of the week, e.g. Saturday.', engine: true, group: 'time' },
-	{ name: 'isotime', description: 'Current local time as 24-hour HH:MM.', engine: true, group: 'time' },
-	{ name: 'isodate', description: 'Current local date as YYYY-MM-DD.', engine: true, group: 'time' },
+	{ name: 'time', description: 'mac.d9', engine: true, group: 'time' },
+	{ name: 'date', description: 'mac.d10', engine: true, group: 'time' },
+	{ name: 'weekday', description: 'mac.d11', engine: true, group: 'time' },
+	{ name: 'isotime', description: 'mac.d12', engine: true, group: 'time' },
+	{ name: 'isodate', description: 'mac.d13', engine: true, group: 'time' },
 
 	// ----- Per-field character macros (place one card field individually) -----
 	{ name: 'description', description: "The character's description field, on its own.", engine: true, group: 'character-field' },
@@ -114,14 +115,14 @@ export const MACROS: readonly MacroDef[] = [
 	{ name: 'scenario', description: "The character's scenario field.", engine: true, group: 'character-field' },
 
 	// ----- Memory pipeline flow (extraction / promotion) -----
-	{ name: 'deepMemory', description: 'Older, already-compacted arcs.', group: 'memory' },
-	{ name: 'recentEpisodes', description: 'The newest raw episode summaries.', group: 'memory' },
+	{ name: 'deepMemory', description: 'mac.d14', group: 'memory' },
+	{ name: 'recentEpisodes', description: 'mac.d15', group: 'memory' },
 	{ name: 'batch', description: "The new scene's messages to digest.", group: 'memory' },
-	{ name: 'sceneLength', description: 'How long the episode should be, scaled to the batch.', group: 'memory' },
-	{ name: 'mergeMode', description: 'Guidance on whether the merge continues a layer or starts fresh.', group: 'memory' },
-	{ name: 'higherContext', description: 'Already-compacted context that must not be restated.', group: 'memory' },
-	{ name: 'episodes', description: 'The episode summaries being merged.', group: 'memory' },
-	{ name: 'recent', description: 'Recent episode summaries included in recall.', group: 'memory' }
+	{ name: 'sceneLength', description: 'mac.d16', group: 'memory' },
+	{ name: 'mergeMode', description: 'mac.d17', group: 'memory' },
+	{ name: 'higherContext', description: 'mac.d18', group: 'memory' },
+	{ name: 'episodes', description: 'mac.d19', group: 'memory' },
+	{ name: 'recent', description: 'mac.d20', group: 'memory' }
 ] as const;
 
 /** Names of the engine-owned macros that resolve exactly as written, derived so it can never
