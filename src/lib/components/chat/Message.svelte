@@ -130,9 +130,9 @@
 	const confirmImpact = $derived(confirmingDelete === 'this_only' ? spliceImpact : subtreeImpact);
 	const confirmCount = $derived(confirmingDelete === 'this_only' ? 1 : deleteBlast.messages);
 	const confirmLines = $derived(
-		describeMemoryImpact(confirmImpact, { mode: 'delete', auto: memoryStore.autoExtract })
+		describeMemoryImpact(confirmImpact, { mode: 'delete', auto: memoryStore.autoExtract }, i18n.t)
 	);
-	const editLines = $derived(describeMemoryImpact(editImpact, { mode: 'edit', auto: memoryStore.autoExtract }));
+	const editLines = $derived(describeMemoryImpact(editImpact, { mode: 'edit', auto: memoryStore.autoExtract }, i18n.t));
 
 	// {{char}}/{{user}} resolve live at display against the active persona + bound character.
 	// Greetings store their macros raw, so changing persona reflows them on screen without

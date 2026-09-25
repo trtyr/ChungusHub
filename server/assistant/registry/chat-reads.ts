@@ -11,7 +11,7 @@ import { serverDb } from '../../db';
 // here would be a coupling that rots the first time the rules change.
 import { changeImpact, episodeSeqRanges, resolveCoverage } from '../../../src/lib/memory/branching';
 import { resolveConfig } from '../../../src/lib/memory/config';
-import { describeMemoryImpact } from '../../../src/lib/memory/impact-copy';
+import { describeMemoryImpact, enT } from '../../../src/lib/memory/impact-copy';
 import type { Episode, MemoryMessage } from '../../../src/lib/memory/types';
 import type { AssistantContext } from '../types';
 import type { Capability } from './types';
@@ -644,7 +644,7 @@ export function memoryCostOfMessageChange(messageId: string, mode: 'edit' | 'del
 		turnsReread: impact.reread,
 		passes: impact.passes,
 		span: impact.span,
-		says: describeMemoryImpact(impact, { mode: removed ? 'delete' : 'edit', auto: state.autoExtract })
+		says: describeMemoryImpact(impact, { mode: removed ? 'delete' : 'edit', auto: state.autoExtract }, enT)
 	};
 }
 

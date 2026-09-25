@@ -29,55 +29,77 @@ export interface ImpactCopyOptions {
 const plural = (n: number, one: string, many: string) => (n === 1 ? one : many);
 
 /** Sentences for a confirmation, or an empty array when memory is untouched by the change. */
-export function describeMemoryImpact(impact: ChangeImpact, opts: ImpactCopyOptions): string[] {
+export type Translate = (key: string, params?: Record<string, string | number>) => string;
+
+/** Sentences for a confirmation, or an empty array when memory is untouched by the change.
+ *  The caller injects `t` (i18n.t on the client) so this module stays server-safe. */
+export function describeMemoryImpact(
+	impact: ChangeImpact,
+	opts: ImpactCopyOptions,
+	t: Translate
+): string[] {
 	const { dropped, droppedStored, paused, survivors, reread, passes, span } = impact;
 	if (!dropped && !droppedStored) return [];
 	const lines: string[] = [];
 
-	if (dropped) {
-		// A summary in play is on-path and contiguous by construction, so it always resolves to
-		// a range. No span here means `resolveCoverage` let a row into `active` that its own
-		// rules forbid: a real defect, and one a quietly range-less sentence would hide.
-		if (!span) throw new Error('memory: a summary in play has no turn span');
-		const where = span.from === span.to ? `Turn #${span.from} is` : `Turns #${span.from} to #${span.to} are`;
-		const verb = opts.mode === 'edit' ? 'Saving' : 'Deleting';
-		const what = plural(dropped, 'that summary', `those ${dropped} summaries`);
-		const after = paused
-			? `, and the ${paused} ${plural(paused, 'summary', 'summaries')} behind ${plural(dropped, 'it', 'them')} ${plural(paused, 'pauses', 'pause')}`
-			: '';
-		lines.push(`${where} summarized in memory. ${verb} drops ${what}${after}.`);
+	if (dropped && span) {
+		const where =
+			span.from === span.to
+				? t('mem.icTurn', { n: span.from })
+				: t('mem.icTurns', { from: span.from, to: span.to });
+		const verb = opts.mode === 'edit' ? t('mem.icSaving') : t('mem.icDeleting');
+		const what = dropped === 1 ? t('mem.icThatSummary') : t('mem.icThoseSummaries', { n: dropped });
+		const after = paused ? t('mem.icAfter', { n: paused }) : '';
+		lines.push(t('mem.icSummarized', { where, verb, what, after }));
 	}
 
 	if (passes > 0) {
-		const cost = `${reread} ${plural(reread, 'turn', 'turns')} (${passes} ${plural(passes, 'pass', 'passes')})`;
-		const back = paused ? `, and the paused ${plural(paused, 'one returns', 'ones return')}` : '';
+		const cost = t('mem.icCost', { reread, passes });
+		const back = paused ? t('mem.icBack', { n: paused }) : '';
 		if (!opts.auto) {
-			lines.push(`Nothing is lost: summarizing in the Memory panel re-reads ${cost}${back}.`);
+			lines.push(t('mem.icManual', { cost, back }));
 		} else if (opts.mode === 'delete') {
-			lines.push(`The turns that survive are re-summarized right away: ${cost}${back}.`);
+			lines.push(t('mem.icDeleteLine', { cost, back }));
 		} else if (passes > AUTO_MAX_BATCHES) {
-			// The automatic pass is capped per reply, so one reply cannot owe nine of them.
-			lines.push(`Nothing is lost: ${cost} are re-read over your next few replies${back}.`);
+			lines.push(t('mem.icAutoMany', { cost, back }));
 		} else {
-			lines.push(`Nothing is lost: your next reply re-reads ${cost}${back}.`);
+			lines.push(t('mem.icAutoOne', { cost, back }));
 		}
 	} else if (dropped && survivors === 0) {
-		// A span removed whole leaves no hole: the path shortens and the summaries either side
-		// keep tiling, so there is nothing to re-read and nothing waiting on it.
-		lines.push(`The ${plural(dropped, 'turns it describes are', 'turns they describe are')} going too, so nothing is re-read and the rest of memory is untouched.`);
+		lines.push(t('mem.icWhole'));
 	} else if (dropped) {
-		// Survivors that no pass can reach: a shortened path put them inside the verbatim
-		// tail, or they are too few to fill a batch with nothing covered after them.
-		lines.push(`The ${survivors} ${plural(survivors, 'turn that survives goes', 'turns that survive go')} back to being sent in full, so nothing is re-read.`);
+		lines.push(t('mem.icSurvivors', { n: survivors }));
 	}
 
 	if (droppedStored) {
-		// Deliberately unclassified: `Coverage.dormant` mixes another branch's summaries with
-		// ones the tail pushed out and ones stranded past a hole, and they return on entirely
-		// different terms. Saying they go is true of all three; saying more is not.
-		lines.push(
-			`${droppedStored} other stored ${plural(droppedStored, 'summary', 'summaries')} of these turns ${plural(droppedStored, 'goes', 'go')} with them.`
-		);
+		lines.push(t('mem.icStoredGone', { n: droppedStored }));
 	}
 	return lines;
 }
+
+/** English fallback for server-side consumers (tool payloads the model reads, not UI copy). */
+const EN: Record<string, string> = {
+	'mem.icTurn': 'Turn #{n}',
+	'mem.icTurns': 'Turns #{from} to #{to} are',
+	'mem.icSaving': 'Saving',
+	'mem.icDeleting': 'Deleting',
+	'mem.icThatSummary': 'that summary',
+	'mem.icThoseSummaries': 'those {n} summaries',
+	'mem.icAfter': ', and the {n} summaries behind them pause',
+	'mem.icSummarized': '{where} summarized in memory. {verb} drops {what}{after}.',
+	'mem.icCost': '{reread} turn(s) ({passes} pass(es))',
+	'mem.icBack': ', and the paused {n} return',
+	'mem.icManual': 'Nothing is lost: summarizing in the Memory panel re-reads {cost}{back}.',
+	'mem.icDeleteLine': 'The turns that survive are re-summarized right away: {cost}{back}.',
+	'mem.icAutoMany': 'Nothing is lost: {cost} are re-read over your next few replies{back}.',
+	'mem.icAutoOne': 'Nothing is lost: your next reply re-reads {cost}{back}.',
+	'mem.icWhole': 'The turns it describes are going too, so nothing is re-read and the rest of memory is untouched.',
+	'mem.icSurvivors': 'The {n} turns that survive go back to being sent in full, so nothing is re-read.',
+	'mem.icStoredGone': '{n} other stored summaries of these turns go with them.'
+};
+
+export const enT: Translate = (key, params) => {
+	let out = EN[key] ?? key;
+	for (const [k, v] of Object.entries(params ?? {})) out = out.replaceAll(`{${k}}`, String(v));
+	return out;
+};
