@@ -26,6 +26,7 @@
 	 *    bar, which IS tabbable, so nothing is reachable by mouse alone.
 	 */
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import { holdMsForBlast } from '$lib/components/ui/HoldToConfirmButton.svelte';
 	import ChatAvatars from './ChatAvatars.svelte';
@@ -52,20 +53,20 @@
 	type SortDir = 'asc' | 'desc';
 	type FilterMode = 'all' | 'favorites' | 'duplicates';
 
-	const SORT_OPTIONS: { key: SortKey; label: string; defaultDir: SortDir }[] = [
-		{ key: 'activity', label: 'Last activity', defaultDir: 'desc' },
-		{ key: 'created', label: 'Date created', defaultDir: 'desc' },
-		{ key: 'messages', label: 'Message count', defaultDir: 'desc' },
-		{ key: 'title', label: 'Title', defaultDir: 'asc' }
-	];
+	const SORT_OPTIONS = $derived([
+		{ key: 'activity' as SortKey, label: i18n.t('svc.sortActivity'), defaultDir: 'desc' as SortDir },
+		{ key: 'created' as SortKey, label: i18n.t('svc.sortCreated'), defaultDir: 'desc' as SortDir },
+		{ key: 'messages' as SortKey, label: i18n.t('svc.sortMessages'), defaultDir: 'desc' as SortDir },
+		{ key: 'title' as SortKey, label: i18n.t('svc.sortTitle'), defaultDir: 'asc' as SortDir }
+	]);
 
-	const BUCKET_LABELS: Record<string, string> = {
-		today: 'Today',
-		yesterday: 'Yesterday',
-		week: 'Previous 7 days',
-		month: 'Previous 30 days',
-		older: 'Older'
-	};
+	const BUCKET_LABELS: Record<string, string> = $derived({
+		today: i18n.t('svc.bToday'),
+		yesterday: i18n.t('svc.bYesterday'),
+		week: i18n.t('svc.bWeek'),
+		month: i18n.t('svc.bMonth'),
+		older: i18n.t('svc.bOlder')
+	});
 
 	let chats = $derived(chatStore.sortedChats);
 	let activeChatId = $derived(chatStore.activeChatId);
@@ -538,10 +539,10 @@
 	let deleteMessage = $derived.by(() => {
 		if (!deleteTarget) return '';
 		const name = `"${deleteTarget.title}"`;
-		if (!deleteStats) return `Delete ${name} and every message in it? This cannot be undone.`;
+		if (!deleteStats) return i18n.t('svc.deleteAskAll', { name });
 		const n = deleteStats.total;
 		const branches = n > deleteStats.path ? ', branches included' : '';
-		return `Delete ${name} and its ${n} message${n === 1 ? '' : 's'}${branches}? This cannot be undone.`;
+		return i18n.t('svc.deleteAskN', { name, n, branches });
 	});
 
 	function deleteChat(chatId: string) {
@@ -595,7 +596,7 @@
 		selectedChats.reduce((n, c) => n + (stats[c.id]?.total ?? 0), 0)
 	);
 	let bulkDeleteMessage = $derived(
-		`Delete ${selectedCount} chat${selectedCount === 1 ? '' : 's'} and ${bulkDeleteStats} message${bulkDeleteStats === 1 ? '' : 's'} in total? This cannot be undone.`
+		i18n.t('svc.bulkDeleteAsk', { n: selectedCount, m: bulkDeleteStats })
 	);
 
 	async function confirmBulkDelete() {
@@ -657,7 +658,7 @@
 		duplicating = true;
 		try {
 			await chatStore.duplicateChat(chat.id, { includeMemory });
-			toastStore.success(includeMemory ? 'Chat duplicated with its memory' : 'Chat duplicated');
+			toastStore.success(includeMemory ? i18n.t('svc.duplicatedWithMemoryToast') : i18n.t('svc.duplicatedToast'));
 			// The selection is deliberately left where it was: the copy's position is not
 			// knowable yet (it settles when the refreshed stats give it its real activity
 			// time), and moving the cursor to a guessed index is worse than not moving it.
@@ -769,7 +770,7 @@
 		     name would say it a second time, and only for one of the two scopes. -->
 		<div class="overlay-header chats-identity-row">
 			<div class="overlay-crumb">
-				<h2 class="overlay-subject">Chats</h2>
+				<h2 class="overlay-subject">{i18n.t('svc.title')}</h2>
 				<span class="overlay-facts">
 					{#if visibleChats.length !== scopedChats.length}
 						{visibleChats.length} of {scopedChats.length} chats
@@ -790,8 +791,8 @@
 					<button
 						type="button"
 						class="overlay-action-btn"
-						title="Import SillyTavern chats"
-						aria-label="Import SillyTavern chats"
+						title={i18n.t('svc.importSt')}
+						aria-label={i18n.t('svc.importSt')}
 						onclick={() => chatFileInput?.click()}
 					>
 						<Icon name="download" class="w-4 h-4" />
@@ -809,7 +810,7 @@
 		     a character to name: with none, one half would be permanently dead and the
 		     other permanently on, which is a label dressed up as a choice. -->
 		{#if scopeCharacter}
-			<div class="chats-scope" role="group" aria-label="Which chats to list">
+			<div class="chats-scope" role="group" aria-label={i18n.t('svc.scopeAria')}>
 				<button
 					type="button"
 					class="chats-scope-btn"
@@ -823,7 +824,7 @@
 					<span class="chats-scope-face" aria-hidden="true">
 						<ChatAvatars members={[scopeCharacter]} size={22} max={1} />
 					</span>
-					<span class="chats-scope-label">{scopeCharacter.name.trim() || 'This character'}</span>
+					<span class="chats-scope-label">{scopeCharacter.name.trim() || i18n.t('svc.thisCharacter')}</span>
 				</button>
 				<button
 					type="button"
@@ -833,7 +834,7 @@
 					onclick={() => setScope('all')}
 				>
 					<Icon name="globe" class="w-4 h-4 shrink-0" />
-					<span class="chats-scope-label">All chats</span>
+					<span class="chats-scope-label">{i18n.t('svc.allChats')}</span>
 				</button>
 			</div>
 		{/if}
@@ -847,7 +848,7 @@
 				<input
 					bind:this={searchInputEl}
 					type="text"
-					placeholder={searchInMessages ? 'Search titles and messages…' : 'Search chats…'}
+					placeholder={searchInMessages ? i18n.t('svc.searchBoth') : i18n.t('svc.searchChats')}
 					bind:value={searchQuery}
 					class="chats-search-input"
 					role="combobox"
@@ -866,7 +867,7 @@
 						type="button"
 						class="chats-search-btn"
 						onclick={() => (searchQuery = '')}
-						aria-label="Clear search"
+						aria-label={i18n.t('svc.clearSearch')}
 					>
 						<Icon name="close" class="w-3.5 h-3.5" />
 					</button>
@@ -879,7 +880,7 @@
 					title={searchInMessages
 						? 'Searching message text too (the branch each chat is on)'
 						: 'Search inside messages as well'}
-					aria-label="Search inside messages"
+					aria-label={i18n.t('svc.searchMsgsAria')}
 					onclick={() => (searchInMessages = !searchInMessages)}
 				>
 					<Icon name="annotation" class="w-4 h-4" />
@@ -893,8 +894,8 @@
 				class="chats-toggle"
 				class:is-on={filterMode === 'favorites'}
 				aria-pressed={filterMode === 'favorites'}
-				title="Show favorites only"
-				aria-label="Show favorites only"
+				title={i18n.t('svc.favOnly')}
+				aria-label={i18n.t('svc.favOnlyAria')}
 				onclick={() => setFilter('favorites')}
 			>
 				<Icon name="heart" class="w-4 h-4 {filterMode === 'favorites' ? 'fill-current' : ''}" />
@@ -908,8 +909,8 @@
 					class="chats-toggle"
 					class:is-on={filterMode === 'duplicates'}
 					aria-pressed={filterMode === 'duplicates'}
-					title="Show only chats whose content is identical to another chat's"
-					aria-label="Show identical chats only"
+					title={i18n.t('svc.dupOnlyTip')}
+					aria-label={i18n.t('svc.dupOnlyAria')}
 					onclick={() => setFilter('duplicates')}
 				>
 					<Icon name="copy" class="w-4 h-4" />
@@ -921,8 +922,8 @@
 				class="chats-toggle"
 				class:is-on={selecting}
 				aria-pressed={selecting}
-				title="Pick several chats"
-				aria-label="Pick several chats"
+				title={i18n.t('svc.pickSeveral')}
+				aria-label={i18n.t('svc.pickSeveralAria')}
 				onclick={toggleSelecting}
 			>
 				<Icon name="checkCircle" class="w-4 h-4" />
@@ -936,7 +937,7 @@
 					aria-expanded={sortMenuOpen}
 					onclick={() => (sortMenuOpen = !sortMenuOpen)}
 				>
-					<span class="chats-sort-caption">Sort</span>
+					<span class="chats-sort-caption">{i18n.t('svc.sortCaption')}</span>
 					<span>{sortLabel(sortKey)}</span>
 					<Icon name="chevronDown" class="w-3.5 h-3.5 text-text-muted" />
 				</button>
@@ -945,7 +946,7 @@
 					class="chats-sort-dir"
 					onclick={toggleSortDir}
 					title={sortDir === 'asc' ? 'Ascending' : 'Descending'}
-					aria-label="Toggle sort direction"
+					aria-label={i18n.t('svc.toggleDir')}
 				>
 					<Icon name={sortDir === 'asc' ? 'chevronUp' : 'chevronDown'} class="w-4 h-4" />
 				</button>
@@ -1135,11 +1136,11 @@
 	     adds a horizontal scrollbar. -->
 	{#if !isMobile}
 		<footer class="chats-footer">
-			<span><kbd>Up/Down</kbd> navigate</span>
-			<span><kbd>Enter</kbd> open</span>
-			<span><kbd>Home/End</kbd> jump</span>
-			<span><kbd>Menu</kbd> actions</span>
-			<span><kbd>Esc</kbd> close</span>
+			<span><kbd>↑/↓</kbd> {i18n.t('svc.kbNavigate')}</span>
+			<span><kbd>⏎</kbd> {i18n.t('svc.kbOpen')}</span>
+			<span><kbd>Home/End</kbd> {i18n.t('svc.kbJump')}</span>
+			<span><kbd>Menu</kbd> {i18n.t('svc.kbActions')}</span>
+			<span><kbd>Esc</kbd> {i18n.t('svc.kbClose')}</span>
 		</footer>
 	{/if}
 </div>
@@ -1171,19 +1172,19 @@
 		>
 			<button type="button" role="menuitem" class="chats-menu-item" onclick={() => selectChat(menuChat.id)}>
 				<Icon name="chat" class="w-4 h-4" />
-				<span>Open</span>
+				<span>{i18n.t('svc.menuOpen')}</span>
 			</button>
 			<button type="button" role="menuitem" class="chats-menu-item" onclick={() => startRename(menuChat.id)}>
 				<Icon name="pencil" class="w-4 h-4" />
-				<span>Rename</span>
+				<span>{i18n.t('svc.menuRename')}</span>
 			</button>
 			<button type="button" role="menuitem" class="chats-menu-item" onclick={() => handleDuplicate(menuChat.id)}>
 				<Icon name="copy" class="w-4 h-4" />
-				<span>Duplicate…</span>
+				<span>{i18n.t('svc.menuDuplicate')}</span>
 			</button>
 			<button type="button" role="menuitem" class="chats-menu-item" onclick={() => toggleFavorite(menuChat.id)}>
 				<Icon name="heart" class="w-4 h-4 {menuChat.isFavorite ? 'fill-current' : ''}" />
-				<span>{menuChat.isFavorite ? 'Remove from favorites' : 'Add to favorites'}</span>
+				<span>{menuChat.isFavorite ? i18n.t('svc.menuFav') : i18n.t('svc.menuUnfav')}</span>
 			</button>
 			<div class="chats-menu-sep"></div>
 			<button
@@ -1193,7 +1194,7 @@
 				onclick={() => deleteChat(menuChat.id)}
 			>
 				<Icon name="trash" class="w-4 h-4" />
-				<span>Delete</span>
+				<span>{i18n.t('common.delete')}</span>
 			</button>
 		</div>
 	{/if}
@@ -1201,7 +1202,7 @@
 
 <ConfirmDialog
 	open={deleteTarget !== null}
-	title="Delete chat"
+	title={i18n.t('svc.deleteChatTitle')}
 	message={deleteMessage}
 	confirmLabel="Delete"
 	variant="danger"
@@ -1213,7 +1214,7 @@
 
 <ConfirmDialog
 	open={bulkDeleteOpen}
-	title="Delete {selectedCount} chat{selectedCount === 1 ? '' : 's'}"
+	title={i18n.t('lbv.deleteBulk', { n: selectedCount })}
 	message={bulkDeleteMessage}
 	confirmLabel="Delete {selectedCount}"
 	variant="danger"
