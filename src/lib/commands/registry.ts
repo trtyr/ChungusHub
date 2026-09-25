@@ -22,6 +22,7 @@
  *
  * See architecture/chat-sessions.md for the composer's command mode.
  */
+import { i18n } from '$lib/i18n/i18n.svelte';
 import type { ComponentProps } from 'svelte';
 import type Icon from '$lib/components/ui/Icon.svelte';
 import { chatCursor } from '$lib/stores/chatCursor.svelte';
@@ -105,7 +106,7 @@ export interface CommandDef {
 /** Panel swaps flush pending lorebook edits, the same call every other navigation makes. */
 const flush = () => lorebookStore.flush();
 
-const NO_CHAT = 'Open a chat first';
+const NO_CHAT_KEY = 'cmd.noChat';
 
 export const COMMANDS: CommandDef[] = [
 	// ===== Write =====
@@ -116,7 +117,7 @@ export const COMMANDS: CommandDef[] = [
 		icon: 'user',
 		describe: 'cmd.say',
 		arg: { label: 'text', required: true },
-		unavailable: (ctx) => (ctx.chatId ? null : NO_CHAT),
+		unavailable: (ctx) => (ctx.chatId ? null : i18n.t(NO_CHAT_KEY)),
 		run: (text) => messageStore.insertDummyMessage('user', text)
 	},
 
@@ -126,7 +127,7 @@ export const COMMANDS: CommandDef[] = [
 		group: 'story',
 		icon: 'feather',
 		describe: 'cmd.continue',
-		unavailable: (ctx) => (ctx.canContinue ? null : 'The newest turn must be a reply'),
+		unavailable: (ctx) => (ctx.canContinue ? null : i18n.t('cmd.mustBeReply')),
 		run: (_arg, ctx) => ctx.host.continueMessage()
 	},
 	{
@@ -159,10 +160,10 @@ export const COMMANDS: CommandDef[] = [
 		// this stands in for needs no Random button.
 		arg: { label: 'direction', required: false },
 		unavailable: (ctx) => {
-			if (!ctx.chatId) return NO_CHAT;
+			if (!ctx.chatId) return i18n.t(NO_CHAT_KEY);
 			return featurePromptsStore.openingSceneEnabled
 				? null
-				: 'Opening Scene is switched off in Settings → Engines';
+				: i18n.t('cmd.openingOff');
 		},
 		run: (direction) => {
 			// Same guard as the sparkle's disabled state: one generation holds the one abort
@@ -176,7 +177,7 @@ export const COMMANDS: CommandDef[] = [
 		group: 'story',
 		icon: 'branch',
 		describe: 'cmd.branchHand',
-		unavailable: (ctx) => (ctx.lastTurnId ? null : 'This chat has no turns yet'),
+		unavailable: (ctx) => (ctx.lastTurnId ? null : i18n.t('cmd.noTurns')),
 		run: (_arg, ctx) => {
 			messageStore.branchTargetId = ctx.lastTurnId;
 		}
@@ -186,11 +187,11 @@ export const COMMANDS: CommandDef[] = [
 		group: 'story',
 		icon: 'crown',
 		describe: 'cmd.canon',
-		unavailable: (ctx) => (ctx.activeLeafId ? null : NO_CHAT),
+		unavailable: (ctx) => (ctx.activeLeafId ? null : i18n.t(NO_CHAT_KEY)),
 		run: async (_arg, ctx) => {
 			const already = ctx.canonLeafId === ctx.activeLeafId;
 			await chatStore.setCanonLeaf(already ? null : ctx.activeLeafId);
-			toastStore.success(already ? 'Canon cleared' : 'This timeline is canon');
+			toastStore.success(i18n.t(already ? 'cmd.canonCleared' : 'cmd.isCanon'));
 		}
 	},
 	{
@@ -211,7 +212,7 @@ export const COMMANDS: CommandDef[] = [
 				scopeId: ctx.chatId,
 				mode: 'once'
 			});
-			toastStore.success('Steering the next reply');
+			toastStore.success(i18n.t('cmd.steeringNext'));
 		}
 	},
 
@@ -237,10 +238,10 @@ export const COMMANDS: CommandDef[] = [
 		icon: 'pencil',
 		describe: 'cmd.rename',
 		arg: { label: 'title', required: true },
-		unavailable: (ctx) => (ctx.chatId ? null : NO_CHAT),
+		unavailable: (ctx) => (ctx.chatId ? null : i18n.t(NO_CHAT_KEY)),
 		run: async (title, ctx) => {
 			await chatStore.updateChatTitle(ctx.chatId!, title.trim());
-			toastStore.success('Chat renamed');
+			toastStore.success(i18n.t('cmd.renamed'));
 		}
 	},
 	{
@@ -248,7 +249,7 @@ export const COMMANDS: CommandDef[] = [
 		group: 'chat',
 		icon: 'copy',
 		describe: 'cmd.duplicate',
-		unavailable: (ctx) => (ctx.chatId ? null : NO_CHAT),
+		unavailable: (ctx) => (ctx.chatId ? null : i18n.t(NO_CHAT_KEY)),
 		run: (_arg, ctx) => ctx.host.requestDuplicate()
 	},
 	{
@@ -269,7 +270,7 @@ export const COMMANDS: CommandDef[] = [
 		icon: 'search',
 		describe: 'cmd.find',
 		arg: { label: 'text', required: false },
-		unavailable: (ctx) => (ctx.chatId ? null : NO_CHAT),
+		unavailable: (ctx) => (ctx.chatId ? null : i18n.t(NO_CHAT_KEY)),
 		run: (text) => {
 			if (text.trim()) chatSearch.query = text.trim();
 			chatSearch.show();
@@ -285,11 +286,11 @@ export const COMMANDS: CommandDef[] = [
 		icon: 'target',
 		describe: 'cmd.go',
 		arg: { label: 'number', required: true },
-		unavailable: (ctx) => (ctx.chatId ? null : NO_CHAT),
+		unavailable: (ctx) => (ctx.chatId ? null : i18n.t(NO_CHAT_KEY)),
 		run: (text) => {
 			const ordinal = Number(text.trim());
 			if (Number.isInteger(ordinal) && chatCursor.goToOrdinal(ordinal)) return;
-			toastStore.warning(`This story runs from turn 1 to ${chatCursor.turnCount}`);
+			toastStore.warning(i18n.t('cmd.turnRange', { n: chatCursor.turnCount }));
 		}
 	},
 	{
@@ -306,7 +307,7 @@ export const COMMANDS: CommandDef[] = [
 		group: 'open',
 		icon: 'userCheck',
 		describe: 'cmd.persona',
-		unavailable: (ctx) => (ctx.personaEntryId ? null : 'You have no persona set'),
+		unavailable: (ctx) => (ctx.personaEntryId ? null : i18n.t('cmd.noPersona')),
 		run: (_arg, ctx) => uiStore.openLibraryEntry(ctx.personaEntryId!, 'persona', flush)
 	},
 	{
@@ -464,14 +465,14 @@ export function runCommand(command: CommandDef, arg: string, ctx: CommandContext
 		return false;
 	}
 	if (!argSatisfied(command, arg)) {
-		toastStore.warning(`/${command.name} needs ${command.arg?.label ?? 'an argument'}`);
+		toastStore.warning(i18n.t('cmd.needsArg', { name: command.name, arg: command.arg?.label ?? i18n.t('cmd.anArgument') }));
 		return false;
 	}
 	void (async () => {
 		try {
 			await command.run(arg, ctx);
 		} catch (error) {
-			toastStore.failed(`run /${command.name}`, error);
+			toastStore.failed(i18n.t('cmd.runNamed', { name: command.name }), error);
 		}
 	})();
 	return true;
