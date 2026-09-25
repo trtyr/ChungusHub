@@ -42,7 +42,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			class="ovr"
 			onclick={onRevert}
 			aria-label={i18n.t('ui.restoreDefault')}
-			title="{text}, click to put it back"
+			title={i18n.t('ui.revertTitle', { text })}
 		>*</button>
 	{:else}
 		<!-- role=img so the glyph is announced as what it means rather than as an asterisk. -->

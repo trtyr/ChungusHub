@@ -83,7 +83,7 @@
 	}
 
 	function addBlank(): void {
-		const rule = createRegexRule({ name: 'New rule' });
+		const rule = createRegexRule({ name: i18n.t('rx.newRule') });
 		set([...rules, rule]);
 		expandedId = rule.id;
 		pickerOpen = false;

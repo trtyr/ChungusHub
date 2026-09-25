@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { labelT } from '$lib/i18n/labels';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import type { ModelInfo } from '$lib/types/llm';
 	import { formatPricePerMillion, formatContext, modelVendor, vendorLabel } from '$lib/utils/modelFormat';
@@ -185,7 +186,7 @@
 		moderated: boolean;
 	} {
 		return {
-			price: formatPricePerMillion(m.pricing?.completion),
+			price: labelT(formatPricePerMillion(m.pricing?.completion) ?? ''),
 			ctx: formatContext(m.contextLength),
 			vision: !!m.inputModalities?.includes('image'),
 			tools: !!m.supportedParameters?.includes('tools'),

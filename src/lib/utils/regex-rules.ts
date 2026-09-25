@@ -205,7 +205,7 @@ function normalizeRule(raw: unknown): RegexRule | null {
 	if (typeof r.pattern !== 'string') return null;
 	return {
 		id: typeof r.id === 'string' && r.id ? r.id : crypto.randomUUID(),
-		name: typeof r.name === 'string' && r.name.trim() ? r.name.trim() : 'Untitled rule',
+		name: typeof r.name === 'string' && r.name.trim() ? r.name.trim() : 'rx.untitledRule',
 		description: typeof r.description === 'string' ? r.description : '',
 		enabled: r.enabled === true,
 		pattern: r.pattern,
@@ -236,7 +236,7 @@ export function normalizeRegexRules(raw: unknown): RegexRule[] {
 export function createRegexRule(partial: Partial<RegexRule> = {}): RegexRule {
 	return {
 		id: crypto.randomUUID(),
-		name: 'New rule',
+		name: 'rx.newRule',
 		description: '',
 		enabled: true,
 		pattern: '',

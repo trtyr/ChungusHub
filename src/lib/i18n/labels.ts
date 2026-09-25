@@ -125,6 +125,20 @@ const ZH: Record<string, string> = {
 	"No regex rules found. Expected a rules export or a SillyTavern regex script.": '未找到正则规则。需要规则导出或 SillyTavern 正则脚本。',
 	"Not a lorebook: expected a JSON object.": '不是世界书：应为 JSON 对象。',
 	'Free': '免费',
+	'N/A': '无',
+	'Other': '其他',
+	'Jan': '1月',
+	'Feb': '2月',
+	'Mar': '3月',
+	'Apr': '4月',
+	'May': '5月',
+	'Jun': '6月',
+	'Jul': '7月',
+	'Aug': '8月',
+	'Sep': '9月',
+	'Oct': '10月',
+	'Nov': '11月',
+	'Dec': '12月',
 };
 
 /** Translate a store-sourced label into the active language; unknown labels pass through. */

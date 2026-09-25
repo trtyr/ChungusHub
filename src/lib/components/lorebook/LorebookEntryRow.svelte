@@ -155,7 +155,7 @@
 		if (!offered.includes(wokenBy)) offered.push(wokenBy);
 		return offered.map((id) => ({
 			id,
-			label: id === 'both' && entry?.constant ? 'Nothing, it is always in' : WOKEN_BY_LABELS[id]
+			label: id === 'both' && entry?.constant ? i18n.t('ler.wakeAlwaysIn') : WOKEN_BY_LABELS[id]
 		}));
 	});
 
