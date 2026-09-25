@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
 import { i18n } from '$lib/i18n/i18n.svelte';
+	import { labelT } from '$lib/i18n/labels';
 	import EmptyState from '$lib/components/ui/EmptyState.svelte';
 	import InfoTip from '$lib/components/ui/InfoTip.svelte';
 	import Toggle from '$lib/components/ui/Toggle.svelte';
@@ -259,7 +260,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						>
 							<span class="rx-rule-text">
 								<span class="rx-rule-name">
-									<span class="rx-name-text">{rule.name}</span>
+									<span class="rx-name-text">{labelT(rule.name)}</span>
 									{#if error}
 										<span class="rx-pill rx-pill-error" title={error}>
 											<Icon name="warning" class="w-3 h-3" />
@@ -272,7 +273,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 									{/if}
 								</span>
 								{#if rule.description}
-									<span class="rx-rule-desc" title={rule.description}>{rule.description}</span>
+									<span class="rx-rule-desc" title={labelT(rule.description)}>{labelT(rule.description)}</span>
 								{/if}
 							</span>
 							{#if !inert}
@@ -353,7 +354,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 								aria-expanded={open}
 							>
 								<span class="rx-carried-text">
-									<span class="rx-carried-name">{rule.name}</span>
+									<span class="rx-carried-name">{labelT(rule.name)}</span>
 									{#if rule.description}
 										<span class="rx-rule-desc">{rule.description}</span>
 									{/if}

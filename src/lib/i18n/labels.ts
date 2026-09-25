@@ -139,6 +139,15 @@ const ZH: Record<string, string> = {
 	'Oct': '10月',
 	'Nov': '11月',
 	'Dec': '12月',
+	"Strip invisible characters": '去除不可见字符',
+	"Non-breaking spaces to spaces": '不换行空格转空格',
+	"Em dash to comma": '长破折号转逗号',
+	"Ellipsis runs to three dots": '省略号统一为三点',
+	"Collapse extra blank lines": '折叠多余空行',
+	"Curly double quotes to straight": '弯双引号转直引号',
+	"Curly single quotes to straight": '弯单引号转直引号',
+	"Straightens typographic single quotes and curly apostrophes.": '（正则种子规则说明）',
+	"System default": 'System default',
 };
 
 /** Translate a store-sourced label into the active language; unknown labels pass through. */

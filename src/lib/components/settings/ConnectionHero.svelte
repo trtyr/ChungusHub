@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { labelT } from '$lib/i18n/labels';
 import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import InfoTip from '$lib/components/ui/InfoTip.svelte';
@@ -226,8 +227,8 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			{#if account.limit != null}
 				<div class="budget">
 					<div class="budget-head">
-						<span class="budget-left">{i18n.t('ch.budgetLeft', { v: formatUsd(account.limitRemaining) })}</span>
-						<span class="budget-cap">{i18n.t('ch.budgetOf', { v: formatUsd(account.limit) })}</span>
+						<span class="budget-left">{i18n.t('ch.budgetLeft', { v: labelT(formatUsd(account.limitRemaining) ?? '') })}</span>
+						<span class="budget-cap">{i18n.t('ch.budgetOf', { v: labelT(formatUsd(account.limit) ?? '') })}</span>
 					</div>
 					<div class="meter"><div class="meter-fill" class:low={budgetLow} style="width:{budgetPct}%"></div></div>
 					{#if account.limitReset}<span class="budget-note">{i18n.t('ch.budgetReset', { v: account.limitReset })}</span>{/if}
@@ -235,15 +236,15 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			{:else}
 				<div class="budget-flat">
 					<span class="nocap">{i18n.t('hero.noCap')}</span>
-					{#if account.balance != null}<span class="balance">{i18n.t('hero.balance', { n: formatUsd(account.balance) })}</span>{/if}
+					{#if account.balance != null}<span class="balance">{i18n.t('hero.balance', { n: labelT(formatUsd(account.balance) ?? '') })}</span>{/if}
 				</div>
 			{/if}
 
 			{#if account.usageDaily || account.usageWeekly || account.usageMonthly}
 				<div class="spend">
-					<span class="spend-chip"><b>{i18n.t('hero.today')}</b> {formatUsd(account.usageDaily)}</span>
-					<span class="spend-chip"><b>{i18n.t('hero.week')}</b> {formatUsd(account.usageWeekly)}</span>
-					<span class="spend-chip"><b>{i18n.t('hero.month')}</b> {formatUsd(account.usageMonthly)}</span>
+					<span class="spend-chip"><b>{i18n.t('hero.today')}</b> {labelT(formatUsd(account.usageDaily) ?? '')}</span>
+					<span class="spend-chip"><b>{i18n.t('hero.week')}</b> {labelT(formatUsd(account.usageWeekly) ?? '')}</span>
+					<span class="spend-chip"><b>{i18n.t('hero.month')}</b> {labelT(formatUsd(account.usageMonthly) ?? '')}</span>
 				</div>
 			{/if}
 

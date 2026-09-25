@@ -330,7 +330,7 @@
 					onchange={(e) => themeStore.update({ uiFont: (e.target as HTMLSelectElement).value })}
 				>
 					{#each themeStore.uiFonts as font (font.id)}
-						<option value={font.id}>{font.label}</option>
+						<option value={font.id}>{labelT(font.label)}</option>
 					{/each}
 				</Select>
 			</div>

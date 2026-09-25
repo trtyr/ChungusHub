@@ -12,6 +12,7 @@
 	import { formatPricePerMillion, formatContext } from '$lib/utils/modelFormat';
 	import { toggleRow } from '$lib/actions/toggleRow';
 	import { i18n } from '$lib/i18n/i18n.svelte';
+	import { labelT } from '$lib/i18n/labels';
 
 	interface Props {
 		/** The connection whose OpenRouter routing (for its single model) is being edited. */
@@ -399,7 +400,7 @@
 				{#if h}<span class="hdot hdot-{h}" title={h === 'ok' ? i18n.t('pr.hOk') : h === 'warn' ? i18n.t('pr.hWarn') : i18n.t('pr.hDown')}></span>{/if}
 				{#if pin || pout}
 					<span class="badge badge-price" title={i18n.t('pr.priceTip')}>
-						{#if pin}<span class="badge-lbl">{i18n.t('pr.in')}</span>{pin}{/if}{#if pin && pout}<span class="badge-sep">·</span>{/if}{#if pout}<span class="badge-lbl">{i18n.t('pr.out')}</span>{pout}{/if}
+						{#if pin}<span class="badge-lbl">{i18n.t('pr.in')}</span>{labelT(pin ?? '')}{/if}{#if pin && pout}<span class="badge-sep">·</span>{/if}{#if pout}<span class="badge-lbl">{i18n.t('pr.out')}</span>{labelT(pout ?? '')}{/if}
 					</span>
 				{/if}
 				{#if formatContext(row.contextLength)}<span class="badge"><span class="badge-lbl">{i18n.t('pr.ctx')}</span>{formatContext(row.contextLength)}</span>{/if}
