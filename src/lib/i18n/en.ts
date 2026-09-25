@@ -1940,6 +1940,7 @@ export const en: Record<string, string> = {
 	'mac.dPersona': "The active persona's description.",
 	'mac.dPersonalityField': "The character's personality-summary field, on its own.",
 	'mac.dScenario': "The character's scenario field.",
+	'rx.invalid': 'invalid',
 	'cmd.say': 'Add a turn of yours without asking for a reply',
 	'cmd.continue': 'Extend the newest reply where it stops',
 	'cmd.retry': 'Generate the newest turn again',

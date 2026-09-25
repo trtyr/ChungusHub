@@ -264,11 +264,11 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 									{#if error}
 										<span class="rx-pill rx-pill-error" title={error}>
 											<Icon name="warning" class="w-3 h-3" />
-											invalid
+											{i18n.t('rx.invalid')}
 										</span>
 									{:else if inert}
 										<span class="rx-pill rx-pill-warn" title={routingSentence(rule)}>
-											inert
+											{i18n.t('rx.inert')}
 										</span>
 									{/if}
 								</span>
@@ -362,7 +362,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 								{#if error}
 									<span class="rx-pill rx-pill-error" title={error}>
 										<Icon name="warning" class="w-3 h-3" />
-										invalid
+										{i18n.t('rx.invalid')}
 									</span>
 								{:else if isRuleInert(rule)}
 									<span class="rx-pill rx-pill-warn" title={routingSentence(rule)}>

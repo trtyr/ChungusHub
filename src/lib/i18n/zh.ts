@@ -1918,6 +1918,7 @@ export const zh: Record<string, string> = {
 	'mac.dPersona': '活动身份的描述。',
 	'mac.dPersonalityField': '角色的性格摘要字段，单独成段。',
 	'mac.dScenario': '角色的场景字段。',
+	'rx.invalid': '无效',
 	'cmd.say': '添加一条你的回合，不请求回复',
 	'cmd.continue': '从最新回复停下的地方继续',
 	'cmd.retry': '重新生成最新回合',
