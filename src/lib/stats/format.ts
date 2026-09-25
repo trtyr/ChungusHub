@@ -21,23 +21,45 @@ export function plural(value: number, singular: string, pluralForm = `${singular
  * days and hours for a library's worth of waiting. Deliberately not the message meta row's
  * `formatDuration`, which is tuned for one reply and would report a week in seconds.
  */
-export function span(ms: number): string {
-	if (ms < 1000) return 'under a second';
+const SPAN_EN: Record<string, string> = {
+	'fmt.underSec': 'under a second',
+	'fmt.nSec': '{n} seconds',
+	'fmt.nMin': '{n} minutes',
+	'fmt.nHour': '{n} hours',
+	'fmt.hMin': '{h} hours {m} minutes',
+	'fmt.nDay': '{n} days',
+	'fmt.dHour': '{d} days {h} hours'
+};
+
+export function span(ms: number, t?: (key: string, params?: Record<string, string | number>) => string): string {
 	const seconds = Math.round(ms / 1000);
-	if (seconds < 60) return plural(seconds, 'second');
-
 	const minutes = Math.floor(seconds / 60);
-	if (minutes < 60) return plural(minutes, 'minute');
-
 	const hours = Math.floor(minutes / 60);
-	if (hours < 24) {
-		const rest = minutes % 60;
-		return rest ? `${plural(hours, 'hour')} ${plural(rest, 'minute')}` : plural(hours, 'hour');
+	const days = Math.floor(hours / 24);
+
+	// English path: original plural() logic, test-compatible.
+	if (!t) {
+		if (ms < 1000) return 'under a second';
+		if (seconds < 60) return plural(seconds, 'second');
+		if (minutes < 60) return plural(minutes, 'minute');
+		if (hours < 24) {
+			const rest = minutes % 60;
+			return rest ? `${plural(hours, 'hour')} ${plural(rest, 'minute')}` : plural(hours, 'hour');
+		}
+		const rest = hours % 24;
+		return rest ? `${plural(days, 'day')} ${plural(rest, 'hour')}` : plural(days, 'day');
 	}
 
-	const days = Math.floor(hours / 24);
+	// i18n path
+	if (ms < 1000) return t('fmt.underSec');
+	if (seconds < 60) return t('fmt.nSec', { n: seconds });
+	if (minutes < 60) return t('fmt.nMin', { n: minutes });
+	if (hours < 24) {
+		const rest = minutes % 60;
+		return rest ? t('fmt.hMin', { h: hours, m: rest }) : t('fmt.nHour', { n: hours });
+	}
 	const rest = hours % 24;
-	return rest ? `${plural(days, 'day')} ${plural(rest, 'hour')}` : plural(days, 'day');
+	return rest ? t('fmt.dHour', { d: days, h: rest }) : t('fmt.nDay', { n: days });
 }
 
 /** An average from a total and the number of things it was measured over. Null when there

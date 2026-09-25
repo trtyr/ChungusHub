@@ -1,5 +1,3 @@
-import { i18n } from '$lib/i18n/i18n.svelte';
-import { beforeAll } from 'bun:test';
 /**
  * The sentences the stats screen is judged on. What is pinned here is the two places a
  * figure could quietly lie: a span that reports a week in seconds, and an average over
@@ -8,9 +6,6 @@ import { beforeAll } from 'bun:test';
 import { describe, it, expect } from 'bun:test';
 import { span, average, share, bookComparison, comparisonLabel, plural } from './format';
 
-beforeAll(() => {
-	i18n.lang = 'en';
-});
 
 describe('a span reaches for the units that carry it', () => {
 	it('climbs from seconds to days', () => {

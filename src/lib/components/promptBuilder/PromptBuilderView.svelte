@@ -996,8 +996,7 @@
 			{#if undeclaredGroups.length > 0}
 				<div class="pb-adopt">
 					<p class="pb-adopt-text">
-						{undeclaredGroups.length === 1 ? 'One group is' : `${undeclaredGroups.length} groups are`}
-						named by controls but not declared here, so they render last under their own name.
+						{i18n.t('pbv.undeclaredGroups', { n: undeclaredGroups.length })}
 					</p>
 					<div class="pb-adopt-row">
 						{#each undeclaredGroups as group (group)}

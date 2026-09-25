@@ -339,8 +339,8 @@
 				<section class="block">
 					<h3 class="block-title">{i18n.t('stv.cost')}</h3>
 					{#if stats.measured.generationTurns === 0 && stats.measured.promptTokenTurns === 0}
-						<p class="block-note">
-							Nothing here recorded what it cost. Turns generated in ChungusHub from now on will.
+<p class="block-note">
+							{i18n.t('stv.noCost')}
 						</p>
 					{:else}
 						<div class="rows">
@@ -352,7 +352,7 @@
 										/></span
 									>
 									<span class="row-value">
-										{span(stats.measured.generationMs)} {i18n.t('stv.inTotal')}<span class="row-sub"
+										{span(stats.measured.generationMs, i18n.t)} {i18n.t('stv.inTotal')}<span class="row-sub"
 											>{i18n.t('stv.avgOver', { n: i18n.t('stv.nMeasured', { n: stats.measured.generationTurns }) })}</span
 										>
 									</span>
@@ -366,7 +366,7 @@
 										/></span
 									>
 									<span class="row-value">
-										{span(firstTokenAverage)} {i18n.t('stv.onAvg')}<span class="row-sub"
+										{span(firstTokenAverage, i18n.t)} {i18n.t('stv.onAvg')}<span class="row-sub"
 											>{i18n.t('stv.avgOver', { n: i18n.t('stv.nMeasured', { n: stats.measured.firstTokenTurns }) })}</span
 										>
 									</span>
@@ -380,7 +380,7 @@
 										/></span
 									>
 									<span class="row-value">
-										{span(stats.measured.reasoningMs)} {i18n.t('stv.inTotal')}<span class="row-sub"
+										{span(stats.measured.reasoningMs, i18n.t)} {i18n.t('stv.inTotal')}<span class="row-sub"
 											>{i18n.t('stv.avgOver', { n: i18n.t('stv.nMeasured', { n: stats.measured.reasoningTurns }) })}</span
 										>
 									</span>
