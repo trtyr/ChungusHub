@@ -1,3 +1,4 @@
+import { i18n } from '$lib/i18n/i18n.svelte';
 /**
  * The memory engine: extraction batches, recursive promotion, and branch reconciliation.
  *
@@ -133,9 +134,7 @@ const REQUIRED_PROMOTE_MACROS = ['{{episodes}}'];
 function assertTemplate(template: string, required: string[], label: string): void {
 	const missing = required.filter((m) => !template.includes(m));
 	if (missing.length) {
-		throw new Error(
-			`Memory ${label} template is missing ${missing.join(', ')}. Without it the model never sees the text it is meant to summarize. Restore it in Settings → Engines → Chat Memory.`
-		);
+		throw new Error(i18n.t('mem.eng1', { p0: label, p1: missing.join(', ') }));
 	}
 }
 
@@ -223,7 +222,7 @@ async function extractEpisode(
 		}
 		return episode;
 	}
-	throw new Error(`Memory extraction ${lastProblem}`);
+	throw new Error(i18n.t('mem.eng2', { p0: lastProblem }));
 }
 
 /** Build the BatchResult for one batch. */

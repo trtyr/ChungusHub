@@ -932,9 +932,7 @@ class CharacterLibraryStore {
 		const usage = await this.versionUsage(version.entryId);
 		const pinned = usage[versionId] ?? 0;
 		if (pinned > 0) {
-			throw new Error(
-				`${pinned} chat${pinned === 1 ? ' is' : 's are'} pinned to "${version.name}". Repin ${pinned === 1 ? 'it' : 'them'} first.`
-			);
+			throw new Error(i18n.t('lib.pinnedRefuse', { n: pinned, name: version.name }));
 		}
 		const entry = this.getEntryById(version.entryId);
 		if (entry?.activeVersionId === versionId) {

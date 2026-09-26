@@ -300,7 +300,7 @@ class ImageService {
 				if (retry.size <= MAX_STORED_BYTES) return { blob: retry, ext: STORED_IMAGE_EXTENSION };
 			}
 			throw new Error(
-				`This transparent image will not fit in ${megabytes(MAX_STORED_BYTES)} as a png, and converting it would fill the transparency back in.`
+				i18n.t('img.noFitTransparent', { size: megabytes(MAX_STORED_BYTES) })
 			);
 		}
 

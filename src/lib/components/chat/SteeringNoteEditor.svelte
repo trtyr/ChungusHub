@@ -157,7 +157,7 @@
 		<div class="pills pills-wrap" role="radiogroup" aria-label={i18n.t('chat.scopeAria')}>
 			{#each choices as choice (choice.scope)}
 				{@const disabled = !choice.available && note.scope !== choice.scope}
-				{@const hint = choice.available ? choice.hint : `${choice.hint} (nothing here to bind to)`}
+				{@const hint = choice.available ? choice.hint : `${choice.hint} ${i18n.t('lbw.noBindShort')}`}
 				{#if choice.scope === 'version'}
 					<!-- Split pill: the face picks the rung, the chevron picks WHICH version. -->
 					<div class="pill pill--split" class:pill--active={note.scope === 'version'}>

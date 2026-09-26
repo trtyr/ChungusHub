@@ -727,7 +727,7 @@ class AssistantSessionStore {
 			// Name the session from its first prompt, and always bump activity on the row's own
 			// stamp, so the history list is ordered by the same clock the turn will bump it with.
 			const patch: Partial<AssistantSession> = { updatedAt: createdAt };
-			if (isFirst && session && session.title === NEW_SESSION_TITLE) patch.title = deriveTitle(body || 'Image');
+			if (isFirst && session && session.title === NEW_SESSION_TITLE) patch.title = deriveTitle(body || i18n.t('asm.imageWord'));
 			await db.updateAssistantSession({ id: sessionId, ...patch });
 			this.bumpSession(sessionId, patch);
 
@@ -774,7 +774,7 @@ class AssistantSessionStore {
 	/** One-click resume after a budget-capped turn: a normal user turn with a canned prompt. */
 	async continueTurn(sessionId: string, attachments: AssistantAttachment[] = []): Promise<void> {
 		if (!this.canContinue(sessionId)) return;
-		await this.send(sessionId, 'Continue exactly where you left off. Do not redo completed work.', attachments);
+		await this.send(sessionId, i18n.t('chat.continueExact'), attachments);
 	}
 
 	/** The tab's current context occupancy (tokens), from the last completed turn. */

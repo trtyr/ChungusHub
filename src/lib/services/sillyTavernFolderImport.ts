@@ -374,7 +374,7 @@ export async function importSillyTavernFolder(
 				// since stops counting, so the file comes back on the next run instead of being
 				// skipped forever under a claim saying they still have it.
 				await ledger.claim(file, chatId);
-			} else report.chats.failed.push(`${file.name}: no importable messages`);
+			} else report.chats.failed.push(`${file.name}: ${i18n.t('impc.noMessages')}`);
 		} catch (e) {
 			report.chats.failed.push(`${file.name}: ${reason(e)}`);
 		}

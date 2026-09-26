@@ -163,7 +163,7 @@
 		if (!item || item.busy) return;
 		item.busy = true;
 		items = items.filter((i) => i !== item);
-		await persist([], `${item.name} deleted`);
+		await persist([], i18n.t('asm.deletedName', { name: item.name }));
 	}
 
 	function addBlank(): void {

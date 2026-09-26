@@ -1,3 +1,4 @@
+import { i18n } from '$lib/i18n/i18n.svelte';
 /**
  * Attached files: the read-only reference material a user hands the Chungus Assistant
  * (architecture/chungus-assistant.md).
@@ -46,7 +47,7 @@ export function isDocumentPng(bytes: Uint8Array): boolean {
 /** The reason a file cannot be attached, or null when it passes. */
 export function fileRejectionReason(file: File): string | null {
 	if (file.size > MAX_ASSISTANT_FILE_BYTES) {
-		return `"${file.name}" is ${megabytes(file.size)}; the limit for an attached file is ${megabytes(MAX_ASSISTANT_FILE_BYTES)}.`;
+		return i18n.t('asm.fileTooBig', { name: file.name, size: megabytes(file.size), limit: megabytes(MAX_ASSISTANT_FILE_BYTES) });
 	}
 	return null;
 }

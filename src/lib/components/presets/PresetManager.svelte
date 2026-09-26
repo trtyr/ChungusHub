@@ -157,7 +157,7 @@
 
 	async function copyJson(): Promise<void> {
 		if (!activePreset) return;
-		await run('f.presetJsonCopied', async () => {
+		await run('t.presetJsonCopied', async () => {
 			await copyText(presetService.exportPresetJson(activePreset.id));
 			toastStore.success(i18n.t('t.presetJsonCopied'));
 		});

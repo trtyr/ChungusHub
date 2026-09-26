@@ -120,7 +120,7 @@
 				{#if controls.length > 0}
 					<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2">
 						{#each controls as control (control.name)}
-							{@render macroChip(control.name, control.description, 'control')}
+							{@render macroChip(control.name, control.description, i18n.t('ui.controlTag'))}
 						{/each}
 					</div>
 				{:else}
