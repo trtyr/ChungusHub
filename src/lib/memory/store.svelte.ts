@@ -160,7 +160,7 @@ function own(override: Partial<MemoryConfig> | null): Partial<MemoryConfig> | nu
 	return override && Object.keys(override).length > 0 ? override : null;
 }
 
-if (process.env.NODE_ENV !== 'test') setMemoryEngineI18n((key, params) => i18n.t(key, params));
+setMemoryEngineI18n((key, params) => i18n.t(key, params));
 
 class MemoryStore {
 	activeChatId = $state<string | null>(null);

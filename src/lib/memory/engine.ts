@@ -38,6 +38,8 @@ export function setMemoryEngineI18n(fn: (key: string, params?: Record<string, st
 const ENG_TEMPLATES: Record<string, string> = {
 	'mem.eng1': 'Memory {p0} template is missing {p1}. Without it the model never sees the text it is meant to summarize. Restore it in Settings → Engines → Chat Memory.',
 	'mem.eng2': 'Memory extraction {p0}',
+	'mem.probNoEpisode': 'returned no episode (response started: "{p0}")',
+	'mem.probLooped': 'looped, repeating {n} words verbatim (episode started: "{p0}")',
 };
 function engMsg(key: string, params: Record<string, string | number>): string {
 	if (engineT) return engineT(key, params);
