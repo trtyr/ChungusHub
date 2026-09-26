@@ -19,6 +19,7 @@
   configuration (each rule sees the previous one's output), so the list drags.
 -->
 <script lang="ts">
+	import { labelT } from '$lib/i18n/labels';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Toggle from '$lib/components/ui/Toggle.svelte';
@@ -157,7 +158,7 @@
 							onclick={() => (expandedId = open ? null : rule.id)}
 							aria-expanded={open}
 						>
-							<span class="cr-name">{rule.name}</span>
+							<span class="cr-name">{labelT(rule.name)}</span>
 							{#if error}
 								<span class="cr-pill cr-pill-error" title={error}>
 									<Icon name="warning" class="w-3 h-3" />

@@ -1,3 +1,4 @@
+import { i18n } from '$lib/i18n/i18n.svelte';
 /**
  * Client preset service.
  *
@@ -157,7 +158,7 @@ class PresetService {
 	private async ensureActivePreset(): Promise<void> {
 		if (this.activePresetId && this.getEffective(this.activePresetId)) return;
 		let next = this.getAllPresets()[0] ?? null;
-		if (!next) next = await this.createPreset('New Preset');
+		if (!next) next = await this.createPreset(i18n.t('pm.newPresetName'));
 		await this.activatePreset(next.id);
 	}
 

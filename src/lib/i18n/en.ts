@@ -2074,6 +2074,7 @@ export const en: Record<string, string> = {
 	'rxe.nMatches': '{n} matches',
 	'sb.favoriteN': 'Favorite {n}',
 	'sb.unfavoriteN': 'Unfavorite {n}',
+	'pm.newPresetName': 'New Preset',
 	'cmd.say': 'Add a turn of yours without asking for a reply',
 	'cmd.continue': 'Extend the newest reply where it stops',
 	'cmd.retry': 'Generate the newest turn again',

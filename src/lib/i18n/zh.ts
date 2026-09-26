@@ -2052,6 +2052,7 @@ export const zh: Record<string, string> = {
 	'rxe.nMatches': '{n} 处匹配',
 	'sb.favoriteN': '收藏 {n} 个',
 	'sb.unfavoriteN': '取消收藏 {n} 个',
+	'pm.newPresetName': '新预设',
 	'cmd.say': '添加一条你的回合，不请求回复',
 	'cmd.continue': '从最新回复停下的地方继续',
 	'cmd.retry': '重新生成最新回合',
