@@ -1,4 +1,13 @@
 <script lang="ts">
+	const IMP_PHASE: Record<string, string> = {
+		Lorebooks: 'st.gLorebooks',
+		Characters: 'st.gCharacters',
+		Sprites: 'st.gSprites',
+		Backgrounds: 'st.gBackgrounds',
+		Personas: 'st.gPersonas',
+		Chats: 'st.gChats',
+		Done: 'bk.done'
+	};
 	/**
 	 * The standing channel's last condition (architecture/ui-shell-settings.md): a SillyTavern
 	 * folder import is running.
@@ -32,7 +41,7 @@
 		<span class="import-message">{i18n.t('import.running')}</span>
 		{#if progress}
 			<span class="import-step">
-				{progress.phase}{progress.total > 1 ? ` ${progress.done + 1} / ${progress.total}` : ''}
+				{i18n.t(IMP_PHASE[progress.phase] ?? progress.phase)}{progress.total > 1 ? ` ${progress.done + 1} / ${progress.total}` : ''}
 			</span>
 		{/if}
 		<button type="button" class="import-stop" onclick={() => importRun.stop()}>{i18n.t('common.stop')}</button>

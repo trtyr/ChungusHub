@@ -124,8 +124,8 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		!install
 			? ''
 			: install.imageBytes > 0
-				? `${bytes(install.dataBytes)} on disk, ${bytes(install.imageBytes)} of it pictures.`
-				: `${bytes(install.dataBytes)} on disk.`
+				? i18n.t('ab.sizeBoth', { a: bytes(install.dataBytes), b: bytes(install.imageBytes) })
+				: i18n.t('ab.sizeOne', { a: bytes(install.dataBytes) })
 	);
 
 	/**

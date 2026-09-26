@@ -1965,6 +1965,8 @@ export const en: Record<string, string> = {
 	'lbw.entryName': 'entry',
 	'lbw.untitled': 'Untitled',
 	'lbw.untitledPalette': 'Untitled palette',
+	'ab.sizeBoth': '{a} on disk, {b} of it pictures.',
+	'ab.sizeOne': '{a} on disk.',
 	'cmd.say': 'Add a turn of yours without asking for a reply',
 	'cmd.continue': 'Extend the newest reply where it stops',
 	'cmd.retry': 'Generate the newest turn again',

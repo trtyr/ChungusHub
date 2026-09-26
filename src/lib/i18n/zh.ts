@@ -1943,6 +1943,8 @@ export const zh: Record<string, string> = {
 	'lbw.entryName': '条目',
 	'lbw.untitled': '未命名',
 	'lbw.untitledPalette': '未命名调色板',
+	'ab.sizeBoth': '磁盘占用 {a}，其中图片 {b}。',
+	'ab.sizeOne': '磁盘占用 {a}。',
 	'cmd.say': '添加一条你的回合，不请求回复',
 	'cmd.continue': '从最新回复停下的地方继续',
 	'cmd.retry': '重新生成最新回合',
