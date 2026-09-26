@@ -329,8 +329,7 @@
 					{#if matchInfo.count === 0}
 						{i18n.t('rxe.t79')}
 					{:else}
-						{matchInfo.count}{matchInfo.capped ? '+' : ''}
-						match{matchInfo.count === 1 && !matchInfo.capped ? '' : 'es'}
+						{i18n.t('rxe.nMatches', { n: matchInfo.count + (matchInfo.capped ? '+' : '') })}
 					{/if}
 				</span>
 			{/if}

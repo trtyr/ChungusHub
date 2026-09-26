@@ -288,7 +288,7 @@
 							</button>
 						{/if}
 						<span class="src-badge big" style={`color:${sourceColor(entry.source)}; background:color-mix(in srgb, ${sourceColor(entry.source)} 15%, transparent)`}>
-							{entry.source}{entry.iteration ? ` · step ${entry.iteration}` : ''}
+							{entry.source}{entry.iteration ? ` · ${i18n.t('dbg.stepN', { n: entry.iteration })}` : ''}
 						</span>
 						<span class="dh-model" title={entry.model}>{entry.model}</span>
 						{#if entry.resultModel && entry.resultModel !== entry.model}

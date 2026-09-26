@@ -271,8 +271,8 @@
 					title={open ? i18n.t('asm.ttCollapseBatch') : i18n.t('asm.ttExpandBatch')}
 				>
 					<Icon name={open ? 'chevronDown' : 'chevronRight'} class="w-3.5 h-3.5 shrink-0" />
-					<span class="assistant-batch-count">{unit.items.length} actions</span>
-					{#if failed}<span class="assistant-batch-fail">{failed} failed</span>{/if}
+					<span class="assistant-batch-count">{i18n.t('asm.nActions', { n: unit.items.length })}</span>
+					{#if failed}<span class="assistant-batch-fail">{i18n.t('asm.nFailed', { n: failed })}</span>{/if}
 					{#if !open}
 						<span class="assistant-batch-latest">{unit.items[unit.items.length - 1].step.tool.label}</span>
 					{/if}

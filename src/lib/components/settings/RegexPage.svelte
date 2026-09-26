@@ -366,7 +366,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 									</span>
 								{:else if isRuleInert(rule)}
 									<span class="rx-pill rx-pill-warn" title={routingSentence(rule)}>
-										inert
+										{i18n.t('rx.inert')}
 									</span>
 								{:else}
 									<RegexRoutingIcons {rule} />

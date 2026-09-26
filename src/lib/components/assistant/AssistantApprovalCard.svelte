@@ -247,7 +247,7 @@
 						{#if verdict}
 							<span class="apv-verdict">{verdict}</span>
 						{:else}
-							{@render answer(indexes, `all ${indexes.length} of ${group.act}`)}
+							{@render answer(indexes, i18n.t('asm.allOfAct', { n: indexes.length, act: group.act }))}
 						{/if}
 					</div>
 					{#if where}<p class="apv-where">{where}</p>{/if}

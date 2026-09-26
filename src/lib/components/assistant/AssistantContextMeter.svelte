@@ -43,7 +43,7 @@
 				<div class="assistant-ctx-fill" style:width="{pct}%"></div>
 			</div>
 		{/if}
-		<span class="assistant-ctx-num">{fmtTokens(used)}{limit ? ` / ${fmtTokens(limit)} · ${pct}%` : ' ctx'}</span>
+		<span class="assistant-ctx-num">{fmtTokens(used)}{limit ? ` / ${fmtTokens(limit)} · ${pct}%` : ' ' + i18n.t('pr.ctxShort')}</span>
 		{#if pct !== null && pct >= 80}
 			<button type="button" class="assistant-ctx-newtab" onclick={onNewTab} title={i18n.t('asm.ctxNewTab')}>
 				{i18n.t('asm.t9')}
