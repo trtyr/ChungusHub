@@ -193,6 +193,11 @@ const ZH: Record<string, string> = {
 	'Amethyst': '紫晶',
 	'Silver': '银灰',
 	'Marigold': '万寿菊橙',
+	"Password required.": '需要密码。',
+	"Connection lost": '连接已断开',
+	"WebSocket connection timed out": 'WebSocket 连接超时',
+	"WebSocket connection failed": 'WebSocket 连接失败',
+	"Connection dropped. The turn keeps running on the server and its result will appear when the connection returns.": '连接已断开。该回合会在服务器上继续运行，其结果将在连接恢复后出现。',
 };
 
 /** Translate a store-sourced label into the active language; unknown labels pass through. */

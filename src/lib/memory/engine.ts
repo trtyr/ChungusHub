@@ -227,12 +227,12 @@ async function extractEpisode(
 		const raw = await deps.llm(messages, signal);
 		const episode = parseEpisode(raw);
 		if (!episode) {
-			lastProblem = `returned no episode (response started: "${raw.slice(0, 160)}")`;
+			lastProblem = engMsg('mem.probNoEpisode', { p0: raw.slice(0, 160) });
 			continue;
 		}
 		const repeat = longestRepeatedRun(episode);
 		if (repeat >= MAX_REPEATED_RUN) {
-			lastProblem = `looped, repeating ${repeat} words verbatim (episode started: "${episode.slice(0, 160)}")`;
+			lastProblem = engMsg('mem.probLooped', { n: repeat, p0: episode.slice(0, 160) });
 			continue;
 		}
 		return episode;

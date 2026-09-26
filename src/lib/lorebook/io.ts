@@ -1,3 +1,4 @@
+import { i18n } from '$lib/i18n/i18n.svelte';
 /**
  * Browser glue for lorebook files: download + file read. The actual format conversion lives
  * in `sillytavern.ts`; this only handles the Blob/anchor/FileReader plumbing so components stay
@@ -61,7 +62,7 @@ export async function readLorebookFile(file: File): Promise<Lorebook> {
 	try {
 		raw = JSON.parse(text);
 	} catch {
-		throw new Error(`"${file.name}" is not valid JSON.`);
+		throw new Error(i18n.t('lbw.invalidJsonFile', { name: file.name }));
 	}
 	const fallbackName = file.name.replace(/\.[^.]+$/, '');
 	return parseLorebook(raw, fallbackName);

@@ -1,3 +1,14 @@
+import { setMemoryEngineI18n } from './engine';
+import { en } from '../i18n/en';
+
+const __t = (key: string, params?: Record<string, string | number>): string => {
+	let out = en[key] ?? key;
+	if (params) for (const [k, v] of Object.entries(params)) out = out.replaceAll(`{${k}}`, String(v));
+	return out;
+};
+
+setMemoryEngineI18n(__t);
+
 /**
  * Smoke tests for the pure memory engine. Run with `bun test`.
  *
