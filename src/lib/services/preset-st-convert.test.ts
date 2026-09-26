@@ -132,8 +132,10 @@ describe('convertSillyTavernPreset', () => {
 		expect(item?.note).toContain('{{lorebook}}');
 	});
 
-	test('variable and comment macros render away exactly as ST would', () => {
-		expect(byName.get('文风指令')?.content).toBe('保持{{lastUserMessage}}的语气。');
+	test('variables travel verbatim; comments render away; ST spelling normalized', () => {
+		expect(byName.get('文风指令')?.content).toBe(
+			'保持{{lastUserMessage}}的语气。{{setvar::format::小说}}{{getvar::format}}{{trim}}'
+		);
 	});
 
 	test('absolute injection is kept in place with an explanatory note', () => {
@@ -153,7 +155,7 @@ describe('convertSillyTavernPreset', () => {
 
 	test('conversion notes name what was stripped and where samplers went', () => {
 		const notes = converted.conversionNotes ?? [];
-		expect(notes.some((n) => n.includes('setvar'))).toBe(true);
+		expect(notes.some((n) => n.includes('comment×1'))).toBe(true);
 		expect(notes.some((n) => n.includes('temperature=0.7'))).toBe(true);
 		expect(notes.some((n) => n.includes('tavern_helper'))).toBe(true);
 		expect(notes.some((n) => n.includes('1 条 ST 正则脚本'))).toBe(true);

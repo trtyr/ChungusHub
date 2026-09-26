@@ -411,7 +411,7 @@ function sweep(text: string, ctx: MacroContext, env: VarEnv | undefined): string
 /** Expand every variable, randomization, utility and conditional macro in `text` against
  *  `ctx.vars` (mutating it in place). With no env on the context, variable reads render
  *  empty and writes are discarded, but randomization still rolls. Runs to a fixed point
- *  (bounded) so nested values — {{setvar::x::{{getvar::y}}}} — resolve innermost-first. */
+ *  (bounded) so nested values ({{setvar::x::{{getvar::y}}}}) resolve innermost-first. */
 export function expandVarMacros(text: string, ctx: MacroContext, env?: VarEnv): string {
 	const table = env ?? ctx.vars;
 	if (!text.includes('{{')) return text;

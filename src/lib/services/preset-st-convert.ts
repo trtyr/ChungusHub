@@ -13,8 +13,8 @@ import { normalizeCarriedRules } from '$lib/utils/regex-rules';
  *   flags; prompts the checklist never mentions are imported disabled at the end
  * - the eight system markers become items holding the matching ChungusHub macro
  *   (`{{chatHistory}}`, `{{description}}`, …) at the same position
- * - each prompt's role, name and content, with ST's comment/variable macros
- *   stripped the way ST itself renders them (to nothing)
+ * - each prompt's role, name and content, with ST's comment macros stripped the way
+ *   ST itself renders them (to nothing); variables and randomization travel live
  * - `extensions.regex_scripts` become the preset's carried rules through the
  *   same parser the Regex page uses
  *
@@ -39,14 +39,10 @@ const MARKER_MACROS: Record<string, string> = {
  *  Dropped silently when empty; counted when the author put content in them. */
 const DROPPED_MARKERS = new Set(['main', 'nsfw', 'jailbreak', 'enhanceDefinitions']);
 
-/** ST macros that render to nothing (comments, side effects): stripped. */
-const VOID_MACROS: RegExp[] = [
-	/\{\{\s*\/\/[\s\S]*?\}\}/gi,
-	/\{\{\s*trim\s*\}\}/gi,
-	/\{\{\s*noop\s*\}\}/gi,
-	/\{\{\s*(?:setvar|getvar)\s*::[\s\S]*?\}\}/gi,
-	/\{\{\s*(?:random|pick|roll)\s*:[\s\S]*?\}\}/gi
-];
+/** The one macro family still stripped at import: comments render to nothing in ST and
+ *  the engine has no comment macro. Variables, randomization and utilities all run live
+ *  now (utils/var-macros.ts), so they travel verbatim. */
+const VOID_MACROS: RegExp[] = [/\{\{\s*\/\/[\s\S]*?\}\}/gi];
 
 /** ST macro spellings with a different case here (macro names match verbatim). */
 const MACRO_RESPELL: [RegExp, string][] = [
@@ -149,7 +145,7 @@ function stripStMacros(content: string, counts: Map<string, number>): string {
 function noteFor(counts: Map<string, number>): string[] {
 	if (counts.size === 0) return [];
 	const parts = [...counts.entries()].sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k}×${n}`);
-	return [`已剥除 ST 专用宏（它们依赖 ST 的会话变量，渲染为空）：${parts.join('、')}`];
+	return [`已剥除注释宏（渲染为空，无语义损失）：${parts.join('、')}`];
 }
 
 export function looksLikeSillyTavernPreset(raw: Record<string, unknown>): boolean {
