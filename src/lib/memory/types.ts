@@ -6,6 +6,16 @@
  * the engine can be unit-tested under `bun test` with no Svelte/Vite resolution.
  */
 
+/** One fact row as the extractor proposes it (P006): entity-anchored attribute, validated
+ *  and id-stamped by the server on the way in. */
+export interface RawFact {
+	entity: string;
+	key: string;
+	value: string;
+	/** 1 = trivia, 2 = a state change, 3 = mainline. Clamped server-side. */
+	importance: number;
+}
+
 /**
  * A narrative summary, the single thing memory stores. Layer 0 = one delta per
  * extraction batch; higher layers are LLM-merged compactions of lower ones.
@@ -122,5 +132,8 @@ export interface MemoryDb {
 	reapEpisodes(chatId: string, episodeIds: string[]): Promise<void>;
 	/** Panel edit of one episode's prose. Coverage is unchanged, so no guard is involved. */
 	updateEpisodeContent(chatId: string, episodeId: string, content: string): Promise<void>;
+	/** Write one extraction batch's fact rows, each anchored to the batch's message ids.
+	 *  The server validates rows and assigns ids/created_at atomically. */
+	applyFacts(chatId: string, facts: RawFact[], sourceIds: string[]): Promise<void>;
 	reset(chatId: string): Promise<void>;
 }

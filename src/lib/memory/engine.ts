@@ -24,10 +24,12 @@ import {
 	buildExtractionMessages,
 	buildPromotionMessages,
 	longestRepeatedRun,
-	parseEpisode
+	parseEpisode,
+	parseFacts,
+	FACTS_APPENDIX
 } from './prompts';
 import { EXTRACT_CONTEXT_EPISODES, resolveConfig } from './config';
-import type { BatchResult, Episode, LlmFn, MemoryConfig, MemoryDb, MemoryMessage, PromotionResult } from './types';
+import type { BatchResult, Episode, LlmFn, MemoryConfig, MemoryDb, MemoryMessage, PromotionResult, RawFact } from './types';
 
 
 let engineT: ((key: string, params?: Record<string, string | number>) => string) | null = null;
@@ -211,9 +213,11 @@ async function extractEpisode(
 	deep: Episode[],
 	recent: Episode[],
 	signal?: AbortSignal
-): Promise<string> {
+): Promise<{ episode: string; facts: RawFact[] }> {
 	const messages = buildExtractionMessages(
-		deps.templates.extract,
+		// The fact appendix rides at call time (engine-owned, versioned in code), so an
+		// old frozen template override keeps producing facts: P006 dual output, R3.
+		deps.templates.extract + FACTS_APPENDIX,
 		{
 			character: deps.cards?.character ?? '',
 			persona: deps.cards?.persona ?? '',
@@ -237,7 +241,7 @@ async function extractEpisode(
 			lastProblem = engMsg('mem.probLooped', { n: repeat, p0: episode.slice(0, 160) });
 			continue;
 		}
-		return episode;
+		return { episode, facts: parseFacts(raw) };
 	}
 	throw new Error(engMsg('mem.eng2', { p0: lastProblem }));
 }
@@ -248,7 +252,7 @@ async function extractBatch(
 	batch: MemoryMessage[],
 	coverage: Coverage,
 	signal?: AbortSignal
-): Promise<BatchResult> {
+): Promise<{ result: BatchResult; facts: RawFact[] }> {
 	assertTemplate(deps.templates.extract, REQUIRED_EXTRACT_MACROS, 'summarizing');
 	// The "already summarised, do not restate" context is the ACTIVE set, not the table.
 	// Showing the extractor another branch's summaries would tell it to leave out events
@@ -256,14 +260,17 @@ async function extractBatch(
 	const deep = coverage.active.filter((e) => e.layer >= 1);
 	const recent = episodesAtLayer(coverage.active, 0).slice(-EXTRACT_CONTEXT_EPISODES);
 
-	const content = await extractEpisode(deps, batch, deep, recent, signal);
+	const { episode, facts } = await extractEpisode(deps, batch, deep, recent, signal);
 	const ids = batch.map((m) => m.id);
 
 	return {
-		episode: { content, sourceMessageIds: ids, anchorMessageId: ids[ids.length - 1] },
-		// A dormant summary of the same ground was written on a branch this one abandons;
-		// the fresh one is authoritative, and two summaries of one span would double-cover.
-		supersedeEpisodeIds: overlappingEpisodeIds(coverage.dormant, ids)
+		result: {
+			episode: { content: episode, sourceMessageIds: ids, anchorMessageId: ids[ids.length - 1] },
+			// A dormant summary of the same ground was written on a branch this one abandons;
+			// the fresh one is authoritative, and two summaries of one span would double-cover.
+			supersedeEpisodeIds: overlappingEpisodeIds(coverage.dormant, ids)
+		},
+		facts
 	};
 }
 
@@ -482,11 +489,12 @@ export async function processChat(
 
 		// The wording this summary is about to describe, as of the moment it was read.
 		const readAs = new Map(batch.map((m) => [m.id, m.editedAt ?? 0] as const));
-		const result = await extractBatch(deps, batch, coverage, opts.signal);
+		const extracted = await extractBatch(deps, batch, coverage, opts.signal);
 		// A branch switch may have landed while the model was answering: committing now
 		// would summarise a span the reader has left. The db-side overlap guard is the hard
 		// guarantee; this check just avoids burning it needlessly.
 		if (stopped(opts)) break;
+		const { result, facts } = extracted;
 
 		// Re-read the tree BEFORE writing anything: the user keeps playing, editing and
 		// deleting through a call that takes seconds, and both the commit below and the
@@ -515,6 +523,12 @@ export async function processChat(
 			capped = true;
 			break;
 		}
+
+		// Facts commit only when the batch did: a stillborn summary (a turn rewritten under
+		// the call) leaves its facts unborn too, and the next pass re-extracts them from
+		// the current text. Anchored to the batch's own turns, so branch behaviour (revert,
+		// switch) is the fact core's concern, not a write-side one.
+		if (facts.length) await deps.db.applyFacts(chatId, facts, batch.map((m) => m.id));
 		opts.onProgress?.({
 			phase: 'extract',
 			batchesDone,

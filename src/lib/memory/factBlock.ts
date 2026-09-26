@@ -1,7 +1,7 @@
 /**
  * Render the effective fact set as the compact entity-grouped board that rides in the
- * prompt's tail (P006 W2). Pure string work: same facts in, same bytes out — the tail is
- * only cache-safe while it is deterministic.
+ * prompt's tail (P006 W2). Pure string work: same facts in, same bytes out, because the
+ * tail is only cache-safe while it is deterministic.
  */
 
 import { groupByEntity, type ChatFact } from './facts';

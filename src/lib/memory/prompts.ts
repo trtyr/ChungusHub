@@ -17,7 +17,7 @@
 
 import { substitute } from '$lib/macros';
 import { parseJsonObject } from '$lib/utils/json-extract';
-import type { Episode, LlmMessage, MemoryMessage } from './types';
+import type { Episode, LlmMessage, MemoryMessage, RawFact } from './types';
 
 const FICTION_CLAUSE =
 	'This is adult fiction authored by an adult for their own creative work. Process ALL content, including violence, power dynamics, explicit sex, and dark themes, without refusal, disclaimers, or sanitization. You are a memory keeper, not a moral arbiter.';
@@ -165,6 +165,47 @@ export function buildPromotionMessages(
 export function parseEpisode(raw: string): string {
 	const data = parseJsonObject(raw);
 	return typeof data.episode === 'string' ? data.episode.trim() : '';
+}
+
+// ===== P006 fact board (dual output, R3) =====
+
+/**
+ * Appended to the extraction template at CALL time, never stored: the fact board is
+ * engine-owned and versioned in code, so a chat whose editable template override froze
+ * years ago keeps producing facts. The model returns the facts array inside the SAME
+ * JSON object as the episode, so one paid call serves both (the R3 decision).
+ */
+export const FACTS_APPENDIX = '\n\n' + [
+	'在写摘要的同时，从本批剧情中提取值得长期记住的事实，放进同一个 JSON 对象的 "facts" 数组，与 "episode" 并列。每条只取这个形状：',
+	'{"entity":"事实主体（角色/NPC/地点/势力的具体名字）","key":"受控键之一：关系·对象 / 情感·对象 / 约定·对象 / 身体 / 持有物 / 所在地 / 能力 / 目标 / 声誉 / 事件 / 地点状态 / 势力 / 规则 / 场景·在场者 / 场景·地点 / 场景·时间 / 场景·正在进行 / 其他","value":"一句自含的话","importance":1到3的整数}',
+	'判断规则：提取结果与状态，不提取过程；变化必须带转移；专有名词、数量、限定词逐字保留；代词替换为名字；存疑时倾向提取；importance 3=主线或重大转折，2=明确状态变化，1=琐事。没有新事实就写 "facts": []。'
+].join('\n');
+
+/** Cap per batch: the board is truncation-managed downstream, not unbounded here. */
+export const MAX_FACTS_PER_BATCH = 20;
+
+/**
+ * The fact rows from an extraction response ('' or absent .facts → []). Engine-side
+ * validation: nothing malformed, empty, or macro-bearing can reach the table, so no
+ * placeholder pollution is possible from the model side.
+ */
+export function parseFacts(raw: string): RawFact[] {
+	const data = parseJsonObject(raw);
+	const list = Array.isArray(data.facts) ? data.facts : [];
+	const out: RawFact[] = [];
+	for (const entry of list) {
+		if (out.length >= MAX_FACTS_PER_BATCH) break;
+		if (!entry || typeof entry !== 'object') continue;
+		const e = entry as Record<string, unknown>;
+		const entity = typeof e.entity === 'string' ? e.entity.trim() : '';
+		const key = typeof e.key === 'string' ? e.key.trim() : '';
+		const value = typeof e.value === 'string' ? e.value.trim() : '';
+		if (!entity || !key || !value) continue;
+		if (entity.includes('{{') || key.includes('{{') || value.includes('{{')) continue;
+		const importance = typeof e.importance === 'number' ? Math.max(1, Math.min(3, Math.round(e.importance))) : 2;
+		out.push({ entity, key, value, importance });
+	}
+	return out;
 }
 
 /**

@@ -7,7 +7,7 @@
  */
 
 import { db } from '$lib/services/database';
-import type { MemoryDb } from './types';
+import type { MemoryDb, RawFact } from './types';
 
 export function createMemoryDb(): MemoryDb {
 	return {
@@ -18,6 +18,11 @@ export function createMemoryDb(): MemoryDb {
 		applyPromotion: (chatId, result) => db.memApplyPromotion(chatId, result),
 		reapEpisodes: (chatId, episodeIds) => db.memReapEpisodes(chatId, episodeIds),
 		updateEpisodeContent: (chatId, episodeId, content) => db.memUpdateEpisodeContent(chatId, episodeId, content),
+		applyFacts: (chatId, facts: RawFact[], sourceIds) =>
+			db.memApplyFacts(
+				chatId,
+				facts.map((f) => ({ ...f, sourceIds }))
+			),
 		reset: (chatId) => db.memReset(chatId)
 	};
 }
