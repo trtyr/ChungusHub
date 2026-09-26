@@ -39,6 +39,18 @@ describe('counting', () => {
 		expect(countTokens('the quick brown fox')).toBeGreaterThan(0);
 	});
 
+	test('ChatML special tokens count instead of throwing (P001)', () => {
+		const text = '<|im_start|>hello<|im_end|>';
+		for (const encoding of ['cl100k_base', 'o200k_base'] as const) {
+			expect(encodingCount(text, encoding)).toBeGreaterThan(0);
+		}
+		expect(countTokens(text)).toBeGreaterThan(0);
+		// Specials are one token each: the same text with them stripped counts less.
+		expect(encodingCount('<|im_start|>hello<|im_end|>', 'o200k_base')).toBeGreaterThan(
+			encodingCount('hello', 'o200k_base')
+		);
+	});
+
 	test('the two encoders are genuinely different (not the same import twice)', () => {
 		// CJK tokenizes very differently between cl100k and o200k (o200k added many CJK merges),
 		// so this reliably proves the two encoders are wired to distinct vocabularies.

@@ -64,7 +64,13 @@ export function encodingCount(text: string, encoding: EncodingName): number {
 	const cache = caches[encoding];
 	const hit = cache.counts.get(text);
 	if (hit !== undefined) return hit;
-	const count = encoding === 'cl100k_base' ? countCl100k(text) : countO200k(text);
+	// ST presets inject `<|im_start|>`-style special tokens for control flow; the default
+	// special-token config treats them as disallowed and THROWS mid-count. Providers count
+	// them (one token each), so allowing all is both the fix and the faithful meter.
+	const count =
+		encoding === 'cl100k_base'
+			? countCl100k(text, { allowedSpecial: 'all' })
+			: countO200k(text, { allowedSpecial: 'all' });
 	if (cache.chars >= COUNT_CACHE_MAX_CHARS) {
 		cache.counts.clear();
 		cache.chars = 0;
