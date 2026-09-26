@@ -140,7 +140,7 @@
 						{#each SETTINGS_GROUPS as group (group.label)}
 							<div class="group">
 								<span class="section-label group-label">{i18n.t(group.label)}</span>
-								<nav class="drill" aria-label={group.label}>
+								<nav class="drill" aria-label={i18n.t(group.label)}>
 									<!-- `shown` is read here rather than baked into the config, so a row
 									     that comes and goes (Developer) appears and leaves under a list
 									     that is already on screen in split view. -->

@@ -89,7 +89,7 @@
 		for (const e of episodes) map.set(e.layer, (map.get(e.layer) ?? 0) + 1);
 		return [...map.entries()]
 			.sort((a, b) => a[0] - b[0])
-			.map(([l, n]) => (l === 0 ? `${n} raw` : l === 1 ? `${n} merged` : `${n} merged ×${l}`))
+			.map(([l, n]) => (l === 0 ? i18n.t('mem.rawN', { n }) : l === 1 ? i18n.t('mem.nMerged', { n }) : i18n.t('mem.mergedX', { n, l })))
 			.join(' · ');
 	});
 	let showDormant = $state(false);

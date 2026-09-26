@@ -147,7 +147,7 @@
 					</button>
 
 					{#if open}
-						<div class="tones" role="radiogroup" aria-label={i18n.t('audio.toneAria', { label: event.label })}>
+						<div class="tones" role="radiogroup" aria-label={i18n.t('audio.toneAria', { label: labelT(event.label) })}>
 							<button
 								type="button"
 								class="tone"

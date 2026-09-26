@@ -137,7 +137,7 @@
 		item.busy = true;
 		const wasNew = item.isNew;
 		if (wasNew) item.isNew = false;
-		const ok = await persist([item], `${item.name.trim()} saved`);
+		const ok = await persist([item], i18n.t('asm.savedName', { name: item.name.trim() }));
 		if (!ok && wasNew) {
 			// The reload dropped the unsaved card. Put it back so the draft isn't lost.
 			item.isNew = true;

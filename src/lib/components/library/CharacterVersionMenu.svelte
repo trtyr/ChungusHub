@@ -221,7 +221,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 										<span class="version-default">{i18n.t('vm.default')}</span>
 									{/if}
 									{#if pinned > 0}
-										<span class="version-usage">{pinned} chat{pinned === 1 ? '' : 's'}</span>
+										<span class="version-usage">{i18n.t('vm.pinnedN', { n: pinned })}</span>
 									{/if}
 								</button>
 								<button

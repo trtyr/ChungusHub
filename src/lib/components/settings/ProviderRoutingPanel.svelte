@@ -196,7 +196,7 @@
 	/** Throughput (tokens/sec p50) → "48 tps". */
 	function throughputLabel(tps: number | undefined): string | null {
 		if (tps == null) return null;
-		return `${Math.round(tps)} tps`;
+		return i18n.t('pr.tpsN', { n: Math.round(tps) });
 	}
 
 	let loadToken = 0;

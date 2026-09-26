@@ -232,7 +232,7 @@
 			</button>
 		{/if}
 		<span class="ask-left">
-			{#if !complete}{remaining === 1 ? '1 still needs an answer' : `${remaining} still need an answer`}{/if}
+			{#if !complete}{i18n.t('asm.needsAnswerN', { n: remaining })}{/if}
 		</span>
 		<button type="button" class="ask-send" disabled={sent || !complete} onclick={send}>
 			{questions.length === 1 ? i18n.t('asm.qSendOne') : i18n.t('asm.qSendN')}

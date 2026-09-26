@@ -125,9 +125,9 @@
 		const answered = group.calls.filter((c) => c.index in decided);
 		if (answered.length < group.calls.length) return '';
 		const yes = answered.filter((c) => decided[c.index]).length;
-		if (yes === answered.length) return 'approved';
-		if (yes === 0) return 'refused';
-		return `${yes} approved, ${answered.length - yes} refused`;
+		if (yes === answered.length) return i18n.t('asm.approved');
+		if (yes === 0) return i18n.t('asm.refused');
+		return i18n.t('asm.mixed', { yes, rest: answered.length - yes });
 	}
 
 	/** The diff panel takes a tool result; a pending call has the same two texts. Its own head

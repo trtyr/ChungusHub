@@ -102,7 +102,9 @@
 			const lines = chatSelection.lineCount;
 			const words = chatSelection.wordCount;
 			const label =
-				lines >= 2 ? `${lines} lines selected` : `${words} ${words === 1 ? 'word' : 'words'} selected`;
+				lines >= 2
+					? i18n.t('asm.nLinesSel', { n: lines })
+					: i18n.t('asm.nWordsSel', { n: words });
 			return {
 				kind: 'selection',
 				refId: chatSelection.chatId!,
