@@ -210,7 +210,7 @@
 								<span class="pp-line short" style="background: {palette.colors.textMuted}"></span>
 								<span class="pp-dot" style="background: {previewAccent(palette.mode)}"></span>
 							</span>
-							<span class="palette-name">{palette.name}</span>
+							<span class="palette-name">{labelT(palette.name)}</span>
 						</button>
 						{#if isCustom(palette.id)}
 							<button

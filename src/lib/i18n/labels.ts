@@ -179,6 +179,12 @@ const ZH: Record<string, string> = {
 	"Unrecognized lorebook format: no `entries` array or object found.": '无法识别的世界书格式：未找到 entries 数组或对象。',
 	"Canvas 2D context unavailable": 'Canvas 2D 上下文不可用',
 	"Lost track of this generation when the connection dropped.": '连接断开时丢失了这次生成。',
+	'Graphite': '石墨',
+	'Literary Dark': '文学暗夜',
+	'Warm Stone': '暖石',
+	'Midnight': '午夜',
+	'Nocturne': '夜曲',
+	'Parchment': '羊皮纸',
 };
 
 /** Translate a store-sourced label into the active language; unknown labels pass through. */

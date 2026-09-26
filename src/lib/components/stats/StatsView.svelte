@@ -50,7 +50,7 @@
 	let snapshot = $derived(statsStore.snapshot);
 	let posterOpen = $state(false);
 
-	let comparison = $derived(snapshot ? bookComparison(snapshot.stats.effort.words) : null);
+	let comparison = $derived(snapshot ? bookComparison(snapshot.stats.effort.words, i18n.lang === 'zh') : null);
 
 	/** Every character the aggregate counted, whether or not the library still holds them. */
 	let castTotal = $derived(snapshot?.stats.cast.length ?? 0);

@@ -115,13 +115,13 @@ export function momentLabel(at: number): string {
  * one they haven't. Word counts are the published approximations and differ by edition and
  * translation, which is why the copy that renders this says "about as long as".
  */
-const BOOKS: { title: string; words: number }[] = [
-	{ title: 'The Old Man and the Sea', words: 27_000 },
-	{ title: 'The Great Gatsby', words: 47_000 },
-	{ title: 'The Hobbit', words: 95_000 },
-	{ title: 'Moby-Dick', words: 206_000 },
-	{ title: 'The Lord of the Rings', words: 480_000 },
-	{ title: 'War and Peace', words: 587_000 }
+const BOOKS: { title: string; zh: string; words: number }[] = [
+	{ title: 'The Old Man and the Sea', zh: '《老人与海》', words: 27_000 },
+	{ title: 'The Great Gatsby', zh: '《了不起的盖茨比》', words: 47_000 },
+	{ title: 'The Hobbit', zh: '《霍比特人》', words: 95_000 },
+	{ title: 'Moby-Dick', zh: '《白鲸》', words: 206_000 },
+	{ title: 'The Lord of the Rings', zh: '《魔戒》', words: 480_000 },
+	{ title: 'War and Peace', zh: '《战争与和平》', words: 587_000 }
 ];
 
 export interface BookComparison {
@@ -132,12 +132,13 @@ export interface BookComparison {
 
 /** The largest book a word count covers, and how many times it covers it. Null below the
  *  smallest one, where the honest answer is that there is nothing to compare to yet. */
-export function bookComparison(words: number): BookComparison | null {
-	let chosen: { title: string; words: number } | null = null;
+export function bookComparison(words: number, localized = false): BookComparison | null {
+	let chosen: { title: string; zh: string; words: number } | null = null;
 	for (const book of BOOKS) {
 		if (words >= book.words) chosen = book;
 	}
-	return chosen ? { title: chosen.title, times: Math.floor(words / chosen.words) } : null;
+	const title = chosen ? (localized ? chosen.zh : chosen.title) : '';
+	return chosen ? { title, times: Math.floor(words / chosen.words) } : null;
 }
 
 /** "The Hobbit" / "The Hobbit, twice over" / "The Hobbit, 5 times over". */
