@@ -1136,8 +1136,8 @@
 		<footer class="chats-footer">
 			<span><kbd>↑/↓</kbd> {i18n.t('svc.kbNavigate')}</span>
 			<span><kbd>⏎</kbd> {i18n.t('svc.kbOpen')}</span>
-			<span><kbd>Home/End</kbd> {i18n.t('svc.kbJump')}</span>
-			<span><kbd>Menu</kbd> {i18n.t('svc.kbActions')}</span>
+			<span><kbd>{i18n.t('svc.kbHomeEnd')}</kbd> {i18n.t('svc.kbJump')}</span>
+			<span><kbd>{i18n.t('svc.kbMenu')}</kbd> {i18n.t('svc.kbActions')}</span>
 			<span><kbd>Esc</kbd> {i18n.t('svc.kbClose')}</span>
 		</footer>
 	{/if}

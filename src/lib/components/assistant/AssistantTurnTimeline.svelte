@@ -435,7 +435,7 @@
 	images={roster.images}
 	bind:index={viewerIndex}
 	alt={i18n.t('asm.ttAssistantAttachment')}
-	countLabel="Attachment"
+	countLabel={i18n.t('sb.attachment')}
 	onClose={() => (viewerIndex = null)}
 />
 

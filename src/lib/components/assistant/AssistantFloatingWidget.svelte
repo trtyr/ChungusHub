@@ -511,7 +511,7 @@
 		>
 			<span class="assistant-widget-title">
 				<AssistantMascot size={18} />
-				Chungus Assistant
+				{i18n.t('asm.widgetTitle')}
 			</span>
 			<button
 				type="button"

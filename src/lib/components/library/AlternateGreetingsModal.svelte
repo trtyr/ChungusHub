@@ -51,7 +51,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 
 	function preview(text: string): string {
 		const t = text.trim().replace(/\s+/g, ' ');
-		return t ? (t.length > 90 ? `${t.slice(0, 90)}…` : t) : 'Empty';
+		return t ? (t.length > 90 ? `${t.slice(0, 90)}…` : t) : i18n.t('lbw.emptyBook');
 	}
 </script>
 
