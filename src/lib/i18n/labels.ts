@@ -203,11 +203,46 @@ const ZH: Record<string, string> = {
 	"GitHub has nothing to compare against: no release is published, or the repository is not public.": 'GitHub 没有可比对象：尚未发布任何 release，或仓库未公开。',
 	"GitHub is rate limiting this address. It clears within the hour.": 'GitHub 正在限制本地址的请求频率。通常一小时内解除。',
 	"GitHub answered with something this build cannot read.": 'GitHub 返回了此构建无法读取的内容。',
+	"Starting": '启动中',
+	"Copying files": '正在复制文件',
+	"Copying the database": '正在复制数据库',
+	"Backing up the current data first": '先备份当前数据',
+	"Ready to restore": '准备好恢复',
+	"Preparing to restore": '正在准备恢复',
+	"Saving the current data first, so this can be undone.": '先保存当前数据，以便本次操作可撤销。',
+	"Close ChungusHub and start it again…": '关闭 ChungusHub 并重新启动…',
+	"A snapshot here is dated in the future, so scheduled backups are on hold. Check this machine's date and time, or delete that snapshot.": '此处有一个快照的日期在未来，定时备份已暂停。请检查本机日期时间，或删除该快照。',
+	"SillyTavern world info": 'SillyTavern 世界书',
+	"ChungusHub preset": 'ChungusHub 预设',
+	"ChungusHub library entry": 'ChungusHub 库条目',
+	"ChungusHub assistant skills": 'ChungusHub 助手技能',
+	"SillyTavern chat log": 'SillyTavern 聊天记录',
 };
 
 /** Translate a store-sourced label into the active language; unknown labels pass through. */
+const REGEX_ZH: [RegExp, string][] = [
+	[/^(\d+) folders? here could not be read as a snapshot/, '$1 个文件夹无法作为快照读取'],
+];
+
 const PREFIX_ZH: [string, string][] = [
 	['GitHub answered ', 'GitHub 返回了 '],
+	['No connection drives the Assistant', '尚未为助手指定连接'],
+	["The Assistant's connection has no model", '助手连接未设置模型'],
+	['This page sent an unknown approval mode', '页面发送了未知的审批模式'],
+	['Duplicate request id', '重复的请求 id'],
+	['A turn is already running in this assistant tab', '该助手标签页已有回合在运行'],
+	['The model produced no usable output', '模型没有产出可用结果'],
+	['The model spent its whole output budget', '模型用尽了全部输出预算'],
+	['The model ended its turn', '模型结束了回合'],
+	['The turn ran, but its transcript row', '回合已运行，但其转录行'],
+	['The user message row', '用户消息行'],
+	['A reply is already being written for this chat', '该聊天正在生成回复'],
+	['The idle timeout must be a whole number of minutes', '空闲超时必须是整数分钟'],
+	['it is a SillyTavern preset, which ChungusHub does not read', '这是 SillyTavern 预设，ChungusHub 无法读取'],
+	['has an unknown role', '角色未知：'],
+	['This picture holds no document', '这张图片中没有文档'],
+	['is not a text file', '不是文本文件'],
+	['carries a "', '携带了「'],
 ];
 
 export function labelT(label: string): string {
@@ -216,6 +251,9 @@ export function labelT(label: string): string {
 	if (exact !== undefined) return exact;
 	for (const [prefix, zhPrefix] of PREFIX_ZH) {
 		if (label.startsWith(prefix)) return zhPrefix + label.slice(prefix.length);
+	}
+	for (const [re, zh] of REGEX_ZH) {
+		if (re.test(label)) return label.replace(re, zh);
 	}
 	return label;
 }

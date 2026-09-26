@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { labelT } from '$lib/i18n/labels';
 	import { onMount, onDestroy } from 'svelte';
 	import { slide } from 'svelte/transition';
 	import Alert from '$lib/components/ui/Alert.svelte';
@@ -329,7 +330,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			<div class="job" transition:slide={{ duration: 160 }}>
 				<Spinner size="sm" />
 				<div class="job-text">
-					<span class="job-phase">{job.phase}</span>
+					<span class="job-phase">{labelT(job.phase)}</span>
 					{#if job.filesTotal > 0}
 						<span class="job-count">{i18n.t('bk.nOfMFiles', { n: job.filesDone, m: job.filesTotal })}</span>
 					{/if}

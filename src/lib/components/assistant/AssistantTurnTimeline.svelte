@@ -332,7 +332,7 @@
 								type="button"
 								class="assistant-sent-chip assistant-sent-chip--pointer"
 								onclick={() => onOpenFile(file)}
-								title={`${fileKindLabel(file.kind)} · ${i18n.t('lb.entriesN', { n: file.lines })} · ${i18n.t('pcf.tokensN', { n: '~' + file.tokenEstimate })}`}
+								title={`${labelT(fileKindLabel(file.kind))} · ${i18n.t('lb.entriesN', { n: file.lines })} · ${i18n.t('pcf.tokensN', { n: '~' + file.tokenEstimate })}`}
 								aria-label={`${file.name}, ${i18n.t('asm.ttOpenFile')}`}
 							>
 								<Icon name="document" class="w-3 h-3 shrink-0" />

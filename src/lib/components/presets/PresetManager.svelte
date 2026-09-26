@@ -206,7 +206,7 @@
 			const isPng = file.type === 'image/png' || file.name.toLowerCase().endsWith('.png');
 			const limit = isPng ? 8 : 2;
 			if (file.size > limit * 1024 * 1024) {
-				throw new Error(`preset ${isPng ? 'cards' : 'files'} must be smaller than ${limit} MB`);
+				throw new Error(i18n.t(isPng ? 'pm.sizeLimitPng' : 'pm.sizeLimitFile', { limit }));
 			}
 
 			let preset: PromptPreset;

@@ -308,8 +308,8 @@
 					<span class="pulse-dot" style="animation-delay: 140ms"></span>
 					<span class="pulse-dot" style="animation-delay: 280ms"></span>
 				</div>
-				<h1 class="state-title">{held.headline}</h1>
-				<p class="state-copy">{held.detail}</p>
+				<h1 class="state-title">{labelT(held.headline)}</h1>
+				<p class="state-copy">{labelT(held.detail)}</p>
 			</div>
 		</div>
 	{:else if phase !== 'ready'}

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { labelT } from '$lib/i18n/labels';
 	/**
 	 * The composer's feature row: Add picker, the attach menu, hand-attached chips
 	 * (removable; they ask for full: the server resolves what actually goes and the sent
@@ -143,7 +144,7 @@
 
 	/** A staged file's chip line: what it turned out to be, and what reading it costs. */
 	function fileTitle(file: AssistantFile): string {
-		return `${fileKindLabel(file.kind)} · ${i18n.t('asm.chipMeta', { lines: file.lines, tokens: file.tokenEstimate })}`;
+		return `${labelT(fileKindLabel(file.kind))} · ${i18n.t('asm.chipMeta', { lines: file.lines, tokens: file.tokenEstimate })}`;
 	}
 
 	/** Close the pop-overs on any press outside them: a fixed backdrop can't cover the

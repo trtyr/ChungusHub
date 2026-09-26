@@ -160,7 +160,7 @@
 						>
 							<span class="cr-name">{labelT(rule.name)}</span>
 							{#if error}
-								<span class="cr-pill cr-pill-error" title={error}>
+								<span class="cr-pill cr-pill-error" title={labelT(error)}>
 									<Icon name="warning" class="w-3 h-3" />
 									{i18n.t('rx.invalid')}
 								</span>

@@ -57,7 +57,7 @@
 	let remaining = $derived(Math.max(0, total - shown));
 	let gutter = $derived(String(total).length);
 	let subtitle = $derived(
-		file ? `${fileKindLabel(file.kind)} · ${i18n.t('afv.linesMeta', { lines: total || file.lines, tokens: file.tokenEstimate })}` : ''
+		file ? `${labelT(fileKindLabel(file.kind))} · ${i18n.t('afv.linesMeta', { lines: total || file.lines, tokens: file.tokenEstimate })}` : ''
 	);
 </script>
 

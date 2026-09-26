@@ -2054,6 +2054,8 @@ export const zh: Record<string, string> = {
 	'sb.unfavoriteN': '取消收藏 {n} 个',
 	'pm.newPresetName': '新预设',
 	'ab.versionCompare': '「{v}」不是此构建可比较的版本。',
+	'pm.sizeLimitPng': '预设卡片必须小于 {limit} MB',
+	'pm.sizeLimitFile': '预设文件必须小于 {limit} MB',
 	'cmd.say': '添加一条你的回合，不请求回复',
 	'cmd.continue': '从最新回复停下的地方继续',
 	'cmd.retry': '重新生成最新回合',

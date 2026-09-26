@@ -17,6 +17,7 @@
   the thing you actually wanted to know.
 -->
 <script lang="ts">
+	import { labelT } from '$lib/i18n/labels';
 	import type { Snippet } from 'svelte';
 	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Icon from '$lib/components/ui/Icon.svelte';
@@ -211,7 +212,7 @@
 				</div>
 			</div>
 			{#if error}
-				<span class="rx-error">{error}</span>
+				<span class="rx-error">{labelT(error)}</span>
 			{/if}
 		</div>
 

@@ -2076,6 +2076,8 @@ export const en: Record<string, string> = {
 	'sb.unfavoriteN': 'Unfavorite {n}',
 	'pm.newPresetName': 'New Preset',
 	'ab.versionCompare': "\"{v}\" is not a version this build can compare.",
+	'pm.sizeLimitPng': 'preset cards must be smaller than {limit} MB',
+	'pm.sizeLimitFile': 'preset files must be smaller than {limit} MB',
 	'cmd.say': 'Add a turn of yours without asking for a reply',
 	'cmd.continue': 'Extend the newest reply where it stops',
 	'cmd.retry': 'Generate the newest turn again',
