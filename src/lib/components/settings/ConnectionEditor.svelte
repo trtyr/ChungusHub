@@ -637,7 +637,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 								title={i18n.t('ce.resetDefault', { n: DEFAULT_CONTEXT_SIZE.toLocaleString() })}
 								onclick={() => commitContextSize(DEFAULT_CONTEXT_SIZE)}
 							>
-								reset
+								{i18n.t('ce.resetLabel')}
 							</button>
 						{/if}
 						<input

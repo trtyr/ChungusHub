@@ -701,8 +701,8 @@
 					<em>{i18n.t('ch.pvSofter')}</em>{i18n.t('ch.pvAfter')} <strong>{i18n.t('ch.pvNothing')}</strong>{i18n.t('ch.pvTail')}
 				</p>
 				<p>
-					He set the lamp down between them.
-					<span class="quoted-text">&ldquo;I never really left.&rdquo;</span>
+					{i18n.t('ch.pv2A')}
+					<span class="quoted-text">{i18n.t('ch.pv2B')}</span>
 				</p>
 			</div>
 

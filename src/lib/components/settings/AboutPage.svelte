@@ -260,10 +260,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			<span class="card-title">{i18n.t('ab.updates')}</span>
 		</div>
 		<div class="card-body">
-			<p class="note">
-				se,
-				from the computer running ChungusHub, and sends nothing else.
-			</p>
+			<p class="note">{i18n.t('ab.updatePrivacy')}</p>
 			<div class="update">
 				<Button
 					variant="secondary"
@@ -287,12 +284,12 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 				{:else if update.kind === 'ahead'}
 					<p class="verdict">
 						<Icon name="info" class="w-3.5 h-3.5 verdict-icon" strokeWidth={1.75} />
-						You are ahead of the latest release, which is {update.version}.
+						{i18n.t('ab.ahead', { version: update.version })}
 					</p>
 				{:else if update.kind === 'behind'}
 					<p class="verdict verdict-new">
 						<Icon name="download" class="w-3.5 h-3.5 verdict-icon" strokeWidth={1.75} />
-						{update.version} is out. You are on {APP_VERSION}.
+						{i18n.t('ab.newOut', { version: update.version, current: APP_VERSION })}
 					</p>
 					<a class="release" href={update.url} target="_blank" rel="noopener noreferrer">
 						{i18n.t('ab.t30')}
