@@ -1,4 +1,3 @@
-import { i18n } from '$lib/i18n/i18n.svelte';
 /**
  * The memory engine: extraction batches, recursive promotion, and branch reconciliation.
  *
@@ -30,6 +29,22 @@ import {
 import { EXTRACT_CONTEXT_EPISODES, resolveConfig } from './config';
 import type { BatchResult, Episode, LlmFn, MemoryConfig, MemoryDb, MemoryMessage, PromotionResult } from './types';
 
+
+let engineT: ((key: string, params?: Record<string, string | number>) => string) | null = null;
+/** Client wiring (store.svelte.ts) injects i18n.t; server/test paths stay on the English template. */
+export function setMemoryEngineI18n(fn: (key: string, params?: Record<string, string | number>) => string): void {
+	engineT = fn;
+}
+const ENG_TEMPLATES: Record<string, string> = {
+	'mem.eng1': 'Memory {p0} template is missing {p1}. Without it the model never sees the text it is meant to summarize. Restore it in Settings → Engines → Chat Memory.',
+	'mem.eng2': 'Memory extraction {p0}',
+};
+function engMsg(key: string, params: Record<string, string | number>): string {
+	if (engineT) return engineT(key, params);
+	let out = ENG_TEMPLATES[key] ?? key;
+	for (const [k, v] of Object.entries(params)) out = out.replaceAll(`{${k}}`, String(v));
+	return out;
+}
 export interface EngineTemplates {
 	extract: string;
 	promote: string;
@@ -134,7 +149,7 @@ const REQUIRED_PROMOTE_MACROS = ['{{episodes}}'];
 function assertTemplate(template: string, required: string[], label: string): void {
 	const missing = required.filter((m) => !template.includes(m));
 	if (missing.length) {
-		throw new Error(i18n.t('mem.eng1', { p0: label, p1: missing.join(', ') }));
+		throw new Error(engMsg('mem.eng1', { p0: label, p1: missing.join(', ') }));
 	}
 }
 
@@ -222,7 +237,7 @@ async function extractEpisode(
 		}
 		return episode;
 	}
-	throw new Error(i18n.t('mem.eng2', { p0: lastProblem }));
+	throw new Error(engMsg('mem.eng2', { p0: lastProblem }));
 }
 
 /** Build the BatchResult for one batch. */

@@ -14,6 +14,7 @@
  */
 
 import { i18n } from '$lib/i18n/i18n.svelte';
+import { setMemoryEngineI18n } from './engine';
 import type { Message } from '$lib/types/chat';
 import type { LLMCompletionResult, LLMMessage } from '$lib/types/llm';
 import { llmService } from '$lib/services/llm/provider';
