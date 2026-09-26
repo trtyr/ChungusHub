@@ -22,8 +22,8 @@
 			<span class="lbl on">{i18n.t('mk.on')}</span>
 		</span>
 		<span class="count">
-			<span class="c c3">3 blocks</span>
-			<span class="c c2">2 blocks</span>
+			<span class="c c3">{i18n.t('mk.nBlocks', { n: 3 })}</span>
+			<span class="c c2">{i18n.t('mk.nBlocks', { n: 2 })}</span>
 		</span>
 	</div>
 
@@ -39,7 +39,7 @@
 		</div>
 		<div class="card user u1">
 			<span class="badge">user</span>
-			<span class="txt">I push the tavern door open.</span>
+			<span class="txt">{i18n.t('mk.tavernLine')}</span>
 		</div>
 	</div>
 </div>

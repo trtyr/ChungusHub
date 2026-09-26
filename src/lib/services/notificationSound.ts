@@ -108,9 +108,7 @@ function loadTone(ac: AudioContext, tone: ToneId): Promise<AudioBuffer | null> {
 					// The file ships with the app and is served from this same origin, so the one
 					// thing that realistically stands between them is a download manager
 					// extension, which claims media URLs before the page can read them.
-					toastStore.error(
-						`Couldn't load the "${tone}" sound. A download manager extension may be taking it before the app gets it.`
-					);
+					toastStore.error(i18n.t('snd.loadFail', { tone }));
 				}
 				return null;
 			});

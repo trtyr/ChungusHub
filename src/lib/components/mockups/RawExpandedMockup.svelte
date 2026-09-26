@@ -39,9 +39,9 @@
 			<span class="name">{i18n.t('mk.charBrief')}</span>
 		</div>
 		<div class="item-body">
-			<span class="line raw-line">You are <span class="macro">{'{{char}}'}</span>.</span>
+			<span class="line raw-line">{i18n.t('mk.rawYouPre')}<span class="macro">{'{{char}}'}</span>{i18n.t('mk.rawYouPost')}</span>
 			<span class="line exp-line"
-				>You are <span class="resolved">Seraphina, a half-elf archivist guarding the drowned library</span>.</span
+				>{i18n.t('mk.rawYouPre')}<span class="resolved">{i18n.t('mk.seraphina')}</span>{i18n.t('mk.rawYouPost')}</span
 			>
 		</div>
 	</div>
