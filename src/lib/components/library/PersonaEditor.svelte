@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { labelT } from '$lib/i18n/labels';
 	import Icon from '$lib/components/ui/Icon.svelte';
 import { i18n } from '$lib/i18n/i18n.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
@@ -169,7 +170,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	// The app keeps at least one persona (architecture/library.md): the server refuses the last
 	// delete, so the menu item goes inert and says why rather than vanishing.
 	let deleteBlockedReason = $derived(
-		characterLibraryStore.personas.length > 1 ? undefined : LAST_PERSONA_REASON
+		characterLibraryStore.personas.length > 1 ? undefined : labelT(LAST_PERSONA_REASON)
 	);
 
 	// Which persona takes over is the server's call, announced on the `settings` scope; this

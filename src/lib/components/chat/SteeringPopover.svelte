@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { labelT } from '$lib/i18n/labels';
 	/**
 	 * The composer's steering surface, and the ONLY one: everything a note can be has to be
 	 * reachable from here. Two views: the stack of notes steering the next reply, and one
@@ -125,7 +126,7 @@
 								onchange={(on) => steeringStore.update(note.id, { enabled: on })}
 							/>
 							<button type="button" class="row-main" onclick={() => (editingId = note.id)}>
-								<span class="row-title font-ui">{noteLabel(note)}</span>
+								<span class="row-title font-ui">{labelT(noteLabel(note))}</span>
 								<span class="row-scope font-ui">
 									{bindingLabel(note)}{#if note.mode === 'once'}<span class="row-once">{i18n.t('chat.nextReply')}</span>{/if}
 								</span>

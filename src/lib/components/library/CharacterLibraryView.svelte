@@ -403,7 +403,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	let deleteTargetUsage = $state<{ chatCount: number; castCount: number } | null>(null);
 	let deleteTargetName = $derived(
 		deleteTargetId
-			? characterLibraryStore.entries.find(e => e.id === deleteTargetId)?.identity.name || 'entry'
+			? characterLibraryStore.entries.find(e => e.id === deleteTargetId)?.identity.name || i18n.t('lbw.entryName')
 			: ''
 	);
 	let deleteTargetMessage = $derived.by(() => {
@@ -1341,7 +1341,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 								{item.result.character.name || i18n.t('setup.unnamedPersona')}
 							</span>
 							<span class="block text-xs text-text-secondary truncate">
-								{item.result.lorebook?.name || 'Lorebook'} · {item.result.lorebook?.entries.length ?? 0} entries
+								{i18n.t(item.result.lorebook?.name || 'st.gLorebooks')} · {i18n.t('lbw.nEntries', { n: item.result.lorebook?.entries.length ?? 0 })}
 							</span>
 						</span>
 					</label>

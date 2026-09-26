@@ -122,7 +122,7 @@
 				{i18n.t('chat.steeringTitle')}
 			</button>
 		{:else}
-			<span class="head-title font-ui">{noteLabel(note)}</span>
+			<span class="head-title font-ui">{labelT(noteLabel(note))}</span>
 		{/if}
 		<button type="button" class="head-link head-danger font-ui" onclick={remove}>
 			<Icon name="trash" class="w-3 h-3" />

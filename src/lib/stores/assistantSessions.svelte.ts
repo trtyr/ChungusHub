@@ -54,6 +54,8 @@ function deriveTitle(text: string): string {
 	return firstLine.length > 48 ? firstLine.slice(0, 48).trimEnd() + '…' : firstLine;
 }
 
+export const NEW_SESSION_TITLE = 'New session';
+
 class AssistantSessionStore {
 	/** Every session, newest-updated first: the history list. */
 	sessions = $state<AssistantSession[]>([]);
@@ -497,7 +499,7 @@ class AssistantSessionStore {
 	async newSession(): Promise<string> {
 		const inheritsDraft = this.activeTabId === null;
 		const now = Date.now();
-		const session: AssistantSession = { id: crypto.randomUUID(), title: 'New session', createdAt: now, updatedAt: now };
+		const session: AssistantSession = { id: crypto.randomUUID(), title: NEW_SESSION_TITLE, createdAt: now, updatedAt: now };
 		await db.insertAssistantSession(session);
 		this.sessions = [session, ...this.sessions];
 		this.messages[session.id] = [];
@@ -725,7 +727,7 @@ class AssistantSessionStore {
 			// Name the session from its first prompt, and always bump activity on the row's own
 			// stamp, so the history list is ordered by the same clock the turn will bump it with.
 			const patch: Partial<AssistantSession> = { updatedAt: createdAt };
-			if (isFirst && session && session.title === 'New session') patch.title = deriveTitle(body || 'Image');
+			if (isFirst && session && session.title === NEW_SESSION_TITLE) patch.title = deriveTitle(body || 'Image');
 			await db.updateAssistantSession({ id: sessionId, ...patch });
 			this.bumpSession(sessionId, patch);
 

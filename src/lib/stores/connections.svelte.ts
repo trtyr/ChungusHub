@@ -16,6 +16,7 @@
  * data and the routing map, riding the settings spine (cross-device synced).
  * `llmService` reads it to resolve who serves each call.
  */
+import { i18n } from '$lib/i18n/i18n.svelte';
 import { readSetting, writeSetting, registerSettingsReload } from '$lib/services/syncedSetting';
 import { db } from '$lib/services/database';
 import { ENGINES } from '$lib/engines/registry';
@@ -179,7 +180,7 @@ class ConnectionStore {
 	/** Create a fresh keyless connection (OpenRouter, no model) and return it.
 	 *  Nothing is routed to it: pointing things at it is the user's move. */
 	create(name?: string): Connection {
-		const conn = makeConnection(this.uniqueName(name?.trim() || 'New connection'));
+		const conn = makeConnection(this.uniqueName(name?.trim() || i18n.t('cn.newConnection')));
 		this.connections = [...this.connections, conn];
 		this.persist();
 		return conn;
@@ -192,7 +193,7 @@ class ConnectionStore {
 		const src = this.get(id);
 		if (!src) return undefined;
 		const snapshot = $state.snapshot(src) as Connection;
-		const conn: Connection = { ...snapshot, id: crypto.randomUUID(), name: this.uniqueName(`${src.name} copy`) };
+		const conn: Connection = { ...snapshot, id: crypto.randomUUID(), name: this.uniqueName(`${src.name}${i18n.t('cn.copySuffix')}`) };
 		this.connections = [...this.connections, conn];
 		this.persist();
 		await db.copyConnectionCredentials(id, conn.id);

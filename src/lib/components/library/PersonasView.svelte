@@ -218,7 +218,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	let deleteTargetId = $state<string | null>(null);
 	let deleteTargetName = $derived(
 		deleteTargetId
-			? characterLibraryStore.entries.find((e) => e.id === deleteTargetId)?.identity.name || 'entry'
+			? characterLibraryStore.entries.find((e) => e.id === deleteTargetId)?.identity.name || i18n.t('lbw.entryName')
 			: ''
 	);
 	let deleteTargetMessage = $derived(

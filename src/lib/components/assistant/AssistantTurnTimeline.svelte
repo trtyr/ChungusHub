@@ -312,7 +312,7 @@
 								class="assistant-sent-chip assistant-sent-chip--{att.mode}"
 								onclick={() => goToAttachment(att)}
 								title={i18n.t(MODE_HINTS[att.mode])}
-								aria-label={`${att.label}, ${MODE_TAGS[att.mode]}. ${i18n.t('asm.goToApp')}`}
+								aria-label={`${att.label}, ${i18n.t(MODE_TAGS[att.mode])}. ${i18n.t('asm.goToApp')}`}
 							>
 								<Icon name={attachmentKindIcon(att.kind, att.entryType)} class="w-3 h-3 shrink-0" />
 								<span class="assistant-sent-chip-label">{att.label}</span>

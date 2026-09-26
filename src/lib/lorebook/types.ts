@@ -1071,7 +1071,7 @@ export function lorebookDeleteMessage(
 		const defaults: Record<string, string> = {
 			'lbw.delAsk': 'Delete "{name}"', 'lbw.held1': ' and its 1 entry', 'lbw.heldN': ' and its {n} entries',
 			'lbw.delEverywhere': ' It is in every chat.', 'lbw.bound1': ' It is bound to 1 character or persona.',
-			'lbw.boundN': ' It is bound to {n} characters or personas.', 'lbw.delTail': ' This cannot be undone.'
+			'lbw.boundN': ' It is bound to {n} characters or personas.', 'lbw.delTail': ' This cannot be undone.', 'lbw.untitledLorebook': 'Untitled lorebook'
 		};
 		let out = defaults[key] ?? key;
 		if (params) for (const [k, v] of Object.entries(params)) out = out.replaceAll(`{${k}}`, String(v));
@@ -1081,7 +1081,7 @@ export function lorebookDeleteMessage(
 	const held = n > 0 ? x(n === 1 ? 'lbw.held1' : 'lbw.heldN', { n }) : '';
 	const everywhere = book.global ? x('lbw.delEverywhere') : '';
 	const bound = links > 0 ? x(links === 1 ? 'lbw.bound1' : 'lbw.boundN', { n: links }) : '';
-	return x('lbw.delAsk', { name: book.name || 'Untitled lorebook' }) + held + '?' + everywhere + bound + x('lbw.delTail');
+	return x('lbw.delAsk', { name: book.name || x('lbw.untitledLorebook') }) + held + '?' + everywhere + bound + x('lbw.delTail');
 }
 
 /** Parse a comma-separated keyword string into a trimmed, non-empty list. */

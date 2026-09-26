@@ -12,6 +12,7 @@
  * Pre-overhaul installs that only have the old `activeTheme` string get it mapped at
  * read time, with no data rewrite.
  */
+import { i18n } from '$lib/i18n/i18n.svelte';
 import type {
 	AppearanceScope,
 	AppearanceState,
@@ -335,7 +336,7 @@ function pickScope(
 /** A name nothing else in the list already carries: two rows reading "Night" would
  *  leave the reader choosing between them on nothing at all. */
 function uniqueName(wanted: string, taken: { name: string }[]): string {
-	const base = wanted.trim() || 'Untitled';
+	const base = wanted.trim() || i18n.t('lbw.untitled');
 	if (!taken.some((t) => t.name === base)) return base;
 	let n = 2;
 	while (taken.some((t) => t.name === `${base} ${n}`)) n++;
@@ -460,7 +461,7 @@ class ThemeStore {
 		if (!source) throw new Error(`[theme] no palette with id "${fromId}"`);
 		const palette: PaletteDef = {
 			id: crypto.randomUUID(),
-			name: uniqueName(`${source.name} copy`, this.palettes),
+			name: uniqueName(`${source.name}${i18n.t('cn.copySuffix')}`, this.palettes),
 			mode: source.mode,
 			colors: { ...source.colors }
 		};

@@ -9,7 +9,7 @@
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import { i18n } from '$lib/i18n/i18n.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
-	import { assistantSessionStore } from '$lib/stores/assistantSessions.svelte';
+	import { assistantSessionStore , NEW_SESSION_TITLE } from '$lib/stores/assistantSessions.svelte';
 	import { chatStore } from '$lib/stores/chat.svelte';
 	import { formatRelativeTime } from '$lib/utils/date';
 	import type { AssistantSession } from '$lib/types/assistant';
@@ -172,7 +172,7 @@
 											title={store.runtime[session.id]?.busy ? i18n.t('asm.working') : i18n.t('asm.histOpenTab')}
 										></span>
 									{/if}
-									<span class="assistant-history-title">{session.title}</span>
+									<span class="assistant-history-title">{session.title === NEW_SESSION_TITLE ? i18n.t('asm.newSession') : session.title}</span>
 								</span>
 								<span class="assistant-history-meta">
 									{formatRelativeTime(session.updatedAt)}{session.messageCount ? ' · ' + i18n.t('asm.nMessages', { n: session.messageCount }) : ''}{aboutChat ? ` · ${aboutChat}` : ''}
