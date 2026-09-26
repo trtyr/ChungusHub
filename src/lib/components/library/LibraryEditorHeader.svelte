@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { labelT } from '$lib/i18n/labels';
 	/**
 	 * Shared header bar for the character/persona editors. One row, two clusters:
 	 * identity on the left (name, badge, save state), actions on the right (lorebooks
@@ -236,7 +237,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						{#if onConvert}
 							<button type="button" role="menuitem" class="edh-menu-item" onclick={menuItem(onConvert)}>
 								<Icon name={CONVERT_ACTION[entryType].icon} class="w-4 h-4" />
-								{CONVERT_ACTION[entryType].label}
+								{labelT(CONVERT_ACTION[entryType].label)}
 							</button>
 						{/if}
 						<div class="edh-menu-sep"></div>

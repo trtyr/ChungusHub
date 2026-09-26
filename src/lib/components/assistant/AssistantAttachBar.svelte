@@ -143,7 +143,7 @@
 
 	/** A staged file's chip line: what it turned out to be, and what reading it costs. */
 	function fileTitle(file: AssistantFile): string {
-		return `${fileKindLabel(file.kind)} · ${file.lines} lines · ~${file.tokenEstimate} tokens`;
+		return `${fileKindLabel(file.kind)} · ${i18n.t('asm.chipMeta', { lines: file.lines, tokens: file.tokenEstimate })}`;
 	}
 
 	/** Close the pop-overs on any press outside them: a fixed backdrop can't cover the

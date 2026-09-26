@@ -38,6 +38,7 @@ export function parsePromptJson(
 		t ??
 		((key: string, params?: Record<string, string | number>) => {
 			const defaults: Record<string, string> = {
+				'pr.messageN': 'Message {n}',
 				'pr.jsonInvalid': 'Invalid JSON: {msg}',
 				'pr.mustBeList': 'The request must be a list of messages.',
 				'pr.noMessages': 'The request has no messages left.',
@@ -63,7 +64,7 @@ export function parsePromptJson(
 
 	const messages: LLMMessage[] = [];
 	for (let i = 0; i < raw.length; i++) {
-		const at = `Message ${i + 1}`;
+		const at = x('pr.messageN', { n: i + 1 });
 		const item = raw[i];
 		if (typeof item !== 'object' || item === null || Array.isArray(item)) {
 			return { ok: false, error: x('pr.notObject', { at }) };

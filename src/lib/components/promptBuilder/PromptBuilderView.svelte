@@ -962,7 +962,7 @@
 									{/if}
 									<span class="pb-name">{section.title || section.id}</span>
 									{#if section.collapsed}
-										<span class="pb-type">folded</span>
+										<span class="pb-type">{i18n.t('pbv.foldedTag')}</span>
 									{/if}
 									<span class="pb-tokens" class:pb-tokens--warn={used === 0} title={i18n.t('pbv.controlsIn')}>
 										{used}

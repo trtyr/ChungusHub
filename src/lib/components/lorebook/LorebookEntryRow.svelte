@@ -398,7 +398,7 @@
 				{/if}
 				<!-- Quick fields: edit priority and trigger chance without unfolding the row. -->
 				<label class="lbr-mini" title={i18n.t('ler.orderMini')}>
-					<span class="lbr-mini-key">ord</span>
+					<span class="lbr-mini-key">{i18n.t('ler.ordTag')}</span>
 					<input
 						type="text"
 						inputmode="numeric"

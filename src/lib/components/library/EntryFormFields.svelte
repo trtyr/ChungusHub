@@ -207,7 +207,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	};
 
 	function getTraitPlaceholder(key: TraitKey, label: string): string {
-		return TRAIT_PLACEHOLDERS[key] ?? `Describe ${label.toLowerCase()}…`;
+		return TRAIT_PLACEHOLDERS[key] ?? i18n.t('ef.describeField', { field: labelT(label) });
 	}
 
 	// ---- Trait fields ----

@@ -73,11 +73,11 @@
 	// (never the composer's intent) in the tag word, so the truth is readable, not a hover
 	// or a style the reader has to decode.
 	const MODE_TAGS: Record<SentAttachmentMode, string> = {
-		full: 'in full',
-		clipped: 'clipped',
-		pointer: 'pointer',
-		oversize: 'too long, pointer',
-		known: 'already read'
+		full: 'asm.modeFull',
+		clipped: 'asm.modeClipped',
+		pointer: 'asm.modePointer',
+		oversize: 'asm.modeOversize',
+		known: 'asm.modeKnown'
 	};
 
 	/** What each tag actually means. The tag is four characters of shorthand and its meaning
@@ -316,7 +316,7 @@
 							>
 								<Icon name={attachmentKindIcon(att.kind, att.entryType)} class="w-3 h-3 shrink-0" />
 								<span class="assistant-sent-chip-label">{att.label}</span>
-								<span class="assistant-sent-chip-mode">{MODE_TAGS[att.mode]}</span>
+								<span class="assistant-sent-chip-mode">{i18n.t(MODE_TAGS[att.mode])}</span>
 							</button>
 						{/each}
 					</div>
@@ -336,7 +336,7 @@
 							>
 								<Icon name="document" class="w-3 h-3 shrink-0" />
 								<span class="assistant-sent-chip-label">{file.name}</span>
-								<span class="assistant-sent-chip-mode">{file.lines} lines</span>
+								<span class="assistant-sent-chip-mode">{i18n.t('asm.nLines', { n: file.lines })}</span>
 							</button>
 						{/each}
 					</div>
