@@ -29,16 +29,16 @@
 
 	<div class="cards">
 		<div class="card system s1">
-			<span class="badge">system</span>
+			<span class="badge">{i18n.t('pb.roleSystem')}</span>
 			<span class="txt">{i18n.t('mk.narrator')}</span>
 		</div>
 		<div class="card system s2">
 			<span class="seam"></span>
-			<span class="badge">system</span>
+			<span class="badge">{i18n.t('pb.roleSystem')}</span>
 			<span class="txt">{i18n.t('mk.secondPerson')}</span>
 		</div>
 		<div class="card user u1">
-			<span class="badge">user</span>
+			<span class="badge">{i18n.t('pb.roleUser')}</span>
 			<span class="txt">{i18n.t('mk.tavernLine')}</span>
 		</div>
 	</div>

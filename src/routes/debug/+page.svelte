@@ -54,7 +54,7 @@
 </script>
 
 <svelte:head>
-	<title>Prompt Debug · ChungusHub</title>
+	<title>{i18n.t('dbg.title')} · ChungusHub</title>
 </svelte:head>
 
 <div class="debug-window surface-shell">

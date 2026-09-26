@@ -697,9 +697,8 @@
 			     shows quoted speech carrying a line on its own. -->
 			<div class="prose story-preview">
 				<p>
-					<span class="quoted-text">&ldquo;You came back,&rdquo;</span> she said, and the words
-					landed <em>softer</em> than she meant them to. <strong>Nothing</strong> in the room
-					had moved since.
+					<span class="quoted-text">{i18n.t('ch.pvQuoted')}</span>{i18n.t('ch.pvSaid')}
+					<em>{i18n.t('ch.pvSofter')}</em>{i18n.t('ch.pvAfter')} <strong>{i18n.t('ch.pvNothing')}</strong>{i18n.t('ch.pvTail')}
 				</p>
 				<p>
 					He set the lamp down between them.

@@ -50,7 +50,7 @@
 	let failures = $state<string[]>([]);
 	let problems = $derived([...unreadable, ...failures]);
 
-	let target = $derived(characterName.trim() || 'this character');
+	let target = $derived(characterName.trim() || i18n.t('ee.nameFallback'));
 	let strays = $derived(rows.filter((row) => row.elsewhere).length);
 
 	function reason(e: unknown): string {

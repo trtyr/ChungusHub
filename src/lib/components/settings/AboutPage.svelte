@@ -96,7 +96,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			throwPop(i18n.t(on ? 'ab.devOn' : 'ab.devOff'), true);
 			return;
 		}
-		throwPop(`${VERSION_TAPS - versionTaps} left`);
+		throwPop(i18n.t('ab.tapsLeft', { n: VERSION_TAPS - versionTaps }));
 		tapTimer = setTimeout(() => {
 			versionTaps = 0;
 			tapTimer = null;

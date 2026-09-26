@@ -32,11 +32,11 @@
 		<div class="block prunable">
 			<span class="ln"><span class="tag">&lt;memory&gt;</span></span>
 			<span class="ln">{i18n.t('mk.treatCanon')}</span>
-			<span class="ln"><span class="macro">{'{{memory}}'}</span><span class="mark">empty</span></span>
+			<span class="ln"><span class="macro">{'{{memory}}'}</span><span class="mark">{i18n.t('mk.markEmpty')}</span></span>
 			<span class="ln"><span class="tag">&lt;/memory&gt;</span></span>
 		</div>
 		<div class="block">
-			<span class="ln"><span class="tag">&lt;style&gt;</span><span class="mark">static</span></span>
+			<span class="ln"><span class="tag">&lt;style&gt;</span><span class="mark">{i18n.t('mk.markStatic')}</span></span>
 			<span class="ln">{i18n.t('mk.pace')}</span>
 			<span class="ln"><span class="tag">&lt;/style&gt;</span></span>
 		</div>

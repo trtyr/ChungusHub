@@ -27,6 +27,7 @@
  * Nothing is written before someone has seen which root was resolved, because a wrong one is a
  * wrong library and this app has no undo.
  */
+import { i18n } from '$lib/i18n/i18n.svelte';
 import { imageService } from '$lib/services/imageService';
 import { importSillyTavernCard } from '$lib/services/sillyTavernImport';
 import { readLorebookFile } from '$lib/lorebook/io';
@@ -298,7 +299,7 @@ export async function importSillyTavernFolder(
 			);
 			report.sprites.imported += files.length - refused.length;
 			for (const label of refused) {
-				report.sprites.failed.push(`${folder}/${label}: that label is already used`);
+				report.sprites.failed.push(i18n.t('t.labelsTaken', { keys: `${folder}/${label}` }));
 			}
 			// The whole pack is claimed, refusals included: a label already in use is this file
 			// having arrived before, which is exactly what the ledger records. Claimed WITH the

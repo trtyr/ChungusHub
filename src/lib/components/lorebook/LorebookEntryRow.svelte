@@ -558,8 +558,8 @@
 						class="input-base w-full px-3.5 py-2.5 font-body text-[0.95rem] leading-relaxed text-text-primary placeholder:text-text-muted placeholder:italic resize-none min-h-[9rem]"
 					></textarea>
 					<p class="mt-1.5 text-xs font-ui text-text-muted">
-						Macros like <code class="ed-macro">{'{{char}}'}</code> and
-						<code class="ed-macro">{'{{user}}'}</code> are expanded here.
+						{i18n.t('ler.macroNoteA')}<code class="ed-macro">{'{{char}}'}</code>{i18n.t('ler.macroNoteB')}
+						<code class="ed-macro">{'{{user}}'}</code>{i18n.t('ler.macroNoteC')}
 					</p>
 				</div>
 

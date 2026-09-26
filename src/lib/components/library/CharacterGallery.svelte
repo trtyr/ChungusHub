@@ -43,7 +43,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			await onAdd(valid);
 		} catch (error) {
 			console.error('Adding gallery images failed:', error);
-			toastStore.failed(valid.length === 1 ? 'f.addThatImage' : 'f.addThoseImages', error);
+			toastStore.failed(i18n.t(valid.length === 1 ? 'f.addThatImage' : 'f.addThoseImages', { n: valid.length }), error);
 		} finally {
 			uploading = false;
 		}
