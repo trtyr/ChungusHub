@@ -2074,6 +2074,7 @@ export const en: Record<string, string> = {
 	'rxe.nMatches': '{n} matches',
 	'sb.favoriteN': 'Favorite {n}',
 	'sb.unfavoriteN': 'Unfavorite {n}',
+	'pm.convertedFromSt': 'Converted from a SillyTavern preset. Notes: {notes}',
 	'pm.newPresetName': 'New Preset',
 	'ab.versionCompare': "\"{v}\" is not a version this build can compare.",
 	'pm.sizeLimitPng': 'preset cards must be smaller than {limit} MB',

@@ -9,6 +9,7 @@
 	import { presetService } from '$lib/services/presets.svelte';
 	import { triggerDownload } from '$lib/services/libraryExport';
 	import { exportPresetCard, readPresetFromPng } from '$lib/services/presetCard';
+	import { parsePresetJson } from '$lib/services/preset-io';
 	import { imageService } from '$lib/services/imageService';
 	import { toastStore } from '$lib/stores/toast.svelte';
 	import { copyText } from '$lib/utils/clipboard';
@@ -216,7 +217,11 @@
 				const cover = await imageService.saveImage(file, 'presets');
 				preset = await presetService.importPreset(imported, cover);
 			} else {
-				preset = await presetService.importPresetJson(await file.text());
+				const imported = parsePresetJson(await file.text(), file.name);
+				preset = await presetService.importPreset(imported);
+				if (imported.conversionNotes?.length) {
+					toastStore.info(i18n.t('pm.convertedFromSt', { notes: imported.conversionNotes.join('；') }));
+				}
 			}
 			await presetService.activatePreset(preset.id);
 			toastStore.success(i18n.t('t.importedNamed2', { name: preset.name }));

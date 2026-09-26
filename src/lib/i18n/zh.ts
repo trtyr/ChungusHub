@@ -2052,6 +2052,7 @@ export const zh: Record<string, string> = {
 	'rxe.nMatches': '{n} 处匹配',
 	'sb.favoriteN': '收藏 {n} 个',
 	'sb.unfavoriteN': '取消收藏 {n} 个',
+	'pm.convertedFromSt': '已从 SillyTavern 预设转换。备注：{notes}',
 	'pm.newPresetName': '新预设',
 	'ab.versionCompare': '「{v}」不是此构建可比较的版本。',
 	'pm.sizeLimitPng': '预设卡片必须小于 {limit} MB',

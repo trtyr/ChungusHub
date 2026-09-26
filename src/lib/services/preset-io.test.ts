@@ -75,12 +75,11 @@ describe('preset JSON interchange', () => {
 		).toThrow('unknown role');
 	});
 
-	test('names a SillyTavern preset in the refusal rather than reporting a broken file', () => {
-		// The one wrong file people bring here on purpose. A parse error about "items" sends
-		// them looking for a fault in a file that has none.
-		expect(() => parsePresetJson(JSON.stringify({ name: 'ST', prompts: [], prompt_order: [] }))).toThrow(
-			'SillyTavern preset'
-		);
+	test('a SillyTavern preset converts instead of refusing; plain junk still refuses', () => {
+		// The one wrong file people bring here on purpose now takes the converter path:
+		// an empty ST pool still yields a (hollow) imported preset, not a parse error.
+		const converted = parsePresetJson(JSON.stringify({ name: 'ST', prompts: [], prompt_order: [] }));
+		expect(converted.items).toEqual([]);
 		expect(() => parsePresetJson(JSON.stringify({ name: 'Junk' }))).toThrow('not a ChungusHub preset');
 	});
 });

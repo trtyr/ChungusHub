@@ -13,6 +13,7 @@ import { DEFAULT_EXAMPLE_SEPARATOR } from '$lib/macros';
 import { DEFAULT_CONTINUE_PROMPT } from '$lib/utils/prompt-assembly';
 import { normalizeCarriedRules } from '$lib/utils/regex-rules';
 import type { RegexRule } from '$lib/utils/regex-rules';
+import { convertSillyTavernPreset, looksLikeSillyTavernPreset } from '$lib/services/preset-st-convert';
 
 export interface ImportedPreset {
 	name: string;
@@ -25,6 +26,9 @@ export interface ImportedPreset {
 	pruneEmptyBlocks: boolean;
 	exampleSeparator?: string;
 	continuePrompt?: string;
+	/** Set only on a SillyTavern conversion: what carried across, what was
+	 *  deliberately dropped, and where the reader goes to fill the gap. */
+	conversionNotes?: string[];
 }
 
 const CONTROL_TYPES = new Set<PromptControlType>([
@@ -46,18 +50,17 @@ function objectAt(value: unknown, label: string): Record<string, unknown> {
 	return value as Record<string, unknown>;
 }
 
-/** Continues the toast's own `Couldn't import "<file>": `. SillyTavern's preset is named rather
- *  than lumped in with corrupt files: it is the one wrong file people bring here on purpose, and
- *  they need to hear "we don't read those" instead of deciding their own file is broken. */
+/** Continues the toast's own `Couldn't import "<file>": `. SillyTavern's preset never
+ *  reaches here (the converter claims it first), so this names the plain corruption case:
+ *  a file with neither an items list nor a prompt pool the reader would recognize. */
 function refusalFor(raw: Record<string, unknown>): string {
-	if (Array.isArray(raw.prompts) || Array.isArray(raw.prompt_order)) {
-		return 'it is a SillyTavern preset, which ChungusHub does not read. The prompt system here is a different shape, so a preset is rebuilt in the Prompt Builder rather than converted.';
-	}
 	return 'it is not a ChungusHub preset, since it carries no "items" list';
 }
 
-/** Parse the app's complete preset interchange format without mutating existing presets. */
-export function parsePresetJson(text: string): ImportedPreset {
+/** Parse the app's complete preset interchange format without mutating existing presets.
+ *  A SillyTavern preset is not refused: it converts through the dedicated converter,
+ *  with the source file's name used as the preset's name when given. */
+export function parsePresetJson(text: string, fileName?: string): ImportedPreset {
 	let parsed: unknown;
 	try {
 		parsed = JSON.parse(text);
@@ -66,6 +69,7 @@ export function parsePresetJson(text: string): ImportedPreset {
 	}
 
 	const raw = objectAt(parsed, 'Preset');
+	if (looksLikeSillyTavernPreset(raw)) return convertSillyTavernPreset(raw, fileName);
 	if (!Array.isArray(raw.items)) throw new Error(refusalFor(raw));
 
 	const items = raw.items.map((value, index): PromptItem => {
