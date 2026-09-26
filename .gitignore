@@ -77,3 +77,6 @@ temp.md
 
 # pi session state (goals, events): machine-local, not repo content
 .pi/
+
+# personal planning workspace (local only)
+docs/plantree/
