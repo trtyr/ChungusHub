@@ -200,10 +200,22 @@ const ZH: Record<string, string> = {
 	"Connection dropped. The turn keeps running on the server and its result will appear when the connection returns.": '连接已断开。该回合会在服务器上继续运行，其结果将在连接恢复后出现。',
 	"Imported script": '导入的脚本',
 	"Character’s Note": '角色备注',
+	"GitHub has nothing to compare against: no release is published, or the repository is not public.": 'GitHub 没有可比对象：尚未发布任何 release，或仓库未公开。',
+	"GitHub is rate limiting this address. It clears within the hour.": 'GitHub 正在限制本地址的请求频率。通常一小时内解除。',
+	"GitHub answered with something this build cannot read.": 'GitHub 返回了此构建无法读取的内容。',
 };
 
 /** Translate a store-sourced label into the active language; unknown labels pass through. */
+const PREFIX_ZH: [string, string][] = [
+	['GitHub answered ', 'GitHub 返回了 '],
+];
+
 export function labelT(label: string): string {
 	if (i18n.lang !== 'zh') return label;
-	return ZH[label] ?? label;
+	const exact = ZH[label];
+	if (exact !== undefined) return exact;
+	for (const [prefix, zhPrefix] of PREFIX_ZH) {
+		if (label.startsWith(prefix)) return zhPrefix + label.slice(prefix.length);
+	}
+	return label;
 }

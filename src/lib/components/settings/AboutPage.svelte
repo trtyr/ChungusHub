@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { labelT } from '$lib/i18n/labels';
 	import { onDestroy, onMount } from 'svelte';
 	import Alert from '$lib/components/ui/Alert.svelte';
 	import BrandGlyph from '$lib/components/ui/BrandGlyph.svelte';
@@ -195,7 +196,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	 *  never a number quietly rounded into a comparison that says "you are up to date". */
 	function parseVersion(v: string): [number, number, number] {
 		const parts = /^(\d+)\.(\d+)\.(\d+)$/.exec(v);
-		if (!parts) throw new Error(`"${v}" is not a version this build can compare.`);
+		if (!parts) throw new Error(i18n.t('ab.versionCompare', { v }));
 		return [Number(parts[1]), Number(parts[2]), Number(parts[3])];
 	}
 
@@ -297,7 +298,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					</a>
 				{/if}
 			</div>
-			<Alert message={update.kind === 'failed' ? update.message : null} />
+			<Alert message={update.kind === 'failed' ? labelT(update.message) : null} />
 		</div>
 	</section>
 

@@ -2053,6 +2053,7 @@ export const zh: Record<string, string> = {
 	'sb.favoriteN': '收藏 {n} 个',
 	'sb.unfavoriteN': '取消收藏 {n} 个',
 	'pm.newPresetName': '新预设',
+	'ab.versionCompare': '「{v}」不是此构建可比较的版本。',
 	'cmd.say': '添加一条你的回合，不请求回复',
 	'cmd.continue': '从最新回复停下的地方继续',
 	'cmd.retry': '重新生成最新回合',
