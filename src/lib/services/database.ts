@@ -223,6 +223,7 @@ class DatabaseService {
 	// ===== SESSION MEMORY =====
 	memGetState(chatId: string): Promise<MemoryState | null> { return this.call('memGetState', chatId); }
 	memListEpisodes(chatId: string): Promise<Episode[]> { return this.call('memListEpisodes', chatId); }
+	memListFacts(chatId: string): Promise<unknown[]> { return this.call('memListFacts', chatId); }
 	memSetState(chatId: string, patch: Partial<Pick<MemoryState, 'enabled' | 'autoExtract' | 'config'>>): Promise<void> {
 		return this.call('memSetState', chatId, patch);
 	}

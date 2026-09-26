@@ -19,6 +19,7 @@ import { readPresetControlValues } from '$lib/stores/presetControls.svelte';
 import { memoryStore } from '$lib/memory/store.svelte';
 import { lorebookSettingsStore } from '$lib/lorebook/settings.svelte';
 import { varsStore } from '$lib/stores/vars.svelte';
+import { factsStore } from '$lib/memory/facts.svelte';
 import { regexRulesStore } from '$lib/stores/regex-rules.svelte';
 import { featurePromptsStore } from '$lib/stores/featurePrompts.svelte';
 import {
@@ -160,6 +161,9 @@ export async function buildPromptMessages(context: PromptBuildContext): Promise<
 	// mutated state is persisted right after: variables change when the prompt is built,
 	// which is ST's own execution model.
 	const vars = varsStore.envFor(chat?.id ?? '');
+	// The fact board rides the tail: load the chat's rows (cached after the first read)
+	// and derive the effective set against the same path the assembly will inject.
+	await factsStore.ensure(chat?.id ?? '');
 	const { messages, lorebook, continuationSent } = assemblePrompt({
 		vars,
 		preset,
@@ -172,6 +176,7 @@ export async function buildPromptMessages(context: PromptBuildContext): Promise<
 		customFields: await readPresetControlValues(preset?.id ?? null),
 		chatMessages,
 		recall,
+		factsBlock: factsStore.blockFor(chat?.id ?? '', chatMessages),
 		model: promptTarget.model,
 		postProcessing: promptTarget.postProcessing,
 		contextBudget: promptTarget.contextBudget,

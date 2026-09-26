@@ -1184,3 +1184,29 @@ describe('the lorebook trace assembly hands back', () => {
 		}
 	});
 });
+
+describe('P006 fact board splice (W2)', () => {
+	test('the board lands after the newest history turn, at depth 0', () => {
+		const a = assemblePrompt(input(preset([{ id: 'i1', name: 'n', role: 'system', content: 'sys', enabled: true }], { chatHistory: true }), { factsBlock: '[当前事实]\n塞拉菲娜：身体=断了左手' }));
+		const texts = a.messages.map((m) => m.content);
+		const at = texts.findIndex((t) => t.includes('当前事实'));
+		expect(at).toBeGreaterThan(-1);
+		// Nothing injected after it except, at most, the steering tail: the board is in
+		// the tail dynamic area, never inside or ahead of the history.
+		expect(at).toBeGreaterThan(texts.length - 3);
+	});
+
+	test('two builds of the same turn are byte-identical (cache prefix holds)', () => {
+		const over = { factsBlock: '[当前事实]\n塞拉菲娜：身体=断了左手；持有物=提灯\n世界：地点状态=暴风雨' };
+		const a = assemblePrompt(input(preset([{ id: 'i1', name: 'n', role: 'system', content: 'sys', enabled: true }], { chatHistory: true }), over));
+		const b = assemblePrompt(input(preset([{ id: 'i1', name: 'n', role: 'system', content: 'sys', enabled: true }], { chatHistory: true }), over));
+		expect(JSON.stringify(a.messages)).toBe(JSON.stringify(b.messages));
+	});
+
+	test('no factsBlock, no splice: existing prompts are untouched', () => {
+		const a = assemblePrompt(input(preset([{ id: 'i1', name: 'n', role: 'system', content: 'sys', enabled: true }], { chatHistory: true })));
+		const b = assemblePrompt(input(preset([{ id: 'i1', name: 'n', role: 'system', content: 'sys', enabled: true }], { chatHistory: true }), { factsBlock: '' }));
+		expect(JSON.stringify(a.messages)).toBe(JSON.stringify(b.messages));
+		expect(a.messages.some((m) => m.content.includes('当前事实'))).toBe(false);
+	});
+});

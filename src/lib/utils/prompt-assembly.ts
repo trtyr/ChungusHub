@@ -116,6 +116,11 @@ export interface AssembleInput {
 	 *  real tables (assembly mutates them in item order and the caller flushes); meters
 	 *  pass a throwaway clone. Absent = variable reads render empty, writes vanish. */
 	vars?: VarEnv;
+	/** The fact board (P006): the chat's effective facts rendered as one deterministic
+	 *  entity-grouped block. Spliced at depth 0, after the newest turn, so the cached
+	 *  prefix through chat history is byte-stable across builds of the same turn. The
+	 *  caller renders it (memory/factBlock.ts); assembly only carries it. */
+	factsBlock?: string;
 }
 
 /** One item's contribution to the final prompt, with tokens attributed by provenance:
@@ -483,6 +488,15 @@ function buildLoreSplices(ctx: MacroContext, model?: string): DepthSplice[] {
 	}));
 }
 
+/** The fact board (P006) as one depth-0 splice: standing story state that rides after the
+ *  newest turn. Fixed cost like steering, never history, so the budget trim yields room
+ *  for it instead of dropping turns to afford it. */
+function buildFactSplice(input: AssembleInput, model?: string): DepthSplice[] {
+	const text = input.factsBlock?.trim();
+	if (!text) return [];
+	return [{ message: { role: 'system', content: text }, depth: 0, tokens: countTokens(text, model) }];
+}
+
 /** The continue-in-place tail (see {@link AssembleInput.continuation}), priced so the
  *  budget trim can account for it. Empty when the input carries no continuation. */
 function continuationTail(input: AssembleInput, ctx: MacroContext): { messages: LLMMessage[]; tokens: number } {
@@ -518,7 +532,12 @@ export function assemblePrompt(input: AssembleInput): PromptAssembly {
 	let ctx: SplicedContext = buildMacroContext(input);
 	// Two kinds of turn ride inside the chat, and they share one placement rule. Lore is built
 	// first so that at a shared slot the background sits ahead of the reader's own direction.
-	const splices = [...buildLoreSplices(ctx, input.model), ...buildSteeringMessages(input, ctx, input.model)];
+	// Facts sit between them: standing world state ahead of the reader's own direction.
+	const splices = [
+		...buildLoreSplices(ctx, input.model),
+		...buildFactSplice(input, input.model),
+		...buildSteeringMessages(input, ctx, input.model)
+	];
 	// Every group splices into the injected chat, whatever its depth. Carrying them on ctx
 	// (instead of threading them through by hand) means the example-trim and history-trim
 	// re-resolves below (which rebuild ctx and re-run resolveEnabled) carry the splices

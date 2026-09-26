@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { tick, untrack } from 'svelte';
 	import { varsStore } from '$lib/stores/vars.svelte';
+	import { factsStore } from '$lib/memory/facts.svelte';
 	import { countTokens, tokenCalibration } from '$lib/tokenizer';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import ChatSetupChip from './ChatSetupChip.svelte';
@@ -203,6 +204,13 @@
 	// sourced reactively from stores here; the generation path sources them from the db.
 	let activePath = $derived(chatStore.currentChatState?.activePath ?? []);
 
+	// The fact board the meter prices: loaded per chat on entry (idempotent), read from
+	// cache so the derived stays synchronous, the same board a send will assemble.
+	$effect(() => {
+		const id = chatStore.activeChat?.id;
+		if (id) void factsStore.ensure(id);
+	});
+
 	// Steering reads live up here because the meter's assembly below consumes
 	// steeringForPrompt. The popover that edits the notes lives in its own component.
 	let steeringTarget = $derived(steeringTargetForChat(chatStore.activeChat));
@@ -284,6 +292,7 @@
 					customFields: presetControlsStore.valuesFor(currentPreset.id),
 					chatMessages: pricedPath,
 					recall: { text: memoryStore.recall || null, archivedIds: memoryStore.archivedMessageIds },
+					factsBlock: factsStore.blockFor(chatStore.activeChat?.id ?? '', pricedPath),
 					model: promptTarget.model,
 					postProcessing: promptTarget.postProcessing,
 					contextBudget: promptTarget.contextBudget,
