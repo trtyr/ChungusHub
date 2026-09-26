@@ -356,7 +356,7 @@ function normalizePalette(raw: unknown): PaletteDef {
 	}
 	return {
 		id: typeof p.id === 'string' && p.id ? p.id : crypto.randomUUID(),
-		name: typeof p.name === 'string' && p.name.trim() ? p.name.trim() : 'Untitled palette',
+		name: typeof p.name === 'string' && p.name.trim() ? p.name.trim() : i18n.t('lbw.untitledPalette'),
 		mode,
 		colors: { ...colors, overlay: OVERLAY_BY_MODE[mode] }
 	};
