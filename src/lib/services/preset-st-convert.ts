@@ -18,7 +18,7 @@ import { normalizeCarriedRules } from '$lib/utils/regex-rules';
  * - `extensions.regex_scripts` become the preset's carried rules through the
  *   same parser the Regex page uses
  *
- * What cannot carry: ST's variable system (`{{getvar}}`/`{{setvar}}` — the
+ * What cannot carry: ST's variable system (`{{getvar}}`/`{{setvar}}`: the
  * values live in ST's session store, not in the file), tavern_helper scripts,
  * and the sampler settings (a connection-level concern here, not a preset's).
  * Each of those is counted in `conversionNotes` instead of failing the import.
@@ -39,7 +39,7 @@ const MARKER_MACROS: Record<string, string> = {
  *  Dropped silently when empty; counted when the author put content in them. */
 const DROPPED_MARKERS = new Set(['main', 'nsfw', 'jailbreak', 'enhanceDefinitions']);
 
-/** ST macros that render to nothing (comments, side effects) — stripped. */
+/** ST macros that render to nothing (comments, side effects): stripped. */
 const VOID_MACROS: RegExp[] = [
 	/\{\{\s*\/\/[\s\S]*?\}\}/gi,
 	/\{\{\s*trim\s*\}\}/gi,
@@ -255,7 +255,13 @@ export function convertSillyTavernPreset(raw: Record<string, unknown>, fileName?
 	const extensions = raw.extensions;
 	if (extensions && typeof extensions === 'object' && !Array.isArray(extensions)) {
 		const ext = extensions as Record<string, unknown>;
-		if (Array.isArray(ext.tavern_helper) || (ext.tavern_helper && typeof ext.tavern_helper === 'object')) {
+		const helper: unknown = ext.tavern_helper;
+		const helperScripts = Array.isArray(helper)
+			? helper
+			: helper && typeof helper === 'object'
+				? (helper as Record<string, unknown>).scripts
+				: undefined;
+		if (Array.isArray(helperScripts) && helperScripts.length > 0) {
 			notes.push('检测到 tavern_helper 脚本（酒馆助手）：ChungusHub 没有对应运行时，未迁移。');
 		}
 		if (ext.regex_scripts !== undefined) {

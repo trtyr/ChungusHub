@@ -89,7 +89,7 @@ const stPreset = {
 				maxDepth: null
 			}
 		],
-		tavern_helper: { scripts: [], variables: {} }
+		tavern_helper: { scripts: [{ name: 'ui panel', code: 'setvar("x", 1);' }], variables: {} }
 	}
 };
 
