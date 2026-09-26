@@ -443,7 +443,8 @@
 	}
 
 	function tabTitle(id: string): string {
-		return store.sessions.find((s) => s.id === id)?.title ?? 'Session';
+		const t = store.sessions.find((s) => s.id === id)?.title ?? i18n.t('asm.session');
+		return t === 'New session' ? i18n.t('asm.newSession') : t;
 	}
 
 	/** A stopped tab says WHAT it is stopped on: approving a call and answering a question are
@@ -451,7 +452,7 @@
 	function waitingTitle(id: string): string {
 		const pending = store.runtime[id]?.pending;
 		if (!pending) return tabTitle(id);
-		return `${tabTitle(id)} · waiting for your ${pending.kind === 'question' ? 'answer' : 'approval'}`;
+		return i18n.t(pending.kind === 'question' ? 'asm.waitAnswer' : 'asm.waitApproval', { title: tabTitle(id) });
 	}
 
 	function startTabRename(id: string): void {

@@ -49,7 +49,7 @@
 						<Toggle
 							checked={engine.enabled.get()}
 							onchange={(v) => engine.enabled.set(v)}
-							label={i18n.t('lbl.enableNamed', { name: engine.name })}
+							label={i18n.t('lbl.enableNamed', { name: labelT(engine.name) })}
 						/>
 					</div>
 				{/each}

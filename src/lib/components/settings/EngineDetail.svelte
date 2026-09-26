@@ -191,7 +191,7 @@
 			<Toggle
 				checked={engine.enabled.get()}
 				onchange={(v) => engine.enabled.set(v)}
-				label={i18n.t('lbl.enableNamed', { name: engine.name })}
+				label={i18n.t('lbl.enableNamed', { name: labelT(engine.name) })}
 			/>
 		</div>
 	</section>
@@ -398,7 +398,7 @@
 									title={i18n.t('eng.clickCopy')}
 									onclick={() => copyKey(token)}
 								>
-									{copied === token ? 'copied' : token}
+									{copied === token ? i18n.t('ma.copied') : token}
 								</button>
 							{/each}
 						</div>

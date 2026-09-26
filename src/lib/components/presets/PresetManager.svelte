@@ -285,7 +285,7 @@
 				     and this list is where you'd go back for it. Same rule as the switcher in
 				     Preset Controls, which is the other picker over the same set. -->
 				{#each allPresets as preset (preset.id)}
-					<option value={preset.id}>{preset.name}{presetService.hasDraft(preset.id) ? ' • Draft' : ''}</option>
+					<option value={preset.id}>{preset.name}{presetService.hasDraft(preset.id) ? ' • ' + i18n.t('pcv.draft') : ''}</option>
 				{/each}
 			</Select>
 		</div>

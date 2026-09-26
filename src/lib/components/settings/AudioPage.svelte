@@ -141,7 +141,7 @@
 							<span class="event-desc">{labelT(event.description)}</span>
 						</span>
 						<span class="event-tone" class:is-silent={current === null}>
-							{current ? toneLabel(current) : i18n.t('audio.none')}
+							{current ? labelT(toneLabel(current)) : i18n.t('audio.none')}
 						</span>
 						<Icon name="chevronDown" class="event-chev" />
 					</button>

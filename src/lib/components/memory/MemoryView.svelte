@@ -126,7 +126,7 @@
 	function priceOf(w: Work): string {
 		const passes = i18n.t('mem.passesStory', { n: w.extractions });
 		if (w.promotions === 0) return passes;
-		return `${passes} and ${w.promotions} ${w.promotions === 1 ? 'merge' : 'merges'} of older summaries`;
+		return passes + i18n.t('mem.mergePart', { n: w.promotions });
 	}
 
 	let enableConfirmOpen = $state(false);

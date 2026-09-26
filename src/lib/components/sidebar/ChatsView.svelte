@@ -541,7 +541,7 @@
 		const name = `"${deleteTarget.title}"`;
 		if (!deleteStats) return i18n.t('svc.deleteAskAll', { name });
 		const n = deleteStats.total;
-		const branches = n > deleteStats.path ? ', branches included' : '';
+		const branches = n > deleteStats.path ? i18n.t('svc.branchesIncl') : '';
 		return i18n.t('svc.deleteAskN', { name, n, branches });
 	});
 

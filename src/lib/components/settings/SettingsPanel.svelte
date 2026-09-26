@@ -45,12 +45,12 @@
 	/** Where `back()` lands, named on the chip: sub-views peel one level at a time. */
 	const backLabel = $derived(
 		uiStore.settingsRoutingModel
-			? 'Connection'
+			? i18n.t('sp.grpConnection')
 			: uiStore.settingsConnectionId
-				? 'Connections'
+				? i18n.t('sp.grpConnections')
 				: uiStore.settingsEngineId
-					? 'Engines'
-					: 'Settings'
+					? i18n.t('sp.grpEngines')
+					: i18n.t('sp.backSettings')
 	);
 
 	function go(p: SettingsPage): void {
