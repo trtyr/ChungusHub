@@ -196,7 +196,7 @@
 	function detailChars(tool: AssistantToolResult): string {
 		const shown = typeof tool.resultPreview === 'string' ? tool.resultPreview.length : 0;
 		const total = typeof tool.resultChars === 'number' ? tool.resultChars : shown;
-		return total > shown ? `cut · ${shown.toLocaleString()} of ${total.toLocaleString()} chars` : `${total.toLocaleString()} chars`;
+		return total > shown ? i18n.t('att.cutChars', { n: shown.toLocaleString(), m: total.toLocaleString() }) : i18n.t('att.nChars', { n: total.toLocaleString() });
 	}
 </script>
 
@@ -246,7 +246,7 @@
 						<pre class="assistant-step-detail-pre">{JSON.stringify(tool.args, null, 1)}</pre>
 					{/if}
 					{#if typeof tool.resultPreview === 'string'}
-						<div class="assistant-step-detail-head">result · {detailChars(tool)}</div>
+						<div class="assistant-step-detail-head">{i18n.t('att.result')} {detailChars(tool)}</div>
 						<pre class="assistant-step-detail-pre">{formatResult(tool.resultPreview)}</pre>
 					{/if}
 				</div>

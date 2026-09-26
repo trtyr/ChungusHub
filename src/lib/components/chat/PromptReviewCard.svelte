@@ -63,7 +63,7 @@
 				</span>
 			{/if}
 			{#if edited}<span class="edited">{i18n.t('prc.edited')}</span>{/if}
-			<span class="meta">{lineCount.toLocaleString()} ln · ~{tokens.toLocaleString()} tok</span>
+			<span class="meta">{i18n.t('dbg.lnTok', { n: lineCount.toLocaleString(), m: tokens.toLocaleString() })}</span>
 		</button>
 		<button
 			class="drop"

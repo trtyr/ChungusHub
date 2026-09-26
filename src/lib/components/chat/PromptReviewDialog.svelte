@@ -237,8 +237,8 @@
 
 				<p class="meta">
 					{#if model}<span>{model}</span>{/if}
-					<span>{messages.length} message{messages.length === 1 ? '' : 's'}</span>
-					<span>~{total.toLocaleString()} tokens</span>
+					<span>{i18n.t('pr.nMessages', { n: messages.length })}</span>
+					~<span>{i18n.t('pbv.nTokens', { n: total.toLocaleString() })}</span>
 				</p>
 
 				<p class="note">{note}</p>

@@ -65,7 +65,7 @@
 					{images.length}
 				</span>
 			{/if}
-			<span class="meta">{lineCount.toLocaleString()} ln · ~{tokens.toLocaleString()} tok</span>
+			<span class="meta">{i18n.t('dbg.lnTok', { n: lineCount.toLocaleString(), m: tokens.toLocaleString() })}</span>
 		</button>
 		<CopyButton quiet text={() => content} title={i18n.t('dbg.copyMsgText')} />
 	</div>

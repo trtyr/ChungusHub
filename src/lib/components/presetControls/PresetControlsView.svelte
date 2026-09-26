@@ -617,7 +617,7 @@
 						<span class="pcv-status-spacer"></span>
 						{#if totalTokens > 0}
 							<span class="pcv-status-cost" title={i18n.t('pcv.costTip')}>
-								{totalTokens.toLocaleString()} tokens
+								{i18n.t('pbv.nTokens', { n: totalTokens.toLocaleString() })}
 							</span>
 						{/if}
 					</div>

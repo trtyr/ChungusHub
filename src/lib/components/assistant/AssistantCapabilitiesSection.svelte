@@ -95,7 +95,7 @@
 		</button>
 	{/each}
 	<span class="cap-total">
-		{#if loaded}~{totalTokens.toLocaleString()} tokens{:else}…{/if}
+		{#if loaded}{i18n.t('asm.nTokensTilde', { n: totalTokens.toLocaleString() })}{:else}…{/if}
 	</span>
 </div>
 

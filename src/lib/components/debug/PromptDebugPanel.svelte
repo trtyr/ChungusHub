@@ -238,25 +238,25 @@
 								}}
 							>⇄</button>
 						</div>
-						<div class="row-model" title={entry.model}>{entry.model || '(no model)'}</div>
+						<div class="row-model" title={entry.model}>{entry.model || i18n.t('dbg.noModel')}</div>
 						<div class="row-meta">
 							<span>{entry.provider}</span>
 							<span class="sep">·</span>
-							<span>{entry.messages.length} msg</span>
+							<span>{i18n.t('dbg.nMsg', { n: entry.messages.length })}</span>
 							{#if rowTools}
 								<span class="sep">·</span>
-								<span>{rowTools} tools</span>
+								<span>{i18n.t('dbg.nTools', { n: rowTools })}</span>
 							{/if}
 							{#if rowImages}
 								<span class="sep">·</span>
-								<span class="img-count">{rowImages} img</span>
+								<span class="img-count">{i18n.t('dbg.nImg', { n: rowImages })}</span>
 							{/if}
 							<span class="sep">·</span>
 							<span
 								class="tok"
 								class:reported={rowSize.reported}
 								title={rowSize.reported ? i18n.t('dp.reported') : i18n.t('dp.estimate')}
-							>{rowSize.reported ? '' : '~'}{rowSize.tokens.toLocaleString()} tok</span>
+							>{rowSize.reported ? '' : '~'}{i18n.t('dbg.nTok', { n: rowSize.tokens.toLocaleString() })}</span>
 							{#if formatDuration(entry.startedAt, entry.endedAt)}
 								<span class="sep">·</span>
 								<span>{formatDuration(entry.startedAt, entry.endedAt)}</span>
@@ -389,7 +389,7 @@
 										<span class="sec-title">{i18n.t('dp.tools')}</span>
 										<span class="sec-count">{tools.length}</span>
 									</button>
-									<span class="sec-meta">~{toolSize.toLocaleString()} tok · {i18n.t('dp.ofRequest', { n: toolShare })}</span>
+									<span class="sec-meta">~{i18n.t('dbg.nTok', { n: toolSize.toLocaleString() })} · {i18n.t('dp.ofRequest', { n: toolShare })}</span>
 									<span class="spacer"></span>
 									<CopyButton text={() => JSON.stringify(tools, null, 2)} title={i18n.t('dp.copyTools')} />
 								</div>
@@ -415,7 +415,7 @@
 								<span
 									class="sec-meta"
 									title={images.length ? i18n.t('dp.wireImages') : undefined}
-								>~{messageSize.toLocaleString()} tok{images.length ? ` · ${images.length} image${images.length === 1 ? '' : 's'} attached` : ''}</span>
+								>~{i18n.t('dbg.nTok', { n: messageSize.toLocaleString() })}{images.length ? ` · ${i18n.t('dp.nAttached', { n: images.length })}` : ''}</span>
 								<span class="spacer"></span>
 								<button
 									class="sec-btn"

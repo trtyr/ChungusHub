@@ -90,10 +90,10 @@
 	};
 
 	const logicGlyph: Record<number, string> = {
-		0: '＋ any of',
-		3: '＋ all of',
-		2: '－ none of',
-		1: '－ not all of'
+		0: 'lb.gAnyOf',
+		3: 'lb.gAllOf',
+		2: 'lb.gNoneOf',
+		1: 'lb.gNotAll'
 	};
 
 	function update(patch: Parameters<typeof lorebookStore.updateEntry>[2]) {
@@ -522,7 +522,7 @@
 								aria-label={i18n.t('lbw.secondaryLogic')}
 							>
 								{#each LOREBOOK_LOGICS as l (l.id)}
-									<option value={String(l.id)}>{logicGlyph[l.id]}</option>
+									<option value={String(l.id)}>{i18n.t(logicGlyph[l.id])}</option>
 								{/each}
 							</Select>
 						</div>

@@ -115,7 +115,7 @@ const ZH: Record<string, string> = {
 	"Cannot transform an empty draft": '空草稿无法转换',
 	"Sprites is turned off in Settings → Engines": '立绘已在 设置 → 引擎 中关闭',
 	"There is no turn to read": '没有可读取的回合',
-	"The Sprites prompt has no {{labels}}, so there is nothing to choose from": '立绘提示词没有 {{{{labels}}}}，因此无从选择',
+	"The Sprites prompt has no {{labels}}, so there is nothing to choose from": '立绘提示词没有 {{labels}}，因此无从选择',
 	"Message not found in active path": '活动路径中未找到该消息',
 	"Cannot regenerate: assistant message has no parent": '无法重新生成：AI 回复消息没有父消息',
 	"Retry is only available for user and assistant messages": '仅用户消息与 AI 回复可重试',
