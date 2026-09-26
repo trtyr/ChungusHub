@@ -2,6 +2,7 @@ import { marked } from 'marked';
 import DOMPurify from 'dompurify';
 import { isDecorationColor, sanitizeDecorations } from './inline-decoration';
 import { prepareModelMarkup } from './model-markup';
+import { scopeStylesheet } from './style-scope';
 
 // Configure marked for safe rendering
 marked.setOptions({
@@ -25,6 +26,11 @@ marked.setOptions({
  */
 DOMPurify.addHook('afterSanitizeAttributes', (node) => {
 	if (!(node instanceof Element)) return;
+
+	if (node.tagName === 'STYLE') {
+		node.textContent = scopeStylesheet(node.textContent ?? '');
+		return;
+	}
 
 	const style = node.getAttribute('style');
 	if (style !== null) {
@@ -136,6 +142,9 @@ export function renderMarkdown(content: string): string {
 			'details',
 			'summary',
 			'div',
+			// A preset's beautify stylesheet (P003): its content is rewritten by
+			// scopeStyleElement above, never trusted as written.
+			'style',
 			'b',
 			'i',
 			'u',

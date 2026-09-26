@@ -661,7 +661,7 @@
 									     use:renderedHtml rather than {@html}: it patches this subtree
 									     instead of rebuilding it, which is what lets a folding panel
 									     take a click while the reply is still arriving. -->
-									<div class="prose message-prose" data-search-text use:renderedHtml={bodyHtml}></div>
+									<div class="prose message-prose msg-style-scope" data-search-text use:renderedHtml={bodyHtml}></div>
 								</div>
 							{/if}
 							</div>
