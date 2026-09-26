@@ -54,6 +54,7 @@ const MAX_VISIBLE = 3;
  *  something the reader can act on. */
 import { i18n } from '$lib/i18n/i18n.svelte';
 import { labelT } from '$lib/i18n/labels';
+import { setSaveFailureHandler } from '$lib/services/syncedSetting';
 
 const REASON_CAP = 160;
 
@@ -143,3 +144,9 @@ class ToastStore {
 	}
 }
 export const toastStore = new ToastStore();
+
+// Settings-spine write failures surface here: syncedSetting must stay a leaf (no i18n/toast
+// imports) so the module graph cannot re-enter mid-initialization; the UI layer owns the toast.
+setSaveFailureHandler((key) => {
+	toastStore.error(i18n.t('sv.saveFail', { key }));
+});

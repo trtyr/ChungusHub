@@ -7,9 +7,17 @@
  * to per-device localStorage: read/write a JSON value by key, and register a
  * reload that fires on every incoming `settings` broadcast.
  */
-import { i18n } from '$lib/i18n/i18n.svelte';
 import { db } from '$lib/services/database';
-import { toastStore } from '$lib/stores/toast.svelte';
+
+/** Write-failure reporter, registered by the UI layer (which owns i18n + toast). This
+ *  module must stay a leaf: importing i18n/toast from here re-enters the module graph
+ *  mid-initialization (i18n.svelte imports this file), which is the crash P004 fixed. */
+let saveFailureHandler: ((key: string, error: unknown) => void) | null = null;
+
+export function setSaveFailureHandler(fn: (key: string, error: unknown) => void): void {
+	saveFailureHandler = fn;
+}
+
 
 const reloaders = new Set<() => Promise<void>>();
 
@@ -45,7 +53,7 @@ export function writeSetting(key: string, value: unknown): Promise<void> {
 		// The store already moved, so a silent failure means this device shows a value no
 		// other device (and not the next boot) will ever agree with. Say it out loud.
 		console.error(`[settings] write failed for "${key}":`, error);
-		toastStore.error(i18n.t('sv.saveFail', { key }));
+		saveFailureHandler?.(key, error);
 	});
 }
 
