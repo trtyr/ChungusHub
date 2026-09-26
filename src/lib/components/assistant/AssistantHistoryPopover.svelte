@@ -31,7 +31,7 @@
 	function startRename(e: MouseEvent, id: string) {
 		e.stopPropagation();
 		renamingId = id;
-		renameDraft = store.sessions.find((s) => s.id === id)?.title ?? 'Session';
+		renameDraft = store.sessions.find((s) => s.id === id)?.title ?? i18n.t('asm.session');
 	}
 
 	async function commitRename() {

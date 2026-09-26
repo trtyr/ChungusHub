@@ -308,7 +308,7 @@
 						oninput={(e) => patchDepth('maxDepth', e.currentTarget.value)}
 					/>
 				</label>
-				<span class="rx-depth-reach" class:rx-depth-bad={inverted}>{depthReach ?? 'every turn'}</span>
+				<span class="rx-depth-reach" class:rx-depth-bad={inverted}>{depthReach ?? i18n.t('ler.everyTurn')}</span>
 			</div>
 			<span class="rx-note">{i18n.t('rxe.backNote')}</span>
 		</div>

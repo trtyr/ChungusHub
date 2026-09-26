@@ -40,7 +40,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	// count reads switches, exactly like the own list's above it; a rule that is on but
 	// broken or inert says so on its own row rather than being quietly subtracted here.
 	let carried = $derived(regexRulesStore.carriedFrom(presetService.getActiveEffectivePreset()));
-	let carriedFrom = $derived(presetService.getActiveEffectivePreset()?.name ?? 'the active preset');
+	let carriedFrom = $derived(presetService.getActiveEffectivePreset()?.name ?? i18n.t('pbv.activePreset'));
 	let carriedActive = $derived(carried.filter((r) => regexRulesStore.carriedEnabled(r)).length);
 
 	// One rule's editor open at a time, so the tab reads as a list, not a wall of forms. The

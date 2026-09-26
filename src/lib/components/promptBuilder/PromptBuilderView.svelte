@@ -1133,7 +1133,7 @@
 	{/if}
 
 	<MacroReference
-		controls={presetControlMacros.map((c) => ({ name: c.macro.trim(), description: c.label || 'Custom control' }))}
+		controls={presetControlMacros.map((c) => ({ name: c.macro.trim(), description: c.label || i18n.t('ce2.customControl') }))}
 	/>
 </div>
 

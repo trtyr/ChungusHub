@@ -129,7 +129,7 @@
 	let confirmDelete = $state(false);
 	/** Named rather than spelled out, so the message cannot drift from the actual fallback. */
 	let fallbackName = $derived(
-		themeStore.palettes.find((p) => p.id === DEFAULT_APPEARANCE.palette)?.name ?? 'the default'
+		themeStore.palettes.find((p) => p.id === DEFAULT_APPEARANCE.palette)?.name ?? i18n.t('pal.theDefault')
 	);
 
 	/**

@@ -14,7 +14,7 @@
 	// Counted over the WHOLE diff, never the condensed view: the header states what changed,
 	// not what is currently on screen.
 	let counts = $derived(diffLineCounts(full));
-	let title = $derived(action?.diff?.title || action?.label || 'Changes');
+	let title = $derived(action?.diff?.title || action?.label || i18n.t('asm.changes'));
 
 	/** Gaps the reader has opened, keyed by where they start in `full`. Cleared per diff, or a
 	 *  card opened on the next edit would inherit the last one's expansions. */

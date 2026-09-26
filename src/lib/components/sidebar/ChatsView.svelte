@@ -329,10 +329,10 @@
 	function hitSnippetFor(chat: Chat): string {
 		const raw = messageHits[chat.id]?.snippet;
 		if (!raw) return '';
-		const charName = chatCastStore.charactersForChat(chat.id)[0]?.name?.trim() || 'Story';
+		const charName = chatCastStore.charactersForChat(chat.id)[0]?.name?.trim() || i18n.t('role.story');
 		// The CHAT's persona, falling back to a neutral "You": the same pair the preview
 		// pane resolves with, so one chat can't read two different names in one panel.
-		const userName = chatCastStore.personaForChat(chat.id)?.name?.trim() || 'You';
+		const userName = chatCastStore.personaForChat(chat.id)?.name?.trim() || i18n.t('role.you');
 		return expandSelfRefs(raw.replace(/\s+/g, ' ').trim(), charName, userName);
 	}
 
