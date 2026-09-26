@@ -36,6 +36,7 @@ import {
 	type PromptCharacter
 } from '$lib/macros';
 import { expandVarMacros } from '$lib/utils/var-macros';
+import type { VarEnv } from '$lib/macros';
 import { countTokens } from '$lib/tokenizer/count';
 import { applyPromptRegex, type RegexRule } from './regex-rules';
 
@@ -111,6 +112,10 @@ export interface AssembleInput {
 	 *  standing prompt state, so the chat meter passes it too, under the same engine
 	 *  gate as prompt-builder, or the meter would price a block the send won't send. */
 	steering?: { notes: ResolvedSteeringNote[]; wrapper: string };
+	/** Live variable tables for the variable pass. The generation path passes the store's
+	 *  real tables (assembly mutates them in item order and the caller flushes); meters
+	 *  pass a throwaway clone. Absent = variable reads render empty, writes vanish. */
+	vars?: VarEnv;
 }
 
 /** One item's contribution to the final prompt, with tokens attributed by provenance:
@@ -183,6 +188,7 @@ export function buildMacroContext(input: AssembleInput): MacroContext {
 				}
 			: undefined;
 	const base: MacroContext = {
+		vars: input.vars,
 		resolvedPersona: input.resolvedPersona,
 		resolvedCharacters: input.resolvedCharacters,
 		chatMessages,

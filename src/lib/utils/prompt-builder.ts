@@ -18,6 +18,7 @@ import { presetService } from '$lib/services/presets.svelte';
 import { readPresetControlValues } from '$lib/stores/presetControls.svelte';
 import { memoryStore } from '$lib/memory/store.svelte';
 import { lorebookSettingsStore } from '$lib/lorebook/settings.svelte';
+import { varsStore } from '$lib/stores/vars.svelte';
 import { regexRulesStore } from '$lib/stores/regex-rules.svelte';
 import { featurePromptsStore } from '$lib/stores/featurePrompts.svelte';
 import {
@@ -155,7 +156,12 @@ export async function buildPromptMessages(context: PromptBuildContext): Promise<
 	// composer's meter runs, so the price on screen is the price of the request.
 	const promptTarget = resolvePromptTarget(chat, context.target ?? 'primary');
 
+	// The chat's live variable tables: assembly mutates them in item order, and the
+	// mutated state is persisted right after: variables change when the prompt is built,
+	// which is ST's own execution model.
+	const vars = varsStore.envFor(chat?.id ?? '');
 	const { messages, lorebook, continuationSent } = assemblePrompt({
+		vars,
 		preset,
 		resolvedCharacters: character ? [toPromptCharacter(character)!] : [],
 		resolvedPersona: toPromptCharacter(personaEntry),
@@ -175,6 +181,8 @@ export async function buildPromptMessages(context: PromptBuildContext): Promise<
 			? { notes: resolvedSteering, wrapper: featurePromptsStore.promptFor('steeringWrapper') }
 			: undefined
 	});
+
+	await varsStore.flush(chat?.id ?? '', vars.locals);
 
 	return { messages, target: promptTarget.target, lorebook, continuationSent, oneShotSteering };
 }

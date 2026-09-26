@@ -17,6 +17,7 @@
 	import PruneEmptyBlocksMockup from '$lib/components/mockups/PruneEmptyBlocksMockup.svelte';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import MacroReference from '$lib/components/ui/MacroReference.svelte';
+	import VarInspector from '$lib/components/promptBuilder/VarInspector.svelte';
 	import PresetManager from '$lib/components/presets/PresetManager.svelte';
 	import ChatOverrideNotice from '$lib/components/ui/ChatOverrideNotice.svelte';
 	import {
@@ -1135,6 +1136,8 @@
 	<MacroReference
 		controls={presetControlMacros.map((c) => ({ name: c.macro.trim(), description: c.label || i18n.t('ce2.customControl') }))}
 	/>
+
+	<VarInspector />
 </div>
 
 <ConfirmDialog
