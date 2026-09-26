@@ -526,6 +526,32 @@ const MIGRATIONS: Migration[] = [
 		                      THEN json_extract(character_library.data_json, '$.activeVersionId') END
 		  );
 		`
+	},
+	{
+		version: 45,
+		name: 'chat_facts',
+		sql: `
+		-- P006 W1: the session state board. A fact is one asserted attribute of one entity
+		-- (塞拉菲娜 · 身体 = 断了左手), anchored to the message ids it was extracted from.
+		-- No status column: which fact stands on a given branch is DERIVED at query time
+		-- from the anchors against the active path (memory/facts.ts), exactly like episode
+		-- coverage. Soft delete keeps the row so the next extraction cannot silently
+		-- resurrect a fact the reader removed; reaping (anchor turns gone) is a hard delete.
+		CREATE TABLE chat_facts (
+			id TEXT PRIMARY KEY,
+			chat_id TEXT NOT NULL,
+			entity TEXT NOT NULL,
+			key TEXT NOT NULL,
+			value TEXT NOT NULL,
+			importance INTEGER NOT NULL DEFAULT 2,
+			source_ids TEXT NOT NULL DEFAULT '[]',
+			created_at INTEGER NOT NULL,
+			revised_at INTEGER,
+			deleted_at INTEGER,
+			FOREIGN KEY (chat_id) REFERENCES chats(id) ON DELETE CASCADE
+		);
+		CREATE INDEX idx_chat_facts_chat ON chat_facts(chat_id, entity, key);
+		`
 	}
 ];
 
@@ -992,6 +1018,28 @@ class ServerDatabase {
 					remapMsgList(episode.source_message_ids),
 					remapMsg(episode.anchor_message_id),
 					episode.created_at
+				]
+			);
+		}
+
+		// Facts ride the same remap: new ids, anchors translated through the same message
+		// map, fail-loud on a stale anchor (same gate as episodes above).
+		const facts = this.select<Record<string, unknown>[]>('SELECT * FROM chat_facts WHERE chat_id = ? ORDER BY rowid', [fromChatId]);
+		for (const fact of facts) {
+			this.execute(
+				`INSERT INTO chat_facts (id, chat_id, entity, key, value, importance, source_ids, created_at, revised_at, deleted_at)
+				 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+				[
+					randomUUID(),
+					toChatId,
+					fact.entity,
+					fact.key,
+					fact.value,
+					fact.importance,
+					remapMsgList(fact.source_ids),
+					fact.created_at,
+					fact.revised_at,
+					fact.deleted_at
 				]
 			);
 		}
@@ -3243,6 +3291,88 @@ class ServerDatabase {
 		return rows.map((r) => this.mapEpisode(r));
 	}
 
+	// ===== Chat facts (P006): the session state board =====
+
+	private mapFact(r: Record<string, unknown>): Record<string, unknown> {
+		let sourceIds: string[] = [];
+		try {
+			const parsed: unknown = JSON.parse(String(r.source_ids ?? '[]'));
+			if (Array.isArray(parsed)) sourceIds = parsed.filter((x): x is string => typeof x === 'string');
+		} catch {
+			sourceIds = [];
+		}
+		return {
+			id: r.id,
+			chatId: r.chat_id,
+			entity: r.entity,
+			key: r.key,
+			value: r.value,
+			importance: r.importance,
+			sourceIds,
+			createdAt: r.created_at,
+			revisedAt: r.revised_at
+		};
+	}
+
+	memListFacts(chatId: string): unknown[] {
+		const rows = this.select<Record<string, unknown>[]>(
+			'SELECT * FROM chat_facts WHERE chat_id = ? AND deleted_at IS NULL ORDER BY rowid ASC',
+			[chatId]
+		);
+		return rows.map((r) => this.mapFact(r));
+	}
+
+	memApplyFacts(chatId: string, facts: unknown): void {
+		if (!Array.isArray(facts) || facts.length === 0) {
+			throw new Error('memApplyFacts: facts must be a non-empty array');
+		}
+		this.db.transaction(() => {
+			for (const raw of facts) {
+				const f = raw as Record<string, unknown>;
+				if (typeof f.entity !== 'string' || !f.entity || typeof f.key !== 'string' || !f.key || typeof f.value !== 'string') {
+					throw new Error('memApplyFacts: each fact needs non-empty entity, key and string value');
+				}
+				this.execute(
+					`INSERT INTO chat_facts (id, chat_id, entity, key, value, importance, source_ids, created_at)
+					 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+					[
+						typeof f.id === 'string' && f.id ? f.id : randomUUID(),
+						chatId,
+						f.entity,
+						f.key,
+						f.value,
+						typeof f.importance === 'number' ? Math.max(1, Math.min(3, Math.round(f.importance))) : 2,
+						JSON.stringify(Array.isArray(f.sourceIds) ? f.sourceIds.filter((x): x is string => typeof x === 'string') : []),
+						Date.now()
+					]
+				);
+			}
+		})();
+	}
+
+	memReapFacts(chatId: string, factIds: unknown): void {
+		if (!Array.isArray(factIds) || factIds.length === 0) return;
+		this.db.transaction(() => {
+			for (const id of factIds) {
+				this.execute('DELETE FROM chat_facts WHERE id = ? AND chat_id = ?', [id, chatId]);
+			}
+		})();
+	}
+
+	memUpdateFactContent(chatId: string, factId: string, value: string): void {
+		this.execute(
+			'UPDATE chat_facts SET value = ?, revised_at = ? WHERE id = ? AND chat_id = ? AND deleted_at IS NULL',
+			[value, Date.now(), factId, chatId]
+		);
+	}
+
+	memSetFactDeleted(chatId: string, factId: string): void {
+		this.execute(
+			'UPDATE chat_facts SET deleted_at = ? WHERE id = ? AND chat_id = ? AND deleted_at IS NULL',
+			[Date.now(), factId, chatId]
+		);
+	}
+
 	/** Fold a config patch onto whatever this chat already has stored. */
 	private mergeMemoryConfig(chatId: string, patch: unknown): Record<string, unknown> {
 		const row = this.select<{ config_json: string | null }[]>(
@@ -3538,7 +3668,11 @@ export const MUTATION_SCOPES: Record<string, SyncScope> = {
 	memApplyPromotion: 'memory',
 	memReapEpisodes: 'memory',
 	memUpdateEpisodeContent: 'memory',
-	memReset: 'memory'
+	memReset: 'memory',
+	memApplyFacts: 'memory',
+	memReapFacts: 'memory',
+	memUpdateFactContent: 'memory',
+	memSetFactDeleted: 'memory'
 };
 
 // Every method the bridge is allowed to dispatch (reads + mutations).
@@ -3554,7 +3688,7 @@ const READ_METHODS = [
 	'getAllLorebooks', 'getLorebook',
 	'getAllSteeringNotes',
 	'getAllAssistantSessions', 'getAssistantMessages',
-	'memGetState', 'memListEpisodes'
+	'memGetState', 'memListEpisodes', 'memListFacts'
 ];
 
 export const ALLOWED_DB_METHODS = new Set([...READ_METHODS, ...Object.keys(MUTATION_SCOPES)]);
