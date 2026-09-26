@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { labelT } from '$lib/i18n/labels';
 	import Workspace from '$lib/components/layout/Workspace.svelte';
 	import TitleBar from '$lib/components/layout/TitleBar.svelte';
 	import AssistantFloatingWidget from '$lib/components/assistant/AssistantFloatingWidget.svelte';
@@ -276,7 +277,7 @@
 					<span>!</span>
 				</div>
 				<h1 class="state-title text-error">{i18n.t('launch.errorTitle')}</h1>
-				<p class="state-copy">{error}</p>
+				<p class="state-copy">{labelT(error ?? '')}</p>
 				<button
 					class="state-action"
 					onclick={() => window.location.reload()}

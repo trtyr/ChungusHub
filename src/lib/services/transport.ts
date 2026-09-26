@@ -233,7 +233,7 @@ async function parseOrThrow(res: Response): Promise<unknown> {
 		throw new MaintenanceError(state.error ?? 'ChungusHub is busy.', state.detail ?? '');
 	}
 	if (!res.ok) {
-		throw new Error((data as { error?: string }).error ?? `Request failed (${res.status})`);
+		throw new Error((data as { error?: string }).error ?? i18n.t('tp.requestFailedN', { n: res.status }));
 	}
 	return data;
 }

@@ -2061,6 +2061,7 @@ export const en: Record<string, string> = {
 	'lbw.invalidJsonFile': "\"{name}\" is not valid JSON.",
 	'mem.probLooped': "looped, repeating {n} words verbatim (episode started: \"{p0}\")",
 	'mem.probNoEpisode': "returned no episode (response started: \"{p0}\")",
+	'tp.requestFailedN': 'Request failed ({n})',
 	'cmd.say': 'Add a turn of yours without asking for a reply',
 	'cmd.continue': 'Extend the newest reply where it stops',
 	'cmd.retry': 'Generate the newest turn again',

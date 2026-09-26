@@ -2039,6 +2039,7 @@ export const zh: Record<string, string> = {
 	'lbw.invalidJsonFile': '「{name}」不是有效的 JSON。',
 	'mem.probLooped': "陷入循环，逐字重复了 {n} 个词（episode 开头：\"{p0}\"）",
 	'mem.probNoEpisode': "未返回 episode（响应开头：\"{p0}\"）",
+	'tp.requestFailedN': '请求失败（{n}）',
 	'cmd.say': '添加一条你的回合，不请求回复',
 	'cmd.continue': '从最新回复停下的地方继续',
 	'cmd.retry': '重新生成最新回合',

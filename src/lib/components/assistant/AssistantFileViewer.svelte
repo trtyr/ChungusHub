@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { labelT } from '$lib/i18n/labels';
 	/**
 	 * Looking at an attached file: the same text, addressed the same way, the assistant reads.
 	 *
@@ -63,7 +64,7 @@
 <Dialog open={!!file} {onClose} title={file?.name ?? ''} size="xl">
 	<p class="file-meta">{subtitle}</p>
 	{#if failed}
-		<p class="file-failed">{failed}</p>
+		<p class="file-failed">{labelT(failed)}</p>
 	{:else if total === 0 && !loading}
 		<p class="file-meta">{i18n.t('asm.noLines')}</p>
 	{:else}

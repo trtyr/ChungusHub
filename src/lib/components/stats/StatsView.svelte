@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { labelT } from '$lib/i18n/labels';
 	/**
 	 * The stats screen: what the reader has written, read in one pass.
 	 *
@@ -134,7 +135,7 @@
 
 	<div class="body panel-scroll">
 		{#if statsStore.error}
-			<Alert message={i18n.t('stv.countFail', { error: statsStore.error ?? '' })} />
+			<Alert message={i18n.t('stv.countFail', { error: labelT(statsStore.error ?? '') })} />
 		{:else if !snapshot}
 			<div class="waiting"><Spinner /></div>
 		{:else if snapshot.stats.effort.messages === 0}

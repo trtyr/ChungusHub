@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { labelT } from '$lib/i18n/labels';
 	/**
 	 * The assistant's turn timeline: user bubbles and bubble-less, chronological
 	 * assistant turns (text + thinking + tool steps), for both persisted messages and
@@ -374,7 +375,7 @@
 				</div>
 			{/if}
 			{#if message.error}
-				<div class="assistant-error">{message.error}</div>
+				<div class="assistant-error">{labelT(message.error)}</div>
 				{#if mi === messages.length - 1 && activeId && !runtime.busy}
 					<button type="button" class="assistant-retry-btn" onclick={onRetry}>
 						<Icon name="refresh" class="w-3.5 h-3.5" />

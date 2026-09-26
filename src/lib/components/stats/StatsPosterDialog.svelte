@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { labelT } from '$lib/i18n/labels';
 	/**
 	 * Make the share pictures, page through them, then take the one you want.
 	 *
@@ -155,7 +156,7 @@
 <Dialog open={showing} onClose={() => (open = false)} title={i18n.t('st.makePicture')} size="md">
 	<div class="poster-body">
 		{#if error}
-			<Alert message={i18n.t('st.drawFail', { error })} />
+			<Alert message={i18n.t('st.drawFail', { error: labelT(error ?? '') })} />
 		{/if}
 
 		{#if cards.length > 1}

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { labelT } from '$lib/i18n/labels';
 	/**
 	 * The prompt debug panel on its own window. The app's "Pop out" button opens this,
 	 * so the log can live on a second screen while the workspace stays whole.
@@ -67,7 +68,7 @@
 					{i18n.t('xx.t109')}
 				</p>
 			{:else if phase === 'error'}
-				<p class="err">{error}</p>
+				<p class="err">{labelT(error ?? '')}</p>
 			{:else}
 				<p>{i18n.t('dbg.connecting')}</p>
 			{/if}
