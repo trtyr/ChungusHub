@@ -6,6 +6,7 @@
 	import ChatSetupChip from './ChatSetupChip.svelte';
 	import ChatPersonaDialog from './ChatPersonaDialog.svelte';
 	import TransformPanel from './TransformPanel.svelte';
+	import { runReplySuggestions } from '$lib/services/replySuggestionService';
 	import { featurePromptsStore } from '$lib/stores/featurePrompts.svelte';
 	import { presetControlsStore } from '$lib/stores/presetControls.svelte';
 	import { regexRulesStore } from '$lib/stores/regex-rules.svelte';
@@ -502,6 +503,31 @@
 		menuOpen = false;
 		transformOriginal = content;
 		transformKind = kind;
+	}
+
+	// Reply suggestions (P007): four direction-diverse candidates shown as chips above the
+	// box. Picking one fills the composer, never sends. Ephemeral state only, no store.
+	let suggestions = $state<string[] | null>(null);
+	let suggestionsLoading = $state(false);
+
+	async function generateSuggestions() {
+		if (suggestionsLoading || isStreaming || transformOpen) return;
+		menuOpen = false;
+		suggestionsLoading = true;
+		suggestions = null;
+		try {
+			suggestions = await runReplySuggestions({ chatMessages: activePath });
+		} catch (error) {
+			toastStore.error(i18n.t('chat.suggestFail', { error: labelT(String(error)) }));
+		} finally {
+			suggestionsLoading = false;
+		}
+	}
+
+	function pickSuggestion(text: string) {
+		content = text;
+		suggestions = null;
+		textareaElement?.focus();
 	}
 
 	// Approve path: the original goes into the ↑ input history first, so even an
@@ -1057,6 +1083,45 @@
 				<div class="composer-drop">{i18n.t('chat.dropHint')}</div>
 			{/if}
 
+			{#if suggestionsLoading || suggestions}
+				<div class="suggest-bar">
+					{#if suggestionsLoading}
+						<span class="suggest-loading">
+							<Icon name="refresh" class="w-4 h-4 animate-spin text-text-muted" />
+							{i18n.t('chat.suggestWorking')}
+						</span>
+					{:else}
+						{#each suggestions as suggestion, i (i)}
+							<button
+								type="button"
+								class="suggest-chip"
+								title={i18n.t('chat.suggestTitle')}
+								onclick={() => pickSuggestion(suggestion)}
+							>
+								{suggestion}
+							</button>
+						{/each}
+						<button
+							type="button"
+							class="suggest-chip suggest-reroll"
+							disabled={isStreaming}
+							title={i18n.t('chat.suggestReroll')}
+							onclick={generateSuggestions}
+						>
+							<Icon name="refresh" class="w-4 h-4" />
+						</button>
+						<button
+							type="button"
+							class="suggest-chip suggest-reroll"
+							title={i18n.t('chat.suggestClose')}
+							onclick={() => (suggestions = null)}
+						>
+							<Icon name="x" class="w-4 h-4" />
+						</button>
+					{/if}
+				</div>
+			{/if}
+
 			<!-- What "/" turned the box into. The list is its own surface; the mode, the gates
 			     and the keys stay here, because all three are about the box being typed into. -->
 			{#if commandOpen}
@@ -1263,6 +1328,18 @@
 										>
 											<Icon name="mask" class="w-4 h-4" />
 											{i18n.t('chat.menuImpersonate')}
+										</button>
+									{/if}
+									{#if featurePromptsStore.impersonateEnabled}
+										<button
+											type="button"
+											class="composer-menu-item"
+											disabled={isStreaming || suggestionsLoading || transformOpen}
+											title={i18n.t('chat.suggestTitle')}
+											onclick={generateSuggestions}
+										>
+											<Icon name="sparkles" class="w-4 h-4" />
+											{i18n.t('chat.menuSuggest')}
 										</button>
 									{/if}
 								{/if}
@@ -1590,6 +1667,56 @@
 		gap: 0.42rem;
 		align-items: flex-end;
 		min-width: 0;
+	}
+
+	/* ===== Reply suggestions (P007) ===== */
+	.suggest-bar {
+		display: flex;
+		gap: 0.4rem;
+		align-items: center;
+		flex-wrap: wrap;
+		padding: 0.45rem 0.6rem;
+		border-bottom: 1px solid var(--color-border);
+		font-family: var(--font-ui);
+		font-size: 0.82rem;
+	}
+
+	.suggest-loading {
+		display: inline-flex;
+		gap: 0.4rem;
+		align-items: center;
+		color: var(--color-text-muted);
+	}
+
+	.suggest-chip {
+		max-width: 16rem;
+		overflow: hidden;
+		display: inline-block;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		text-align: left;
+		padding: 0.3rem 0.6rem;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		background: var(--color-bg-solid);
+		color: var(--color-text);
+		cursor: pointer;
+		transition: border-color 120ms ease, background 120ms ease;
+	}
+
+	.suggest-chip:hover:not(:disabled) {
+		border-color: var(--color-accent);
+		background: color-mix(in srgb, var(--color-accent) 8%, var(--color-bg-solid));
+	}
+
+	.suggest-chip:disabled {
+		opacity: 0.5;
+		cursor: default;
+	}
+
+	.suggest-reroll {
+		flex: none;
+		color: var(--color-text-muted);
 	}
 
 	/* ===== Image attachments ===== */
