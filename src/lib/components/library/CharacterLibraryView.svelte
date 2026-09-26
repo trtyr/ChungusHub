@@ -1048,7 +1048,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						onclick={() => { favMenuOpen = false; bulkSetFavorite(true); }}
 					>
 						<Icon name="heart" class="w-3.5 h-3.5 fill-current" />
-						Favorite {selectedCount}
+						{i18n.t('sb.favoriteN', { n: selectedCount })}
 					</button>
 					<button
 						type="button"
@@ -1057,7 +1057,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 						onclick={() => { favMenuOpen = false; bulkSetFavorite(false); }}
 					>
 						<Icon name="heart" class="w-3.5 h-3.5" />
-						Unfavorite {selectedCount}
+						{i18n.t('sb.unfavoriteN', { n: selectedCount })}
 					</button>
 				</BrowsePopover>
 

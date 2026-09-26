@@ -161,11 +161,11 @@
 							{#if error}
 								<span class="cr-pill cr-pill-error" title={error}>
 									<Icon name="warning" class="w-3 h-3" />
-									invalid
+									{i18n.t('rx.invalid')}
 								</span>
 							{:else if inert}
 								<span class="cr-pill cr-pill-warn" title={routingSentence(rule)}>
-									inert
+									{i18n.t('rx.inert')}
 								</span>
 							{:else}
 								<RegexRoutingIcons {rule} />
