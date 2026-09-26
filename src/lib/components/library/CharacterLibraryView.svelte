@@ -739,7 +739,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 										onclick={() => { tagFilterMode = 'any'; currentPage = 1; }}
 										title={i18n.t('clv.anyTags')}
 									>
-										ANY
+										{i18n.t('lb.anyOf')}
 									</button>
 									<button
 										type="button"
@@ -747,7 +747,7 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 										onclick={() => { tagFilterMode = 'all'; currentPage = 1; }}
 										title={i18n.t('clv.allTags')}
 									>
-										ALL
+										{i18n.t('lb.allOf')}
 									</button>
 								</div>
 							{/if}
