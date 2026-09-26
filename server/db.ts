@@ -552,6 +552,15 @@ const MIGRATIONS: Migration[] = [
 		);
 		CREATE INDEX idx_chat_facts_chat ON chat_facts(chat_id, entity, key);
 		`
+	},
+	{
+		version: 46,
+		name: 'chat_facts_pinned',
+		sql: `
+		-- P006 W4: a reader-pinned fact is exempt from downstream truncation and pruning
+		-- (the panel's judgment outranks the extractor's importance score).
+		ALTER TABLE chat_facts ADD COLUMN pinned INTEGER NOT NULL DEFAULT 0;
+		`
 	}
 ];
 
@@ -3308,6 +3317,7 @@ class ServerDatabase {
 			key: r.key,
 			value: r.value,
 			importance: r.importance,
+			pinned: r.pinned === 1,
 			sourceIds,
 			createdAt: r.created_at,
 			revisedAt: r.revised_at
@@ -3370,6 +3380,13 @@ class ServerDatabase {
 		this.execute(
 			'UPDATE chat_facts SET deleted_at = ? WHERE id = ? AND chat_id = ? AND deleted_at IS NULL',
 			[Date.now(), factId, chatId]
+		);
+	}
+
+	memSetFactPinned(chatId: string, factId: string, pinned: boolean): void {
+		this.execute(
+			'UPDATE chat_facts SET pinned = ?, revised_at = ? WHERE id = ? AND chat_id = ? AND deleted_at IS NULL',
+			[pinned ? 1 : 0, Date.now(), factId, chatId]
 		);
 	}
 
@@ -3672,7 +3689,8 @@ export const MUTATION_SCOPES: Record<string, SyncScope> = {
 	memApplyFacts: 'memory',
 	memReapFacts: 'memory',
 	memUpdateFactContent: 'memory',
-	memSetFactDeleted: 'memory'
+	memSetFactDeleted: 'memory',
+	memSetFactPinned: 'memory'
 };
 
 // Every method the bridge is allowed to dispatch (reads + mutations).

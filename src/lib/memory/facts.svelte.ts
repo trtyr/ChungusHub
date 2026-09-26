@@ -21,6 +21,7 @@ class FactsStore {
 			key: String(r.key),
 			value: String(r.value),
 			importance: typeof r.importance === 'number' ? r.importance : 2,
+			pinned: r.pinned === true,
 			sourceIds: Array.isArray(r.sourceIds) ? (r.sourceIds as string[]) : [],
 			createdAt: typeof r.createdAt === 'number' ? r.createdAt : undefined,
 			revisedAt: typeof r.revisedAt === 'number' ? r.revisedAt : undefined
@@ -38,6 +39,29 @@ class FactsStore {
 	async invalidate(chatId: string): Promise<void> {
 		if (!chatId) return;
 		await this.loadOne(chatId);
+	}
+
+	/** Panel edit of one fact's prose. */
+	async editValue(chatId: string, factId: string, value: string): Promise<void> {
+		await db.memUpdateFactContent(chatId, factId, value);
+		await this.invalidate(chatId);
+	}
+
+	/** Soft delete: the row stays (the next extraction cannot resurrect it). */
+	async remove(chatId: string, factId: string): Promise<void> {
+		await db.memSetFactDeleted(chatId, factId);
+		await this.invalidate(chatId);
+	}
+
+	async pin(chatId: string, factId: string, pinned: boolean): Promise<void> {
+		await db.memSetFactPinned(chatId, factId, pinned);
+		const facts = this.#byChat[chatId];
+		if (facts) {
+			this.#byChat = {
+				...this.#byChat,
+				[chatId]: facts.map((f) => (f.id === factId ? { ...f, pinned } : f))
+			};
+		}
 	}
 
 	factsOf(chatId: string): ChatFact[] {

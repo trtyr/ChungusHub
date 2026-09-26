@@ -9,6 +9,8 @@
 	import { chatStore } from '$lib/stores/chat.svelte';
 	import { toastStore } from '$lib/stores/toast.svelte';
 	import { memoryStore, type ChatCtx } from '$lib/memory/store.svelte';
+	import FactsPanel from '$lib/components/memory/FactsPanel.svelte';
+	import { activePath } from '$lib/memory/branching';
 	import { featurePromptsStore } from '$lib/stores/featurePrompts.svelte';
 	import {
 		chatLorebookClaim,
@@ -99,6 +101,11 @@
 	let recallText = $derived(memoryStore.recall);
 	let recallTokens = $derived(recallText ? countTokens(recallText) : 0);
 	let showRecall = $state(false);
+
+	// The fact board's inputs (P006): the chat and the active path the standing/dormant
+	// split derives against. Same resolution the rest of the view reads.
+	let c = $derived(ctx());
+	let factPath = $derived(c ? activePath(c.allMessages, c.leafId) : []);
 
 	function ctx(): ChatCtx | null {
 		const state = chatStore.currentChatState;
@@ -431,6 +438,14 @@
 					{:else}
 						<p class="memory-muted">{i18n.t('mem.emptyYet')}</p>
 					{/if}
+				{/if}
+			</section>
+
+			<!-- Fact board (P006) -->
+			<section class="memory-section">
+				<h3 class="memory-section-title">{i18n.t('mem.factsTitle')}</h3>
+				{#if c}
+					<FactsPanel chatId={c.chatId} path={factPath} />
 				{/if}
 			</section>
 

@@ -28,11 +28,15 @@
 
 import type { Episode, MemoryMessage } from './types';
 
-/** Walk root → leaf, returning the active path in order. Stops cleanly on a bad link. */
-export function activePath(messages: MemoryMessage[], leafId: string | null): MemoryMessage[] {
+/** Walk root → leaf, returning the active path in order. Stops cleanly on a bad link.
+ *  Generic: only id/parentId are read, so app Message slices work beside MemoryMessage. */
+export function activePath<T extends { id: string; parentId: string | null }>(
+	messages: T[],
+	leafId: string | null
+): T[] {
 	if (!leafId) return [];
 	const byId = new Map(messages.map((m) => [m.id, m]));
-	const out: MemoryMessage[] = [];
+	const out: T[] = [];
 	const seen = new Set<string>();
 	let cur: string | null = leafId;
 	while (cur && !seen.has(cur)) {

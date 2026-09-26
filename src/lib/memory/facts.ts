@@ -19,6 +19,8 @@ export interface ChatFact {
 	value: string;
 	/** 1 = trivia, 2 = a state change, 3 = mainline. Drives injection truncation later. */
 	importance: number;
+	/** Reader-pinned: exempt from downstream truncation and pruning. */
+	pinned?: boolean;
 	/** The message ids this fact was extracted from. Empty means unanchored (a reader's
 	 *  hand entry), which stands on every path until revised. */
 	sourceIds: string[];
@@ -27,7 +29,7 @@ export interface ChatFact {
 }
 
 /** The path's ids in walk order, for depth comparisons. */
-function pathIdsInOrder(path: MemoryMessage[]): string[] {
+function pathIdsInOrder(path: ReadonlyArray<{ id: string }>): string[] {
 	return path.map((m) => m.id);
 }
 
@@ -52,9 +54,10 @@ function depthOf(fact: ChatFact, order: Map<string, number>): number {
 /**
  * The effective fact set for one active path: every standing fact, and per
  * (entity, key) only the deepest-standing one. Revert past a revision and the older
- * value resurfaces; switch branches and only that branch's facts remain.
+ * value resurfaces; switch branches and only that branch's facts remain. Only ids are
+ * read from the path, so any id-bearing message slice works.
  */
-export function activeFacts(allFacts: ChatFact[], path: MemoryMessage[]): ChatFact[] {
+export function activeFacts(allFacts: ChatFact[], path: ReadonlyArray<{ id: string }>): ChatFact[] {
 	const order = new Map(pathIdsInOrder(path).map((id, index) => [id, index]));
 	const pathIdSet = new Set(order.keys());
 	const winners = new Map<string, { fact: ChatFact; depth: number }>();
