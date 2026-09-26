@@ -195,12 +195,33 @@ describe('randomization family', () => {
 });
 
 describe('utility macros', () => {
-	test('noop/trim vanish, newline and space repeat with a count', () => {
+	test('noop vanishes, trim removes its surrounding newlines, newline/space repeat', () => {
 		const ctx = ctxWith();
 		expect(expandVarMacros('a{{noop}}b', ctx)).toBe('ab');
 		expect(expandVarMacros('x{{trim}}y', ctx)).toBe('xy');
+		expect(expandVarMacros('x\n{{trim}}\ny', ctx)).toBe('xy');
+		expect(expandVarMacros('  {{trim}}  ', ctx)).toBe('');
 		expect(expandVarMacros('a{{newline::3}}b', ctx)).toBe('a\n\n\nb');
 		expect(expandVarMacros('a{{space::4}}b', ctx)).toBe('a    b');
+	});
+
+	test('scoped set form: content becomes the value, trimmed and de-dented', () => {
+		const env = emptyVarEnv();
+		const ctx = ctxWith(env);
+		expandVarMacros('{{setvar backstory}}\n\t\tBorn in a village.\n\t\tRaised a scholar.\n{{/setvar}}', ctx);
+		expect(env.locals['backstory']).toBe('Born in a village.\nRaised a scholar.');
+		expandVarMacros('{{#setvar raw}}\n  keep  this\n{{/setvar}}', ctx);
+		expect(env.locals['raw']).toBe('\n  keep  this\n');
+		expandVarMacros('{{setglobalvar::g::x}}{{setglobalvar gstyle}}dark{{/setglobalvar}}', ctx);
+		expect(env.globals['gstyle']).toBe('dark');
+	});
+
+	test('-= leaves a non-numeric variable unchanged (ST: warning, no change)', () => {
+		const env = emptyVarEnv();
+		env.locals['txt'] = 'abc';
+		const ctx = ctxWith(env);
+		expandVarMacros('{{.txt -= 5}}', ctx);
+		expect(env.locals['txt']).toBe('abc');
 	});
 });
 
@@ -211,6 +232,9 @@ describe('conditional blocks', () => {
 		env.locals['off'] = 'off';
 		const ctx = ctxWith(env);
 		expect(expandVarMacros('{{if .flag}}显示{{else}}隐藏{{/if}}', ctx)).toBe('显示');
+		// Branch content is trimmed and de-dented per ST's scoped rule; {{#if keeps it.
+		expect(expandVarMacros('{{if .flag}}\n\t行一\n\t行二\n{{/if}}', ctx)).toBe('行一\n行二');
+		expect(expandVarMacros('{{#if .flag}}\n  keep\n{{/if}}', ctx)).toBe('\n  keep\n');
 		expect(expandVarMacros('{{if .off}}显示{{else}}隐藏{{/if}}', ctx)).toBe('隐藏');
 		expect(expandVarMacros('{{if .flag}}only then{{/if}}', ctx)).toBe('only then');
 		expect(expandVarMacros('{{if .off}}only then{{/if}}', ctx)).toBe('');

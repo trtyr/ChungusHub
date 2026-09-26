@@ -18,10 +18,11 @@ import { normalizeCarriedRules } from '$lib/utils/regex-rules';
  * - `extensions.regex_scripts` become the preset's carried rules through the
  *   same parser the Regex page uses
  *
- * What cannot carry: ST's variable system (`{{getvar}}`/`{{setvar}}`: the
- * values live in ST's session store, not in the file), tavern_helper scripts,
- * and the sampler settings (a connection-level concern here, not a preset's).
- * Each of those is counted in `conversionNotes` instead of failing the import.
+ * What cannot carry: tavern_helper scripts (no runtime here) and the sampler settings
+ * (a connection-level concern, not a preset's). ST's variable and randomization macros
+ * now run natively (utils/var-macros.ts), so they travel verbatim; only comment macros
+ * are stripped, because they render to nothing in ST and the engine has no comment form.
+ * Both of the real gaps are counted in `conversionNotes` instead of failing the import.
  */
 
 /** The markers with a direct macro equivalent. Keyed by ST identifier. */

@@ -2,7 +2,7 @@
  * ST-style variable tables: chat-scoped locals and app-scoped globals, backed by two
  * settings rows (the same spine presetControlValuesByPreset rides). The GENERATION path
  * takes a live env reference from here: assembly mutates it in item order and the
- * mutated tables are flushed back right after — while meters build throwaway clones so
+ * mutated tables are flushed back right after, while meters build throwaway clones so
  * pricing a prompt can never change the variables it prices.
  */
 import { db } from '$lib/services/database';

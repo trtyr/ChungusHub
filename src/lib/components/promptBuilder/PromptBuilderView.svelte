@@ -8,6 +8,7 @@
 -->
 <script lang="ts">
 	import Icon from '$lib/components/ui/Icon.svelte';
+	import { varsStore } from '$lib/stores/vars.svelte';
 	import { i18n } from '$lib/i18n/i18n.svelte';
 	import Select from '$lib/components/ui/Select.svelte';
 	import Toggle from '$lib/components/ui/Toggle.svelte';
@@ -134,6 +135,7 @@
 	let promptTarget = $derived(resolvePromptTarget(chatStore.activeChat));
 	let chatPersona = $derived(chatPersonaEntry(chatStore.activeChat));
 	let assembleInput = $derived<AssembleInput>({
+		vars: varsStore.cloneFor(chatStore.activeChat?.id ?? ''),
 		preset: currentPreset,
 		resolvedPersona: toPromptCharacter(chatPersona),
 		resolvedCharacters: activeCharacterEntry && activeCharacterData

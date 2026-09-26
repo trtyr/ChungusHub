@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { tick, untrack } from 'svelte';
+	import { varsStore } from '$lib/stores/vars.svelte';
 	import { countTokens, tokenCalibration } from '$lib/tokenizer';
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import ChatSetupChip from './ChatSetupChip.svelte';
@@ -258,6 +259,7 @@
 	let assembly = $derived(
 		currentPreset
 			? assemblePrompt({
+					vars: varsStore.cloneFor(chatStore.activeChat?.id ?? ''),
 					preset: currentPreset,
 					resolvedPersona: toPromptCharacter(chatPersona),
 					resolvedCharacters: activeCharacterEntry && activeCharacterData

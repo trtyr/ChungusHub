@@ -187,8 +187,6 @@ function evalUtility(name: string, rawArgs: string): ReadResult {
 	switch (name) {
 		case 'noop':
 			return { out: '', known: true };
-		case 'trim':
-			return { out: '', known: true };
 		case 'newline': {
 			const count = Math.min(Math.max(Number(args[0] ?? '1') || 1, 1), 20);
 			return { out: '\n'.repeat(count), known: true };
@@ -230,17 +228,25 @@ function shorthandOp(
 			table[key] = next;
 			return next;
 		}
-		case '+=':
-		case '-=': {
+		case '+=': {
+			// Numeric addition, else string append (ST's addvar semantics).
 			const value = expandRhs(rhs ?? '');
 			const a = Number(current);
 			const b = Number(value);
 			table[key] =
 				current !== '' && value !== '' && Number.isFinite(a) && Number.isFinite(b)
-					? String(op === '+=' ? a + b : a - b)
-					: op === '+='
-						? current + value
-						: String(toNumber(current) - toNumber(value));
+					? String(a + b)
+					: current + value;
+			return '';
+		}
+		case '-=': {
+			// ST: a non-numeric operand logs a warning and leaves the value unchanged.
+			const value = expandRhs(rhs ?? '');
+			const a = Number(current);
+			const b = Number(value);
+			if (current !== '' && value !== '' && Number.isFinite(a) && Number.isFinite(b)) {
+				table[key] = String(a - b);
+			}
 			return '';
 		}
 		case '=':
@@ -283,7 +289,37 @@ function shorthandOp(
 // Conditional blocks {{if cond}}...{{else}}...{{/if}}
 // ---------------------------------------------------------------------------
 
-const BLOCK_TOKEN_RE_SRC = '\\{\\{\\s*(\\/?)(if|else)\\b\\s*(' + ARG + ')\\}\\}';
+const BLOCK_TOKEN_RE_SRC = '\\{\\{\\s*(#)?\\s*(\\/?)(if|else)\\b\\s*(' + ARG + ')\\}\\}';
+
+/** Scoped set forms: the content between the tags becomes the macro's last argument,
+ *  trimmed and de-dented by default, preserved verbatim under the {{# flag. Only the
+ *  value-carrying macros get the treatment (ST's common multi-line variable writes). */
+const SCOPED_SET_RE_SRC =
+	'\\{\\{\\s*(#)?\\s*(setvar|setglobalvar)\\b\\s*((?!:)[^}]*)\\}\\}([\\s\\S]*?)\\{\\{\\s*/\\s*\\2\\s*\\}\\}';
+const SCOPED_SET_RE = () => new RegExp(SCOPED_SET_RE_SRC, 'gi');
+
+/** ST's scoped-content rule: strip leading/trailing newlines and remove every line's
+ *  common indent (the first non-empty line's). {{# keeps everything verbatim. */
+function dedentTrim(content: string, preserve: boolean): string {
+	if (preserve) return content;
+	let text = content.replace(/^\n+/, '').replace(/\n+$/, '');
+	const lines = text.split('\n');
+	const indents = lines.filter((line) => line.trim()).map((line) => line.match(/^[ \t]*/)![0]);
+	const min = indents.length > 0 ? indents.reduce((a, b) => (a.length <= b.length ? a : b)) : '';
+	if (min) text = lines.map((line) => (line.startsWith(min) ? line.slice(min.length) : line)).join('\n');
+	return text;
+}
+
+function expandScopedSets(text: string, env: VarEnv | undefined, expandValue: (t: string) => string): string {
+	return text.replace(SCOPED_SET_RE(), (match, flag: string | undefined, name: string, rawArgs: string, content: string) => {
+		const table = env ? pickTable(env, name.toLowerCase() === 'setglobalvar') : undefined;
+		if (table) {
+			const key = rawArgs.trim();
+			table[key] = expandValue(dedentTrim(content, flag === '#'));
+		}
+		return '';
+	});
+}
 
 interface IfFrame {
 	start: number;
@@ -293,31 +329,33 @@ interface IfFrame {
 	/** Index where the else token ends; -1 while no else seen. */
 	contentElseStart: number;
 	condition: string;
+	preserve: boolean;
 }
 
-/** Expand conditional blocks: innermost pairing via a token scan with a stack. The chosen
- *  branch's text replaces the whole block BEFORE further expansion, so branches nest. */
+/** Expand conditional blocks: innermost pairing via a token scan with a stack. The taken
+ *  branch's text (trimmed and de-dented; {{#if keeps whitespace verbatim) replaces the
+ *  whole block BEFORE further expansion, so branches nest across passes. Unpaired
+ *  {{/if}} stays literal and terminates the loop.
+ *  LOCAL regex instance: expandCondition recurses into this function mid-scan, and a
+ *  shared global's lastIndex would be reset under the running loop (infinite rescan). */
 function expandIfBlocks(text: string, ctx: MacroContext, env: VarEnv | undefined): string {
-	// Iterate to a fixed point so nested ifs (an {{if}} inside a chosen branch) resolve
-	// outward-in across passes; unpaired {{/if}} stays literal and terminates the loop.
-	// LOCAL regex instance: expandCondition recurses into this function mid-scan, and a
-	// shared global's lastIndex would be reset under the running loop (infinite rescan).
 	for (let pass = 0; pass < 16; pass++) {
-		const tokenRe = new RegExp(BLOCK_TOKEN_RE_SRC, 'g');
 		let out = '';
 		let pos = 0;
 		let replaced = false;
 		const stack: IfFrame[] = [];
+		const tokenRe = new RegExp(BLOCK_TOKEN_RE_SRC, 'g');
 		let match: RegExpExecArray | null;
 		while ((match = tokenRe.exec(text)) !== null) {
-			const [token, closing, keyword, condition] = match;
+			const [token, flag, closing, keyword, condition] = match;
 			if (!closing && keyword === 'if') {
 				stack.push({
 					start: match.index,
 					contentStart: match.index + token.length,
 					elseIndex: -1,
 					contentElseStart: -1,
-					condition
+					condition,
+					preserve: flag === '#'
 				});
 				continue;
 			}
@@ -332,12 +370,14 @@ function expandIfBlocks(text: string, ctx: MacroContext, env: VarEnv | undefined
 			// {{/if}}: pop the frame it closes.
 			const frame = stack.pop();
 			if (!frame) continue; // unpaired closer stays literal
-			const thenText = text.slice(
-				frame.contentStart,
-				frame.elseIndex === -1 ? match.index : frame.elseIndex
+			const thenText = dedentTrim(
+				text.slice(frame.contentStart, frame.elseIndex === -1 ? match.index : frame.elseIndex),
+				frame.preserve
 			);
 			const elseText =
-				frame.elseIndex === -1 ? '' : text.slice(frame.contentElseStart, match.index);
+				frame.elseIndex === -1
+					? ''
+					: dedentTrim(text.slice(frame.contentElseStart, match.index), frame.preserve);
 			const conditionValue = expandCondition(frame.condition, ctx, env);
 			const taken = conditionValue === 'true' ? thenText : elseText;
 			out += text.slice(pos, frame.start);
@@ -380,14 +420,23 @@ function expandCondition(condition: string, ctx: MacroContext, env: VarEnv | und
 // ---------------------------------------------------------------------------
 
 const PARAM_MACROS_RE_SRC =
-	'\\{\\{\\s*(getvar|setvar|addvar|incvar|decvar|hasvar|deletevar|getglobalvar|setglobalvar|addglobalvar|incglobalvar|decglobalvar|hasglobalvar|deleteglobalvar|random|pick|roll|noop|trim|newline|space)\\s*(?:::|\\s+|:)?\\s*(' + ARG + ')\\}\\}';
+	'\\{\\{\\s*(getvar|setvar|addvar|incvar|decvar|hasvar|deletevar|getglobalvar|setglobalvar|addglobalvar|incglobalvar|decglobalvar|hasglobalvar|deleteglobalvar|random|pick|roll|noop|newline|space)\\s*(?:::|\\s+|:)?\\s*(' + ARG + ')\\}\\}';
 const PARAM_MACROS_RE = () => new RegExp(PARAM_MACROS_RE_SRC, 'gi');
 
 /** One sweep of the variable/random/utility pass. Order inside a sweep: conditional
  *  blocks first (their branches change what macros are even present), then parameterized
  *  macros left-to-right (side effects land in reading order), then shorthands. */
+const TRIM_RE = () => /\n?[ \t]*\{\{\s*trim\s*\}\}[ \t]*\n?/gi;
+
+/** One sweep of the variable/random/utility pass. Order inside a sweep: conditional
+ *  blocks first (their branches change what macros are even present), then scoped set
+ *  forms, then {{trim}} (it rewrites its own surroundings, so it runs on whole text),
+ *  then parameterized macros left-to-right (side effects land in reading order), then
+ *  shorthands. */
 function sweep(text: string, ctx: MacroContext, env: VarEnv | undefined): string {
 	text = expandIfBlocks(text, ctx, env);
+	text = expandScopedSets(text, env, (inner) => expandMacros(expandVarMacros(inner, ctx, env), ctx));
+	text = text.replace(TRIM_RE(), '');
 	// Local instance per sweep: value expansion recurses into sweep, and a shared global
 	// regex's lastIndex is corrupted under the running replace.
 	text = text.replace(PARAM_MACROS_RE(), (match, rawName: string, rawArgs: string) => {
