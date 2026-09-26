@@ -58,9 +58,9 @@ const preset: PromptPreset = {
 };
 
 describe('preset cards', () => {
-	test('a preset survives the trip through a picture', () => {
+	test('a preset survives the trip through a picture', async () => {
 		const card = embedPresetInPng(minimalPng(), preset);
-		const back = readPresetFromPng(card);
+		const back = await readPresetFromPng(card);
 
 		expect(back?.name).toBe('Kaçış');
 		expect(back?.meta?.author).toBe('someone');
@@ -76,12 +76,12 @@ describe('preset cards', () => {
 		expect(back?.pruneEmptyBlocks).toBe(true);
 	});
 
-	test('the cover path stays home: the picture itself is the cover', () => {
-		const back = readPresetFromPng(embedPresetInPng(minimalPng(), preset));
+	test('the cover path stays home: the picture itself is the cover', async () => {
+		const back = await readPresetFromPng(embedPresetInPng(minimalPng(), preset));
 		expect(back?.meta && 'cover' in back.meta).toBe(false);
 	});
 
-	test('re-exporting replaces the old preset instead of sitting beside it', () => {
+	test('re-exporting replaces the old preset instead of sitting beside it', async () => {
 		const stale = buildTextChunk(PRESET_CHUNK_KEYWORD, encodeBase64Utf8('{"name":"Older","items":[]}'));
 		const card = embedPresetInPng(minimalPng([stale]), preset);
 
@@ -92,15 +92,16 @@ describe('preset cards', () => {
 			found++;
 		}
 		expect(found).toBe(1);
-		expect(readPresetFromPng(card)?.name).toBe('Kaçış');
+		const back = await readPresetFromPng(card);
+		expect(back?.name).toBe('Kaçış');
 	});
 
-	test('an ordinary picture is not a preset card, and a non-picture is not a file we read', () => {
-		expect(readPresetFromPng(minimalPng())).toBeNull();
-		expect(() => readPresetFromPng(new TextEncoder().encode('{"name":"nope"}'))).toThrow();
+	test('an ordinary picture is not a preset card, and a non-picture is not a file we read', async () => {
+		expect(await readPresetFromPng(minimalPng())).toBeNull();
+		await expect(readPresetFromPng(new TextEncoder().encode('{"name":"nope"}'))).rejects.toThrow();
 	});
 
-	test('a preset card is not mistaken for a character card', () => {
+	test('a preset card is not mistaken for a character card', async () => {
 		const card = embedPresetInPng(minimalPng(), preset);
 		expect(new TextDecoder('latin1').decode(card).includes('chara\0')).toBe(false);
 	});

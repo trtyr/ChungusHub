@@ -53,7 +53,7 @@ export function embedPresetInPng(basePng: Uint8Array, preset: PromptPreset): Uin
  * is present but unreadable throws, because silently importing an empty preset under a
  * success message is how a person loses an afternoon's work without being told.
  */
-export function readPresetFromPng(png: Uint8Array): ImportedPreset | null {
+export async function readPresetFromPng(png: Uint8Array): Promise<ImportedPreset | null> {
 	const chunk = readTextChunk(png, PRESET_CHUNK_KEYWORD);
 	if (chunk === null) return null;
 	let json: string;

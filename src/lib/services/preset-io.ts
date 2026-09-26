@@ -60,7 +60,7 @@ function refusalFor(raw: Record<string, unknown>): string {
 /** Parse the app's complete preset interchange format without mutating existing presets.
  *  A SillyTavern preset is not refused: it converts through the dedicated converter,
  *  with the source file's name used as the preset's name when given. */
-export function parsePresetJson(text: string, fileName?: string): ImportedPreset {
+export async function parsePresetJson(text: string, fileName?: string): Promise<ImportedPreset> {
 	let parsed: unknown;
 	try {
 		parsed = JSON.parse(text);
@@ -69,7 +69,7 @@ export function parsePresetJson(text: string, fileName?: string): ImportedPreset
 	}
 
 	const raw = objectAt(parsed, 'Preset');
-	if (looksLikeSillyTavernPreset(raw)) return convertSillyTavernPreset(raw, fileName);
+	if (looksLikeSillyTavernPreset(raw)) return await convertSillyTavernPreset(raw, fileName);
 	if (!Array.isArray(raw.items)) throw new Error(refusalFor(raw));
 
 	const items = raw.items.map((value, index): PromptItem => {

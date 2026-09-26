@@ -12,7 +12,7 @@ const bare = (over: Record<string, unknown> = {}) => ({
 });
 
 describe('preset JSON interchange', () => {
-	test('round-trips controls and preset-level behavior without runtime item ids', () => {
+	test('round-trips controls and preset-level behavior without runtime item ids', async () => {
 		const json = serializePresetJson({
 			id: 'source',
 			name: 'Focused prose',
@@ -31,14 +31,14 @@ describe('preset JSON interchange', () => {
 		});
 
 		expect(json).not.toContain('runtime-only');
-		const imported = parsePresetJson(json);
+		const imported = await parsePresetJson(json);
 		expect(imported.name).toBe('Focused prose');
 		expect(imported.items[0]?.content).toBe('{{tone}}');
 		expect(imported.controls[0]?.options?.[0]?.injectedText).toBe('Write warmly.');
 		expect(imported.pruneEmptyBlocks).toBe(true);
 	});
 
-	test('an export names every per-preset field, defaults included', () => {
+	test('an export names every per-preset field, defaults included', async () => {
 		// The bug this guards: a preset riding the shipped defaults exported JSON with no
 		// continuePrompt / exampleSeparator key at all, so the fields read as ones the
 		// preset does not own, and nobody could learn they exist from the JSON.
@@ -48,38 +48,38 @@ describe('preset JSON interchange', () => {
 		expect(parsed.pruneEmptyBlocks).toBe(false);
 	});
 
-	test('overridden values export verbatim, empty string included', () => {
+	test('overridden values export verbatim, empty string included', async () => {
 		const parsed = JSON.parse(serializePresetJson(bare({ continuePrompt: '', exampleSeparator: '' })));
 		expect(parsed.continuePrompt).toBe('');
 		expect(parsed.exampleSeparator).toBe('');
 		// Empty is a real choice (no instruction / no header line), so it must survive import.
-		const imported = parsePresetJson(JSON.stringify(parsed));
+		const imported = await parsePresetJson(JSON.stringify(parsed));
 		expect(imported.continuePrompt).toBe('');
 		expect(imported.exampleSeparator).toBe('');
 	});
 
-	test('importing a shipped default stores no override, so the preset keeps tracking it', () => {
-		const imported = parsePresetJson(serializePresetJson(bare()));
+	test('importing a shipped default stores no override, so the preset keeps tracking it', async () => {
+		const imported = await parsePresetJson(serializePresetJson(bare()));
 		expect(imported.continuePrompt).toBeUndefined();
 		expect(imported.exampleSeparator).toBeUndefined();
 	});
 
-	test('a real continue override survives the round trip', () => {
-		const imported = parsePresetJson(serializePresetJson(bare({ continuePrompt: 'Keep going, {{char}}.' })));
+	test('a real continue override survives the round trip', async () => {
+		const imported = await parsePresetJson(serializePresetJson(bare({ continuePrompt: 'Keep going, {{char}}.' })));
 		expect(imported.continuePrompt).toBe('Keep going, {{char}}.');
 	});
 
-	test('rejects unknown roles instead of silently changing prompt semantics', () => {
-		expect(() =>
+	test('rejects unknown roles instead of silently changing prompt semantics', async () => {
+		await expect(
 			parsePresetJson(JSON.stringify({ name: 'Bad', items: [{ role: 'developer', content: 'x' }] }))
-		).toThrow('unknown role');
+		).rejects.toThrow('unknown role');
 	});
 
-	test('a SillyTavern preset converts instead of refusing; plain junk still refuses', () => {
+	test('a SillyTavern preset converts instead of refusing; plain junk still refuses', async () => {
 		// The one wrong file people bring here on purpose now takes the converter path:
 		// an empty ST pool still yields a (hollow) imported preset, not a parse error.
-		const converted = parsePresetJson(JSON.stringify({ name: 'ST', prompts: [], prompt_order: [] }));
+		const converted = await parsePresetJson(JSON.stringify({ name: 'ST', prompts: [], prompt_order: [] }));
 		expect(converted.items).toEqual([]);
-		expect(() => parsePresetJson(JSON.stringify({ name: 'Junk' }))).toThrow('not a ChungusHub preset');
+		await expect(parsePresetJson(JSON.stringify({ name: 'Junk' }))).rejects.toThrow('not a ChungusHub preset');
 	});
 });

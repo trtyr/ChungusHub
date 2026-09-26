@@ -1,5 +1,6 @@
 import type { ImportedPreset } from '$lib/services/preset-io';
-import type { PromptItem, PromptPresetMeta, PromptRole } from '$lib/types/database';
+import { MACROS } from '$lib/macros';
+import type { PromptControl, PromptControlOption, PromptItem, PromptPresetMeta, PromptRole } from '$lib/types/database';
 import { normalizeCarriedRules } from '$lib/utils/regex-rules';
 
 /**
@@ -153,7 +154,148 @@ export function looksLikeSillyTavernPreset(raw: Record<string, unknown>): boolea
 	return Array.isArray(raw.prompts) || Array.isArray(raw.prompt_order);
 }
 
-export function convertSillyTavernPreset(raw: Record<string, unknown>, fileName?: string): ImportedPreset {
+/** Names a control macro may not take: every built-in macro, engine-resolved or
+ *  flow-supplied. Mirrors the guard PromptBuilderView applies to hand-authored controls. */
+const RESERVED_MACROS = new Set<string>(MACROS.map((m) => m.name));
+
+const VAR_ARG = '(?:[^{}]|\\{\\{[^{}]*\\}\\})*';
+const SETVAR_RE_SRC = `\\{\\{setvar::([^:{}]+)::(${VAR_ARG})\\}\\}`;
+const GETVAR_RE_SRC = '\\{\\{getvar::([^:{}]+)\\}\\}';
+
+function fnv1a36(text: string): string {
+	let hash = 0x811c9dc5;
+	for (let i = 0; i < text.length; i++) {
+		hash ^= text.charCodeAt(i);
+		hash = Math.imul(hash, 0x01000193);
+	}
+	return (hash >>> 0).toString(36);
+}
+
+/** A readable macro for a variable name: ASCII names pass through, CJK names go through
+ *  pinyin (lazy import, it is import-time only), everything else falls back to a stable
+ *  hash. Collisions and reserved names get numbered suffixes. */
+async function slugFor(name: string, used: Set<string>): Promise<string> {
+	let base = name.trim();
+	if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(base)) {
+		try {
+			const { pinyin } = await import('pinyin-pro');
+			base = pinyin(base, { toneType: 'none', separator: '' });
+		} catch {
+			base = '';
+		}
+		base = base.replace(/[^A-Za-z0-9_]/g, '');
+		if (!base) base = `v${fnv1a36(name)}`;
+		if (/^[0-9]/.test(base)) base = `v${base}`;
+	}
+	let slug = base;
+	let n = 2;
+	while (used.has(slug) || RESERVED_MACROS.has(slug)) slug = `${base}_${n++}`;
+	used.add(slug);
+	return slug;
+}
+
+interface VarAutoControls {
+	controls: PromptControl[];
+	rewrittenItems: number;
+	strippedCalls: number;
+	skipped: number;
+}
+
+/** P002 phase 1: turn ST's setvar/getvar switch idiom into native controls. A variable
+ *  becomes a select control when it has TWO OR MORE literal setvar values somewhere in
+ *  the preset AND is read by getvar at least once; the control's options are those
+ *  values (default = the first written, i.e. the init item's). Every `{{getvar::X}}` on
+ *  a grouped variable is rewritten to `{{macro}}`, and the grouped `{{setvar}}` calls
+ *  are stripped out so the control bucket, not the chat var table, owns the value.
+ *  Anything else (single-value vars, macro-computed values, vars only scripts write)
+ *  stays a live runtime variable untouched. */
+async function autoControlsFromVars(items: PromptItem[]): Promise<VarAutoControls> {
+	const setValues = new Map<string, string[]>();
+	const readNames = new Set<string>();
+
+	for (const item of items) {
+		const getRe = new RegExp(GETVAR_RE_SRC, 'gi');
+		let getMatch: RegExpExecArray | null;
+		while ((getMatch = getRe.exec(item.content)) !== null) readNames.add(getMatch[1].trim());
+
+		const setRe = new RegExp(SETVAR_RE_SRC, 'gi');
+		let setMatch: RegExpExecArray | null;
+		while ((setMatch = setRe.exec(item.content)) !== null) {
+			const name = setMatch[1].trim();
+			const value = setMatch[2].trim();
+			if (value.includes('{{')) continue;
+			const list = setValues.get(name) ?? [];
+			if (!list.some((v) => v === value)) list.push(value);
+			setValues.set(name, list);
+		}
+	}
+
+	const grouped = new Map<string, string[]>();
+	let skipped = 0;
+	for (const [name, values] of setValues) {
+		if (values.length >= 2 && readNames.has(name)) grouped.set(name, values);
+		else skipped++;
+	}
+	if (grouped.size === 0) return { controls: [], rewrittenItems: 0, strippedCalls: 0, skipped };
+
+	const used = new Set<string>();
+	const controls: PromptControl[] = [];
+	const nameToMacro = new Map<string, string>();
+	for (const [name] of grouped) nameToMacro.set(name, await slugFor(name, used));
+
+	let rewrittenItems = 0;
+	let strippedCalls = 0;
+	for (const item of items) {
+		let content = item.content;
+		let touched = false;
+		for (const [name, macro] of nameToMacro) {
+			const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+			const getRe = new RegExp(`\\{\\{getvar::${escaped}\\}\\}`, 'gi');
+			if (getRe.test(content)) {
+				content = content.replace(getRe, `{{${macro}}}`);
+				touched = true;
+			}
+			const setRe = new RegExp(`\\{\\{setvar::${escaped}::${VAR_ARG}\\}\\}`, 'gi');
+			const before = content;
+			content = content.replace(setRe, () => {
+				strippedCalls++;
+				return '';
+			});
+			if (content !== before) touched = true;
+		}
+		if (touched) {
+			item.content = content;
+			rewrittenItems++;
+			// An item whose only job was writing a grouped switch would now inject an
+			// empty string every turn; switch it off instead of shipping dead weight.
+			if (item.enabled && content.trim() === '') item.enabled = false;
+		}
+	}
+
+	for (const [name, values] of grouped) {
+		const options: PromptControlOption[] = values.map((value) => ({
+			id: crypto.randomUUID(),
+			label: value === '' ? '（空）' : value,
+			injectedText: value
+		}));
+		controls.push({
+			id: crypto.randomUUID(),
+			macro: nameToMacro.get(name) as string,
+			label: name,
+			type: 'select',
+			options,
+			defaultOptionId: options[0].id,
+			group: '变量开关'
+		});
+	}
+
+	return { controls, rewrittenItems, strippedCalls, skipped };
+}
+
+export async function convertSillyTavernPreset(
+	raw: Record<string, unknown>,
+	fileName?: string
+): Promise<ImportedPreset> {
 	const prompts = readPrompts(raw.prompts);
 	const order = readOrder(raw.prompt_order);
 	const counts = new Map<string, number>();
@@ -240,6 +382,15 @@ export function convertSillyTavernPreset(raw: Record<string, unknown>, fileName?
 		});
 	}
 
+	const auto = await autoControlsFromVars(items);
+	if (auto.controls.length > 0) {
+		notes.push(
+			`已从 ST 变量自动生成 ${auto.controls.length} 个控件（预设级作用域：同一预设的所有聊天共享开关状态，与酒馆的聊天级变量不同），改写了 ${auto.rewrittenItems} 个条目、停写了 ${auto.strippedCalls} 处变量赋值。`
+		);
+		if (auto.skipped > 0) {
+			notes.push(`另有 ${auto.skipped} 个变量保持为运行时变量（单值、值含宏或从未被读取，不成开关）。`);
+		}
+	}
 	notes.push(...noteFor(counts));
 
 	const samplerNotes = SAMPLER_KEYS.filter((key) => raw[key] !== undefined && raw[key] !== null).map(
@@ -275,7 +426,7 @@ export function convertSillyTavernPreset(raw: Record<string, unknown>, fileName?
 	return {
 		name: (fileName ?? '').replace(/\.json$/i, '') || 'Imported preset',
 		items,
-		controls: [],
+		controls: auto.controls,
 		regexRules: normalizeCarriedRules(
 			extensions && typeof extensions === 'object' && !Array.isArray(extensions)
 				? (extensions as Record<string, unknown>).regex_scripts

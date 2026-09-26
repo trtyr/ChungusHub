@@ -212,12 +212,12 @@
 
 			let preset: PromptPreset;
 			if (isPng) {
-				const imported = readPresetFromPng(new Uint8Array(await file.arrayBuffer()));
+				const imported = await readPresetFromPng(new Uint8Array(await file.arrayBuffer()));
 				if (!imported) throw new Error('no preset is stored in that image');
 				const cover = await imageService.saveImage(file, 'presets');
 				preset = await presetService.importPreset(imported, cover);
 			} else {
-				const imported = parsePresetJson(await file.text(), file.name);
+				const imported = await parsePresetJson(await file.text(), file.name);
 				preset = await presetService.importPreset(imported);
 				if (imported.conversionNotes?.length) {
 					toastStore.info(i18n.t('pm.convertedFromSt', { notes: imported.conversionNotes.join('；') }));

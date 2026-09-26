@@ -356,7 +356,7 @@ class PresetService {
 	}
 
 	async importPresetJson(text: string, fileName?: string): Promise<PromptPreset> {
-		return this.importPreset(parsePresetJson(text, fileName));
+		return this.importPreset(await parsePresetJson(text, fileName));
 	}
 
 	/** Land a parsed preset under a free name. `cover` is a stored image path the caller
