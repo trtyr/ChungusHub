@@ -185,6 +185,14 @@ const ZH: Record<string, string> = {
 	'Midnight': '午夜',
 	'Nocturne': '夜曲',
 	'Parchment': '羊皮纸',
+	'Indigo': '靛蓝',
+	'Copper': '古铜',
+	'Ember': '余烬',
+	'Sage': '鼠尾草绿',
+	'Azure': '蔚蓝',
+	'Amethyst': '紫晶',
+	'Silver': '银灰',
+	'Marigold': '万寿菊橙',
 };
 
 /** Translate a store-sourced label into the active language; unknown labels pass through. */

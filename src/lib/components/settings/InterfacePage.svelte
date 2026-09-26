@@ -279,8 +279,8 @@
 						class="accent-swatch"
 						class:active={appearance.accent === accent.id}
 						style="background: {themeStore.accentSwatch(accent)}"
-						title={accent.name}
-						aria-label={accent.name}
+						title={labelT(accent.name)}
+						aria-label={labelT(accent.name)}
 						onclick={() => themeStore.update({ accent: accent.id })}
 					></button>
 				{/each}

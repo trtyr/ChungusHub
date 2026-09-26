@@ -473,7 +473,7 @@ function drawWriting(ctx: CanvasRenderingContext2D, palette: Palette, snapshot: 
 
 	drawHero(ctx, palette, count(stats.effort.words), i18n.t('p.wordsWritten'), 566, 200);
 
-	const comparison = bookComparison(stats.effort.words);
+	const comparison = bookComparison(stats.effort.words, i18n.lang === 'zh');
 	if (comparison) {
 		ctx.fillStyle = palette.muted;
 		ctx.font = `400 36px ${palette.serif}`;
