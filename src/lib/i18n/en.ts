@@ -1973,6 +1973,7 @@ export const en: Record<string, string> = {
 	'mk.seraphina': 'Seraphina, a half-elf archivist guarding the drowned library',
 	'mk.tavernLine': 'I push the tavern door open.',
 	'snd.loadFail': "Couldn't load the \"{tone}\" sound. A download manager extension may be taking it before the app gets it.",
+	'asm.unchangedN': '{n} unchanged line(s)',
 	'cmd.say': 'Add a turn of yours without asking for a reply',
 	'cmd.continue': 'Extend the newest reply where it stops',
 	'cmd.retry': 'Generate the newest turn again',

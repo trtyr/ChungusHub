@@ -53,7 +53,7 @@
 					onclick={() => (opened = { ...opened, [line.from]: true })}
 					title={i18n.t('asm.betweenChanges')}
 				>
-					⋯ {line.count} unchanged line{line.count === 1 ? '' : 's'}
+					⋯ {i18n.t('asm.unchangedN', { n: line.count })}
 				</button>
 			{:else if line.type === 'same'}
 				<div class="diff-row diff-row--same">

@@ -1951,6 +1951,7 @@ export const zh: Record<string, string> = {
 	'mk.seraphina': '塞拉菲娜，守护沉没图书馆的半精灵档案员',
 	'mk.tavernLine': '我推开了酒馆的门。',
 	'snd.loadFail': '无法加载「{tone}」提示音。下载管理器扩展可能抢先截获了它。',
+	'asm.unchangedN': '未更改的 {n} 行',
 	'cmd.say': '添加一条你的回合，不请求回复',
 	'cmd.continue': '从最新回复停下的地方继续',
 	'cmd.retry': '重新生成最新回合',
