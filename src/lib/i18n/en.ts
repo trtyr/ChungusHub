@@ -3645,7 +3645,7 @@ export const en: Record<string, string> = {
 	'asm.noLines': 'This file has no lines.',
 	'asm.reading': 'Reading…',
 	'asm.showMoreLines': 'Show more ({n} line(s) left)',
-	'asm.waitApproval': 'Waiting for your approval',
+	'asm.waitApproval': '{title} · waiting for your approval',
 	'asm.working': 'Working',
 	'asm.costAria': 'What the assistant costs',
 	'asm.costTitle': 'Before you use this',
