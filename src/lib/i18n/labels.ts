@@ -176,7 +176,7 @@ const ZH: Record<string, string> = {
 	"No connection is assigned to the Assistant. Assign one in Settings → Connections.": '尚未为助手指定连接。请在 设置 → 连接 中指定一个。',
 	"skill files must be smaller than 2 MB": '技能文件必须小于 2 MB',
 	"no preset is stored in that image": '该图片中没有存储预设',
-	"Unrecognized lorebook format: no entries array or object found.": '无法识别的世界书格式：未找到 entries 数组或对象。',
+	"Unrecognized lorebook format: no `entries` array or object found.": '无法识别的世界书格式：未找到 entries 数组或对象。',
 	"Canvas 2D context unavailable": 'Canvas 2D 上下文不可用',
 	"Lost track of this generation when the connection dropped.": '连接断开时丢失了这次生成。',
 };

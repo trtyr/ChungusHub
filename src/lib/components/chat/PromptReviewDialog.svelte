@@ -134,7 +134,7 @@
 
 	function readJson(text: string): void {
 		jsonText = text;
-		const parsed = parsePromptJson(text);
+		const parsed = parsePromptJson(text, i18n.t);
 		jsonError = parsed.ok ? '' : parsed.error;
 		if (!parsed.ok) return;
 		messages = parsed.messages;

@@ -30,41 +30,61 @@ export function promptToJson(messages: LLMMessage[]): string {
  * object. An empty `images` list is dropped: it means the message carries no attachment,
  * which is what its absence means.
  */
-export function parsePromptJson(text: string): ParsedPrompt {
+export function parsePromptJson(
+	text: string,
+	t?: (key: string, params?: Record<string, string | number>) => string
+): ParsedPrompt {
+	const x =
+		t ??
+		((key: string, params?: Record<string, string | number>) => {
+			const defaults: Record<string, string> = {
+				'pr.jsonInvalid': 'Invalid JSON: {msg}',
+				'pr.mustBeList': 'The request must be a list of messages.',
+				'pr.noMessages': 'The request has no messages left.',
+				'pr.notObject': '{at} is not an object.',
+				'pr.unknownField': '{at} has a field the request has no place for: "{unknown}".',
+				'pr.needsRole': '{at} needs a role of "system", "user" or "assistant".',
+				'pr.contentText': '{at} needs its content to be text.',
+				'pr.imagesList': '{at} needs its images to be a list of file paths.'
+			};
+			let out = defaults[key] ?? key;
+			if (params) for (const [k, v] of Object.entries(params)) out = out.replaceAll(`{${k}}`, String(v));
+			return out;
+		});
 	let raw: unknown;
 	try {
 		raw = JSON.parse(text);
 	} catch (error) {
-		return { ok: false, error: `Invalid JSON: ${error instanceof Error ? error.message : String(error)}` };
+		return { ok: false, error: x('pr.jsonInvalid', { msg: error instanceof Error ? error.message : String(error) }) };
 	}
 
-	if (!Array.isArray(raw)) return { ok: false, error: 'The request must be a list of messages.' };
-	if (raw.length === 0) return { ok: false, error: 'The request has no messages left.' };
+	if (!Array.isArray(raw)) return { ok: false, error: x('pr.mustBeList') };
+	if (raw.length === 0) return { ok: false, error: x('pr.noMessages') };
 
 	const messages: LLMMessage[] = [];
 	for (let i = 0; i < raw.length; i++) {
 		const at = `Message ${i + 1}`;
 		const item = raw[i];
 		if (typeof item !== 'object' || item === null || Array.isArray(item)) {
-			return { ok: false, error: `${at} is not an object.` };
+			return { ok: false, error: x('pr.notObject', { at }) };
 		}
 		const entry = item as Record<string, unknown>;
 
 		const unknown = Object.keys(entry).find((key) => !FIELDS.includes(key as (typeof FIELDS)[number]));
-		if (unknown) return { ok: false, error: `${at} has a field the request has no place for: "${unknown}".` };
+		if (unknown) return { ok: false, error: x('pr.unknownField', { at, unknown }) };
 
 		const role = entry.role;
 		if (typeof role !== 'string' || !ROLES.includes(role as (typeof ROLES)[number])) {
-			return { ok: false, error: `${at} needs a role of "system", "user" or "assistant".` };
+			return { ok: false, error: x('pr.needsRole', { at }) };
 		}
 		if (typeof entry.content !== 'string') {
-			return { ok: false, error: `${at} needs its content to be text.` };
+			return { ok: false, error: x('pr.contentText', { at }) };
 		}
 
 		const message: LLMMessage = { role: role as LLMMessage['role'], content: entry.content };
 		if (entry.images !== undefined) {
 			if (!Array.isArray(entry.images) || entry.images.some((path) => typeof path !== 'string')) {
-				return { ok: false, error: `${at} needs its images to be a list of file paths.` };
+				return { ok: false, error: x('pr.imagesList', { at }) };
 			}
 			if (entry.images.length > 0) message.images = entry.images as string[];
 		}
