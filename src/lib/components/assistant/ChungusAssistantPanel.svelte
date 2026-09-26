@@ -452,7 +452,7 @@
 	function waitingTitle(id: string): string {
 		const pending = store.runtime[id]?.pending;
 		if (!pending) return tabTitle(id);
-		return i18n.t(pending.kind === 'question' ? 'asm.waitAnswer' : 'asm.waitApproval', { title: tabTitle(id) });
+		return i18n.t(pending.kind === 'question' ? 'asm.waitAnswer' : 'asm.waitApprovalT', { title: tabTitle(id) });
 	}
 
 	function startTabRename(id: string): void {
