@@ -12,6 +12,7 @@
 
 import type { Message } from '$lib/types/chat';
 import { expandMacros, type MacroContext, type PromptCharacter } from '$lib/macros';
+import { expandVarMacros } from '$lib/utils/var-macros';
 import { resolveLorebooks } from '$lib/lorebook/engine';
 import { lorebookHistory, lorebookScanFields, type LorebookTrigger } from '$lib/lorebook/types';
 import { chatStore } from '$lib/stores/chat.svelte';
@@ -102,7 +103,7 @@ export function buildLiveMacroContext(opts: LiveMacroContextOptions = {}): Macro
 		trigger: opts.lorebookTrigger,
 		history: lorebookHistory(chatMessages),
 		settings: lorebookSettings,
-		expand: (text) => expandMacros(text, base),
+		expand: (text) => expandMacros(expandVarMacros(text, base), base),
 		budget: lorebookBudget
 	});
 	return { ...base, lorebook: lore.text, lorebookTrace: lore.trace };

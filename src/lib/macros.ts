@@ -142,6 +142,14 @@ export const STRUCTURAL_MACROS: readonly string[] = MACROS.filter((m) => m.struc
 /** Matches {{name}} and {{name.sub}}, the one macro shape used everywhere. */
 export const MACRO_REGEX = /\{\{(\w+(?:\.\w+)?)\}\}/g;
 
+/** ST-style variable tables: `locals` travel with the chat, `globals` with the app.
+ *  Defined here because the MacroContext carries one; the evaluator lives in
+ *  utils/var-macros.ts (this module stays free of its side-effectful pass). */
+export interface VarEnv {
+	locals: Record<string, string>;
+	globals: Record<string, string>;
+}
+
 /** Heads each example-dialogue block when the preset names no `exampleSeparator` of its own
  *  (SillyTavern's <START> marker becomes this). An empty separator is a real choice, meaning
  *  no header line at all, so this is only ever the fallback for an ABSENT one. */
@@ -306,6 +314,9 @@ export function pruneEmptyTagBlocks(text: string, values: Record<string, string>
 // ============================================================================
 
 export interface MacroContext {
+	/** ST-style variable tables: chat-scoped locals, app-scoped globals. Absent = the
+	 *  variable pass renders reads empty and discards writes (old callers, tests). */
+	vars?: VarEnv;
 	resolvedPersona?: PromptCharacter | null;
 	resolvedCharacters?: PromptCharacter[];
 	/** The lorebook block injected at {{lorebook}}, already scanned and rendered by the context

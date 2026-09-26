@@ -35,6 +35,7 @@ import {
 	type MacroContext,
 	type PromptCharacter
 } from '$lib/macros';
+import { expandVarMacros } from '$lib/utils/var-macros';
 import { countTokens } from '$lib/tokenizer/count';
 import { applyPromptRegex, type RegexRule } from './regex-rules';
 
@@ -244,8 +245,12 @@ export function resolveItem(item: PromptItem, ctx: MacroContext, model?: string)
 	// Prune-then-substitute: when the preset opts in, tag blocks whose macros all resolved
 	// empty are dropped from the template before expansion, so conditional framing never
 	// dangles (see macros.ts). Off = the template is expanded exactly as written.
-	const values = resolveMacroValues(item.content, ctx);
-	const template = ctx.pruneEmptyBlocks ? pruneEmptyTagBlocks(item.content, values) : item.content;
+	// Variables / randomization / conditionals first: the side-effectful pass whose output
+	// is the template the name-based substitution then sees. The env is shared across
+	// every resolveItem of one assembly, so item order IS the variable timeline.
+	const prepared = expandVarMacros(item.content, ctx);
+	const values = resolveMacroValues(prepared, ctx);
+	const template = ctx.pruneEmptyBlocks ? pruneEmptyTagBlocks(prepared, values) : prepared;
 	const expanded = substitute(template, values);
 	if (!expanded.trim()) return { messages: [], raw, preset: 0, context: 0, memory: 0, chat: 0 };
 
@@ -258,7 +263,7 @@ export function resolveItem(item: PromptItem, ctx: MacroContext, model?: string)
 	// Chat-memory recall is its own category, not part of Context. Isolate exactly what
 	// the {{memory}} text contributed by re-substituting the same surviving template with
 	// it blanked (the template stays fixed so the block's framing stays in Preset).
-	if (ctx.memory && item.content.includes('{{memory}}')) {
+	if (ctx.memory && prepared.includes('{{memory}}')) {
 		const withoutMemory = countTokens(substitute(template, { ...values, memory: '' }), model);
 		memory = Math.max(0, expandedTokens - withoutMemory);
 		context = Math.max(0, context - memory);
