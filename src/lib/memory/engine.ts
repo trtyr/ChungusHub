@@ -29,7 +29,8 @@ import {
 	FACTS_APPENDIX
 } from './prompts';
 import { EXTRACT_CONTEXT_EPISODES, resolveConfig } from './config';
-import type { BatchResult, Episode, LlmFn, MemoryConfig, MemoryDb, MemoryMessage, PromotionResult, RawFact } from './types';
+import { duplicateFactIds, FACTS_BOARD_CAP, pruneCapCandidates } from './facts';
+import type { BatchResult, ChatFact, Episode, LlmFn, MemoryConfig, MemoryDb, MemoryMessage, PromotionResult, RawFact } from './types';
 
 
 let engineT: ((key: string, params?: Record<string, string | number>) => string) | null = null;
@@ -528,7 +529,15 @@ export async function processChat(
 		// the call) leaves its facts unborn too, and the next pass re-extracts them from
 		// the current text. Anchored to the batch's own turns, so branch behaviour (revert,
 		// switch) is the fact core's concern, not a write-side one.
-		if (facts.length) await deps.db.applyFacts(chatId, facts, batch.map((m) => m.id));
+		if (facts.length) {
+			await deps.db.applyFacts(chatId, facts, batch.map((m) => m.id));
+			// The W5 pass rides the extraction cadence (the phase-1 fixed rhythm): distil
+			// exact echoes, then enforce the board's soft ceiling. Pinned facts survive
+			// both, by construction of the pure functions.
+			const board = (await deps.db.listFacts(chatId)) as ChatFact[];
+			const reappable = [...duplicateFactIds(board), ...pruneCapCandidates(board, FACTS_BOARD_CAP).map((f) => f.id)];
+			if (reappable.length) await deps.db.reapFacts(chatId, reappable);
+		}
 		opts.onProgress?.({
 			phase: 'extract',
 			batchesDone,

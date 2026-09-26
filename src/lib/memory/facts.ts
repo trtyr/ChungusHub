@@ -10,23 +10,15 @@
  * shape the episode core uses), so it is unit-testable with no app dependencies.
  */
 
-import type { MemoryMessage } from './types';
+import type { ChatFact, MemoryMessage } from './types';
 
-export interface ChatFact {
-	id: string;
-	entity: string;
-	key: string;
-	value: string;
-	/** 1 = trivia, 2 = a state change, 3 = mainline. Drives injection truncation later. */
-	importance: number;
-	/** Reader-pinned: exempt from downstream truncation and pruning. */
-	pinned?: boolean;
-	/** The message ids this fact was extracted from. Empty means unanchored (a reader's
-	 *  hand entry), which stands on every path until revised. */
-	sourceIds: string[];
-	createdAt?: number;
-	revisedAt?: number;
-}
+export type { ChatFact } from './types';
+
+/** The board's soft ceiling (W5 Dropper): past this many rows the lowest-value unpinned
+ *  facts are reaped on the next extraction pass. 200 covers a 10k-turn story's board;
+ *  storage cost is dust either way. The cap exists for injection QUALITY (30 slots must
+ *  not be competing with hundreds of trivia), not for size. */
+export const FACTS_BOARD_CAP = 200;
 
 /** The path's ids in walk order, for depth comparisons. */
 function pathIdsInOrder(path: ReadonlyArray<{ id: string }>): string[] {
@@ -95,4 +87,37 @@ export function groupByEntity(active: ChatFact[]): Map<string, ChatFact[]> {
 export function reapCandidateFacts(allFacts: ChatFact[], liveMessageIds: Iterable<string>): ChatFact[] {
 	const live = new Set(liveMessageIds);
 	return allFacts.filter((fact) => fact.sourceIds.length > 0 && !fact.sourceIds.every((id) => live.has(id)));
+}
+
+/** The board's soft ceiling (P006 W5 Dropper): past it the lowest-value rows go, until the
+ *  count fits again. Value = importance, then age (oldest first); pinned facts are the
+ *  reader's own judgment and never pruned. Unanchored facts count toward the cap but rank
+ *  last to prune (a hand entry is a decision, not extraction noise). */
+export function pruneCapCandidates(allFacts: ChatFact[], cap: number): ChatFact[] {
+	if (allFacts.length <= cap) return [];
+	const over = allFacts.length - cap;
+	const prunable = allFacts
+		.filter((f) => !f.pinned)
+		.sort((a, b) => {
+			if (a.importance !== b.importance) return a.importance - b.importance;
+			const at = a.createdAt ?? Number.MAX_SAFE_INTEGER;
+			const bt = b.createdAt ?? Number.MAX_SAFE_INTEGER;
+			return at - bt;
+		});
+	return prunable.slice(0, over);
+}
+
+/** P006 W5 Reflector, deterministic form: the extractor can re-assert the SAME fact on an
+ *  overlapping batch (same entity, key and value verbatim). The newest row wins nothing:
+ *  the oldest is the original, the rest are echoes to reap. Distinct values stay: those
+ *  are revisions, and path-derivation owns them. */
+export function duplicateFactIds(allFacts: ChatFact[]): string[] {
+	const seen = new Map<string, ChatFact>();
+	const dupes: string[] = [];
+	for (const fact of [...allFacts].sort((a, b) => (a.createdAt ?? 0) - (b.createdAt ?? 0))) {
+		const slot = `${fact.entity}\u0000${fact.key}\u0000${fact.value}`;
+		if (seen.has(slot)) dupes.push(fact.id);
+		else seen.set(slot, fact);
+	}
+	return dupes;
 }

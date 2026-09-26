@@ -225,6 +225,7 @@ class DatabaseService {
 	memListEpisodes(chatId: string): Promise<Episode[]> { return this.call('memListEpisodes', chatId); }
 	memListFacts(chatId: string): Promise<unknown[]> { return this.call('memListFacts', chatId); }
 	memApplyFacts(chatId: string, facts: unknown): Promise<void> { return this.call('memApplyFacts', chatId, facts); }
+	memReapFacts(chatId: string, factIds: string[]): Promise<void> { return this.call('memReapFacts', chatId, factIds); }
 	memUpdateFactContent(chatId: string, factId: string, value: string): Promise<void> { return this.call('memUpdateFactContent', chatId, factId, value); }
 	memSetFactDeleted(chatId: string, factId: string): Promise<void> { return this.call('memSetFactDeleted', chatId, factId); }
 	memSetFactPinned(chatId: string, factId: string, pinned: boolean): Promise<void> { return this.call('memSetFactPinned', chatId, factId, pinned); }

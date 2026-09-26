@@ -4,7 +4,7 @@
  */
 import { describe, expect, test } from 'bun:test';
 
-import { activeFacts, groupByEntity, reapCandidateFacts, type ChatFact } from './facts';
+import { activeFacts, duplicateFactIds, groupByEntity, pruneCapCandidates, reapCandidateFacts, type ChatFact } from './facts';
 import type { MemoryMessage } from './types';
 
 /** A linear story m1 → m2 → … → m9. */
@@ -107,5 +107,57 @@ describe('reapCandidateFacts', () => {
 	test('unanchored facts are never reaped by turn deletion', () => {
 		const hand = fact({ id: 'h', entity: 'S', key: '其他', value: 'x', sourceIds: [] });
 		expect(reapCandidateFacts([hand], [])).toEqual([]);
+	});
+});
+
+describe('W5 dropper (pruneCapCandidates)', () => {
+	function row(id: string, importance: number, createdAt: number, pinned = false): ChatFact {
+		return { id, entity: 'S', key: '其他', value: id, importance, pinned, sourceIds: ['m1'], createdAt };
+	}
+
+	test('under the cap nothing goes', () => {
+		const board = [row('a', 1, 1), row('b', 2, 2)];
+		expect(pruneCapCandidates(board, 5)).toEqual([]);
+	});
+
+	test('over the cap the lowest-importance oldest rows go first', () => {
+		const board = [
+			row('hi', 3, 1),
+			row('lo1', 1, 2),
+			row('lo2', 1, 3),
+			row('mid', 2, 4),
+			row('lo3', 1, 5)
+		];
+		const pruned = pruneCapCandidates(board, 3).map((f) => f.id);
+		expect(pruned).toEqual(['lo1', 'lo2']);
+	});
+
+	test('pinned facts are never pruned, even at importance 1', () => {
+		const board = [row('pin', 1, 1, true), row('lo', 1, 2), row('mid', 2, 3), row('mid2', 2, 4)];
+		const pruned = pruneCapCandidates(board, 2).map((f) => f.id);
+		// 4 rows, cap 2: two must go. The unpinned lowest-importance oldest first; the
+		// pinned row is untouchable no matter its score.
+		expect(pruned).toEqual(['lo', 'mid']);
+		expect(pruned).not.toContain('pin');
+	});
+});
+
+describe('W5 reflector (duplicateFactIds)', () => {
+	test('exact echoes go; distinct values are revisions and stay', () => {
+		const board = [
+			fact({ id: 'orig', entity: 'S', key: '身体', value: '断了左手', sourceIds: ['m1'], createdAt: 1 }),
+			fact({ id: 'echo', entity: 'S', key: '身体', value: '断了左手', sourceIds: ['m5'], createdAt: 2 }),
+			fact({ id: 'rev', entity: 'S', key: '身体', value: '左手痊愈', sourceIds: ['m6'], createdAt: 3 })
+		];
+		expect(duplicateFactIds(board)).toEqual(['echo']);
+	});
+
+	test('the oldest of an echo cluster survives', () => {
+		const board = [
+			fact({ id: 'b', entity: 'S', key: '所在地', value: '灯塔', createdAt: 2 }),
+			fact({ id: 'a', entity: 'S', key: '所在地', value: '灯塔', createdAt: 1 }),
+			fact({ id: 'c', entity: 'S', key: '所在地', value: '灯塔', createdAt: 3 })
+		];
+		expect(duplicateFactIds(board).sort()).toEqual(['b', 'c']);
 	});
 });

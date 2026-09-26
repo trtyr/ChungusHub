@@ -16,6 +16,23 @@ export interface RawFact {
 	importance: number;
 }
 
+/** A stored fact row (P006): the same shape, plus its identity and anchors. */
+export interface ChatFact {
+	id: string;
+	entity: string;
+	key: string;
+	value: string;
+	/** 1 = trivia, 2 = a state change, 3 = mainline. Drives injection truncation later. */
+	importance: number;
+	/** Reader-pinned: exempt from downstream truncation and pruning. */
+	pinned?: boolean;
+	/** The message ids this fact was extracted from. Empty means unanchored (a reader's
+	 *  hand entry), which stands on every path until revised. */
+	sourceIds: string[];
+	createdAt?: number;
+	revisedAt?: number;
+}
+
 /**
  * A narrative summary, the single thing memory stores. Layer 0 = one delta per
  * extraction batch; higher layers are LLM-merged compactions of lower ones.
@@ -135,5 +152,9 @@ export interface MemoryDb {
 	/** Write one extraction batch's fact rows, each anchored to the batch's message ids.
 	 *  The server validates rows and assigns ids/created_at atomically. */
 	applyFacts(chatId: string, facts: RawFact[], sourceIds: string[]): Promise<void>;
+	/** The chat's whole fact table (standing + dormant), for the W5 reflector/dropper. */
+	listFacts(chatId: string): Promise<ChatFact[]>;
+	/** Hard-delete fact rows by id, chat-scoped. Idempotent, order-free. */
+	reapFacts(chatId: string, factIds: string[]): Promise<void>;
 	reset(chatId: string): Promise<void>;
 }

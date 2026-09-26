@@ -7,7 +7,7 @@
  */
 
 import { db } from '$lib/services/database';
-import type { MemoryDb, RawFact } from './types';
+import type { ChatFact, MemoryDb, RawFact } from './types';
 
 export function createMemoryDb(): MemoryDb {
 	return {
@@ -23,6 +23,8 @@ export function createMemoryDb(): MemoryDb {
 				chatId,
 				facts.map((f) => ({ ...f, sourceIds }))
 			),
+		listFacts: (chatId) => db.memListFacts(chatId) as Promise<ChatFact[]>,
+		reapFacts: (chatId, factIds) => db.memReapFacts(chatId, factIds),
 		reset: (chatId) => db.memReset(chatId)
 	};
 }

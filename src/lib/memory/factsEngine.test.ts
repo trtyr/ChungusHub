@@ -16,7 +16,7 @@ import type { BatchResult, MemoryDb, MemoryMessage, PromotionResult, RawFact } f
 const TEMPLATE =
 	'Summarize. {{batch}} {{deepMemory}} {{recentEpisodes}} {{sceneLength}} {{character}} {{persona}}';
 
-class FakeDb implements Pick<MemoryDb, 'getState' | 'listEpisodes' | 'applyBatch' | 'applyPromotion' | 'applyFacts' | 'reapEpisodes' | 'updateEpisodeContent' | 'reset'> {
+class FakeDb implements Pick<MemoryDb, 'getState' | 'listEpisodes' | 'applyBatch' | 'applyPromotion' | 'applyFacts' | 'listFacts' | 'reapFacts' | 'reapEpisodes' | 'updateEpisodeContent' | 'reset'> {
 	appliedBatches: BatchResult[] = [];
 	appliedFacts: Array<{ chatId: string; rows: Array<Record<string, unknown>> }> = [];
 	async getState() {
@@ -43,6 +43,13 @@ class FakeDb implements Pick<MemoryDb, 'getState' | 'listEpisodes' | 'applyBatch
 	async applyPromotion(chatId: string, result: PromotionResult) {}
 	async applyFacts(chatId: string, facts: RawFact[], sourceIds: string[]) {
 		this.appliedFacts.push({ chatId, rows: facts.map((f) => ({ ...f, sourceIds })) });
+	}
+	reapedFactIds: string[] = [];
+	async listFacts() {
+		return this.appliedFacts.flatMap((a) => a.rows) as never;
+	}
+	async reapFacts(chatId: string, factIds: string[]) {
+		this.reapedFactIds.push(...factIds);
 	}
 	async reapEpisodes() {}
 	async updateEpisodeContent() {}
