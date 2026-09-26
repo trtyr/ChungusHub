@@ -146,7 +146,7 @@ export const PROMPT_POST_PROCESSING_MODES: PromptPostProcessingMode[] = [
 export const DEFAULT_PROMPT_PLACEHOLDER = '[Start a new chat]';
 
 /** Default per-connection context window (tokens) when the user hasn't set one. */
-export const DEFAULT_CONTEXT_SIZE = 32768;
+export const DEFAULT_CONTEXT_SIZE = 1048576;
 
 /**
  * Upper bounds for the two token fields in the connection editor. They are UI
@@ -341,7 +341,7 @@ export interface GenerationSettings {
 
 export const DEFAULT_GENERATION_SETTINGS: GenerationSettings = {
 	temperature: 1.0,
-	maxTokens: 6144,
+	maxTokens: 65535,
 	topP: 1,
 	topK: 0,
 	minP: 0,
