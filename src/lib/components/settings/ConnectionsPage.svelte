@@ -64,9 +64,16 @@
 
 	// Every calling engine, registry order. Steering makes no call and is
 	// deliberately absent: there is nothing to route.
+	const ENGINE_LABELS: Record<string, string> = {
+		memory: 'conn.engChatMemory',
+		'opening-scene': 'conn.engOpeningScene',
+		spellcheck: 'conn.engSpellcheck',
+		impersonate: 'conn.engImpersonate',
+		sprites: 'conn.engSprites'
+	};
 	const ENGINE_POINTS: RoutePoint[] = ENGINES.filter((e) => e.makesCalls).map((e) => ({
 		id: e.id,
-		label: e.name,
+		label: ENGINE_LABELS[e.id] ?? e.name,
 		icon: e.icon
 	}));
 
@@ -131,7 +138,7 @@
 {#snippet routeRow(point: RoutePoint, key: boolean)}
 	<div class="route-row" class:is-key={key}>
 		<Icon name={point.icon} class="w-4 h-4 route-icon" strokeWidth={1.75} />
-		<span class="route-label">{point.label}</span>
+		<span class="route-label">{i18n.t(point.label)}</span>
 		<Select
 			variant="compact"
 			class="pill-select"
@@ -206,7 +213,7 @@
 											<span class="point-chip">{i18n.t('conn.everything')}</span>
 										{:else}
 											{#each points as p (p)}
-												<span class="point-chip">{POINT_LABELS[p] ?? p}</span>
+												<span class="point-chip">{POINT_LABELS[p] ? i18n.t(POINT_LABELS[p]) : p}</span>
 											{/each}
 										{/if}
 									</div>
