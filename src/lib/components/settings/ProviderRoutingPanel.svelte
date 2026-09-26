@@ -135,13 +135,13 @@
 	 */
 	function disqualifyReason(r: ProviderRow): string | null {
 		const maxC = parseFloat(maxCompletion);
-		if (Number.isFinite(maxC) && r.price != null && r.price * 1_000_000 > maxC) return 'over max output $';
+		if (Number.isFinite(maxC) && r.price != null && r.price * 1_000_000 > maxC) return i18n.t('pr.dqMaxOut');
 		const maxP = parseFloat(maxPrompt);
-		if (Number.isFinite(maxP) && r.promptPrice != null && r.promptPrice * 1_000_000 > maxP) return 'over max input $';
-		if (quantizations.size && r.quants.length && !r.quants.some((q) => quantizations.has(q))) return 'quantization';
+		if (Number.isFinite(maxP) && r.promptPrice != null && r.promptPrice * 1_000_000 > maxP) return i18n.t('pr.dqMaxIn');
+		if (quantizations.size && r.quants.length && !r.quants.some((q) => quantizations.has(q))) return i18n.t('pr.quantization');
 		// Only judge param support when the provider actually reported it: an
 		// unknown set must never silently hide a usable provider.
-		if (requireParameters && r.paramsKnown && !genParamKeys.every((k) => r.params.has(k))) return 'drops a setting';
+		if (requireParameters && r.paramsKnown && !genParamKeys.every((k) => r.params.has(k))) return i18n.t('pr.dqParam');
 		return null;
 	}
 

@@ -562,39 +562,54 @@ export function resolveBookActivation(
 export function activationSummary(
 	resolved: ResolvedActivation,
 	settings: LorebookGlobalSettings,
-	global = false
+	global = false,
+	t?: (key: string, params?: Record<string, string | number>) => string
 ): { text: string; set: boolean }[] {
+	const x =
+		t ??
+		((key: string, params?: Record<string, string | number>) => {
+			const defaults: Record<string, string> = {
+				'ler.scanAll': 'scan all', 'ler.scanN': 'scan {n}', 'ler.recOn': 'recursion on',
+				'ler.recOff': 'recursion off', 'ler.everyChat': 'every chat', 'ler.passesN': '≤{n} passes',
+				'ler.passesInf': '∞ passes', 'ler.booksTogether': 'books together', 'ler.caseOn': 'case on',
+				'ler.caseOff': 'case off', 'ler.wordsOn': 'whole words on', 'ler.wordsOff': 'whole words off',
+				'ler.budgetN': 'budget {n}%', 'ler.budgetOff': 'budget off'
+			};
+			let out = defaults[key] ?? key;
+			if (params) for (const [k, v] of Object.entries(params)) out = out.replaceAll(`{${k}}`, String(v));
+			return out;
+		});
 	const out = [
 		{
-			text: `scan ${resolved.scanDepth === 0 ? 'all' : resolved.scanDepth}`,
+			text: resolved.scanDepth === 0 ? x('ler.scanAll') : x('ler.scanN', { n: resolved.scanDepth }),
 			set: resolved.scanDepth !== settings.scanDepth
 		},
 		{
-			text: `recursion ${resolved.recursiveScanning ? 'on' : 'off'}`,
+			text: resolved.recursiveScanning ? x('ler.recOn') : x('ler.recOff'),
 			set: resolved.recursiveScanning !== settings.recursiveScanning
 		}
 	];
-	if (global) out.unshift({ text: 'every chat', set: true });
+	if (global) out.unshift({ text: x('ler.everyChat'), set: true });
 	if (resolved.recursiveScanning) {
 		// While books recurse together there is one shared loop, so the cap that runs is the
 		// global one; printing the book's own here would name a number the scan never uses.
 		const passes = settings.crossBookRecursion ? settings.maxRecursionSteps : resolved.maxRecursionSteps;
 		out.push({
-			text: passes > 0 ? `≤${passes} passes` : '∞ passes',
+			text: passes > 0 ? x('ler.passesN', { n: passes }) : x('ler.passesInf'),
 			set: !settings.crossBookRecursion && resolved.maxRecursionSteps !== settings.maxRecursionSteps
 		});
-		if (settings.crossBookRecursion) out.push({ text: 'books together', set: false });
+		if (settings.crossBookRecursion) out.push({ text: x('ler.booksTogether'), set: false });
 	}
 	out.push({
-		text: `case ${resolved.caseSensitive ? 'on' : 'off'}`,
+		text: resolved.caseSensitive ? x('ler.caseOn') : x('ler.caseOff'),
 		set: resolved.caseSensitive !== settings.caseSensitive
 	});
 	out.push({
-		text: `whole words ${resolved.matchWholeWords ? 'on' : 'off'}`,
+		text: resolved.matchWholeWords ? x('ler.wordsOn') : x('ler.wordsOff'),
 		set: resolved.matchWholeWords !== settings.matchWholeWords
 	});
 	out.push({
-		text: `budget ${settings.budgetPercent > 0 ? `${settings.budgetPercent}%` : 'off'}`,
+		text: settings.budgetPercent > 0 ? x('ler.budgetN', { n: settings.budgetPercent }) : x('ler.budgetOff'),
 		set: false
 	});
 	return out;

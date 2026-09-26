@@ -43,7 +43,7 @@
 	/** The Global Settings row's own line: the defaults, in the wording the open book's
 	 *  Activation strip uses. Passed as both layers, so nothing is lit: this IS the root. */
 	let defaults = $derived(
-		activationSummary(lorebookSettingsStore.settings, lorebookSettingsStore.settings)
+		activationSummary(lorebookSettingsStore.settings, lorebookSettingsStore.settings, false, i18n.t)
 	);
 
 	/** bookId → how many characters and personas carry it. One pass over the library rather

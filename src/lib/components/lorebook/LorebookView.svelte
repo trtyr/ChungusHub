@@ -243,7 +243,8 @@
 			? activationSummary(
 					resolveBookActivation(selectedBook, globals),
 					globals,
-					!!selectedBook.global
+					!!selectedBook.global,
+					i18n.t
 				)
 			: []
 	);

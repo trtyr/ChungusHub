@@ -158,7 +158,7 @@ export const COMMANDS: CommandDef[] = [
 		describe: 'cmd.opening',
 		// Optional: an empty direction is the surprise, which is the whole reason the popover
 		// this stands in for needs no Random button.
-		arg: { label: 'direction', required: false },
+		arg: { label: 'cmd.pDirection', required: false },
 		unavailable: (ctx) => {
 			if (!ctx.chatId) return i18n.t(NO_CHAT_KEY);
 			return featurePromptsStore.openingSceneEnabled
@@ -269,7 +269,7 @@ export const COMMANDS: CommandDef[] = [
 		group: 'open',
 		icon: 'search',
 		describe: 'cmd.find',
-		arg: { label: 'text', required: false },
+		arg: { label: 'cmd.pText', required: false },
 		unavailable: (ctx) => (ctx.chatId ? null : i18n.t(NO_CHAT_KEY)),
 		run: (text) => {
 			if (text.trim()) chatSearch.query = text.trim();
