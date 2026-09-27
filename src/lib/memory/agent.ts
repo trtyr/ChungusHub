@@ -46,6 +46,8 @@ export interface AgentRunResult {
 	updated: number;
 	reaped: number;
 	turns: number;
+	/** Per-write trace for the panel's 溯源 list: one entry per successful tool write. */
+	writes: Array<{ tool: string; entity: string; key: string; value: string }>;
 }
 
 interface AgentAction {
@@ -83,7 +85,7 @@ function renderBoard(board: ChatFact[]): string {
  * will not produce parseable actions (after one retry, the P0 doctrine).
  */
 export async function runAgentPass(deps: AgentDeps, chatId: string): Promise<AgentRunResult> {
-	const result: AgentRunResult = { applied: 0, updated: 0, reaped: 0, turns: 0 };
+	const result: AgentRunResult = { applied: 0, updated: 0, reaped: 0, turns: 0, writes: [] };
 	const seed =
 		`[新回合原文]\n${renderTurns(deps.recentTurns) || '（无）'}\n\n[当前事实板]\n${renderBoard(deps.board)}`;
 	const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [
@@ -136,9 +138,13 @@ export async function runAgentPass(deps: AgentDeps, chatId: string): Promise<Age
 					feedback = 'apply_facts 的 facts 为空。';
 				} else {
 					try {
-						await deps.db.applyFacts(chatId, facts.slice(0, MAX_APPLY - result.applied) as never, recentIds(deps.recentTurns));
-						result.applied += facts.length;
-						feedback = `applied ${facts.length}.`;
+						const batch = facts.slice(0, MAX_APPLY - result.applied) as Array<Record<string, unknown>>;
+						await deps.db.applyFacts(chatId, batch as never, recentIds(deps.recentTurns));
+						result.applied += batch.length;
+						for (const f of batch) {
+							result.writes.push({ tool: 'apply', entity: String(f.entity ?? ''), key: String(f.key ?? ''), value: String(f.value ?? '') });
+						}
+						feedback = `applied ${batch.length}.`;
 					} catch (error) {
 						feedback = `工具失败：${String(error).slice(0, 200)}`;
 					}
@@ -156,6 +162,7 @@ export async function runAgentPass(deps: AgentDeps, chatId: string): Promise<Age
 					try {
 						await deps.db.updateFactContent(chatId, factId, value);
 						result.updated++;
+						result.writes.push({ tool: 'update', entity: '', key: '', value: `${factId} ${value}` });
 						feedback = 'updated.';
 					} catch (error) {
 						feedback = `工具失败：${String(error).slice(0, 200)}`;
@@ -175,6 +182,9 @@ export async function runAgentPass(deps: AgentDeps, chatId: string): Promise<Age
 					try {
 						await deps.db.reapFacts(chatId, ids);
 						result.reaped += ids.length;
+						for (const id of ids) {
+							result.writes.push({ tool: 'reap', entity: '', key: '', value: id });
+						}
 						feedback = `reaped ${ids.length}.`;
 					} catch (error) {
 						feedback = `工具失败：${String(error).slice(0, 200)}`;

@@ -57,4 +57,10 @@ describe('mem-op-pinned refusals', () => {
 		expect(row.value).toBe('灯塔');
 		expect(row.pinned).toBe(1);
 	});
+
+	test('per-call caps are enforced server-side, loud', () => {
+		const many = Array.from({ length: 21 }, (_, i) => ({ entity: `E${i}`, key: '其他', value: `v${i}` }));
+		expect(() => serverDb.memApplyFacts('c1', many)).toThrow(/at most 20/);
+		expect(() => serverDb.memReapFacts('c1', Array.from({ length: 11 }, (_, i) => `x${i}`))).toThrow(/at most 10/);
+	});
 });

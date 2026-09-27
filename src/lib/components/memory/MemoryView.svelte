@@ -402,6 +402,12 @@
 								reaped: memoryStore.lastFactsPass.reaped
 							})}
 						</span>
+						{#each memoryStore.lastFactsPass.writes.slice(0, 8) as w}
+							<span class="memory-mode-help">
+								{w.tool === 'apply' ? '+' : w.tool === 'update' ? '~' : '-'}
+								{w.entity ? `${w.entity} · ${w.key} = ${w.value}` : w.value}
+							</span>
+						{/each}
 					{/if}
 				</div>
 				<div

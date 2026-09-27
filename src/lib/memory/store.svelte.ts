@@ -176,7 +176,14 @@ class MemoryStore {
 	autoExtract = $state(true);
 	agentEnabled = $state(false);
 	/** The last agent maintenance pass summary, for the panel's change badge (phase 2). */
-	lastFactsPass = $state<{ applied: number; updated: number; reaped: number; chatId: string; at: number } | null>(null);
+	lastFactsPass = $state<{
+		applied: number;
+		updated: number;
+		reaped: number;
+		writes: Array<{ tool: string; entity: string; key: string; value: string }>;
+		chatId: string;
+		at: number;
+	} | null>(null);
 	configOverride = $state<Partial<MemoryConfig> | null>(null);
 
 	episodes = $state<Episode[]>([]);

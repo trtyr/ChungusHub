@@ -3346,6 +3346,10 @@ class ServerDatabase {
 		if (!Array.isArray(facts) || facts.length === 0) {
 			throw new Error('memApplyFacts: facts must be a non-empty array');
 		}
+		// The agent's per-turn budget is enforced here too: one call carries at most 20.
+		if (facts.length > 20) {
+			throw new Error('memApplyFacts: at most 20 facts per call');
+		}
 		this.db.transaction(() => {
 			for (const raw of facts) {
 				const f = raw as Record<string, unknown>;
@@ -3373,6 +3377,10 @@ class ServerDatabase {
 	memReapFacts(chatId: string, factIds: unknown): void {
 		if (!Array.isArray(factIds) || factIds.length === 0) return;
 		const ids = factIds.map(String);
+		// One call reaps at most 10; larger batches are a caller bug, refused loud.
+		if (ids.length > 10) {
+			throw new Error('memReapFacts: at most 10 ids per call');
+		}
 		// Pinned rows are the reader's own judgment: refuse loud (mem-op-pinned) instead
 		// of silently skipping, so the agent loop can report the refusal back.
 		const placeholders = ids.map(() => '?').join(',');
