@@ -15,6 +15,7 @@
 
 import { i18n } from '$lib/i18n/i18n.svelte';
 import { setMemoryEngineI18n } from './engine';
+import { factsStore } from './facts.svelte';
 import type { Message } from '$lib/types/chat';
 import type { LLMCompletionResult, LLMMessage } from '$lib/types/llm';
 import { llmService } from '$lib/services/llm/provider';
@@ -736,6 +737,9 @@ class MemoryStore {
 		try {
 			const deps = await this.deps(ctx);
 			await fn(deps, controller.signal);
+			// A pass may have written fact rows (P006): drop the board cache so the panel
+			// and the next send's tail assembly read what just landed, not a stale empty.
+			void factsStore.invalidate(ctx.chatId);
 			if (owns()) this.status = 'idle';
 			if (this.activeChatId === ctx.chatId) await this.refresh(ctx.chatId);
 		} catch (e) {
