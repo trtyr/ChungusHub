@@ -118,13 +118,24 @@ describe('agent tool loop', () => {
 	test('read_fact_board and read_recent_turns are real tools', async () => {
 		const db = new FakeDb();
 		db.facts = [{ id: 'f1', entity: 'S', key: '所在地', value: '灯塔', importance: 2, sourceIds: [] }];
-		const d = deps(db, [
-			'{"tool":"read_fact_board"}',
-			'{"tool":"read_recent_turns"}',
-			'{"tool":"finish"}'
-		]);
+		const scripted = ['{"tool":"read_fact_board"}', '{"tool":"read_recent_turns"}', '{"tool":"finish"}'];
+		const seenUserTexts: string[] = [];
+		const d = deps(db, scripted);
+		let call = 0;
+		d.llm = async (messages) => {
+			const last = messages[messages.length - 1];
+			if (call > 0) seenUserTexts.push(last.content);
+			const out = scripted[Math.min(call, scripted.length - 1)];
+			call++;
+			return out;
+		};
 		const r = await runAgentPass(d, 'c');
 		expect(r.turns).toBe(3);
+		// The board tool's feedback carries the LIVE row from listFacts, not the seed snapshot.
+		expect(seenUserTexts[0]).toContain('灯塔');
+		expect(seenUserTexts[0]).toContain('f1');
+		// The turns tool re-feeds the source turns verbatim.
+		expect(seenUserTexts[1]).toContain('莉莉在礁石下递给苏辰一把铜钥匙');
 	});
 
 	test('stillActive false stops the pass before the next turn', async () => {

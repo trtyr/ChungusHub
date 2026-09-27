@@ -159,6 +159,20 @@ describe('P006 W3 extraction pipeline', () => {
 		expect(seen.includes('turn 1')).toBe(true);
 		expect(seen.includes(FACTS_APPENDIX)).toBe(true);
 	});
+
+	test('agent mode replaces the fact pass: no appendix on the extraction call', async () => {
+		const db = new FakeDb();
+		let seen = '';
+		const deps = makeDeps(db, [dualResponse('summary.', [])]);
+		deps.llm = async (messages) => {
+			seen = messages[0].content;
+			return dualResponse('summary.', []);
+		};
+		await processChat(deps, 'c', story(8, 8), 'm8', { factsViaAgent: true });
+		expect(seen.includes(FACTS_APPENDIX)).toBe(false);
+		// The episode work is untouched: the summary template still renders fully.
+		expect(seen.includes('turn 1')).toBe(true);
+	});
 });
 
 describe('parseFacts hygiene', () => {
