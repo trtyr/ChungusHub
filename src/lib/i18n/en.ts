@@ -2062,6 +2062,7 @@ export const en: Record<string, string> = {
 	'mem.factsPin': 'Pin (downstream truncation and pruning never touch it)',
 	'mem.factsEdit': 'Edit this fact',
 	'mem.factsDormant': 'Facts off the current path ({n}); they stand again when you revert onto them',
+	'mem.factsPass': 'Last pass: +{applied} new / {updated} edited / {reaped} reaped',
 	'mem.factsFail': 'Fact action failed: {error}',
 	'mem.agentLabel': 'Memory agent',
 	'mem.agentOn': 'When on, a background agent maintains the fact board (merging, refining, pruning) instead of the fixed extraction pass.',

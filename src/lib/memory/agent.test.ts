@@ -115,6 +115,39 @@ describe('agent tool loop', () => {
 		expect(r.turns).toBeLessThanOrEqual(8);
 	});
 
+	test('read_fact_board and read_recent_turns are real tools', async () => {
+		const db = new FakeDb();
+		db.facts = [{ id: 'f1', entity: 'S', key: '所在地', value: '灯塔', importance: 2, sourceIds: [] }];
+		const d = deps(db, [
+			'{"tool":"read_fact_board"}',
+			'{"tool":"read_recent_turns"}',
+			'{"tool":"finish"}'
+		]);
+		const r = await runAgentPass(d, 'c');
+		expect(r.turns).toBe(3);
+	});
+
+	test('stillActive false stops the pass before the next turn', async () => {
+		const db = new FakeDb();
+		const d = deps(db, ['{"tool":"apply_facts","args":{"facts":[{"entity":"E","key":"其他","value":"v","importance":1}]}}', '{"tool":"finish"}']);
+		d.stillActive = () => false;
+		const r = await runAgentPass(d, 'c');
+		expect(r.turns).toBe(0);
+	});
+
+	test('tool errors feed back gracefully instead of crashing the pass', async () => {
+		const db = new FakeDb();
+		db.reapFacts = async () => {
+			throw new Error('mem-op-pinned: pinned facts resist reaping');
+		};
+		const d = deps(db, [
+			'{"tool":"reap_facts","args":{"ids":["f1"]}}',
+			'{"tool":"finish"}'
+		]);
+		const r = await runAgentPass(d, 'c');
+		expect(r.reaped).toBe(0);
+		expect(r.turns).toBe(2);
+	});
 	test('aborted signal ends the pass between turns', async () => {
 		const db = new FakeDb();
 		const controller = new AbortController();

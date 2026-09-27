@@ -394,6 +394,15 @@
 							{i18n.t('mem.agentOff')}
 						{/if}
 					</span>
+					{#if agentEnabled && memoryStore.lastFactsPass && memoryStore.lastFactsPass.chatId === chat?.id}
+						<span class="memory-mode-help">
+							{i18n.t('mem.factsPass', {
+								applied: memoryStore.lastFactsPass.applied,
+								updated: memoryStore.lastFactsPass.updated,
+								reaped: memoryStore.lastFactsPass.reaped
+							})}
+						</span>
+					{/if}
 				</div>
 				<div
 					class="memory-toggle"

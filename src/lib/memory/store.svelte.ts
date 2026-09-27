@@ -145,16 +145,19 @@ function emptyReplyReason(result: LLMCompletionResult): string {
 
 /** The LLM port: memory side-tasks ride the Memory engine's connection and that
  *  connection's own generation settings, non-streaming. */
-const llm: LlmFn = async (messages, signal) => {
+const makeLlm = (source: string): LlmFn => async (messages, signal) => {
 	const result = await llmService.complete(
 		{ engine: 'memory' },
-		{ messages: messages as LLMMessage[], source: 'memory', signal }
+		{ messages: messages as LLMMessage[], source, signal }
 	);
 	// Thrown here rather than left to the parser: retrying an empty reply spends a
 	// second identical call, and the quoted "" names nothing.
 	if (!result.content.trim()) throw new Error(emptyReplyReason(result));
 	return result.content;
 };
+const llm: LlmFn = makeLlm('memory');
+/** The agent pass tags its calls distinctly (P006 phase 2 design: source memory-agent). */
+const agentLlm: LlmFn = makeLlm('memory-agent');
 
 /** A chat's own override, or null when it has none. An empty object is "none": the server row
  *  can hold one, and treating it as a real override would both hide the app-wide defaults from
@@ -172,6 +175,8 @@ class MemoryStore {
 	/** false = extraction only fires from the panel's Summarise. Reaping still runs. */
 	autoExtract = $state(true);
 	agentEnabled = $state(false);
+	/** The last agent maintenance pass summary, for the panel's change badge (phase 2). */
+	lastFactsPass = $state<{ applied: number; updated: number; reaped: number; chatId: string; at: number } | null>(null);
 	configOverride = $state<Partial<MemoryConfig> | null>(null);
 
 	episodes = $state<Episode[]>([]);
@@ -661,7 +666,11 @@ class MemoryStore {
 				if (!agent) return;
 				const board = (await deps.db.listFacts(ctx.chatId)) as ChatFact[];
 				const turns = this.toMemory(ctx).slice(-12);
-				await runAgentPass({ llm: deps.llm, db: deps.db, board, recentTurns: turns, signal }, ctx.chatId);
+				const pass = await runAgentPass(
+					{ llm: agentLlm, db: deps.db, board, recentTurns: turns, signal, stillActive: () => this.active },
+					ctx.chatId
+				);
+				this.lastFactsPass = { ...pass, chatId: ctx.chatId, at: Date.now() };
 			})
 		);
 	}
@@ -681,7 +690,11 @@ class MemoryStore {
 				if (!agent) return;
 				const board = (await deps.db.listFacts(ctx.chatId)) as ChatFact[];
 				const turns = this.toMemory(ctx).slice(-12);
-				await runAgentPass({ llm: deps.llm, db: deps.db, board, recentTurns: turns, signal }, ctx.chatId);
+				const pass = await runAgentPass(
+					{ llm: agentLlm, db: deps.db, board, recentTurns: turns, signal, stillActive: () => this.active },
+					ctx.chatId
+				);
+				this.lastFactsPass = { ...pass, chatId: ctx.chatId, at: Date.now() };
 			})
 		);
 	}

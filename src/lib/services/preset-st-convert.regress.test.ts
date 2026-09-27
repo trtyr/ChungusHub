@@ -65,6 +65,9 @@ describe.skipIf(present.length === 0)('real SillyTavern presets convert end to e
 			expect(converted.items.filter((item) => item.enabled).length, `${fileName}: enabled count`).toBe(enabled);
 			expect(converted.regexRules?.length ?? 0, `${fileName}: carried rule count`).toBe(rules);
 			expect(converted.controls.length, `${fileName}: auto control count`).toBe(controls);
+			const toggles = converted.controls.filter((c) => c.type === 'entryToggle').length;
+			const disabledNonEmpty = converted.items.filter((i) => !i.enabled && i.content.trim().length > 0).length;
+			expect(toggles, `${fileName}: one entry toggle per disabled non-empty item`).toBe(disabledNonEmpty);
 		}
 	});
 });

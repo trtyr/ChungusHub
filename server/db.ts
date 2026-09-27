@@ -3372,16 +3372,26 @@ class ServerDatabase {
 
 	memReapFacts(chatId: string, factIds: unknown): void {
 		if (!Array.isArray(factIds) || factIds.length === 0) return;
+		const ids = factIds.map(String);
+		// Pinned rows are the reader's own judgment: refuse loud (mem-op-pinned) instead
+		// of silently skipping, so the agent loop can report the refusal back.
+		const placeholders = ids.map(() => '?').join(',');
+	 const pinned = this.db
+			.query(`SELECT id FROM chat_facts WHERE chat_id = ? AND id IN (${placeholders}) AND pinned = 1`)
+			.get(chatId, ...ids);
+		if (pinned) throw new Error('mem-op-pinned: pinned facts resist reaping');
 		this.db.transaction(() => {
-			for (const id of factIds) {
-				// Pinned rows are the reader's own judgment: the agent (and any bulk reaper)
-				// cannot touch them, by clause rather than by pre-check.
+			for (const id of ids) {
 				this.execute('DELETE FROM chat_facts WHERE id = ? AND chat_id = ? AND pinned = 0', [id, chatId]);
 			}
 		})();
 	}
 
 	memUpdateFactContent(chatId: string, factId: string, value: string): void {
+	 const row = this.db
+			.query('SELECT pinned FROM chat_facts WHERE id = ? AND chat_id = ? AND deleted_at IS NULL')
+			.get(factId, chatId) as { pinned?: number } | null;
+		if (row?.pinned) throw new Error('mem-op-pinned: pinned facts resist edits');
 		this.execute(
 			'UPDATE chat_facts SET value = ?, revised_at = ? WHERE id = ? AND chat_id = ? AND deleted_at IS NULL AND pinned = 0',
 			[value, Date.now(), factId, chatId]

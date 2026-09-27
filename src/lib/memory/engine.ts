@@ -216,12 +216,15 @@ async function extractEpisode(
 	batch: MemoryMessage[],
 	deep: Episode[],
 	recent: Episode[],
-	signal?: AbortSignal
+	signal?: AbortSignal,
+	withFacts = true
 ): Promise<{ episode: string; facts: RawFact[] }> {
 	const messages = buildExtractionMessages(
 		// The fact appendix rides at call time (engine-owned, versioned in code), so an
 		// old frozen template override keeps producing facts: P006 dual output, R3.
-		deps.templates.extract + FACTS_APPENDIX,
+		// With the phase 2 agent owning facts the appendix is skipped: the agent
+		// replaces the fixed fact pass instead of stacking on it.
+		deps.templates.extract + (withFacts ? FACTS_APPENDIX : ''),
 		{
 			character: deps.cards?.character ?? '',
 			persona: deps.cards?.persona ?? '',
@@ -255,7 +258,8 @@ async function extractBatch(
 	deps: EngineDeps,
 	batch: MemoryMessage[],
 	coverage: Coverage,
-	signal?: AbortSignal
+	signal?: AbortSignal,
+	withFacts = true
 ): Promise<{ result: BatchResult; facts: RawFact[] }> {
 	assertTemplate(deps.templates.extract, REQUIRED_EXTRACT_MACROS, 'summarizing');
 	// The "already summarised, do not restate" context is the ACTIVE set, not the table.
@@ -264,7 +268,7 @@ async function extractBatch(
 	const deep = coverage.active.filter((e) => e.layer >= 1);
 	const recent = episodesAtLayer(coverage.active, 0).slice(-EXTRACT_CONTEXT_EPISODES);
 
-	const { episode, facts } = await extractEpisode(deps, batch, deep, recent, signal);
+	const { episode, facts } = await extractEpisode(deps, batch, deep, recent, signal, withFacts);
 	const ids = batch.map((m) => m.id);
 
 	return {
@@ -493,7 +497,7 @@ export async function processChat(
 
 		// The wording this summary is about to describe, as of the moment it was read.
 		const readAs = new Map(batch.map((m) => [m.id, m.editedAt ?? 0] as const));
-		const extracted = await extractBatch(deps, batch, coverage, opts.signal);
+		const extracted = await extractBatch(deps, batch, coverage, opts.signal, opts.factsViaAgent !== true);
 		// A branch switch may have landed while the model was answering: committing now
 		// would summarise a span the reader has left. The db-side overlap guard is the hard
 		// guarantee; this check just avoids burning it needlessly.

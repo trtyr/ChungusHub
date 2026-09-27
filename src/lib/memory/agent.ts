@@ -2,7 +2,7 @@
  * The fact-maintenance agent (P006 Phase 2). A plain-completion JSON tool loop: the model
  * answers one JSON object per turn (`{"tool": "...", "args": {...}}`), the host executes
  * it against the fact RPCs and feeds the result back, until `finish` or a budget binds.
- * No native function-calling dependency — the same doctrine as the JSON extraction.
+ * No native function-calling dependency ： the same doctrine as the JSON extraction.
  *
  * Authority stays exactly where Phase 1 put it: every write is one audited RPC with
  * server-side validation, pinned rows are refused server-side, and the whole pass is
@@ -22,19 +22,23 @@ const SYSTEM = [
 	'{"tool":"apply_facts","args":{"facts":[{"entity":"主体名","key":"受控键","value":"一句自含的话","importance":1-3}]}}',
 	'{"tool":"update_fact","args":{"factId":"要改写的事实 id","value":"改后的自含一句话"}}',
 	'{"tool":"reap_facts","args":{"ids":["要删除的事实 id"]}}',
+	'{"tool":"read_fact_board"} （重读当前事实板，返回最新行）',
+	'{"tool":"read_recent_turns"} （重读新回合原文）',
 	'{"tool":"finish"}',
 	'规则：只从新回合提取，结果与状态而非过程；变化带转移；专名数量逐字保留；同义事实合并（改写旧行）而非堆叠；完全重复的回声行删除；importance 3=主线 2=状态变化 1=琐事；没有要做的就 finish。'
 ].join('\n');
 
 export interface AgentDeps {
 	llm: LlmFn;
-	db: Pick<MemoryDb, 'applyFacts' | 'reapFacts' | 'updateFactContent'>;
-	/** The board snapshot at pass start (the host reads it; the agent sees it in the seed). */
+	db: Pick<MemoryDb, 'applyFacts' | 'reapFacts' | 'updateFactContent' | 'listFacts'>;
+	/** The board snapshot at pass start (the agent sees it in the seed; read_fact_board re-reads live). */
 	board: ChatFact[];
 	/** The recent turns the agent may extract from (already tail-trimmed by the caller). */
 	recentTurns: MemoryMessage[];
 	/** Chat-scoped abort: a chat switch or delete aborts between tool turns. */
 	signal?: AbortSignal;
+	/** Per-turn liveness: the generation that spawned this pass must still be the leaf. */
+	stillActive?: () => boolean;
 }
 
 export interface AgentRunResult {
@@ -90,6 +94,7 @@ export async function runAgentPass(deps: AgentDeps, chatId: string): Promise<Age
 	let lastParseFailed = false;
 	while (result.turns < MAX_TURNS) {
 		if (deps.signal?.aborted) break;
+		if (deps.stillActive && !deps.stillActive()) break;
 		result.turns++;
 
 		let raw: string;
@@ -112,14 +117,32 @@ export async function runAgentPass(deps: AgentDeps, chatId: string): Promise<Age
 		let feedback: string;
 		if (action.tool === 'finish') break;
 
-		if (action.tool === 'apply_facts') {
+		if (action.tool === 'read_fact_board') {
+			let live = deps.board;
+			try {
+				live = (await deps.db.listFacts(chatId)) as ChatFact[];
+			} catch {
+				/* keep the seed snapshot if the read fails */
+			}
+			feedback = `[事实板]\n${renderBoard(live)}`;
+		} else if (action.tool === 'read_recent_turns') {
+			feedback = `[新回合原文]\n${renderTurns(deps.recentTurns) || '（无）'}`;
+		} else if (action.tool === 'apply_facts') {
 			if (result.applied >= MAX_APPLY) {
 				feedback = 'apply 预算已用尽，请 finish。';
 			} else {
 				const facts = Array.isArray(action.args.facts) ? (action.args.facts as never[]) : [];
-				await deps.db.applyFacts(chatId, facts.slice(0, MAX_APPLY - result.applied) as never, recentIds(deps.recentTurns));
-				result.applied += facts.length;
-				feedback = `applied ${facts.length}.`;
+				if (facts.length === 0) {
+					feedback = 'apply_facts 的 facts 为空。';
+				} else {
+					try {
+						await deps.db.applyFacts(chatId, facts.slice(0, MAX_APPLY - result.applied) as never, recentIds(deps.recentTurns));
+						result.applied += facts.length;
+						feedback = `applied ${facts.length}.`;
+					} catch (error) {
+						feedback = `工具失败：${String(error).slice(0, 200)}`;
+					}
+				}
 			}
 		} else if (action.tool === 'update_fact') {
 			if (result.updated >= MAX_UPDATE) {
@@ -130,9 +153,13 @@ export async function runAgentPass(deps: AgentDeps, chatId: string): Promise<Age
 				if (!factId || !value.trim()) {
 					feedback = 'update_fact 需要 factId 与非空 value。';
 				} else {
-					await deps.db.updateFactContent(chatId, factId, value);
-					result.updated++;
-					feedback = 'updated.';
+					try {
+						await deps.db.updateFactContent(chatId, factId, value);
+						result.updated++;
+						feedback = 'updated.';
+					} catch (error) {
+						feedback = `工具失败：${String(error).slice(0, 200)}`;
+					}
 				}
 			}
 		} else if (action.tool === 'reap_facts') {
@@ -142,12 +169,20 @@ export async function runAgentPass(deps: AgentDeps, chatId: string): Promise<Age
 				const ids = Array.isArray(action.args.ids)
 					? (action.args.ids as unknown[]).map(String).slice(0, MAX_REAP - result.reaped)
 					: [];
-				await deps.db.reapFacts(chatId, ids);
-				result.reaped += ids.length;
-				feedback = `reaped ${ids.length}.`;
+				if (ids.length === 0) {
+					feedback = 'reap_facts 的 ids 为空。';
+				} else {
+					try {
+						await deps.db.reapFacts(chatId, ids);
+						result.reaped += ids.length;
+						feedback = `reaped ${ids.length}.`;
+					} catch (error) {
+						feedback = `工具失败：${String(error).slice(0, 200)}`;
+					}
+				}
 			}
 		} else {
-			feedback = `未知工具 "${action.tool}"。可用：apply_facts / update_fact / reap_facts / finish。`;
+			feedback = `未知工具 "${action.tool}"。可用：apply_facts / update_fact / reap_facts / read_fact_board / read_recent_turns / finish。`;
 		}
 
 		messages.push({ role: 'assistant', content: JSON.stringify(action) });

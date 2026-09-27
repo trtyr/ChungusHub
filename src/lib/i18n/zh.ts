@@ -2040,6 +2040,7 @@ export const zh: Record<string, string> = {
 	'mem.factsPin': '固定（下游截断与剪除都不会动它）',
 	'mem.factsEdit': '编辑这条事实',
 	'mem.factsDormant': '不在当前路径上的事实（{n} 条），回退到对应回合时会重新生效',
+	'mem.factsPass': '上次维护：新增 {applied} / 改写 {updated} / 清理 {reaped}',
 	'mem.factsFail': '事实操作失败：{error}',
 	'mem.agentLabel': '事实记忆 Agent',
 	'mem.agentOn': '开着时，一个后台 Agent 会自主维护事实板（合并/精炼/清理），替代固定抽取的事实部分。',
