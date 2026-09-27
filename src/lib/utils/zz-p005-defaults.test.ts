@@ -1,5 +1,5 @@
 /**
- * P005 contract: the shipped defaults are 1M context / 65535 response. Constants only —
+ * P005 contract: the shipped defaults are 1M context / 65535 response. Constants only:
  * the assemble-level "long chat is not false-trimmed" leg lives in
  * prompt-assembly.test.ts (it needs the warmed assembly imports). `bun test`.
  */

@@ -1,9 +1,9 @@
 /**
- * P003 消毒红线验证脚本（独立运行，不进 bun test 套件——happy-dom 全局绑定会挂套件）。
+ * P003 消毒红线验证脚本（独立运行，不进 bun test 套件；happy-dom 全局绑定会挂套件）。
  * 用真实 Izumi「1美化最近2层思维链（流式）」替换串（多行 <style> + 数 KB <script>）
  * 走真实管线：marked → DOMPurify(happy-dom) + registerMarkdownHooks + sanitizeConfig。
- * 运行：bun scripts/p003-sanitize-verify.ts  — 全 PASS 即红线钉住。
- * 注意：全部 app 导入必须动态——static import 会在 window 武装前求值 dompurify。
+ * 运行：bun scripts/p003-sanitize-verify.ts；全 PASS 即红线钉住。
+ * 注意：全部 app 导入必须动态；static import 会在 window 武装前求值 dompurify。
  */
 import { Window } from 'happy-dom';
 import { marked } from 'marked';
