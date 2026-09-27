@@ -16,6 +16,8 @@
 import { i18n } from '$lib/i18n/i18n.svelte';
 import { setMemoryEngineI18n } from './engine';
 import { factsStore } from './facts.svelte';
+import { runAgentPass } from './agent';
+import type { ChatFact } from './types';
 import type { Message } from '$lib/types/chat';
 import type { LLMCompletionResult, LLMMessage } from '$lib/types/llm';
 import { llmService } from '$lib/services/llm/provider';
@@ -169,6 +171,7 @@ class MemoryStore {
 	enabled = $state(false);
 	/** false = extraction only fires from the panel's Summarise. Reaping still runs. */
 	autoExtract = $state(true);
+	agentEnabled = $state(false);
 	configOverride = $state<Partial<MemoryConfig> | null>(null);
 
 	episodes = $state<Episode[]>([]);
@@ -519,6 +522,7 @@ class MemoryStore {
 		// it derives from ctx, which is already null.
 		this.enabled = false;
 		this.autoExtract = true;
+		this.agentEnabled = false;
 		this.configOverride = null;
 		this.episodes = [];
 		await this.refresh(chatId);
@@ -533,6 +537,7 @@ class MemoryStore {
 		this.loaded = false;
 		this.enabled = false;
 		this.autoExtract = true;
+		this.agentEnabled = false;
 		this.configOverride = null;
 		this.episodes = [];
 		this.status = 'idle';
@@ -545,6 +550,7 @@ class MemoryStore {
 		if (this.activeChatId !== chatId) return; // a newer chat won the race
 		this.enabled = state?.enabled ?? false;
 		this.autoExtract = state?.autoExtract ?? true;
+		this.agentEnabled = state?.agentEnabled ?? false;
 		this.configOverride = state?.config ?? null;
 		this.episodes = episodes;
 	}
@@ -641,6 +647,7 @@ class MemoryStore {
 	 *  (reaping still runs via syncForPath, so consistency never waits). */
 	maintainAfterTurn(ctx: ChatCtx): void {
 		if (!this.active || !this.autoExtract || this.busy || ctx.chatId !== this.activeChatId) return;
+		const agent = this.agentEnabled;
 		void this.run(ctx, 'processing', (deps, signal) =>
 			processChat(deps, ctx.chatId, this.toMemory(ctx), ctx.leafId, {
 				signal,
@@ -648,7 +655,13 @@ class MemoryStore {
 				maxBatches: AUTO_MAX_BATCHES,
 				maxPromotions: AUTO_MAX_PROMOTIONS,
 				latest: () => this.latestTree(ctx.chatId),
+				factsViaAgent: agent,
 				onProgress: (p) => this.handleProgress(ctx.chatId, signal, p)
+			}).then(async () => {
+				if (!agent) return;
+				const board = (await deps.db.listFacts(ctx.chatId)) as ChatFact[];
+				const turns = this.toMemory(ctx).slice(-12);
+				await runAgentPass({ llm: deps.llm, db: deps.db, board, recentTurns: turns, signal }, ctx.chatId);
 			})
 		);
 	}
@@ -656,12 +669,19 @@ class MemoryStore {
 	/** Foreground build over the whole backlog (after enabling, or the panel's Summarise). */
 	async build(ctx: ChatCtx): Promise<void> {
 		if (ctx.chatId !== this.activeChatId) return;
+		const agent = this.agentEnabled;
 		await this.run(ctx, 'building', (deps, signal) =>
 			processChat(deps, ctx.chatId, this.toMemory(ctx), ctx.leafId, {
 				signal,
 				stillActive: () => this.active,
 				latest: () => this.latestTree(ctx.chatId),
+				factsViaAgent: agent,
 				onProgress: (p) => this.handleProgress(ctx.chatId, signal, p)
+			}).then(async () => {
+				if (!agent) return;
+				const board = (await deps.db.listFacts(ctx.chatId)) as ChatFact[];
+				const turns = this.toMemory(ctx).slice(-12);
+				await runAgentPass({ llm: deps.llm, db: deps.db, board, recentTurns: turns, signal }, ctx.chatId);
 			})
 		);
 	}
@@ -859,6 +879,11 @@ class MemoryStore {
 	async setAutoExtract(chatId: string, value: boolean): Promise<void> {
 		await memoryDb.setState(chatId, { autoExtract: value });
 		if (this.activeChatId === chatId) this.autoExtract = value;
+	}
+
+	async setAgentEnabled(chatId: string, value: boolean): Promise<void> {
+		await memoryDb.setState(chatId, { agentEnabled: value });
+		if (this.activeChatId === chatId) this.agentEnabled = value;
 	}
 
 	// ===== Helpers =====

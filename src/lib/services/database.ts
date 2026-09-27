@@ -229,7 +229,7 @@ class DatabaseService {
 	memUpdateFactContent(chatId: string, factId: string, value: string): Promise<void> { return this.call('memUpdateFactContent', chatId, factId, value); }
 	memSetFactDeleted(chatId: string, factId: string): Promise<void> { return this.call('memSetFactDeleted', chatId, factId); }
 	memSetFactPinned(chatId: string, factId: string, pinned: boolean): Promise<void> { return this.call('memSetFactPinned', chatId, factId, pinned); }
-	memSetState(chatId: string, patch: Partial<Pick<MemoryState, 'enabled' | 'autoExtract' | 'config'>>): Promise<void> {
+	memSetState(chatId: string, patch: Partial<Pick<MemoryState, 'enabled' | 'autoExtract' | 'agentEnabled' | 'config'>>): Promise<void> {
 		return this.call('memSetState', chatId, patch);
 	}
 	memApplyBatch(chatId: string, result: BatchResult): Promise<void> { return this.call('memApplyBatch', chatId, result); }

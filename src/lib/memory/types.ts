@@ -63,6 +63,9 @@ export interface MemoryState {
 	/** true = extraction fires on its own after each reply; false = only via the panel's
 	 *  Process. Reaping dead episodes is never gated by this. */
 	autoExtract: boolean;
+	/** P006 Phase 2: true = fact maintenance is driven by the tool-loop agent instead of
+	 *  the fixed dual-output pass. Episodes (P0 layer) are unaffected either way. */
+	agentEnabled: boolean;
 	config: Partial<MemoryConfig> | null;
 	updatedAt: number;
 }
@@ -156,5 +159,7 @@ export interface MemoryDb {
 	listFacts(chatId: string): Promise<ChatFact[]>;
 	/** Hard-delete fact rows by id, chat-scoped. Idempotent, order-free. */
 	reapFacts(chatId: string, factIds: string[]): Promise<void>;
+	/** Panel/agent edit of one fact's prose. Pinned rows are refused server-side. */
+	updateFactContent(chatId: string, factId: string, value: string): Promise<void>;
 	reset(chatId: string): Promise<void>;
 }

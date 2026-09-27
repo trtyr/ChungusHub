@@ -25,6 +25,7 @@ export function createMemoryDb(): MemoryDb {
 			),
 		listFacts: (chatId) => db.memListFacts(chatId) as Promise<ChatFact[]>,
 		reapFacts: (chatId, factIds) => db.memReapFacts(chatId, factIds),
+		updateFactContent: (chatId, factId, value) => db.memUpdateFactContent(chatId, factId, value),
 		reset: (chatId) => db.memReset(chatId)
 	};
 }

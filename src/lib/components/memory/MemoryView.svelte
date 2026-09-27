@@ -34,6 +34,7 @@
 
 	let enabled = $derived(memoryStore.enabled);
 	let autoExtract = $derived(memoryStore.autoExtract);
+	let agentEnabled = $derived(memoryStore.agentEnabled);
 	let busy = $derived(memoryStore.busy);
 	let progress = $derived(memoryStore.progress);
 	let lastError = $derived(memoryStore.lastError);
@@ -191,6 +192,11 @@
 
 	async function toggleAutoExtract() {
 		if (chat) await memoryStore.setAutoExtract(chat.id, !autoExtract);
+	}
+
+	async function toggleAgent(): Promise<void> {
+		const chat = ctx()?.chatId ? chatStore.currentChatState?.chat : null;
+		if (chat) await memoryStore.setAgentEnabled(chat.id, !agentEnabled);
 	}
 
 	let rebuildConfirmOpen = $state(false);
@@ -375,6 +381,27 @@
 				>
 					<Toggle checked={autoExtract} onchange={toggleAutoExtract} label={i18n.t('mem.autoLabel')} />
 					<span>{i18n.t(autoExtract ? 'ap.auto' : 'ap.manual')}</span>
+				</div>
+			</section>
+
+			<section class="memory-mode">
+				<div class="memory-mode-text">
+					<span class="memory-mode-label">{i18n.t('mem.agentLabel')}</span>
+					<span class="memory-mode-help">
+						{#if agentEnabled}
+							{i18n.t('mem.agentOn')}
+						{:else}
+							{i18n.t('mem.agentOff')}
+						{/if}
+					</span>
+				</div>
+				<div
+					class="memory-toggle"
+					class:is-on={agentEnabled}
+					title={i18n.t('mem.agentTip')}
+				>
+					<Toggle checked={agentEnabled} onchange={toggleAgent} label={i18n.t('mem.agentLabel')} />
+					<span>{i18n.t(agentEnabled ? 'ap.auto' : 'ap.manual')}</span>
 				</div>
 			</section>
 

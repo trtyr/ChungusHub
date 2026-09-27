@@ -77,6 +77,9 @@ export interface TreeSnapshot {
 
 export interface ProcessOptions {
 	signal?: AbortSignal;
+	/** P006 Phase 2: true = the caller drives fact writes through the agent loop instead
+	 *  of the fixed dual-output pass. Episodes are unaffected either way. */
+	factsViaAgent?: boolean;
 	/**
 	 * Re-asked before every model call: false ends the run, as an abort would.
 	 *
@@ -529,7 +532,7 @@ export async function processChat(
 		// the call) leaves its facts unborn too, and the next pass re-extracts them from
 		// the current text. Anchored to the batch's own turns, so branch behaviour (revert,
 		// switch) is the fact core's concern, not a write-side one.
-		if (facts.length) {
+		if (facts.length && !opts.factsViaAgent) {
 			await deps.db.applyFacts(chatId, facts, batch.map((m) => m.id));
 			// The W5 pass rides the extraction cadence (the phase-1 fixed rhythm): distil
 			// exact echoes, then enforce the board's soft ceiling. Pinned facts survive

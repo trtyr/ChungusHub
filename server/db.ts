@@ -561,6 +561,15 @@ const MIGRATIONS: Migration[] = [
 		-- (the panel's judgment outranks the extractor's importance score).
 		ALTER TABLE chat_facts ADD COLUMN pinned INTEGER NOT NULL DEFAULT 0;
 		`
+	},
+	{
+		version: 47,
+		name: 'memory_agent_enabled',
+		sql: `
+		-- P006 Phase 2: per-chat opt-in for the fact-maintenance agent. Default off: with
+		-- the flag down, maintenance runs the Phase 1 fixed pipeline unchanged.
+		ALTER TABLE memory_state ADD COLUMN agent_enabled INTEGER NOT NULL DEFAULT 0;
+		`
 	}
 ];
 
@@ -3267,6 +3276,7 @@ class ServerDatabase {
 			chatId: r.chat_id,
 			enabled: r.enabled === 1,
 			autoExtract: r.auto_extract !== 0,
+			agentEnabled: r.agent_enabled === 1,
 			config: r.config_json ? JSON.parse(r.config_json as string) : null,
 			updatedAt: r.updated_at
 		};
@@ -3364,14 +3374,16 @@ class ServerDatabase {
 		if (!Array.isArray(factIds) || factIds.length === 0) return;
 		this.db.transaction(() => {
 			for (const id of factIds) {
-				this.execute('DELETE FROM chat_facts WHERE id = ? AND chat_id = ?', [id, chatId]);
+				// Pinned rows are the reader's own judgment: the agent (and any bulk reaper)
+				// cannot touch them, by clause rather than by pre-check.
+				this.execute('DELETE FROM chat_facts WHERE id = ? AND chat_id = ? AND pinned = 0', [id, chatId]);
 			}
 		})();
 	}
 
 	memUpdateFactContent(chatId: string, factId: string, value: string): void {
 		this.execute(
-			'UPDATE chat_facts SET value = ?, revised_at = ? WHERE id = ? AND chat_id = ? AND deleted_at IS NULL',
+			'UPDATE chat_facts SET value = ?, revised_at = ? WHERE id = ? AND chat_id = ? AND deleted_at IS NULL AND pinned = 0',
 			[value, Date.now(), factId, chatId]
 		);
 	}
@@ -3434,6 +3446,10 @@ class ServerDatabase {
 			// minutes stale, and worse while the other device was mid-build, since its sync
 			// reload is skipped whenever it is busy. An explicit null still clears the row.
 			values.push(patch.config ? JSON.stringify(this.mergeMemoryConfig(chatId, patch.config)) : null);
+		}
+		if (patch.agentEnabled !== undefined) {
+			updates.push('agent_enabled = ?');
+			values.push(patch.agentEnabled ? 1 : 0);
 		}
 		updates.push('updated_at = ?');
 		values.push(now);
