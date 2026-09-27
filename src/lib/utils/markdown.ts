@@ -24,24 +24,32 @@ marked.setOptions({
  * a marker written here (see the note beside that rule in app.css). The serialized shape
  * `sanitizeDecorations` produces is therefore load-bearing beyond this file.
  */
-DOMPurify.addHook('afterSanitizeAttributes', (node) => {
-	if (!(node instanceof Element)) return;
+/** The sanitize hook, factored out so tests can register it on a DOMPurify instance
+ *  bound to a synthetic window (happy-dom) without touching the app's globals. Works on
+ *  any DOM implementation: only nodeType/tagName/getAttribute are read. */
+export function registerMarkdownHooks(purify: Pick<typeof DOMPurify, 'addHook'>): void {
+	purify.addHook('afterSanitizeAttributes', (node) => {
+		if (!node || node.nodeType !== 1) return;
+		const el = node as Element;
 
-	if (node.tagName === 'STYLE') {
-		node.textContent = scopeStylesheet(node.textContent ?? '');
-		return;
-	}
+		if (el.tagName === 'STYLE') {
+			el.textContent = scopeStylesheet(el.textContent ?? '');
+			return;
+		}
 
-	const style = node.getAttribute('style');
-	if (style !== null) {
-		const safe = sanitizeDecorations(style);
-		if (safe) node.setAttribute('style', safe);
-		else node.removeAttribute('style');
-	}
+		const style = el.getAttribute('style');
+		if (style !== null) {
+			const safe = sanitizeDecorations(style);
+			if (safe) el.setAttribute('style', safe);
+			else el.removeAttribute('style');
+		}
 
-	const color = node.getAttribute('color');
-	if (color !== null && !isDecorationColor(color)) node.removeAttribute('color');
-});
+		const color = el.getAttribute('color');
+		if (color !== null && !isDecorationColor(color)) el.removeAttribute('color');
+	});
+}
+
+registerMarkdownHooks(DOMPurify);
 
 /**
  * Quote pairs to highlight as dialogue. Each entry: [open, close, displayOpen, displayClose]
@@ -107,7 +115,14 @@ function highlightQuotes(html: string): string {
 export function renderMarkdown(content: string): string {
 	const rawHtml = marked.parse(prepareModelMarkup(content), { async: false }) as string;
 	const withQuotes = highlightQuotes(rawHtml);
-	return DOMPurify.sanitize(withQuotes, {
+	return DOMPurify.sanitize(withQuotes, sanitizeConfig());
+}
+
+/** The sanitize policy, as data: which tags/attributes survive and how URIs are judged.
+ *  Exported so tests can drive a synthetic-window DOMPurify through the REAL policy
+ *  instead of a drifted copy. */
+export function sanitizeConfig() {
+	return {
 		ALLOWED_TAGS: [
 			'p',
 			'br',
@@ -167,7 +182,7 @@ export function renderMarkdown(content: string): string {
 		// a pass they have no use for.
 		ADD_URI_SAFE_ATTR: ['color'],
 		ALLOWED_URI_REGEXP: /^(?:https?|mailto):/i
-	});
+	};
 }
 
 /**

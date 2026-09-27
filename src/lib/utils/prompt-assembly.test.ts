@@ -18,6 +18,7 @@ import {
 } from './prompt-assembly';
 import { countTokens } from '$lib/tokenizer/count';
 import type { LLMMessage } from '$lib/types/llm';
+import { DEFAULT_CONTEXT_SIZE } from '$lib/types/llm';
 import {
 	createEmptyLorebook,
 	createEmptyLorebookEntry,
@@ -1208,5 +1209,51 @@ describe('P006 fact board splice (W2)', () => {
 		const b = assemblePrompt(input(preset([{ id: 'i1', name: 'n', role: 'system', content: 'sys', enabled: true }], { chatHistory: true }), { factsBlock: '' }));
 		expect(JSON.stringify(a.messages)).toBe(JSON.stringify(b.messages));
 		expect(a.messages.some((m) => m.content.includes('当前事实'))).toBe(false);
+	});
+});
+
+
+
+describe('P006 cache prefix across fact changes (auditor gap #2)', () => {
+	const preset2 = () => preset([{ id: 'i1', name: 'n', role: 'system', content: 'sys', enabled: true }], { chatHistory: true });
+	const history = Array.from({ length: 6 }, (_, i) => ({
+		id: `m${i}`,
+		parentId: i === 0 ? null : `m${i - 1}`,
+		role: i % 2 ? 'user' : 'assistant',
+		content: `回合 ${i} 的剧情内容`,
+		attachments: null,
+		thinking: null
+	}));
+	const FACTS_A = '[当前事实]\n塞拉菲娜：身体=断了左手';
+	const FACTS_B = '[当前事实]\n塞拉菲娜：身体=断了左手；持有物=铜钥匙\n世界：地点状态=暴风雨';
+
+	test('facts changing only leaves the history prefix byte-identical', () => {
+		const before = assemblePrompt(input(preset2(), { chatMessages: history as never, factsBlock: FACTS_A }));
+		const after = assemblePrompt(input(preset2(), { chatMessages: history as never, factsBlock: FACTS_B }));
+		const shared = Math.min(before.messages.length, after.messages.length);
+		for (let i = 0; i < shared; i++) {
+			const isFactsSlot = before.messages[i].content.includes('当前事实') || after.messages[i].content.includes('当前事实');
+			if (!isFactsSlot) expect(after.messages[i].content).toBe(before.messages[i].content);
+		}
+	});
+});
+
+describe('P005 long chat under the 1M budget is not false-trimmed', () => {
+	test('every turn survives assembly at the new default budget', () => {
+		const turns = 60;
+		const chatMessages = Array.from({ length: turns }, (_, i) => ({
+			id: `m${i}`,
+			parentId: i === 0 ? null : `m${i - 1}`,
+			role: i % 2 ? 'user' : 'assistant',
+			content: `第 ${i} 回合的剧情。`.repeat(20),
+			attachments: null,
+			thinking: null
+		}));
+		const a = assemblePrompt(input(preset([{ id: 'i1', name: 'n', role: 'system', content: '{{chatHistory}}', enabled: true }]), {
+			chatMessages: chatMessages as never,
+			contextBudget: DEFAULT_CONTEXT_SIZE
+		}));
+		const injected = a.messages.filter((m) => m.content.includes('回合的剧情')).length;
+		expect(injected).toBe(turns);
 	});
 });
