@@ -77,8 +77,7 @@
 	// is a running session with unsaved composer drafts, and navigating it away to
 	// read a repo page is never what the click meant.
 	const socials = [
-		{ key: 'github', label: 'GitHub', href: LINKS.repo },
-		{ key: 'discord', label: 'Discord', href: LINKS.discord }
+		{ key: 'github', label: 'GitHub', href: LINKS.repo }
 	] as const;
 </script>
 

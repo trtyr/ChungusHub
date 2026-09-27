@@ -160,15 +160,6 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		}
 	}
 
-	async function copyHandle(): Promise<void> {
-		try {
-			await copyText(LINKS.discordHandle);
-			toastStore.success(i18n.t('t.copiedDiscord'));
-		} catch (error) {
-			toastStore.failed(i18n.t('f.copyHandle'), error);
-		}
-	}
-
 	async function copyEnvironment(): Promise<void> {
 		try {
 			await copyText(environment);
@@ -307,12 +298,6 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 			<span class="card-title">{i18n.t('ab.helpCommunity')}</span>
 		</div>
 		<nav class="rows" aria-label={i18n.t('ab.helpAria')}>
-			<a class="row" href={LINKS.docs} target="_blank" rel="noopener noreferrer">
-				<Icon name="bookOpen" class="w-4 h-4 row-icon" strokeWidth={1.75} />
-				<span class="row-label">{i18n.t('ab.docs')}</span>
-				<Icon name="externalLink" class="w-3.5 h-3.5 row-out" strokeWidth={1.75} />
-			</a>
-
 			<!-- Gone on touch, where the sheet lists keys that device doesn't have and its only
 			     other trigger (Ctrl+/) is unreachable: the row would open a dead end. Hidden, not
 			     shown inert, the same rule the Chat controls follow. -->
@@ -323,12 +308,6 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 					<span class="row-value">{MOD_KEY} /</span>
 				</button>
 			{/if}
-
-			<a class="row" href={LINKS.discord} target="_blank" rel="noopener noreferrer">
-				<BrandGlyph name="discord" class="w-4 h-4 row-icon" />
-				<span class="row-label">Discord</span>
-				<Icon name="externalLink" class="w-3.5 h-3.5 row-out" strokeWidth={1.75} />
-			</a>
 
 			<a class="row" href={LINKS.repo} target="_blank" rel="noopener noreferrer">
 				<BrandGlyph name="github" class="w-4 h-4 row-icon" />
@@ -355,22 +334,6 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 	<!-- The one block on the page written by a person rather than by the app, which is what a
 	     reader with no GitHub account is left with once the links above run out. It stays one
 	     card: the author's voice belongs here and nowhere else in the interface. -->
-	<section class="card">
-		<div class="card-head">
-			<span class="card-title">{i18n.t('ab.reachMe')}</span>
-		</div>
-		<div class="reach">
-			<p class="personal">
-				{i18n.t('ab.t31')}
-				{i18n.t('ab.discordLine')}
-			</p>
-			<button type="button" class="handle" onclick={copyHandle} title={i18n.t('ab.copyHandle')}>
-				<BrandGlyph name="discord" class="w-3.5 h-3.5 handle-glyph" />
-				<code>{LINKS.discordHandle}</code>
-				<Icon name="copy" class="w-3 h-3" strokeWidth={1.75} />
-			</button>
-		</div>
-	</section>
 
 	<section class="card">
 		<div class="card-head">
@@ -688,56 +651,6 @@ import { i18n } from '$lib/i18n/i18n.svelte';
 		flex-shrink: 0;
 		color: var(--color-text-muted);
 		opacity: 0.65;
-	}
-
-	/* ===== Reach me ===== */
-
-	.reach {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 0.7rem;
-	}
-
-	/* A shade warmer than the notes around it: this one is somebody talking, not the app
-	   stating a fact, and the muted tone every other caption wears would bury it. */
-	.personal {
-		margin: 0;
-		font-family: var(--font-ui);
-		font-size: 0.78rem;
-		line-height: 1.6;
-		color: var(--color-text-secondary);
-	}
-
-	.handle {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.45rem;
-		padding: 0.32rem 0.65rem;
-		border-radius: var(--radius-full);
-		border: 1px solid var(--theme-border-raised);
-		background: var(--theme-input-bg);
-		color: var(--color-text-secondary);
-		cursor: pointer;
-		transition: color 120ms ease, border-color 120ms ease;
-	}
-
-	.handle:hover {
-		color: var(--color-text-primary);
-		border-color: color-mix(in srgb, var(--color-accent) 45%, var(--theme-border-raised));
-	}
-
-	.handle code {
-		font-size: 0.75rem;
-	}
-
-	.handle :global(.handle-glyph) {
-		flex-shrink: 0;
-		color: var(--color-text-muted);
-	}
-
-	.handle:hover :global(.handle-glyph) {
-		color: var(--color-accent);
 	}
 
 	/* ===== This install ===== */
