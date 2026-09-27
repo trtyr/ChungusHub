@@ -79,7 +79,9 @@ describe('preset JSON interchange', () => {
 		// The one wrong file people bring here on purpose now takes the converter path:
 		// an empty ST pool still yields a (hollow) imported preset, not a parse error.
 		const converted = await parsePresetJson(JSON.stringify({ name: 'ST', prompts: [], prompt_order: [] }));
-		expect(converted.items).toEqual([]);
+		// P008: even a hollow pool gets the auto-appended memory item (the only {{memory}} carrier).
+		expect(converted.items.length).toBe(1);
+		expect(converted.items[0].content).toBe('{{memory}}');
 		await expect(parsePresetJson(JSON.stringify({ name: 'Junk' }))).rejects.toThrow('not a ChungusHub preset');
 	});
 });

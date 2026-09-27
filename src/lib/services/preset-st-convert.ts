@@ -413,6 +413,27 @@ export async function convertSillyTavernPreset(
 		}
 	}
 
+	// P008: ST presets never carry the {{memory}} slot macro, so the memory engine's
+	// recall block has nowhere to inject (the third gate fails) and the reader pays
+	// for extractions that reach nothing. Append one enabled system item before the
+	// chat history marker; presets already carrying the macro are untouched.
+	if (!items.some((i) => /\{\{\s*memory\s*\}\}/i.test(i.content))) {
+		const memoryItem = {
+			id: crypto.randomUUID(),
+			name: '记忆',
+			role: 'system' as const,
+			content: '{{memory}}',
+			enabled: true
+		};
+		const historyIdx = items.findIndex((i) => i.content.trim().toLowerCase() === '{{chathistory}}');
+		if (historyIdx >= 0) {
+			items.splice(historyIdx, 0, memoryItem);
+		} else {
+			items.push(memoryItem);
+		}
+		notes.push('已自动补「记忆」条目（原预设没有 {{memory}}，ChungusHub 记忆靠它注入）；不需要可在 Prompt Builder 删除。');
+	}
+
 	// P002 phase 2: every imported-disabled item with content becomes an entry toggle, the
 	// same "checklist" affordance ST's own prompt manager gives the reader. Collapsed by
 	// default so 100+ toggles stay out of the way until wanted.

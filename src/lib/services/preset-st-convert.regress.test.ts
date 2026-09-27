@@ -26,7 +26,7 @@ describe.skipIf(present.length === 0)('real SillyTavern presets convert end to e
 			const converted = await convertSillyTavernPreset(raw, name);
 
 			const pool = (raw.prompts as unknown[]).length;
-			expect(converted.items.length, `${name}: one item per prompt`).toBe(pool);
+			expect(converted.items.length, `${name}: one item per prompt plus the P008 memory item`).toBe(pool + 1);
 			expect(converted.items.some((item) => item.enabled), `${name}: the checklist's enabled flags carry`).toBe(true);
 			expect(converted.items.some((item) => !item.enabled) || pool === converted.items.filter((i) => i.enabled).length,
 				`${name}: unlisted or switched-off prompts import disabled`).toBe(true);
@@ -52,9 +52,9 @@ describe.skipIf(present.length === 0)('real SillyTavern presets convert end to e
 			// [file, items, enabled, carried rules, auto-generated controls]
 			// P002 re-recording 2026-09-27: enabled dropped by the pure-switch items the
 			// auto-control pass now disables (their only content was grouped setvar writes).
-			['Izumi 0923.json', 228, 45, 30, 185],
-			['[主预设] V19.5 狐神抚 · 毓忻.json', 220, 49, 38, 80],
-			['夏瑾 天琴座 V2 Beta 1.0.json', 144, 30, 11, 109]
+			['Izumi 0923.json', 229, 46, 30, 185],
+			['[主预设] V19.5 狐神抚 · 毓忻.json', 221, 50, 38, 80],
+			['夏瑾 天琴座 V2 Beta 1.0.json', 145, 31, 11, 109]
 		];
 		for (const [fileName, items, enabled, rules, controls] of baselines) {
 			const path = REAL_PRESETS.find((candidate) => candidate.endsWith(fileName));
@@ -68,6 +68,8 @@ describe.skipIf(present.length === 0)('real SillyTavern presets convert end to e
 			const toggles = converted.controls.filter((c) => c.type === 'entryToggle').length;
 			const disabledNonEmpty = converted.items.filter((i) => !i.enabled && i.content.trim().length > 0).length;
 			expect(toggles, `${fileName}: one entry toggle per disabled non-empty item`).toBe(disabledNonEmpty);
+			const memCount = converted.items.filter((i) => /\{\{\s*memory\s*\}\}/i.test(i.content)).length;
+			expect(memCount, `${fileName}: exactly one memory item after conversion`).toBe(1);
 		}
 	});
 });

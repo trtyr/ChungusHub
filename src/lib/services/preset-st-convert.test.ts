@@ -118,6 +118,7 @@ describe('convertSillyTavernPreset', () => {
 			'文风指令',
 			'World Info (after)',
 			'绝对注入',
+			'记忆',
 			'Chat History',
 			'没进清单的条目'
 		]);
@@ -174,5 +175,70 @@ describe('convertSillyTavernPreset', () => {
 	test('parsePresetJson routes a SillyTavern document to the converter', async () => {
 		const parsed = await parsePresetJson(JSON.stringify(stPreset));
 		expect(parsed.items.length).toBe(converted.items.length);
+	});
+});
+
+describe('P008 memory item auto-append', () => {
+	const baseDoc = (prompts: unknown[], order: unknown[]) => ({
+		name: 'T',
+		prompts,
+		prompt_order: [{ character_id: 100001, order }]
+	});
+
+	test('appends one enabled memory item before chatHistory, with a note', async () => {
+		const out = await convertSillyTavernPreset(
+			baseDoc(
+				[
+					{ identifier: 'worldInfoBefore', name: 'World Info', marker: true, content: '' },
+					{ identifier: 'chatHistory', name: 'Chat History', marker: true, content: '' }
+				],
+				[
+					{ identifier: 'worldInfoBefore', enabled: true },
+					{ identifier: 'chatHistory', enabled: true }
+				]
+			),
+			't.json'
+		);
+		const mem = out.items.filter((i) => /\{\{\s*memory\s*\}\}/i.test(i.content));
+		expect(mem.length).toBe(1);
+		expect(mem[0].enabled).toBe(true);
+		expect(mem[0].role).toBe('system');
+		const histIdx = out.items.findIndex((i) => i.content.trim().toLowerCase() === '{{chathistory}}');
+		const memIdx = out.items.indexOf(mem[0]);
+		expect(memIdx).toBe(histIdx - 1);
+		expect((out.conversionNotes ?? []).some((n) => n.includes('记忆'))).toBe(true);
+	});
+
+	test('a preset already carrying {{memory}} is untouched', async () => {
+		const out = await convertSillyTavernPreset(
+			baseDoc(
+				[
+					{ identifier: 'memo', name: 'Memo', role: 'system', content: '前言 {{memory}}' },
+					{ identifier: 'chatHistory', name: 'Chat History', marker: true, content: '' }
+				],
+				[
+					{ identifier: 'memo', enabled: true },
+					{ identifier: 'chatHistory', enabled: true }
+				]
+			),
+			't2.json'
+		);
+		const mem = out.items.filter((i) => /\{\{\s*memory\s*\}\}/i.test(i.content));
+		expect(mem.length).toBe(1);
+		expect(mem[0].name).toBe('Memo');
+		expect((out.conversionNotes ?? []).some((n) => n.includes('自动补'))).toBe(false);
+	});
+
+	test('without a chatHistory marker the memory item goes to the end', async () => {
+		const out = await convertSillyTavernPreset(
+			baseDoc(
+				[{ identifier: 'worldInfoBefore', name: 'World Info', marker: true, content: '' }],
+				[{ identifier: 'worldInfoBefore', enabled: true }]
+			),
+			't3.json'
+		);
+		const mem = out.items.filter((i) => i.content === '{{memory}}');
+		expect(mem.length).toBe(1);
+		expect(out.items.indexOf(mem[0])).toBe(out.items.length - 1);
 	});
 });
