@@ -76,6 +76,18 @@ bun run check   # svelte-check
 bun run build   # 生产构建
 ```
 
+## Docker
+
+```sh
+docker compose up -d --build
+```
+
+打开 <http://localhost:4242>。数据在 `./user-data/` 卷里，容器重建不丢。
+
+- 容器内首启会自动种 `user-data/security.json`（网络访问开、白名单关）；已有配置原样保留，密码等加固可在 UI 里继续做
+- 本机同时跑着源码实例的话先停掉（数据目录锁只允许一个实例）
+- 只想手跑：`docker run -p 4242:4242 -v ./user-data:/app/user-data chungushub:local`
+
 ## License
 
 [AGPL-3.0](LICENSE)。本 fork 沿用上游许可证。

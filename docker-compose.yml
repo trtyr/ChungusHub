@@ -1,0 +1,10 @@
+services:
+  chungushub:
+    build: .
+    image: chungushub:local
+    container_name: chungushub
+    ports:
+      - "4242:4242"
+    volumes:
+      - ./user-data:/app/user-data
+    restart: unless-stopped
