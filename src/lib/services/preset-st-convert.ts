@@ -158,6 +158,27 @@ export function looksLikeSillyTavernPreset(raw: Record<string, unknown>): boolea
  *  flow-supplied. Mirrors the guard PromptBuilderView applies to hand-authored controls. */
 const RESERVED_MACROS = new Set<string>(MACROS.map((m) => m.name));
 
+/** P002 phase 2: the collapsed group every entry toggle lands in. */
+const ENTRY_GROUP_ID = 'entry-toggles';
+
+/** P002 phase 2: one entry toggle per imported-disabled item that carries content. This
+ *  is ST's own checklist affordance: anything the author shipped switched off, the
+ *  reader can switch on. Empty-content rows (stripped pure-switch writers, marker
+ *  placeholders) have nothing to offer when enabled, so they get no toggle. */
+function entryTogglesFor(items: PromptItem[]): PromptControl[] {
+	return items
+		.filter((item) => !item.enabled && item.content.trim().length > 0)
+		.map((item) => ({
+			id: crypto.randomUUID(),
+			macro: `entry:${item.id}`,
+			label: item.name || '未命名条目',
+			type: 'entryToggle' as const,
+			itemId: item.id,
+			defaultOn: false,
+			group: ENTRY_GROUP_ID
+		}));
+}
+
 const VAR_ARG = '(?:[^{}]|\\{\\{[^{}]*\\}\\})*';
 const SETVAR_RE_SRC = `\\{\\{setvar::([^:{}]+)::(${VAR_ARG})\\}\\}`;
 const GETVAR_RE_SRC = '\\{\\{getvar::([^:{}]+)\\}\\}';
@@ -391,6 +412,14 @@ export async function convertSillyTavernPreset(
 			notes.push(`另有 ${auto.skipped} 个变量保持为运行时变量（单值、值含宏或从未被读取，不成开关）。`);
 		}
 	}
+
+	// P002 phase 2: every imported-disabled item with content becomes an entry toggle, the
+	// same "checklist" affordance ST's own prompt manager gives the reader. Collapsed by
+	// default so 100+ toggles stay out of the way until wanted.
+	const entry = entryTogglesFor(items);
+	if (entry.length > 0) {
+		notes.push(`已为 ${entry.length} 个停用条目生成条目开关（面板「条目开关」分组，默认收起）。`);
+	}
 	notes.push(...noteFor(counts));
 
 	const samplerNotes = SAMPLER_KEYS.filter((key) => raw[key] !== undefined && raw[key] !== null).map(
@@ -426,7 +455,8 @@ export async function convertSillyTavernPreset(
 	return {
 		name: (fileName ?? '').replace(/\.json$/i, '') || 'Imported preset',
 		items,
-		controls: auto.controls,
+		controls: [...auto.controls, ...entry],
+		sections: entry.length > 0 ? [{ id: ENTRY_GROUP_ID, title: '条目开关', collapsed: true }] : undefined,
 		regexRules: normalizeCarriedRules(
 			extensions && typeof extensions === 'object' && !Array.isArray(extensions)
 				? (extensions as Record<string, unknown>).regex_scripts

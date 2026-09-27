@@ -1257,3 +1257,35 @@ describe('P005 long chat under the 1M budget is not false-trimmed', () => {
 		expect(injected).toBe(turns);
 	});
 });
+
+describe('P002 entryToggle overrides item enabled (phase 2)', () => {
+	test('a bound disabled item turns ON when the toggle value is true', () => {
+		const item = { id: 'opt1', name: '可选美化', role: 'system', content: 'beautify text', enabled: false };
+		const toggle = { id: 't1', macro: 'entry:opt1', label: 'x', type: 'entryToggle', itemId: 'opt1', defaultOn: false };
+		const a = assemblePrompt(input(preset([item], { chatHistory: true }), {
+			controls: [toggle] as never,
+			customFields: { 'entry:opt1': true }
+		}));
+		expect(a.messages.some((m) => m.content.includes('beautify text'))).toBe(true);
+	});
+
+	test('an enabled item turns OFF when the toggle value is false', () => {
+		const item = { id: 'opt2', name: '默认开', role: 'system', content: 'always-on text', enabled: true };
+		const toggle = { id: 't2', macro: 'entry:opt2', label: 'x', type: 'entryToggle', itemId: 'opt2', defaultOn: true };
+		const a = assemblePrompt(input(preset([item], { chatHistory: true }), {
+			controls: [toggle] as never,
+			customFields: { 'entry:opt2': false }
+		}));
+		expect(a.messages.some((m) => m.content.includes('always-on text'))).toBe(false);
+	});
+
+	test('absent value falls back to defaultOn, and entry toggles inject no text', () => {
+		const item = { id: 'opt3', name: '默认开条目', role: 'system', content: 'default-on text', enabled: false };
+		const toggle = { id: 't3', macro: 'entry:opt3', label: 'x', type: 'entryToggle', itemId: 'opt3', defaultOn: true };
+		const a = assemblePrompt(input(preset([item], { chatHistory: true }), {
+			controls: [toggle] as never,
+			customFields: {}
+		}));
+		expect(a.messages.some((m) => m.content.includes('default-on text'))).toBe(true);
+	});
+});

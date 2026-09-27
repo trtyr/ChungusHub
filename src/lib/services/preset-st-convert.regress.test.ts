@@ -52,9 +52,9 @@ describe.skipIf(present.length === 0)('real SillyTavern presets convert end to e
 			// [file, items, enabled, carried rules, auto-generated controls]
 			// P002 re-recording 2026-09-27: enabled dropped by the pure-switch items the
 			// auto-control pass now disables (their only content was grouped setvar writes).
-			['Izumi 0923.json', 228, 45, 30, 68],
-			['[主预设] V19.5 狐神抚 · 毓忻.json', 220, 49, 38, 43],
-			['夏瑾 天琴座 V2 Beta 1.0.json', 144, 30, 11, 1]
+			['Izumi 0923.json', 228, 45, 30, 185],
+			['[主预设] V19.5 狐神抚 · 毓忻.json', 220, 49, 38, 80],
+			['夏瑾 天琴座 V2 Beta 1.0.json', 144, 30, 11, 109]
 		];
 		for (const [fileName, items, enabled, rules, controls] of baselines) {
 			const path = REAL_PRESETS.find((candidate) => candidate.endsWith(fileName));

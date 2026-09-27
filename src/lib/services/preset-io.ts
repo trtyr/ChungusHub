@@ -35,6 +35,7 @@ const CONTROL_TYPES = new Set<PromptControlType>([
 	'text',
 	'textarea',
 	'toggle',
+	'entryToggle',
 	'slider',
 	'range',
 	'select',

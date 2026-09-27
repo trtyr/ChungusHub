@@ -84,6 +84,7 @@ export type PromptControlType =
 	| 'text'
 	| 'textarea'
 	| 'toggle'
+	| 'entryToggle'
 	| 'slider'
 	| 'range'
 	| 'select'
@@ -123,6 +124,9 @@ export interface PromptControl {
 	 *  what lets a preset that never declares sections keep working untouched. */
 	group?: string;
 	type: PromptControlType;
+	/** entryToggle only: the item id this control switches on/off. The bound macro is
+	 *  synthesized as `entry:<itemId>` so the value rides the ordinary control bucket. */
+	itemId?: string;
 	// text / textarea
 	defaultText?: string;
 	placeholder?: string;

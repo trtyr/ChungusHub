@@ -32,6 +32,7 @@ export function getControlDefaultValue(control: PromptControl): ControlValue {
 		case 'textarea':
 			return control.defaultText ?? '';
 		case 'toggle':
+		case 'entryToggle':
 			return control.defaultOn ?? false;
 		case 'slider':
 			return control.defaultNumber ?? control.min ?? 0;
@@ -57,6 +58,7 @@ export function getControlValue(control: PromptControl, raw: unknown): ControlVa
 		case 'textarea':
 			return typeof raw === 'string' ? raw : String(raw);
 		case 'toggle':
+		case 'entryToggle':
 			return typeof raw === 'boolean' ? raw : Boolean(raw);
 		case 'slider':
 			return typeof raw === 'number' ? raw : Number(raw) || getControlDefaultValue(control);
@@ -130,5 +132,10 @@ export function formatControlForPrompt(control: PromptControl, raw: unknown): st
 				.filter((text) => text.length > 0)
 				.join(separator);
 		}
+
+		// An entry toggle injects NOTHING into the prompt: its effect is flipping the bound
+		// item's enabled flag at assembly time (withEntryToggles), never adding text.
+		case 'entryToggle':
+			return '';
 	}
 }

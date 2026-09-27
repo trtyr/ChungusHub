@@ -508,6 +508,33 @@ function continuationTail(input: AssembleInput, ctx: MacroContext): { messages: 
 	return { messages, tokens: messages.reduce((sum, m) => sum + countTokens(m.content, input.model), 0) };
 }
 
+/** P002 phase 2: an entryToggle control overrides its bound item's enabled flag. The
+ *  stored boolean (customFields under the control's synthesized `entry:<itemId>` macro)
+ *  WINS over the item's own flag; absent value falls back to defaultOn. Applied ONCE at
+ *  the top of assembly so resolveEnabled, the example check, and every trim re-resolution
+ *  see the same effective flags, so the meter and the send can never disagree. */
+function withEntryToggles(
+	preset: PromptPreset | null,
+	controls: PromptControl[] | undefined,
+	customFields: Record<string, unknown>
+): PromptPreset | null {
+	if (!preset) return preset;
+	const toggles = (controls ?? []).filter((c) => c.type === 'entryToggle' && c.itemId);
+	if (toggles.length === 0) return preset;
+	const byItem = new Map(toggles.map((c) => [c.itemId as string, c]));
+	let changed = false;
+	const items = preset.items.map((item) => {
+		const control = byItem.get(item.id);
+		if (!control) return item;
+		const raw = customFields[control.macro];
+		const on = typeof raw === 'boolean' ? raw : (control.defaultOn ?? false);
+		if (on === item.enabled) return item;
+		changed = true;
+		return { ...item, enabled: on };
+	});
+	return changed ? { ...preset, items } : preset;
+}
+
 /**
  * Pure assembly: resolved inputs → final messages + aggregate token breakdown.
  * No db, no async. The live meters can therefore call it on every reactive change.
@@ -515,7 +542,7 @@ function continuationTail(input: AssembleInput, ctx: MacroContext): { messages: 
 export function assemblePrompt(input: AssembleInput): PromptAssembly {
 	const mode = input.postProcessing?.mode ?? 'merge';
 	const placeholder = input.postProcessing?.placeholder;
-	const { preset } = input;
+	const preset = withEntryToggles(input.preset, input.controls, input.customFields);
 	if (!preset || preset.items.length === 0) {
 		// The tail and steering must survive even without a preset: a continue/steering
 		// against the bare fallback prompt still has to carry what it carries.

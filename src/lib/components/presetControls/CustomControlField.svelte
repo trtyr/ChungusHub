@@ -130,7 +130,7 @@
 
 <div class="pcf-card" class:is-modified={modified}>
 	<!-- Toggles act right in the header row: no lonely switch floating in a card body. -->
-	<div class="pcf-head" class:pcf-head--inline={control.type === 'toggle'}>
+	<div class="pcf-head" class:pcf-head--inline={control.type === 'toggle' || control.type === 'entryToggle'}>
 		<div class="pcf-head-text">
 			<span class="pcf-label-row">
 				<span class="pcf-label">{control.label || i18n.t('clv.untitled')}</span>
@@ -160,7 +160,7 @@
 				<p class="pcf-help">{help}</p>
 			{/if}
 		</div>
-		{#if control.type === 'toggle'}
+		{#if control.type === 'toggle' || control.type === 'entryToggle'}
 			<Toggle checked={value as boolean} onchange={onChange} label={control.label || i18n.t('clv.untitled')} />
 		{/if}
 	</div>
