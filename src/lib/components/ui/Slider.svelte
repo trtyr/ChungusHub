@@ -10,6 +10,14 @@
 		format?: (value: number) => string;
 		/** Double-clicking the track snaps back to this value. */
 		defaultValue?: number;
+		/**
+		 * Where the value actually is right now, when something other than the reader is moving
+		 * it. Drawn as a thin mark travelling along the track while the thumb holds `value`, and
+		 * never as a second reading of the FILL: a fill that disagrees with its own thumb reads
+		 * as a control that is broken rather than as a value that is moving. Omit unless
+		 * something really is moving it.
+		 */
+		meter?: number;
 		disabled?: boolean;
 		label?: string;
 	}
@@ -22,6 +30,7 @@
 		oninput,
 		format = (v) => String(v),
 		defaultValue,
+		meter,
 		disabled = false,
 		label
 	}: Props = $props();
@@ -101,28 +110,41 @@
 		oninput?.(defaultValue);
 	}
 
-	let fill = $derived(max > min ? (value - min) / (max - min) : 0);
+	let shown = $derived(Math.min(max, Math.max(min, value)));
+	let fill = $derived(max > min ? (shown - min) / (max - min) : 0);
+	let meterFill = $derived(
+		meter === undefined || max <= min
+			? 0
+			: Math.min(1, Math.max(0, (Math.min(max, Math.max(min, meter)) - min) / (max - min)))
+	);
 </script>
 
 <div class="slider" class:disabled>
-	<input
-		type="range"
-		{min}
-		{max}
-		{step}
-		{value}
-		{disabled}
-		aria-label={label}
-		title={defaultValue !== undefined ? i18n.t('ui.dblReset') : undefined}
-		style="--fill: {fill}"
-		oninput={handleInput}
-		onchange={handleChange}
-		onpointerdown={handlePointerDown}
-		onpointermove={handlePointerMove}
-		onpointerup={endDrag}
-		onpointercancel={endDrag}
-		ondblclick={handleDblClick}
-	/>
+	<div class="slider-body">
+		<input
+			type="range"
+			{min}
+			{max}
+			{step}
+			{value}
+			{disabled}
+			aria-label={label}
+			title={defaultValue !== undefined ? i18n.t('ui.dblReset') : undefined}
+			style="--fill: {fill}"
+			oninput={handleInput}
+			onchange={handleChange}
+			onpointerdown={handlePointerDown}
+			onpointermove={handlePointerMove}
+			onpointerup={endDrag}
+			onpointercancel={endDrag}
+			ondblclick={handleDblClick}
+		/>
+		{#if meter !== undefined}
+			<!-- A readout, not a control: the screen reader already has the value off the input,
+			     and a second announcement of the same level moving on its own is noise. -->
+			<span class="live-mark" style="--meter: {meterFill}" aria-hidden="true"></span>
+		{/if}
+	</div>
 	<span class="readout">{format(value)}</span>
 </div>
 
@@ -139,9 +161,62 @@
 		opacity: 0.45;
 	}
 
-	input[type='range'] {
+	/* The bar is 0.35rem of paint; the element around it is the grab. Sized to the box alone it
+	   is a 5px tall target, which on a phone sits between rows many times its size and is the
+	   one control on a settings page a thumb cannot reliably catch. The track is drawn by the
+	   pseudo-elements instead, so the element can be tall enough to hit while the bar stays the
+	   width of a hairline. */
+	.slider-body {
+		position: relative;
 		flex: 1;
 		min-width: 0;
+		display: flex;
+		flex-direction: column;
+	}
+
+	input[type='range'] {
+		width: 100%;
+		min-width: 0;
+		height: 1.5rem;
+		background: none;
+		appearance: none;
+		-webkit-appearance: none;
+		cursor: pointer;
+	}
+
+	/* What the value is actually doing, drawn ON the track it belongs to. It takes no pointer
+	   events, so the round thumb beside it stays the only thing that can be moved and the two
+	   read as what was set and what is happening rather than as two controls. It is placed on
+	   the thumb's own travel (between its half-widths, not edge to edge), or a mark a few
+	   pixels off the value it reports reads as a rendering fault. */
+	.live-mark {
+		position: absolute;
+		top: 50%;
+		left: calc(var(--meter, 0) * (100% - 0.95rem) + 0.475rem);
+		width: 2px;
+		height: 0.85rem;
+		margin-left: -1px;
+		transform: translateY(-50%);
+		border-radius: var(--radius-full);
+		background: color-mix(in srgb, var(--color-text-primary) 75%, transparent);
+		pointer-events: none;
+		transition: left 180ms linear;
+	}
+
+	/* Sampled many times a second, so with transitions cut this jumps rather than travels,
+	   which is the opposite of what asking for less motion wanted. The level is still audible;
+	   only the picture of it goes. */
+	:global([data-motion='reduced']) .live-mark {
+		display: none;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.live-mark {
+			display: none;
+		}
+	}
+
+	input[type='range']::-webkit-slider-runnable-track {
 		height: 0.35rem;
 		border-radius: var(--radius-full);
 		background: linear-gradient(
@@ -149,9 +224,16 @@
 			var(--color-accent) calc((var(--fill, 0)) * 100%),
 			var(--color-bg-tertiary) calc((var(--fill, 0)) * 100%)
 		);
-		appearance: none;
-		-webkit-appearance: none;
-		cursor: pointer;
+	}
+
+	input[type='range']::-moz-range-track {
+		height: 0.35rem;
+		border-radius: var(--radius-full);
+		background: linear-gradient(
+			to right,
+			var(--color-accent) calc((var(--fill, 0)) * 100%),
+			var(--color-bg-tertiary) calc((var(--fill, 0)) * 100%)
+		);
 	}
 
 	input[type='range']::-webkit-slider-thumb {
@@ -159,6 +241,9 @@
 		appearance: none;
 		width: 0.95rem;
 		height: 0.95rem;
+		/* WebKit hangs the thumb off the track's top edge, so half the difference between the
+		   two brings it back onto the bar's centre line. */
+		margin-top: -0.3rem;
 		border-radius: var(--radius-full);
 		background: var(--color-accent);
 		border: 2px solid var(--color-bg-primary);

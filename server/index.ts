@@ -8,7 +8,7 @@ import { existsSync, statSync } from 'node:fs';
 import { hostname } from 'node:os';
 import { join, normalize } from 'node:path';
 import type { ServerWebSocket } from 'bun';
-import { ALLOWED_HOSTNAMES, CLIENT_DIR, CONFIG_ISSUES, CONFIG_NOTICES, CONFIG_OVERRIDES, CONFIG_PATH, DATA_DIR, DEFAULT_BACKGROUNDS_DIR, HOST, IS_COMPILED, OPEN_BROWSER, PORT, SECURITY_PATH, ensureConfigFile, ensureDirs, type ImageCategory } from './config';
+import { ALLOWED_HOSTNAMES, CLIENT_DIR, CONFIG_ISSUES, CONFIG_NOTICES, CONFIG_OVERRIDES, CONFIG_PATH, DATA_DIR, DEFAULT_BACKGROUNDS_DIR, DEFAULT_SOUNDS_DIR, HOST, IS_COMPILED, OPEN_BROWSER, PORT, SECURITY_PATH, ensureConfigFile, ensureDirs, type ImageCategory } from './config';
 import { claimDataDir, type RunningInstance } from './instance-lock';
 import {
 	allowIp,
@@ -408,17 +408,23 @@ function requestedFilePath(pathname: string, prefix: string): string {
 }
 
 /**
- * How a picture is handed back. This is the one route that serves bytes somebody uploaded,
- * from the origin that holds the session cookie, so each header answers a different way of
- * turning one of those files into a page on it: `nosniff` stops the browser from looking
- * inside a `.png` and deciding it is a document, the CSP leaves anything that still manages
- * to be one with no origin, no script and nothing to reach, and CORP keeps another site from
- * reading these at all. The type itself is whitelisted upstream (`imageContentType`).
+ * How a stored file is handed back. `/files/` is the one route that serves bytes somebody
+ * uploaded, from the origin that holds the session cookie, so each header answers a different
+ * way of turning one of those files into a page on it: `nosniff` stops the browser from
+ * looking inside a `.png` and deciding it is a document, the CSP leaves anything that still
+ * manages to be one with no origin, no script and nothing to reach, and CORP keeps another
+ * site from reading these at all. The type is never guessed from the bytes: a picture's is
+ * whitelisted by `imageContentType` and a bundled recording's is fixed by its route.
  */
-function imageHeaders(type: string): Record<string, string> {
+/**
+ * `no-cache` is the default because what `/files/` mostly serves is the reader's own library,
+ * where a picture can be replaced under a name it already had and a stale copy is then the
+ * wrong picture. A caller passes something longer only for a file that ships with the build.
+ */
+function servedFileHeaders(type: string, cache = 'no-cache'): Record<string, string> {
 	return {
 		'content-type': type,
-		'cache-control': 'no-cache',
+		'cache-control': cache,
 		'x-content-type-options': 'nosniff',
 		'content-security-policy': "default-src 'none'; sandbox",
 		'cross-origin-resource-policy': 'same-origin'
@@ -431,7 +437,37 @@ function serveDefaultBackground(pathname: string): Response {
 	const filePath = join(DEFAULT_BACKGROUNDS_DIR, rel);
 	const type = imageContentType(filePath);
 	if (type && existsSync(filePath) && statSync(filePath).isFile()) {
-		return new Response(Bun.file(filePath), { headers: imageHeaders(type) });
+		return new Response(Bun.file(filePath), { headers: servedFileHeaders(type) });
+	}
+	return new Response('Not found', { status: 404 });
+}
+
+/**
+ * A bundled ambient recording. Its own route rather than a type added to `imageContentType`,
+ * because that whitelist is what stops a stored file being served as something a browser will
+ * run: widening it would widen it for uploads too, while nothing here is ever uploaded.
+ *
+ * The extension is checked rather than trusted, and the folder is fixed, so the only things
+ * this can answer with are an MP3 that shipped with the app and, named exactly, the licence
+ * notice beside them that Settings → About links.
+ */
+function serveDefaultSound(pathname: string): Response {
+	const rel = requestedFilePath(pathname, '/files/sounds/');
+	const filePath = join(DEFAULT_SOUNDS_DIR, rel);
+	if (rel === 'CREDITS.txt' && existsSync(filePath)) {
+		return new Response(Bun.file(filePath), {
+			headers: servedFileHeaders('text/plain; charset=utf-8')
+		});
+	}
+	if (/\.mp3$/i.test(rel) && existsSync(filePath) && statSync(filePath).isFile()) {
+		// These ship with the build and cannot change under their own name while it is running,
+		// so without this a mix re-downloads megabytes on every play for nothing. `private`,
+		// because the app can be sitting behind a password and a shared cache has no business
+		// holding what it served afterwards; a week, because a later build replacing a recording
+		// should still be heard eventually.
+		return new Response(Bun.file(filePath), {
+			headers: servedFileHeaders('audio/mpeg', 'private, max-age=604800')
+		});
 	}
 	return new Response('Not found', { status: 404 });
 }
@@ -447,7 +483,7 @@ function serveImage(pathname: string): Response {
 	// a stored file becomes a page on this origin.
 	const type = filePath && imageContentType(filePath);
 	if (filePath && type) {
-		return new Response(Bun.file(filePath), { headers: imageHeaders(type) });
+		return new Response(Bun.file(filePath), { headers: servedFileHeaders(type) });
 	}
 	return new Response('Not found', { status: 404 });
 }
@@ -2060,6 +2096,9 @@ function serve(hostname: string) {
 			// Image files (served directly; access is already gated by IP above).
 			if (path.startsWith('/files/backgrounds/')) {
 				return serveDefaultBackground(path);
+			}
+			if (path.startsWith('/files/sounds/')) {
+				return serveDefaultSound(path);
 			}
 			if (path.startsWith('/files/')) {
 				return serveImage(path);

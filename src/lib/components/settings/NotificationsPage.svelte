@@ -67,7 +67,7 @@
 	}
 </script>
 
-<div class="audio">
+<div class="notifications">
 	<section class="card" data-setting="notification-sounds">
 		<div class="card-head">
 			<span class="card-title">{i18n.t('audio.title')}</span>
@@ -185,7 +185,7 @@
 </div>
 
 <style>
-	.audio {
+	.notifications {
 		display: flex;
 		flex-direction: column;
 		gap: 0.85rem;

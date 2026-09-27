@@ -247,8 +247,8 @@ export const SHORTCUTS: ShortcutDef[] = [
 		id: 'assistant',
 		group: 'panels',
 		label: 'sc.l11',
-		// The assistant's other door, and the ONLY one once its floating button is switched
-		// off in Settings → General.
+		// The assistant's shortcut door, alongside its floating launcher and, when that's
+		// switched off in Settings → General, the title-bar button that takes its place.
 		binding: { mod: true, key: 'j' },
 		run: () => uiStore.toggleAssistant()
 	},

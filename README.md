@@ -90,4 +90,10 @@ docker compose up -d --build
 
 ## License
 
+## License
+
 [AGPL-3.0](LICENSE)。本 fork 沿用上游许可证。
+
+捆绑的字体是第三方资产、不受该许可证覆盖：各自遵循 SIL Open Font License 1.1，版权与许可原文在 [static/fonts/OFL.txt](static/fonts/OFL.txt)。
+
+捆绑的通知音与环境音同为第三方资产：通知音遵循 CC0 1.0 / CC BY 4.0 / CC BY 3.0，署名见 [static/sounds/CREDITS.txt](static/sounds/CREDITS.txt)；环境音遵循 Pixabay Content License 或 CC0 1.0，录制信息见 [defaults/sounds/CREDITS.txt](defaults/sounds/CREDITS.txt)。

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import GeneralPage from './GeneralPage.svelte';
-	import AudioPage from './AudioPage.svelte';
+	import NotificationsPage from './NotificationsPage.svelte';
+	import SoundscapesPage from './SoundscapesPage.svelte';
 	import ConnectionsPage from './ConnectionsPage.svelte';
 	import InterfacePage from './InterfacePage.svelte';
 	import LanguagePage from './LanguagePage.svelte';
@@ -35,8 +36,10 @@
 	<ChatPage />
 {:else if page === 'general'}
 	<GeneralPage />
-{:else if page === 'audio'}
-	<AudioPage />
+{:else if page === 'notifications'}
+	<NotificationsPage />
+{:else if page === 'soundscapes'}
+	<SoundscapesPage />
 {:else if page === 'engines'}
 	<EnginesPage />
 {:else if page === 'security'}

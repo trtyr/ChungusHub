@@ -9,13 +9,14 @@
 export const LINKS = {
 	repo: 'https://github.com/trtyr/ChungusHub',
 	license: 'https://github.com/trtyr/ChungusHub/blob/main/LICENSE',
-	/** The two addresses here that never leave the machine: the bundled typefaces' own notice
-	 *  and the bundled sounds' credits, each shipping in `static/` and served beside the files
-	 *  it covers. A license the app hands the reader has to be readable from an install with no
-	 *  internet at all. Both are `.txt` because the server hands any other extension over as a
-	 *  download rather than a page. */
+	/** The addresses here that never leave the machine: the bundled typefaces' own notice, the
+	 *  notification sounds' credits and the ambient recordings' notice, each served beside the
+	 *  files it covers. A license the app hands the reader has to be readable from an install
+	 *  with no internet at all. The two in `static/` are `.txt` because the server hands any
+	 *  other extension there over as a download rather than a page. */
 	fontLicense: '/fonts/OFL.txt',
-	soundCredits: '/sounds/CREDITS.txt'
+	soundCredits: '/sounds/CREDITS.txt',
+	soundscapeLicense: '/files/sounds/CREDITS.txt'
 } as const;
 
 /**

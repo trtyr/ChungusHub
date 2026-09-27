@@ -10,7 +10,9 @@
  *  - `TAB_FALLBACK_PAGE` covers every `SettingsTab`: the assistant's `tab` ids are
  *    the deep-link contract, and there is no rail for them to point at.
  *  - Previews read singleton stores/services; the root re-renders on every
- *    page return (keyed), so they refresh without being reactive.
+ *    page return (keyed), so they refresh without being reactive. Soundscapes' is
+ *    the exception: its row's play button changes it with the list on screen, so
+ *    everything it reads has to be a rune.
  *  - A page added here needs its arm in `SettingsPageView.svelte`, or its row
  *    opens an empty panel.
  */
@@ -20,6 +22,8 @@ import { ENGINES } from '$lib/engines/registry';
 import { backupStore } from '$lib/stores/backups.svelte';
 import { advancedSettingsStore } from '$lib/stores/advanced-settings.svelte';
 import { audioSettingsStore } from '$lib/stores/audio-settings.svelte';
+import { soundscapeStore } from '$lib/stores/soundscape.svelte';
+import { soundscapePlayer } from '$lib/services/soundscapePlayer.svelte';
 import { SOUND_EVENTS } from '$lib/config/sound-events';
 import { APP_VERSION } from '$lib/version';
 
@@ -48,9 +52,11 @@ export type SettingsPage =
 	| 'interface'
 	| 'language'
 	| 'chat'
+	// Audio
+	| 'notifications'
+	| 'soundscapes'
 	// App
 	| 'general'
-	| 'audio'
 	| 'engines'
 	| 'security'
 	| 'import'
@@ -80,6 +86,7 @@ export type SettingsRowIcon =
 	| 'archive'
 	| 'info'
 	| 'bell'
+	| 'music'
 	| 'sliders';
 
 export interface SettingsRow {
@@ -111,9 +118,21 @@ function enginesSummary(): { key: string; params?: Record<string, string | numbe
 	return { key: 'sp.sumEngines', params: { on, total: ENGINES.length } };
 }
 
-function audioSummary(): { key: string; params?: Record<string, string | number> } {
+function notificationsSummary(): { key: string; params?: Record<string, string | number> } {
 	if (!audioSettingsStore.enabled) return { key: 'sp.sumOff' };
-	return { key: 'sp.sumSounds', params: { on: audioSettingsStore.activeCount, total: SOUND_EVENTS.length } };
+	return { key: 'sp.sumNotifications', params: { on: audioSettingsStore.activeCount, total: SOUND_EVENTS.length } };
+}
+
+/** Counts what is audible, not what was pressed, the way the mixer's own status line does. */
+function soundscapesSummary(): { key: string; params?: Record<string, string | number> } {
+	if (!soundscapeStore.playing) return { key: 'sp.sumOff' };
+	if (soundscapePlayer.blocked) return { key: 'sp.sumSoundBlocked' };
+	const ids = soundscapeStore.activeIds;
+	const heard = ids.filter((id) => soundscapePlayer.sounding.has(id)).length;
+	const failures = ids.filter((id) => soundscapePlayer.failed.has(id)).length;
+	if (heard === ids.length) return { key: 'sp.sumSoundHeardAll', params: { n: heard } };
+	if (heard === 0 && failures < ids.length) return { key: 'sp.sumSoundStarting' };
+	return { key: 'sp.sumSoundHeard', params: { heard, total: ids.length } };
 }
 
 /**
@@ -137,7 +156,6 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
 		label: 'sp.groupApp',
 		rows: [
 			{ page: 'general', label: 'sp.rowGeneral', icon: 'settings' },
-			{ page: 'audio', label: 'sp.rowAudio', icon: 'bell', preview: audioSummary },
 			{ page: 'engines', label: 'sp.rowEngines', icon: 'bolt', preview: enginesSummary },
 			{ page: 'security', label: 'sp.rowSecurity', icon: 'shield' },
 			{ page: 'backups', label: 'sp.rowBackups', icon: 'archive', preview: backupsSummary },
@@ -150,6 +168,13 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
 			{ page: 'language', label: 'sp.rowLanguage', icon: 'globe' },
 			{ page: 'interface', label: 'sp.rowInterface', icon: 'sun' },
 			{ page: 'chat', label: 'sp.rowChat', icon: 'columns' }
+		]
+	},
+	{
+		label: 'sp.groupAudio',
+		rows: [
+			{ page: 'notifications', label: 'sp.rowNotifications', icon: 'bell', preview: notificationsSummary },
+			{ page: 'soundscapes', label: 'sp.rowSoundscapes', icon: 'music', preview: soundscapesSummary }
 		]
 	},
 	{
@@ -215,11 +240,11 @@ export const ANCHOR_PAGES: Record<string, SettingsPage> = {
 	// page and flashes nothing.
 	'interface-defaults': 'interface',
 	'chat-defaults': 'chat',
-	// General
 	// Audio
-	'notification-sounds': 'audio',
-	'sound-events': 'audio',
-
+	'notification-sounds': 'notifications',
+	'sound-events': 'notifications',
+	soundscape: 'soundscapes',
+	// General
 	'message-drafts': 'general',
 	'input-history': 'general',
 	'long-chats': 'general',
@@ -254,7 +279,7 @@ export const TAB_FALLBACK_PAGE: Record<SettingsTab, SettingsPage> = {
 	interface: 'interface',
 	security: 'security',
 	engines: 'engines',
-	audio: 'audio',
+	audio: 'notifications',
 	promptBuilder: 'prompt-builder',
 	regex: 'regex',
 	advanced: 'advanced'

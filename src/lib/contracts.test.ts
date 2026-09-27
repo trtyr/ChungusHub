@@ -19,7 +19,7 @@
  */
 import { describe, test, expect } from 'bun:test';
 import { execFileSync } from 'node:child_process';
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { PROVIDER_NAMES } from '$lib/types/llm';
@@ -33,6 +33,13 @@ import {
 } from '$lib/types/ambient';
 import { STEERING_ROLES, STEERING_SCOPES } from '$lib/types/steering';
 import { SOUND_EVENTS, TONES, TONE_IDS } from '$lib/config/sound-events';
+import {
+	AMBIENT_SOUNDS,
+	PEAK_CEILING_DB,
+	SOUND_CATEGORIES,
+	TARGET_LUFS,
+	normalizeGain
+} from '$lib/config/soundscape';
 import { palettes } from '$lib/themes/presets';
 // The app's own reading, so this contract and the palette editor's readout can never
 // drift into disagreeing about what a ratio is.
@@ -510,6 +517,61 @@ describe('nav labels and panel titles (architecture/ui-shell-settings.md)', () =
 			new RegExp(`--chat-col-max: var\\((${probeVar})\\)`, 'g'),
 			'dock branch consuming the docked column in app.css'
 		);
+	});
+});
+
+describe("the assistant's two doors (architecture/chungus-assistant.md)", () => {
+	// One boolean decides which door the CLOSED assistant has, and its ends live in files
+	// that cannot read each other: the widget draws the corner launcher while the setting
+	// is on, TitleBar draws an Assistant button while it is off. Drift either way is both
+	// doors on screen at once, or a closed assistant with no door at all. The settings row
+	// offering the choice asks it the other way round, so it reads the same field NEGATED:
+	// a third spelling of one boolean, and the one most likely to be "tidied" into agreeing
+	// with the other two, which would silently invert the checkbox.
+	const field = (source: string, re: RegExp, what: string): string => {
+		const found = scan(source, re, what);
+		expect(found.length, `expected exactly one ${what}`).toBe(1);
+		return found[0];
+	};
+
+	test('all three spellings name the one setting', () => {
+		const shown = field(
+			read('src', 'lib', 'components', 'assistant', 'AssistantFloatingWidget.svelte'),
+			/showLauncher = \$derived\(generalSettingsStore\.(\w+)\)/g,
+			'launcher gate in AssistantFloatingWidget.svelte'
+		);
+		const hidden = field(
+			read('src', 'lib', 'components', 'layout', 'TitleBar.svelte'),
+			/showAssistantNav = \$derived\(!generalSettingsStore\.(\w+)\)/g,
+			'negated title-bar gate in TitleBar.svelte'
+		);
+		const row = field(
+			read('src', 'lib', 'components', 'assistant', 'AssistantSettingsView.svelte'),
+			/checked=\{!generalSettingsStore\.(\w+)\}/g,
+			'negated settings row in AssistantSettingsView.svelte'
+		);
+		for (const name of [hidden, row]) expect(name).toBe(shown);
+	});
+
+	test('both doors read the same working marks', () => {
+		const marks = (parts: string[]): string[] => {
+			const where = parts[parts.length - 1];
+			return [
+				...new Set(scan(read(...parts), /assistantSessionStore\.(any\w+)/g, `marks in ${where}`))
+			].sort();
+		};
+		const nav = marks(['src', 'lib', 'components', 'assistant', 'AssistantNavStatus.svelte']);
+		const widget = marks([
+			'src',
+			'lib',
+			'components',
+			'assistant',
+			'AssistantFloatingWidget.svelte'
+		]);
+		// A strict subset, deliberately: the launcher also owns the "just finished" latch,
+		// which is not duplicated onto the bar. What the bar DOES show has to come from the
+		// same getters, or the two surfaces disagree about whether the assistant is working.
+		for (const m of nav) expect(widget).toContain(m);
 	});
 });
 
@@ -1344,6 +1406,80 @@ describe('notification sounds (architecture/build-packaging.md #10)', () => {
 	});
 });
 
+describe('ambient soundscape (architecture/build-packaging.md #11)', () => {
+	// The registry is TypeScript and the recordings are files in a folder, with nothing
+	// between them: an entry naming a recording that does not ship is a row in the mixer that
+	// can only ever fail to load, and a recording nobody named is weight in every build and
+	// every release archive that no reader can reach.
+	test('every sound has a file and every file is a sound', () => {
+		const onDisk: string[] = [];
+		for (const category of SOUND_CATEGORIES) {
+			const dir = join(ROOT, 'defaults', 'sounds', category.id);
+			for (const name of readdirSync(dir)) {
+				if (name.endsWith('.mp3')) onDisk.push(`${category.id}/${name.slice(0, -'.mp3'.length)}`);
+			}
+		}
+		expect(onDisk.length, 'found no recordings, so the scan is stale').toBeGreaterThan(0);
+		expect(AMBIENT_SOUNDS.map((s) => `${s.category}/${s.id}`).sort()).toEqual(onDisk.sort());
+	});
+
+	// An id is the key a mix stores, so two recordings answering to one would make a stored
+	// mix ambiguous about which is in it.
+	test('ids are unique across every shelf', () => {
+		const ids = AMBIENT_SOUNDS.map((s) => s.id);
+		expect(ids.length).toBe(new Set(ids).size);
+	});
+
+	// The licences these ship under ask for no attribution, so the notice is not one. It is
+	// still a shipping requirement: it is the only thing saying the recordings are outside
+	// the app's own licence, which is what a redistributor needs.
+	test('the licence notice ships with them', () => {
+		const credits = read('defaults', 'sounds', 'CREDITS.txt');
+		expect(credits).toContain('Pixabay Content License');
+		expect(credits).toContain('CC0 1.0');
+	});
+
+	// The measurements are the whole point of the switch, so a recording carrying neither is
+	// one nobody measured rather than one that happened to land on zero.
+	test('every sound carries its measured loudness and peak', () => {
+		expect(AMBIENT_SOUNDS.filter((s) => !(s.lufs < 0)).map((s) => s.id)).toEqual([]);
+		expect(AMBIENT_SOUNDS.filter((s) => !Number.isFinite(s.peak)).map((s) => s.id)).toEqual([]);
+	});
+
+	// The duration decides how much of a file is decoded, so one that is wrong by a lot means
+	// either a phone decoding a recording whole or a loop cut short. It cannot be measured back
+	// out of the file here, but the bitrate it implies against the file's own size can, and
+	// anything outside what an MP3 can carry is a figure taken off the wrong recording or in
+	// the wrong unit.
+	test('every sound carries a duration that matches the file it names', () => {
+		const wrong = AMBIENT_SOUNDS.filter((s) => {
+			if (!Number.isFinite(s.seconds) || s.seconds <= 0) return true;
+			const bytes = statSync(join(ROOT, 'defaults', 'sounds', s.category, `${s.id}.mp3`)).size;
+			const kbps = (bytes * 8) / s.seconds / 1000;
+			return kbps < 32 || kbps > 320;
+		});
+		expect(wrong.map((s) => s.id)).toEqual([]);
+	});
+
+	// Normalization may never make a recording clip, whichever way it moves it. Held against
+	// the shipped measurements rather than argued from the formula, since what matters is
+	// that these 42 files are safe.
+	test('normalizing never raises a recording past the ceiling', () => {
+		const over = AMBIENT_SOUNDS.filter(
+			(s) => s.peak + 20 * Math.log10(normalizeGain(s)) > PEAK_CEILING_DB + 1e-9
+		);
+		expect(over.map((s) => s.id)).toEqual([]);
+	});
+
+	// The reason the switch exists: anything louder than the target has to come down, or one
+	// slider position stays painful on some recordings and inaudible on others.
+	test('normalizing turns every loud recording down', () => {
+		const loud = AMBIENT_SOUNDS.filter((s) => s.lufs > TARGET_LUFS);
+		expect(loud.length, 'nothing is above the target, so the test proves nothing').toBeGreaterThan(0);
+		expect(loud.filter((s) => normalizeGain(s) >= 1).map((s) => s.id)).toEqual([]);
+	});
+});
+
 describe('ambient effects (architecture/ui-shell-settings.md #5)', () => {
 	// The union, the picker list, the labels/descriptions maps and the canvas renderer all
 	// derive from AMBIENT_EFFECTS. The compositing order cannot: it carries its own
@@ -1398,6 +1534,18 @@ describe('anchored tips (architecture/ui-shell-settings.md)', () => {
 		walk(join(ROOT, 'src', 'lib', 'components'));
 		expect(bubbles, 'found no tooltip bubbles, so the scan is stale').toBeGreaterThan(0);
 		expect(bespoke).toEqual([]);
+	});
+});
+
+describe('keep actions in view (architecture/chat-sessions.md)', () => {
+	// The opening panel's styles are its own, so the upward rule reaches it by class name. A
+	// renamed panel drops out of that rule and opens off screen under a stuck toolbar.
+	test('the upward rule names the opening panel by its real class', () => {
+		const message = read('src', 'lib', 'components', 'chat', 'Message.svelte');
+		const popover = read('src', 'lib', 'components', 'chat', 'OpeningScenePopover.svelte');
+		const named = scan(message, /\.message-toolbar-menus-up :global\(\.([\w-]+)\)/g, 'global classes under the upward rule');
+		const panel = scan(popover, /bind:this=\{panelElement\} class="([\w-]+)/g, 'opening panel class');
+		expect(named).toEqual(panel);
 	});
 });
 
