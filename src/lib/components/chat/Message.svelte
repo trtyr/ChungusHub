@@ -1187,6 +1187,17 @@
 		line-height: var(--user-line-height, 1.72);
 	}
 
+	/* P003 phase 2: document-type beautify renders as a sandboxed iframe. Fixed generous
+	 * height with native scrolling: auto-resize would need script inside the frame, which
+	 * the sandbox forbids by design. */
+	.message-prose :global(iframe.html-doc) {
+		width: 100%;
+		height: 480px;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		background: #fff;
+	}
+
 	.message-bubble-user .message-prose {
 		line-height: calc(var(--user-line-height, 1.72) - 0.08);
 	}

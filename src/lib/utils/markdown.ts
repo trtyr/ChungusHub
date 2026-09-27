@@ -49,7 +49,13 @@ export function registerMarkdownHooks(purify: Pick<typeof DOMPurify, 'addHook'>)
 	});
 }
 
-registerMarkdownHooks(DOMPurify);
+// Register on the ambient window when one exists (the browser app). In DOM-less
+// contexts (bun importing pure helpers) the default DOMPurify is an inert stub and
+// there is nothing to register on; tests that need the hook build their own instance
+// through registerMarkdownHooks.
+if (typeof (DOMPurify as unknown as Record<string, unknown>).addHook === 'function') {
+	registerMarkdownHooks(DOMPurify);
+}
 
 /**
  * Quote pairs to highlight as dialogue. Each entry: [open, close, displayOpen, displayClose]
@@ -115,7 +121,48 @@ function highlightQuotes(html: string): string {
 export function renderMarkdown(content: string): string {
 	const rawHtml = marked.parse(prepareModelMarkup(content), { async: false }) as string;
 	const withQuotes = highlightQuotes(rawHtml);
-	return DOMPurify.sanitize(withQuotes, sanitizeConfig());
+	return htmlDocumentIframes(DOMPurify.sanitize(withQuotes, sanitizeConfig()));
+}
+
+// ===== P003 phase 2: document-type beautify (```html full documents) =====
+
+/** A fenced ```html block that carries a COMPLETE document, after marked has escaped it
+ *  into a code element. */
+const HTML_CODE_BLOCK_RE = /<pre><code class="language-html">([\s\S]*?)<\/code><\/pre>/g;
+/** What makes a code block a DOCUMENT rather than a snippet: a doctype or an <html> root. */
+const HTML_DOC_MARKER_RE = /<!doctype html|<html[\s>]/i;
+
+function decodeEntities(text: string): string {
+	return text
+		.replace(/&lt;/g, '<')
+		.replace(/&gt;/g, '>')
+		.replace(/&quot;/g, '"')
+		.replace(/&#39;/g, "'")
+		.replace(/&amp;/g, '&');
+}
+
+function escapeAttr(text: string): string {
+	return text.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+/**
+ * Rewrite complete-HTML ```html code blocks into sandboxed iframes (P003 phase 2). The
+ * 毓忻-style beautify ships whole documents (doctype, <style>, fonts), which read as an
+ * escaped wall of text inside a code block. As srcdoc under sandbox="" they render as
+ * the styled document they are, with the sandbox as the whole security boundary: no
+ * allow-scripts means any embedded script is inert by construction, no allow-same-origin
+ * means the frame is opaque to the app. Ordinary snippets (no doctype/html root) stay
+ * code blocks, and everything else in the message is untouched sanitized output.
+ *
+ * The frame gets a fixed generous height and scrolls natively; auto-resizing would need
+ * script inside the frame, which the sandbox exists to forbid.
+ */
+export function htmlDocumentIframes(sanitizedHtml: string): string {
+	return sanitizedHtml.replace(HTML_CODE_BLOCK_RE, (whole, code: string) => {
+		const decoded = decodeEntities(code);
+		if (!HTML_DOC_MARKER_RE.test(decoded)) return whole;
+		return `<iframe class="html-doc" sandbox="" srcdoc="${escapeAttr(decoded)}" title="HTML"></iframe>`;
+	});
 }
 
 /** The sanitize policy, as data: which tags/attributes survive and how URIs are judged.
