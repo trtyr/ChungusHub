@@ -46,6 +46,7 @@ export type SettingsPage =
 	| 'connections'
 	// Appearance
 	| 'interface'
+	| 'language'
 	| 'chat'
 	// App
 	| 'general'
@@ -65,6 +66,7 @@ export type SettingsPage =
 /** Literal subset of ui/Icon's IconName (not exported there), all verified members. */
 export type SettingsRowIcon =
 	| 'radar'
+	| 'globe'
 	| 'sun'
 	| 'columns'
 	| 'image'
@@ -145,6 +147,7 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
 	{
 		label: 'sp.groupAppearance',
 		rows: [
+			{ page: 'language', label: 'sp.rowLanguage', icon: 'globe' },
 			{ page: 'interface', label: 'sp.rowInterface', icon: 'sun' },
 			{ page: 'chat', label: 'sp.rowChat', icon: 'columns' }
 		]

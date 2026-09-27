@@ -2314,6 +2314,7 @@ export const en: Record<string, string> = {
 	'sp.rowImport': 'Import',
 	'sp.groupAppearance': 'Appearance',
 	'sp.rowInterface': 'Interface',
+	'sp.rowLanguage': 'Language',
 	'sp.rowChat': 'Chat',
 	'sp.groupAdvanced': 'Advanced',
 	'sp.rowPromptBuilder': 'Prompt Builder',

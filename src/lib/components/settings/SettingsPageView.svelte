@@ -3,6 +3,7 @@
 	import AudioPage from './AudioPage.svelte';
 	import ConnectionsPage from './ConnectionsPage.svelte';
 	import InterfacePage from './InterfacePage.svelte';
+	import LanguagePage from './LanguagePage.svelte';
 	import ChatPage from './ChatPage.svelte';
 	import AdvancedPage from './AdvancedPage.svelte';
 	import SecurityPage from './SecurityPage.svelte';
@@ -28,6 +29,8 @@
 	<ConnectionsPage />
 {:else if page === 'interface'}
 	<InterfacePage />
+{:else if page === 'language'}
+	<LanguagePage />
 {:else if page === 'chat'}
 	<ChatPage />
 {:else if page === 'general'}

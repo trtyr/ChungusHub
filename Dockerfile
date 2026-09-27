@@ -1,4 +1,4 @@
-# ChungusHub — 容器化部署
+# ChungusHub 容器化部署
 # 多阶段：构建层装依赖 + 产 build/，运行层只带运行所需。
 # 数据卷：/app/user-data（SQLite + presets 文件 + 图片全在这）。
 FROM oven/bun:1.3.9 AS build

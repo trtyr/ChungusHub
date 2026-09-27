@@ -2287,6 +2287,7 @@ export const zh: Record<string, string> = {
 	'sp.rowImport': '导入',
 	'sp.groupAppearance': '外观',
 	'sp.rowInterface': '界面',
+	'sp.rowLanguage': '语言',
 	'sp.rowChat': '聊天',
 	'sp.groupAdvanced': '高级',
 	'sp.rowPromptBuilder': '提示词构建器',
