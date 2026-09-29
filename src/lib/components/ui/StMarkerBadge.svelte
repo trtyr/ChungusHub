@@ -3,7 +3,7 @@
 	 * Inline badge for SillyTavern extension-card markers on a lorebook entry
 	 * (P015 档0): distinguishes the Prompt-Template dialect (EJS blocks, entry-title
 	 * injection syntax) from TavernHelper script cards, with a shared hint that the
-	 * content degrades to static text for the model. Purely informational — the
+	 * content degrades to static text for the model. Purely informational: the
 	 * entry's data is never touched.
 	 */
 	import { i18n } from '$lib/i18n/i18n.svelte';

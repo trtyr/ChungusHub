@@ -17,7 +17,7 @@
  *
  * `variables.hakimi.affection` reads our flat table at the dotted-path key (the same
  * key 档1a's InitialVariables seeding writes); bare `variables` reads locals first,
- * then globals — the merged view upstream's tree presents.
+ * then globals, which is the merged view upstream's tree presents.
  */
 import type { MacroContext, VarEnv } from '$lib/macros';
 import { expandCondition } from '$lib/utils/var-macros';
