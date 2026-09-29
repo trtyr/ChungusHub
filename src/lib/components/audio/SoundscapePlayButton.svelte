@@ -2,6 +2,7 @@
 	import Icon from '$lib/components/ui/Icon.svelte';
 	import { soundscapeStore } from '$lib/stores/soundscape.svelte';
 	import { soundscapePlayer } from '$lib/services/soundscapePlayer.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	let playing = $derived(soundscapeStore.playing);
 	let empty = $derived(soundscapeStore.activeIds.length === 0);
@@ -12,7 +13,7 @@
 			!soundscapePlayer.blocked &&
 			soundscapeStore.activeIds.some((id) => soundscapePlayer.sounding.has(id))
 	);
-	let label = $derived(playing ? 'Pause the mix' : 'Play the mix');
+	let label = $derived(playing ? i18n.t('snd.pauseMix') : i18n.t('snd.playMix'));
 </script>
 
 <button

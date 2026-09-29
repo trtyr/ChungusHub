@@ -53,9 +53,12 @@ const read = (...parts: string[]): string => readFileSync(join(ROOT, ...parts), 
 
 /** All matches of `re`'s first capture group, asserted non-empty so a stale pattern fails
  *  loudly instead of quietly agreeing with everything. */
-function scan(source: string, re: RegExp, what: string): string[] {
+function scan(source: string, re: RegExp, what: string, min = 1): string[] {
 	const found = [...source.matchAll(re)].map((m) => m[1]);
-	expect(found.length, `found no ${what}, so the scan pattern is stale`).toBeGreaterThan(0);
+	expect(
+		found.length,
+		`found no ${what}, so the scan pattern is stale`
+	).toBeGreaterThanOrEqual(min);
 	return found;
 }
 
@@ -1375,6 +1378,46 @@ describe('settings deep links (architecture/chungus-assistant.md #1, architectur
 		walk(join(ROOT, 'src', 'lib', 'components'));
 		expect(marked.size, 'found no data-setting attributes, so the scan is stale').toBeGreaterThan(0);
 		expect(anchors.filter((a) => !marked.has(a))).toEqual([]);
+	});
+});
+
+describe('settings page arms (architecture/ui-shell-settings.md #3: the blank-page trap)', () => {
+	// The drill-down panel and the split dock both render pages through ONE switch in
+	// SettingsPageView: a union value without an arm there renders a blank page, and an
+	// arm naming a page the union no longer has is a dead branch. Svelte's compiler
+	// checks neither, so this does.
+	test('every SettingsPage value has a rendering arm, and no arm names a ghost page', () => {
+		const pages = read('src', 'lib', 'config', 'settings-pages.ts');
+		const union = scan(
+			block(pages, /export type SettingsPage =[\s\S]*?;/, 'SettingsPage'),
+			/'([a-z-]+)'/g,
+			'settings page values',
+			10
+		);
+		const view = read('src', 'lib', 'components', 'settings', 'SettingsPageView.svelte');
+		const arms = new Set(
+			scan(view, /page === '([a-z-]+)'/g, 'SettingsPageView arms', 10)
+		);
+		expect(union.filter((p) => !arms.has(p))).toEqual([]);
+		expect([...arms].filter((p) => !union.includes(p))).toEqual([]);
+	});
+});
+
+describe('beautify scoping is load-bearing (P003)', () => {
+	// The scope class only works if the element that hosts rendered message HTML carries
+	// it. It used to live in that element's class list as a literal, where a rename or a
+	// refactor could drop it silently: every preset style would stop applying and nothing
+	// would error. Importing the shared constant makes a rename a compile error instead.
+	test('the message renderer mounts the scope class by importing the constant', () => {
+		const message = read('src', 'lib', 'components', 'chat', 'Message.svelte');
+		expect(
+			message.includes("import { STYLE_SCOPE_CLASS } from '$lib/utils/style-scope'"),
+			'Message.svelte must import STYLE_SCOPE_CLASS, not spell the class by hand'
+		).toBe(true);
+		expect(message.includes('${STYLE_SCOPE_CLASS}')).toBe(true);
+		expect(read('src', 'lib', 'utils', 'style-scope.ts')).toContain(
+			`export const STYLE_SCOPE_CLASS = 'msg-style-scope';`
+		);
 	});
 });
 

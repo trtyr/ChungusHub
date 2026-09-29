@@ -24,6 +24,8 @@
 	import { SOUND_CATEGORIES, soundById, soundsIn, type SoundCategory } from '$lib/config/soundscape';
 	import { soundscapeStore, type SoundEffects } from '$lib/stores/soundscape.svelte';
 	import { soundscapePlayer } from '$lib/services/soundscapePlayer.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
+	import { labelT } from '$lib/i18n/labels';
 	import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
 	import { holdMsForBlast } from '$lib/components/ui/HoldToConfirmButton.svelte';
 	import Icon, { type IconName } from '$lib/components/ui/Icon.svelte';
@@ -42,16 +44,16 @@
 
 	/** Two independent things rather than two strengths of one, which is what lets either stand
 	 *  alone and both make sense together: something in the way, and ground to cross. */
-	const PLACEMENTS: { key: keyof SoundEffects; label: string; hint: string }[] = [
+	const PLACEMENTS: { key: keyof SoundEffects; labelKey: string; hintKey: string }[] = [
 		{
 			key: 'muffled',
-			label: 'Behind a wall',
-			hint: 'Takes the top off it, the way a wall, a window or a hull does.'
+			labelKey: 'snd.placeMuffled',
+			hintKey: 'snd.placeMuffledTip'
 		},
 		{
 			key: 'distant',
-			label: 'Far away',
-			hint: 'Sets it back from you and leaves the space in between audible.'
+			labelKey: 'snd.placeDistant',
+			hintKey: 'snd.placeDistantTip'
 		}
 	];
 
@@ -97,19 +99,20 @@
 	);
 
 	let status = $derived.by(() => {
-		if (held) return 'Sound is blocked. Tap anywhere to allow it.';
-		if (count === 0) return 'Nothing in the mix yet';
-		const sounds = count === 1 ? '1 sound' : `${count} sounds`;
-		if (!playing) return `${sounds} in the mix`;
-		if (heard === count) return `${sounds} playing`;
+		if (held) return i18n.t('snd.blocked');
+		if (count === 0) return i18n.t('snd.empty');
+		const sounds = count === 1 ? i18n.t('snd.countOne') : i18n.t('snd.countMany', { count });
+		if (!playing) return i18n.t('snd.inMix', { sounds });
+		if (heard === count) return i18n.t('snd.playingAll', { sounds });
 		// With every recording failed nothing is starting, and a Starting… there would never end.
-		if (heard === 0 && failures < count) return 'Starting…';
-		return `${heard} of ${count} playing`;
+		if (heard === 0 && failures < count) return i18n.t('snd.starting');
+		return i18n.t('snd.playingSome', { heard, count });
 	});
 
-	let transportLabel = $derived(playing ? 'Pause the mix' : 'Play the mix');
+	let transportLabel = $derived(playing ? i18n.t('snd.pauseMix') : i18n.t('snd.playMix'));
 
-	const levelText = (v: number) => (Math.round(v * 100) === 0 ? 'Muted' : `${Math.round(v * 100)}%`);
+	const levelText = (v: number) =>
+		Math.round(v * 100) === 0 ? i18n.t('snd.muted') : `${Math.round(v * 100)}%`;
 
 	// Svelte runs transitions on the Web Animations API, out of reach of the app's reduced-motion CSS.
 	function reducedMotion(): boolean {
@@ -132,9 +135,9 @@
 	let clearMessage = $derived.by(() => {
 		const only = count === 1 ? soundById(soundscapeStore.activeIds[0]) : null;
 		const goes = only
-			? `"${only.label}" comes out of the mix, along with its level and placement.`
-			: `All ${count} recordings come out of the mix, along with their levels and placements.`;
-		return `${goes} The overall level and the three switches stay as they are.`;
+			? i18n.t('snd.clearOne', { label: labelT(only.label) })
+			: i18n.t('snd.clearAll', { count });
+		return `${goes} ${i18n.t('snd.clearKeep')}`;
 	});
 
 	async function clearMix(): Promise<void> {
@@ -160,7 +163,7 @@
 			<Icon name={playing ? 'pause' : 'play'} class="play-glyph" />
 		</button>
 		<div class="transport-level">
-			<span class="slider-label">Overall Level</span>
+			<span class="slider-label">{i18n.t('snd.overallLevel')}</span>
 			<Slider
 				value={config.volume}
 				min={0}
@@ -169,7 +172,7 @@
 				defaultValue={0.5}
 				format={levelText}
 				oninput={(v) => soundscapeStore.setVolume(v)}
-				label="Overall Level"
+				label={i18n.t('snd.overallLevel')}
 			/>
 		</div>
 	</div>
@@ -181,12 +184,12 @@
 		<span class="status-text" class:is-held={held}>{status}</span>
 		{#if count > 0}
 			<button type="button" class="clear" onclick={() => (confirmingClear = true)}>
-				Clear all
+				{i18n.t('snd.clearAllBtn')}
 			</button>
 		{/if}
 	</div>
 
-	<div class="shelves" role="radiogroup" aria-label="Which sounds to show">
+	<div class="shelves" role="radiogroup" aria-label={i18n.t('snd.whichSounds')}>
 		<button
 			type="button"
 			class="chip"
@@ -195,7 +198,7 @@
 			aria-checked={shelf === 'all'}
 			onclick={() => (shelf = 'all')}
 		>
-			All
+			{i18n.t('snd.all')}
 		</button>
 		{#each SOUND_CATEGORIES as category (category.id)}
 			<button
@@ -207,7 +210,7 @@
 				onclick={() => (shelf = category.id)}
 			>
 				<Icon name={CATEGORY_ICON[category.id]} class="chip-glyph" />
-				{category.label}
+				{labelT(category.label)}
 			</button>
 		{/each}
 	</div>
@@ -219,7 +222,7 @@
 			{#if shelf === 'all'}
 				<div class="shelf-head">
 					<Icon name={CATEGORY_ICON[category.id]} class="shelf-glyph" />
-					<span>{category.label}</span>
+					<span>{labelT(category.label)}</span>
 				</div>
 			{/if}
 
@@ -233,17 +236,17 @@
 						type="button"
 						class="sound-head"
 						aria-pressed={on}
-						title={on ? 'Remove from the mix' : 'Add to the mix'}
+						title={on ? i18n.t('snd.remove') : i18n.t('snd.add')}
 						onclick={() => soundscapeStore.toggleSound(sound.id)}
 					>
 						<span class="dot"></span>
-						<span class="sound-name">{sound.label}</span>
+						<span class="sound-name">{labelT(sound.label)}</span>
 						{#if failed}
-							<span class="sound-state is-failed-text">Could not load</span>
+							<span class="sound-state is-failed-text">{i18n.t('snd.couldNotLoad')}</span>
 						{:else if loading}
-							<span class="sound-state">Loading…</span>
+							<span class="sound-state">{i18n.t('snd.loading')}</span>
 						{:else if updating}
-							<span class="sound-state">Updating…</span>
+							<span class="sound-state">{i18n.t('snd.updating')}</span>
 						{/if}
 					</button>
 
@@ -261,20 +264,24 @@
 								defaultValue={0.5}
 								format={levelText}
 								oninput={(v) => soundscapeStore.setLevel(sound.id, v)}
-								label="{sound.label} level"
+								label={i18n.t('snd.levelOf', { label: labelT(sound.label) })}
 							/>
-							<div class="sound-place" role="group" aria-label="Where {sound.label} is">
+							<div
+								class="sound-place"
+								role="group"
+								aria-label={i18n.t('snd.whereIs', { label: labelT(sound.label) })}
+							>
 								{#each PLACEMENTS as place (place.key)}
 									<button
 										type="button"
 										class="place"
 										class:is-active-tint={placed[place.key]}
 										aria-pressed={placed[place.key]}
-										title={place.hint}
+										title={i18n.t(place.hintKey)}
 										onclick={() =>
 											soundscapeStore.setEffect(sound.id, place.key, !placed[place.key])}
 									>
-										{place.label}
+										{i18n.t(place.labelKey)}
 									</button>
 								{/each}
 							</div>
@@ -288,43 +295,37 @@
 	<div class="switches">
 		<div class="toggle-row switch-row" use:toggleRow>
 			<span class="switch-text">
-				<span class="switch-label">Loop without an audible seam</span>
-				<InfoTip
-					text="Joins each recording's end to its own beginning. Off, a recording wraps wherever it happens to end, which on most of them is a click you hear every time around."
-				/>
+				<span class="switch-label">{i18n.t('snd.loopSeam')}</span>
+				<InfoTip text={i18n.t('snd.loopSeamTip')} />
 			</span>
 			<Toggle
 				checked={config.seamless}
 				onchange={(v) => soundscapeStore.setSeamless(v)}
-				label="Loop without an audible seam"
+				label={i18n.t('snd.loopSeam')}
 			/>
 		</div>
 
 		<div class="toggle-row switch-row" use:toggleRow>
 			<span class="switch-text">
-				<span class="switch-label">Match every recording's loudness</span>
-				<InfoTip
-					text="The recordings were made by different people and span 29 dB as published, so without this, one slider position is painful on one and inaudible on the next."
-				/>
+				<span class="switch-label">{i18n.t('snd.loudness')}</span>
+				<InfoTip text={i18n.t('snd.loudnessTip')} />
 			</span>
 			<Toggle
 				checked={config.normalize}
 				onchange={(v) => soundscapeStore.setNormalize(v)}
-				label="Match every recording's loudness"
+				label={i18n.t('snd.loudness')}
 			/>
 		</div>
 
 		<div class="toggle-row switch-row" use:toggleRow>
 			<span class="switch-text">
-				<span class="switch-label">Let levels drift on their own</span>
-				<InfoTip
-					text="Each level wanders slowly around where you set it, a few decibels either way and never in step with the others, so a long scene stops sounding like a loop."
-				/>
+				<span class="switch-label">{i18n.t('snd.drift')}</span>
+				<InfoTip text={i18n.t('snd.driftTip')} />
 			</span>
 			<Toggle
 				checked={config.drift}
 				onchange={(v) => soundscapeStore.setDrift(v)}
-				label="Let levels drift on their own"
+				label={i18n.t('snd.drift')}
 			/>
 		</div>
 	</div>
@@ -332,9 +333,9 @@
 
 <ConfirmDialog
 	open={confirmingClear}
-	title="Clear the mix?"
+	title={i18n.t('snd.clearTitle')}
 	message={clearMessage}
-	confirmLabel="Clear all"
+	confirmLabel={i18n.t('snd.clearAllBtn')}
 	variant="danger"
 	destructive
 	holdMs={holdMsForBlast(count)}

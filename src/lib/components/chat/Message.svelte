@@ -18,6 +18,7 @@
 	import { chatStore } from '$lib/stores/chat.svelte';
 	import { themeStore } from '$lib/stores/theme.svelte';
 	import { renderMarkdown } from '$lib/utils/markdown';
+	import { STYLE_SCOPE_CLASS } from '$lib/utils/style-scope';
 	import { renderedHtml } from '$lib/actions/renderedHtml';
 	import { copyText } from '$lib/utils/clipboard';
 	import { previewContinuation } from '$lib/utils/continuation';
@@ -675,7 +676,7 @@
 									     use:renderedHtml rather than {@html}: it patches this subtree
 									     instead of rebuilding it, which is what lets a folding panel
 									     take a click while the reply is still arriving. -->
-									<div class="prose message-prose msg-style-scope" data-search-text use:renderedHtml={bodyHtml}></div>
+									<div class={`prose message-prose ${STYLE_SCOPE_CLASS}`} data-search-text use:renderedHtml={bodyHtml}></div>
 								</div>
 							{/if}
 							</div>
@@ -1206,15 +1207,17 @@
 		line-height: var(--user-line-height, 1.72);
 	}
 
-	/* P003 phase 2: document-type beautify renders as a sandboxed iframe. Fixed generous
-	 * height with native scrolling: auto-resize would need script inside the frame, which
-	 * the sandbox forbids by design. */
+	/* P003 phase 2: document-type beautify renders as a sandboxed iframe. Generous
+	 * viewport-proportional height with native scrolling: auto-resize would need script
+	 * inside the frame, which the sandbox forbids by design. The background rides the
+	 * theme so a dark theme does not flash a white sheet; a document that ships its own
+	 * background still paints its own. */
 	.message-prose :global(iframe.html-doc) {
 		width: 100%;
-		height: 480px;
+		height: clamp(20rem, 60vh, 45rem);
 		border: 1px solid var(--color-border);
 		border-radius: var(--radius-lg);
-		background: #fff;
+		background: var(--color-bg-primary, #fff);
 	}
 
 	.message-bubble-user .message-prose {

@@ -27,6 +27,48 @@ describe('scopeStylesheet', () => {
 		expect(out.toLowerCase()).toContain('position:static');
 	});
 
+	test('keyframes names are prefixed and animation references follow (no app shadowing)', () => {
+		const css = '@keyframes float { from { top: 0; } } .card { animation: float 2s ease; }';
+		const out = scopeStylesheet(css);
+		expect(out).toContain('@keyframes msg-kf-float');
+		expect(out).not.toMatch(/@keyframes\s+float\b/);
+		expect(out).toContain('animation: msg-kf-float 2s ease');
+		// The animation-name longhand is renamed too.
+		const out2 = scopeStylesheet(
+			'@keyframes drift { to { left: 4px; } } .x { animation-name: drift; }'
+		);
+		expect(out2).toContain('animation-name: msg-kf-drift');
+	});
+
+	test('keyframes inside @media are renamed and referenced from a later rule', () => {
+		const css = '@media (min-width: 30rem) { @keyframes pulse { from { opacity: 1; } } } ' +
+			'.card { animation: pulse 1s infinite; }';
+		const out = scopeStylesheet(css);
+		expect(out).toContain('@keyframes msg-kf-pulse');
+		expect(out).toContain('animation: msg-kf-pulse 1s infinite');
+		// Unrelated identifier-looking words stay untouched.
+		expect(out).not.toContain('msg-kf-media');
+	});
+
+	test('foreign url() targets are stripped; font hosts, data: and relative survive', () => {
+		const css =
+			'.card { background: url(https://evil.example/pixel.gif); }' +
+			' @font-face { font-family: X; src: url(https://cdn.tracker.example/f.woff2); }' +
+			' .b { background-image: url("https://fonts.gstatic.com/s/x.woff2"); }' +
+			' .c { background: url(data:image/png;base64,AAA); }' +
+			' .d { mask-image: url(/files/images/local.png); }';
+		const out = scopeStylesheet(css);
+		// Absolute foreign targets become `none` (background) or an invalid src (dropped).
+		expect(out).not.toContain('evil.example');
+		expect(out).not.toContain('cdn.tracker.example');
+		expect(out).toContain('background: none');
+		expect(out).toContain('src: none');
+		// Whitelisted font hosts, data: URLs and origin-relative paths stay.
+		expect(out).toContain('fonts.gstatic.com/s/x.woff2');
+		expect(out).toContain('data:image/png;base64,AAA');
+		expect(out).toContain('/files/images/local.png');
+	});
+
 	test('@import survives only for https font hosts', () => {
 		const ok = scopeStylesheet('@import url(https://fonts.googleapis.com/css2?family=X);');
 		expect(ok).toContain('fonts.googleapis.com');

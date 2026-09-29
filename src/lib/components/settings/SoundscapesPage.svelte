@@ -1,14 +1,13 @@
 <script lang="ts">
 	import SoundscapeMixer from '$lib/components/audio/SoundscapeMixer.svelte';
 	import InfoTip from '$lib/components/ui/InfoTip.svelte';
+	import { i18n } from '$lib/i18n/i18n.svelte';
 </script>
 
 <section class="card" data-setting="soundscape">
 	<div class="card-head">
-		<span class="card-title">Soundscape</span>
-		<InfoTip
-			text="A bed of ambient recordings played underneath the story: rain on a window, a crowded bar, a fire. Any number can play at once, each at its own level."
-		/>
+		<span class="card-title">{i18n.t('snd.cardTitle')}</span>
+		<InfoTip text={i18n.t('snd.cardTip')} />
 	</div>
 	<SoundscapeMixer />
 </section>

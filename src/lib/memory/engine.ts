@@ -26,7 +26,7 @@ import {
 	longestRepeatedRun,
 	parseEpisode,
 	parseFacts,
-	FACTS_APPENDIX
+	factsAppendix
 } from './prompts';
 import { EXTRACT_CONTEXT_EPISODES, resolveConfig } from './config';
 import { duplicateFactIds, FACTS_BOARD_CAP, pruneCapCandidates } from './facts';
@@ -37,6 +37,12 @@ let engineT: ((key: string, params?: Record<string, string | number>) => string)
 /** Client wiring (store.svelte.ts) injects i18n.t; server/test paths stay on the English template. */
 export function setMemoryEngineI18n(fn: (key: string, params?: Record<string, string | number>) => string): void {
 	engineT = fn;
+}
+let engineLang: 'zh' | 'en' = 'zh';
+/** Client wiring (store.svelte.ts) mirrors the UI language here; server/test paths stay zh.
+ *  Picks which fact-appendix wording the extraction prompt rides. */
+export function setMemoryEngineLang(lang: 'zh' | 'en'): void {
+	engineLang = lang;
 }
 const ENG_TEMPLATES: Record<string, string> = {
 	'mem.eng1': 'Memory {p0} template is missing {p1}. Without it the model never sees the text it is meant to summarize. Restore it in Settings → Engines → Chat Memory.',
@@ -223,8 +229,9 @@ async function extractEpisode(
 		// The fact appendix rides at call time (engine-owned, versioned in code), so an
 		// old frozen template override keeps producing facts: P006 dual output, R3.
 		// With the phase 2 agent owning facts the appendix is skipped: the agent
-		// replaces the fixed fact pass instead of stacking on it.
-		deps.templates.extract + (withFacts ? FACTS_APPENDIX : ''),
+		// replaces the fixed fact pass instead of stacking on it. Wording follows the
+		// UI language (engineLang, mirrored from i18n by the store).
+		deps.templates.extract + (withFacts ? factsAppendix(engineLang) : ''),
 		{
 			character: deps.cards?.character ?? '',
 			persona: deps.cards?.persona ?? '',

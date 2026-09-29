@@ -174,12 +174,28 @@ export function parseEpisode(raw: string): string {
  * engine-owned and versioned in code, so a chat whose editable template override froze
  * years ago keeps producing facts. The model returns the facts array inside the SAME
  * JSON object as the episode, so one paid call serves both (the R3 decision).
+ *
+ * Two languages, chosen per call by the caller (the store reads i18n there; importing
+ * i18n HERE would drag the settings spine into the pure engine module graph). The
+ * controlled keys stay the Chinese data vocabulary in both: they are stored values the
+ * fact board filters on, not prose.
  */
 export const FACTS_APPENDIX = '\n\n' + [
 	'在写摘要的同时，从本批剧情中提取值得长期记住的事实，放进同一个 JSON 对象的 "facts" 数组，与 "episode" 并列。每条只取这个形状：',
 	'{"entity":"事实主体（角色/NPC/地点/势力的具体名字）","key":"受控键之一：关系·对象 / 情感·对象 / 约定·对象 / 身体 / 持有物 / 所在地 / 能力 / 目标 / 声誉 / 事件 / 地点状态 / 势力 / 规则 / 场景·在场者 / 场景·地点 / 场景·时间 / 场景·正在进行 / 其他","value":"一句自含的话","importance":1到3的整数}',
 	'判断规则：提取结果与状态，不提取过程；变化必须带转移；专有名词、数量、限定词逐字保留；代词替换为名字；存疑时倾向提取；importance 3=主线或重大转折，2=明确状态变化，1=琐事。没有新事实就写 "facts": []。'
 ].join('\n');
+
+export const FACTS_APPENDIX_EN = '\n\n' + [
+	'While writing the summary, also extract facts worth remembering long-term from this batch, into a "facts" array inside the SAME JSON object, alongside "episode". Each entry takes exactly this shape:',
+	'{"entity":"the specific name of the subject (a character / NPC / place / faction)","key":"one of the controlled keys, copied verbatim: 关系·对象 / 情感·对象 / 约定·对象 / 身体 / 持有物 / 所在地 / 能力 / 目标 / 声誉 / 事件 / 地点状态 / 势力 / 规则 / 场景·在场者 / 场景·地点 / 场景·时间 / 场景·正在进行 / 其他","value":"one self-contained sentence","importance":an integer from 1 to 3}',
+	'Rules: extract results and states, not processes; a change must carry its transition; proper nouns, quantities and qualifiers stay verbatim; pronouns become names; when in doubt, extract; importance 3 = a mainline event or major turn, 2 = a clear state change, 1 = trivia. If there are no new facts, write "facts": [].'
+].join('\n');
+
+/** The fact appendix in the caller's UI language (defaults to zh, same text as before). */
+export function factsAppendix(lang: 'zh' | 'en'): string {
+	return lang === 'en' ? FACTS_APPENDIX_EN : FACTS_APPENDIX;
+}
 
 /** Cap per batch: the board is truncation-managed downstream, not unbounded here. */
 export const MAX_FACTS_PER_BATCH = 20;

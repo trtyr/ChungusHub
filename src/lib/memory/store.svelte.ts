@@ -14,7 +14,8 @@
  */
 
 import { i18n } from '$lib/i18n/i18n.svelte';
-import { setMemoryEngineI18n } from './engine';
+import { setMemoryEngineI18n, setMemoryEngineLang } from './engine';
+import { registerSettingsReload } from '$lib/services/syncedSetting';
 import { factsStore } from './facts.svelte';
 import { runAgentPass } from './agent';
 import type { ChatFact } from './types';
@@ -167,6 +168,10 @@ function own(override: Partial<MemoryConfig> | null): Partial<MemoryConfig> | nu
 }
 
 setMemoryEngineI18n((key, params) => i18n.t(key, params));
+setMemoryEngineLang(i18n.lang);
+// A language switch on any device re-reads the setting (i18n registers its own reload);
+// mirror the new language into the engine so extraction prompts follow it.
+registerSettingsReload(async () => setMemoryEngineLang(i18n.lang));
 
 class MemoryStore {
 	activeChatId = $state<string | null>(null);
@@ -674,7 +679,7 @@ class MemoryStore {
 				const board = (await deps.db.listFacts(ctx.chatId)) as ChatFact[];
 				const turns = this.toMemory(ctx).slice(-12);
 				const pass = await runAgentPass(
-					{ llm: agentLlm, db: deps.db, board, recentTurns: turns, signal, stillActive: () => this.active },
+					{ llm: agentLlm, db: deps.db, board, recentTurns: turns, signal, stillActive: () => this.active, lang: i18n.lang },
 					ctx.chatId
 				);
 				this.lastFactsPass = { ...pass, chatId: ctx.chatId, at: Date.now() };
@@ -698,7 +703,7 @@ class MemoryStore {
 				const board = (await deps.db.listFacts(ctx.chatId)) as ChatFact[];
 				const turns = this.toMemory(ctx).slice(-12);
 				const pass = await runAgentPass(
-					{ llm: agentLlm, db: deps.db, board, recentTurns: turns, signal, stillActive: () => this.active },
+					{ llm: agentLlm, db: deps.db, board, recentTurns: turns, signal, stillActive: () => this.active, lang: i18n.lang },
 					ctx.chatId
 				);
 				this.lastFactsPass = { ...pass, chatId: ctx.chatId, at: Date.now() };

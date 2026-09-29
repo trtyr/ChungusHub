@@ -16,7 +16,7 @@ const MAX_APPLY = 20;
 const MAX_UPDATE = 10;
 const MAX_REAP = 10;
 
-const SYSTEM = [
+const SYSTEM_ZH = [
 	'你维护一个角色扮演聊天的事实板。每轮只回一个 JSON 对象，不要 markdown 围栏、不要多余文字。',
 	'可用工具：',
 	'{"tool":"apply_facts","args":{"facts":[{"entity":"主体名","key":"受控键","value":"一句自含的话","importance":1-3}]}}',
@@ -27,6 +27,23 @@ const SYSTEM = [
 	'{"tool":"finish"}',
 	'规则：只从新回合提取，结果与状态而非过程；变化带转移；专名数量逐字保留；同义事实合并（改写旧行）而非堆叠；完全重复的回声行删除；importance 3=主线 2=状态变化 1=琐事；没有要做的就 finish。'
 ].join('\n');
+
+const SYSTEM_EN = [
+	'You maintain the fact board of a roleplay chat. Reply with ONE JSON object per turn: no markdown fences, no extra prose.',
+	'Available tools:',
+	'{"tool":"apply_facts","args":{"facts":[{"entity":"subject name","key":"a controlled key","value":"one self-contained sentence","importance":1-3}]}}',
+	'{"tool":"update_fact","args":{"factId":"id of the fact to rewrite","value":"the rewritten self-contained sentence"}}',
+	'{"tool":"reap_facts","args":{"ids":["ids of the facts to delete"]}}',
+	'{"tool":"read_fact_board"} (re-read the current fact board, returns the latest rows)',
+	'{"tool":"read_recent_turns"} (re-read the recent turns verbatim)',
+	'{"tool":"finish"}',
+	'Rules: extract only from the new turns: results and states, not processes; a change carries its transition; proper nouns, quantities and qualifiers stay verbatim; merge synonymous facts (rewrite the old row) instead of stacking; delete exact-duplicate echo rows; importance 3 = mainline, 2 = a state change, 1 = trivia; if there is nothing to do, call finish.'
+].join('\n');
+
+/** The agent's system prompt in the caller's UI language (defaults to zh, as before). */
+function systemPrompt(lang: 'zh' | 'en'): string {
+	return lang === 'en' ? SYSTEM_EN : SYSTEM_ZH;
+}
 
 export interface AgentDeps {
 	llm: LlmFn;
@@ -39,6 +56,8 @@ export interface AgentDeps {
 	signal?: AbortSignal;
 	/** Per-turn liveness: the generation that spawned this pass must still be the leaf. */
 	stillActive?: () => boolean;
+	/** UI language for the system prompt and seed labels (zh default, the text as before). */
+	lang?: 'zh' | 'en';
 }
 
 export interface AgentRunResult {
@@ -86,10 +105,14 @@ function renderBoard(board: ChatFact[]): string {
  */
 export async function runAgentPass(deps: AgentDeps, chatId: string): Promise<AgentRunResult> {
 	const result: AgentRunResult = { applied: 0, updated: 0, reaped: 0, turns: 0, writes: [] };
+	const en = deps.lang === 'en';
+	const turnsLabel = en ? 'New turns verbatim' : '新回合原文';
+	const boardLabel = en ? 'Current fact board' : '当前事实板';
+	const noneLabel = en ? '(none)' : '（无）';
 	const seed =
-		`[新回合原文]\n${renderTurns(deps.recentTurns) || '（无）'}\n\n[当前事实板]\n${renderBoard(deps.board)}`;
+		`[${turnsLabel}]\n${renderTurns(deps.recentTurns) || noneLabel}\n\n[${boardLabel}]\n${renderBoard(deps.board)}`;
 	const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [
-		{ role: 'system', content: SYSTEM },
+		{ role: 'system', content: systemPrompt(deps.lang ?? 'zh') },
 		{ role: 'user', content: seed }
 	];
 
