@@ -1209,7 +1209,10 @@
 
 	/* P003 phase 2: document-type beautify renders as a sandboxed iframe. Generous
 	 * viewport-proportional height with native scrolling: auto-resize would need script
-	 * inside the frame, which the sandbox forbids by design. The background rides the
+	 * inside the frame, which the sandbox forbids by design. User decision 2026-09-30
+	 * (risk-debt #4 closure): this clamp IS the final state; relaxing the sandbox to
+	 * measure content height was offered and declined, so a long document scrolls
+	 * inside the frame by design. The background rides the
 	 * theme so a dark theme does not flash a white sheet; a document that ships its own
 	 * background still paints its own. */
 	.message-prose :global(iframe.html-doc) {
