@@ -1608,6 +1608,8 @@ export const en: Record<string, string> = {
 	'mem.cfMergeH': 'How many old summaries merge into one on compaction.',
 	'mem.cfLayers': 'Compaction layers',
 	'mem.cfLayersH': 'Depth of the summary ladder. The top layer compacts in place.',
+	'mem.cfSoftCap': 'Recall soft cap',
+	'mem.cfSoftCapH': 'When the recall block exceeds this rough token budget, the oldest summaries fold to one-line indexes instead of full prose; 0 = unlimited. No summary ever leaves the recall block.',
 	'mem.stVerbatim': 'Keep verbatim',
 	'mem.stReading': 'Reading new turns…',
 	'mem.stUpToDate': 'Up to date',

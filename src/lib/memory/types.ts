@@ -82,6 +82,10 @@ export interface MemoryConfig {
 	promoteCount: number;
 	/** Number of episode layers (top one compacts in place). */
 	maxLayers: number;
+	/** Opt-in soft cap on the rendered recall block (0 = off, the default). Over budget
+	 *  the OLDEST episodes render as one-line folded indexes instead of full prose; no
+	 *  episode ever leaves the block. See recall.ts and architecture/memory.md. */
+	recallSoftCapTokens: number;
 }
 
 /** A chat message as the engine consumes it (a thin slice of the app's Message). */

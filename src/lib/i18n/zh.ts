@@ -1586,6 +1586,8 @@ export const zh: Record<string, string> = {
 	'mem.cfMergeH': '压缩时有多少条旧摘要合并为一条。',
 	'mem.cfLayers': '压缩层数',
 	'mem.cfLayersH': '摘要阶梯的深度。顶层原地压缩。',
+	'mem.cfSoftCap': '回忆块软上限',
+	'mem.cfSoftCapH': '回忆块超出此预算（约 token 数）时，最旧的摘要折叠为一行索引，不再展开全文；0 = 不限制。没有任何摘要会从回忆中消失。',
 	'mem.stVerbatim': '逐字保留',
 	'mem.stReading': '正在读取新回合…',
 	'mem.stUpToDate': '已是最新',

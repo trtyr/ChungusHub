@@ -11,11 +11,15 @@
  * the tail also folds in smaller steps, so an edit or a delete over a folded turn destroys
  * less and costs a shorter re-read.
  *
- * Note what is deliberately NOT a tunable: how many episodes reach the prompt. Recall
- * renders every stored episode, and the layer caps below are what bound their NUMBER. A
- * separate recall cap was a phantom lever: it hid whole batches from the model while
- * their messages were already dropped from the live history, so a band of the story was
- * neither shown nor recalled. Bounding the count happens in one place now, by construction.
+ * Note what was deliberately NOT a tunable for a long time: how many episodes reach the
+ * prompt. Recall renders every stored episode, and the layer caps below are what bound
+ * their NUMBER. A separate recall cap was a phantom lever: it hid whole batches from the
+ * model while their messages were already dropped from the live history, so a band of the
+ * story was neither shown nor recalled. Bounding the count happens in one place now, by
+ * construction. (`recallSoftCapTokens` is the measured exception, added 2026-09-30: an
+ * opt-in RENDERING budget, off by default, that folds the oldest episodes to one-line
+ * indexes instead of dropping them, so the invisible-band hole cannot open. See
+ * architecture/memory.md's revised note and recall.ts before touching it.)
  *
  * What nothing here bounds is the block's SIZE. Episode length is set by the templates, not
  * by these numbers, and it compounds: each merge targets about half the length of what it
@@ -32,7 +36,8 @@ export const DEFAULT_MEMORY_CONFIG: MemoryConfig = {
 	verbatimTail: 16,
 	maxPerLayer: 12,
 	promoteCount: 4,
-	maxLayers: 3
+	maxLayers: 3,
+	recallSoftCapTokens: 0
 };
 
 /**
@@ -70,7 +75,9 @@ const BOUNDS: Record<keyof MemoryConfig, { min: number; max: number }> = {
 	verbatimTail: { min: 1, max: 60 },
 	maxPerLayer: { min: 3, max: 60 },
 	promoteCount: { min: 2, max: 30 },
-	maxLayers: { min: 1, max: 6 }
+	maxLayers: { min: 1, max: 6 },
+	// 0 is "off" (the default); anything else is a rough-token ceiling on the recall block.
+	recallSoftCapTokens: { min: 0, max: 200000 }
 };
 
 function clampField(key: keyof MemoryConfig, value: number): number {
@@ -112,7 +119,14 @@ export const MEMORY_CONFIG_FIELDS: {
 	{ key: 'batchSize', label: 'mem.cfBatch', min: 2, max: 40, help: 'mem.cfBatchH' },
 	{ key: 'maxPerLayer', label: 'mem.cfLayer', min: 3, max: 40, help: 'mem.cfLayerH' },
 	{ key: 'promoteCount', label: 'mem.cfMerge', min: 2, max: 20, help: 'mem.cfMergeH' },
-	{ key: 'maxLayers', label: 'mem.cfLayers', min: 1, max: 6, help: 'mem.cfLayersH' }
+	{ key: 'maxLayers', label: 'mem.cfLayers', min: 1, max: 6, help: 'mem.cfLayersH' },
+	{
+		key: 'recallSoftCapTokens',
+		label: 'mem.cfSoftCap',
+		min: 0,
+		max: 24000,
+		help: 'mem.cfSoftCapH'
+	}
 ];
 
 /** promoteCount can never exceed maxPerLayer (resolveConfig clamps it), and a slider whose

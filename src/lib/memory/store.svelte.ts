@@ -411,7 +411,9 @@ class MemoryStore {
 	/** The recall block as injected via {{memory}}, or '' when inactive or empty. Built from
 	 *  the ACTIVE episodes only, the same set `getRecall` renders at generation time, so
 	 *  the panel's preview and the input meter can never price another branch's summaries. */
-	recall = $derived(this.active ? buildRecall(this.coverage.active) ?? '' : '');
+	recall = $derived(
+		this.active ? buildRecall(this.coverage.active, undefined, this.config.recallSoftCapTokens) ?? '' : ''
+	);
 
 	get busy(): boolean {
 		return this.status === 'processing' || this.status === 'building' || this.status === 'rebuilding';
@@ -654,7 +656,10 @@ class MemoryStore {
 		// this path is excluded whichever bucket it lands in. Nothing is reaped from here.
 		const coverage = resolveCoverage(mem, leafId, episodes, config.verbatimTail);
 		// Recall framing is fixed in code (it's macro resolution, not an editable LLM helper).
-		return { text: buildRecall(coverage.active), archivedIds: coverage.archivedIds };
+		return {
+			text: buildRecall(coverage.active, undefined, config.recallSoftCapTokens),
+			archivedIds: coverage.archivedIds
+		};
 	}
 
 	// ===== Extraction / maintenance =====

@@ -36,7 +36,7 @@ import {
 	type Coverage
 } from './branching';
 import { describeMemoryImpact, enT } from './impact-copy';
-import { buildRecall } from './recall';
+import { buildRecall, estimateRecallTokens } from './recall';
 import {
 	resolveConfig,
 	sanitizeMemoryDefaults,
@@ -515,6 +515,67 @@ describe('recall assembly', () => {
 		const out = buildRecall([ep({ content: 'they met', createdAt: 1 })])!;
 		expect(out).not.toContain('Earlier arcs:');
 		expect(out.startsWith('Recent events:')).toBe(true);
+	});
+});
+
+describe('recall soft cap', () => {
+	const ep = (over: Partial<Episode>) => ({
+		id: 'e',
+		chatId: 'c',
+		layer: 0,
+		content: '',
+		sourceMessageIds: [],
+		anchorMessageId: null,
+		createdAt: 0,
+		...over
+	});
+	const long = (id: string, layer: number) =>
+		ep({
+			id,
+			layer,
+			content: 'x'.repeat(400), // ~100 estimated tokens of latin prose
+			sourceMessageIds: ['a', 'b', 'c', 'd'],
+			createdAt: 0
+		});
+
+	test('cap 0 (the default) renders everything in full', () => {
+		const out = buildRecall([long('a', 1), long('b', 0)])!;
+		expect(out).toContain('xxxx');
+		expect(out).not.toContain('turns folded');
+	});
+
+	test('over budget, the oldest episodes fold to index lines, newest keep prose', () => {
+		const eps = [long('a', 1), long('b', 1), long('c', 0), long('d', 0)];
+		// Two folded index lines (~15 tokens each) plus two full blocks (~100 each) fits ~250.
+		const out = buildRecall(eps, undefined, 250)!;
+		expect(out).toContain('turns folded');
+		// Oldest fold first: both deep episodes fold, both recent keep prose.
+		const foldedCount = out.split('turns folded').length - 1;
+		expect(foldedCount).toBe(2);
+		expect(out).toContain('Earlier arcs:');
+		// The index line names its turn span.
+		expect(out).toContain('[4 turns folded]');
+	});
+
+	test('folding is monotone: a tighter cap never renders more prose', () => {
+		const eps = [long('a', 1), long('b', 0), long('c', 0)];
+		const loose = buildRecall(eps, undefined, 400)!;
+		const tight = buildRecall(eps, undefined, 100)!;
+		expect(estimateRecallTokens(tight)).toBeLessThanOrEqual(estimateRecallTokens(loose));
+	});
+
+	test('the fully-indexed block is the floor and still ships', () => {
+		const eps = [long('a', 1), long('b', 0)];
+		const out = buildRecall(eps, undefined, 1)!;
+		// Every episode folded, none dropped.
+		expect(out.split('turns folded').length - 1).toBe(2);
+		expect(out).not.toContain('xxxx');
+	});
+
+	test('estimateRecallTokens: CJK counts ~1/char, latin ~4/char', () => {
+		expect(estimateRecallTokens('他们抵达城门时天已黑了')).toBe(11); // 11 CJK chars
+		expect(estimateRecallTokens('abcdefgh')).toBe(2); // 8 latin -> ceil(8/4)
+		expect(estimateRecallTokens('他们 arrived')).toBe(4); // 2 CJK + ceil(8/4)
 	});
 });
 
