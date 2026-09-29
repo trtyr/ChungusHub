@@ -323,7 +323,7 @@ type SplicedContext = MacroContext & {
 /** One turn that rides inside the chat rather than at a preset item: the built message, the
  *  depth it wants, and its price. Steering and at-depth lore are the same shape on purpose,
  *  so one placement rule serves both and neither can drift. */
-type DepthSplice = { message: LLMMessage; depth: number; tokens: number };
+type DepthSplice = { message: LLMMessage; depth: number; tokens: number; at?: number };
 
 /**
  * The chat turns THIS resolution injects: one sequence, all of it {{chatHistory}}'s, and
@@ -347,7 +347,7 @@ function injectedTurns(ctx: SplicedContext): LLMMessage[] {
 function placeSplices(injected: LLMMessage[], splices: DepthSplice[] | undefined): LLMMessage[] {
 	if (!splices?.length) return injected;
 	const placements = splices.map((s) => ({
-		at: Math.max(0, injected.length - s.depth),
+		at: s.at ?? Math.max(0, injected.length - s.depth),
 		message: s.message
 	}));
 	const out: LLMMessage[] = [];
@@ -486,7 +486,8 @@ function buildLoreSplices(ctx: MacroContext, model?: string): DepthSplice[] {
 	return (ctx.lorebookPlaced ?? []).map((group) => ({
 		message: { role: group.role, content: group.text },
 		depth: group.depth,
-		tokens: countTokens(group.text, model)
+		tokens: countTokens(group.text, model),
+		...(group.at !== undefined ? { at: group.at } : {})
 	}));
 }
 

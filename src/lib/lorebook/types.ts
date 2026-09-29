@@ -336,6 +336,9 @@ export interface LorebookPlacedGroup {
 	/** Turns back from the newest injected one; 0 lands after it. */
 	depth: number;
 	text: string;
+	/** P016 1d: absolute index into the injected chat (regex-placement entries). When
+	 *  present it wins over `depth`; the entry lands BEFORE that message. */
+	at?: number;
 }
 
 // ===== which generations an entry fires on =====

@@ -816,6 +816,17 @@ export interface LorebookResolution {
 }
 
 /**
+ * P016 1d: `[GENERATE:REGEX:pattern]` entry-title support (SPT Prompt-Template syntax,
+ * documented semantics): the entry is ALWAYS in play and its rendered content lands
+ * before the first message whose text matches the pattern. Case-insensitive per the
+ * upstream docs; an invalid pattern injects nothing and warns.
+ */
+export function parseGenerateRegexTitle(title: string): { pattern: string } | null {
+	const m = /^\s*\[GENERATE:REGEX:(.+)\]\s*$/.exec(title ?? '');
+	return m ? { pattern: m[1] } : null;
+}
+
+/**
  * Scan and render in one call: the ONE way a MacroContext gets its lorebook block. Every
  * context builder (the generation path, the live token meters, the store-sourced twins) goes
  * through this, so a surface can never select differently from the one that sends, and the
@@ -841,12 +852,41 @@ export function resolveLorebooks(opts: {
 	placeAtDepth?: boolean;
 }): LorebookResolution {
 	const expand = opts.expand ?? ((t: string) => t);
+	// P016 1d: [GENERATE:REGEX:...] entries never enter the keyword scan. They are always
+	// in play and place themselves before the first matching message. A pattern that
+	// matches nothing (or does not compile) injects nothing; the trace covers only what
+	// the scan saw, same as the @@if pre-filter.
+	const regexPlaced: LorebookPlacedGroup[] = [];
+	const scanBooks = opts.books.map((b) => {
+		if (!b.entries.some((e) => parseGenerateRegexTitle(e.comment))) return b;
+		const entries: LorebookEntry[] = [];
+		for (const e of b.entries) {
+			const rx = parseGenerateRegexTitle(e.comment);
+			if (!rx) {
+				entries.push(e);
+				continue;
+			}
+			let re: RegExp;
+			try {
+				re = new RegExp(rx.pattern, 'i');
+			} catch {
+				console.warn(
+					`[st-card-compat] invalid [GENERATE:REGEX] pattern on "${e.comment}": ${rx.pattern}`
+				);
+				continue;
+			}
+			const idx = opts.messages.findIndex((m) => re.test(m));
+			if (idx === -1) continue;
+			regexPlaced.push({ role: 'system', depth: 0, text: expand(e.content ?? ''), at: idx });
+		}
+		return { ...b, entries };
+	});
 	// Card fields go in FRONT of the chat: sources are searched from the back, so a key present
 	// in both is reported against the turn the reader is looking at, not the description. They
 	// are expanded like entry content, so a card writing {{char}} is scanned as it reads.
 	const fields = fieldScanSources(opts.fields).map((s) => ({ ...s, text: expand(s.text) }));
 	const selection = scanLorebooks({
-		books: opts.books,
+		books: scanBooks,
 		sources: [...fields, ...messageScanSources(opts.messages)],
 		rng: opts.rng,
 		settings: opts.settings,
@@ -857,7 +897,7 @@ export function resolveLorebooks(opts: {
 	const rendered = renderLorebookBlock(selection, expand, opts.budget, opts.placeAtDepth);
 	return {
 		text: rendered.text,
-		placed: rendered.placed,
+		placed: [...regexPlaced, ...rendered.placed],
 		trace: buildLorebookTrace(rendered.records)
 	};
 }
