@@ -55,6 +55,7 @@ const MAX_VISIBLE = 3;
 import { i18n } from '$lib/i18n/i18n.svelte';
 import { labelT } from '$lib/i18n/labels';
 import { setSaveFailureHandler } from '$lib/services/syncedSetting';
+import { setTransportErrorText } from '$lib/services/transport';
 
 const REASON_CAP = 160;
 
@@ -149,4 +150,10 @@ export const toastStore = new ToastStore();
 // imports) so the module graph cannot re-enter mid-initialization; the UI layer owns the toast.
 setSaveFailureHandler((key) => {
 	toastStore.error(i18n.t('sv.saveFail', { key }));
+});
+// Same doctrine one layer down: transport sits beneath database in the module graph, so it
+// cannot import i18n either. The closures read the active language at throw time.
+setTransportErrorText({
+	notConnected: () => i18n.t('tp.notConnected'),
+	requestFailed: (n) => i18n.t('tp.requestFailedN', { n })
 });
