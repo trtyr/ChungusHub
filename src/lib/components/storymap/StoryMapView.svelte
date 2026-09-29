@@ -23,6 +23,7 @@
 		createStoryMapView,
 		nodeIdFromEvent,
 		clamp,
+		isNodeVisible,
 		PAD,
 		COL_W,
 		ROW_H,
@@ -382,6 +383,20 @@
 			null
 	);
 
+	// Viewport culling: only nodes whose screen position falls on the stage (plus margin)
+	// mount in the SVG. The roving/selected node always mounts, so the keyboard focus ring
+	// and the inspector anchor never lose their DOM element mid-navigation. Edges stay
+	// unculled: a path is one cheap element and elbows from off-screen parents still draw
+	// into view.
+	let visibleNodes = $derived(
+		graph.nodes.filter(
+			(n) =>
+				n.id === rovingId ||
+				n.id === selectedId ||
+				isNodeVisible(n, view)
+		)
+	);
+
 	function keyContextNode(e: KeyboardEvent): StoryMapNode | null {
 		const focused = nodeIdFromEvent(e);
 		const id = selected?.id ?? focused ?? rovingId;
@@ -582,8 +597,8 @@
 							{/if}
 						{/each}
 
-						<!-- Nodes -->
-						{#each graph.nodes as n (n.id)}
+						<!-- Nodes: culled to the viewport (see visibleNodes) -->
+						{#each visibleNodes as n (n.id)}
 							{@const cx = cxOf(n)}
 							{@const cy = cyOf(n)}
 							{@const r = rOf(n)}

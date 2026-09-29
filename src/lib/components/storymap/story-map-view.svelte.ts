@@ -29,6 +29,29 @@ const FOCUS_K_MAX = 1.3;
 export const cxOf = (n: StoryMapNode): number => n.col * COL_W + PAD;
 export const cyOf = (n: StoryMapNode): number => n.depth * ROW_H + PAD;
 
+/** Screen-space slack around the viewport for node culling: covers the dot radius, the
+ *  halo ring and the oversized hit disc, so a node just off-screen is still mounted when
+ *  its edge or its neighbour's ring pokes into view. */
+export const CULL_MARGIN = 48;
+
+/** Viewport culling for the map canvas: whether a node's screen position falls inside the
+ *  stage (plus margin). Pure arithmetic so a pan/zoom frame can afford one test per node
+ *  even at several thousand nodes; the DOM then only carries what is on screen. */
+export function isNodeVisible(
+	n: StoryMapNode,
+	view: { k: number; tx: number; ty: number; stageW: number; stageH: number },
+	margin = CULL_MARGIN
+): boolean {
+	const sx = cxOf(n) * view.k + view.tx;
+	const sy = cyOf(n) * view.k + view.ty;
+	return (
+		sx >= -margin &&
+		sx <= view.stageW + margin &&
+		sy >= -margin &&
+		sy <= view.stageH + margin
+	);
+}
+
 const R_MIN = 10;
 const R_MAX = 19;
 /** Square root, not linear: turns run from a dozen characters to several thousand. */
