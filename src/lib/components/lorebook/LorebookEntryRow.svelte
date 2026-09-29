@@ -37,6 +37,7 @@
 	import Toggle from '$lib/components/ui/Toggle.svelte';
 	import KeyChipInput from './KeyChipInput.svelte';
 	import OverrideMark from '$lib/components/ui/OverrideMark.svelte';
+	import StMarkerBadge from '$lib/components/ui/StMarkerBadge.svelte';
 
 	type Nature = LorebookEntryNature;
 
@@ -396,6 +397,7 @@
 						title={i18n.t('ler.tokenTitle')}
 					>~{contentTokens}</span>
 				{/if}
+				<StMarkerBadge title={entry.comment} content={entry.content} />
 				<!-- Quick fields: edit priority and trigger chance without unfolding the row. -->
 				<label class="lbr-mini" title={i18n.t('ler.orderMini')}>
 					<span class="lbr-mini-key">{i18n.t('ler.ordTag')}</span>

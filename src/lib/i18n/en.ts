@@ -3122,6 +3122,12 @@ export const en: Record<string, string> = {
 	'ler.secondaryPlaceholder': 'optional, leave empty to ignore',
 	'ler.secondaryAria': 'Secondary keywords',
 	'ler.content': 'Content',
+	'st.badgeEjs': 'EJS template',
+	'st.badgeInject': 'ST injection syntax',
+	'st.badgeDecorator': 'ST conditional',
+	'st.badgeScript': 'script card',
+	'st.badgeHint':
+		'This entry depends on SillyTavern extensions (Prompt Template / TavernHelper). This app degrades it to static text: template statements are never sent to the model, and the entry data stays as written.',
 	'ler.contentPlaceholder': 'The text woven into context when this entry fires…',
 	'ler.order': 'Order',
 	'ler.orderHelp': 'Lower is injected first.',

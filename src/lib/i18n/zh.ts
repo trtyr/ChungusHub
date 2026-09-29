@@ -3033,6 +3033,12 @@ export const zh: Record<string, string> = {
 	'ler.secondaryPlaceholder': '可选，留空则忽略',
 	'ler.secondaryAria': '次关键词',
 	'ler.content': '内容',
+	'st.badgeEjs': 'EJS 模板',
+	'st.badgeInject': 'ST 注入语法',
+	'st.badgeDecorator': 'ST 条件装饰器',
+	'st.badgeScript': '可编程卡',
+	'st.badgeHint':
+		'此条目依赖 SillyTavern 扩展（提示词模板 / 酒馆助手）。本应用按静态文本降级处理：模板语句不会发给模型，条目数据保持原样。',
 	'ler.contentPlaceholder': '此条目触发时织入上下文的文本…',
 	'ler.order': '顺序',
 	'ler.orderHelp': '越小越先注入。',
