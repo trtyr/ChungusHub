@@ -14,6 +14,8 @@ import type { Message } from '$lib/types/chat';
 import { expandMacros, type MacroContext, type PromptCharacter } from '$lib/macros';
 import { expandVarMacros } from '$lib/utils/var-macros';
 import { resolveLorebooks } from '$lib/lorebook/engine';
+import { varsStore } from '$lib/stores/vars.svelte';
+import { applyStCardCompat } from '$lib/utils/st-if-condition';
 import { lorebookHistory, lorebookScanFields, type LorebookTrigger } from '$lib/lorebook/types';
 import { chatStore } from '$lib/stores/chat.svelte';
 import { characterLibraryStore } from '$lib/stores/characterLibrary.svelte';
@@ -75,6 +77,7 @@ export function buildLiveMacroContext(opts: LiveMacroContextOptions = {}): Macro
 			: undefined;
 	const persona = chatPersonaEntry(chatStore.activeChat);
 	const base: MacroContext = {
+		vars: varsStore.cloneFor(chatStore.activeChat?.id ?? ''),
 		resolvedPersona: toPromptCharacter(persona),
 		resolvedCharacters: character ? [character] : [],
 		chatMessages,
@@ -86,11 +89,15 @@ export function buildLiveMacroContext(opts: LiveMacroContextOptions = {}): Macro
 	// buildMacroContext, through the same resolver, so these surfaces cannot select
 	// differently from the prompt they sit beside.
 	const lore = resolveLorebooks({
-		books: lorebookStore.booksForChat({
-			cards: [...(characterData?.lorebookIds ?? []), ...(persona?.data.lorebookIds ?? [])],
-			chat: chatLorebookClaim(chatStore.activeChat),
-			muted: chatMutedLorebookClaim(chatStore.activeChat)
-		}),
+		books: applyStCardCompat(
+			lorebookStore.booksForChat({
+				cards: [...(characterData?.lorebookIds ?? []), ...(persona?.data.lorebookIds ?? [])],
+				chat: chatLorebookClaim(chatStore.activeChat),
+				muted: chatMutedLorebookClaim(chatStore.activeChat)
+			}),
+			base,
+			base.vars
+		),
 		messages: chatMessages.map((m) => m.content),
 		// The steering these surfaces sit beside is scannable, through the store's gated
 		// resolver so the notes are exactly the ones the prompt would carry, and none at all

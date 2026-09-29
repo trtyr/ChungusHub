@@ -36,6 +36,8 @@ import {
 	type PromptCharacter
 } from '$lib/macros';
 import { expandVarMacros } from '$lib/utils/var-macros';
+import { stripEjsBlocks } from '$lib/utils/st-markers';
+import { applyStCardCompat } from '$lib/utils/st-if-condition';
 import type { VarEnv } from '$lib/macros';
 import { countTokens } from '$lib/tokenizer/count';
 import { applyPromptRegex, type RegexRule } from './regex-rules';
@@ -209,7 +211,7 @@ export function buildMacroContext(input: AssembleInput): MacroContext {
 	// yet: that is what makes a stray {{lorebook}} inside an entry resolve to nothing instead of
 	// recursing, and it leaves ONE roll of the probabilistic entries per assembly.
 	const lore = resolveLorebooks({
-		books: input.lorebooks,
+		books: applyStCardCompat(input.lorebooks, base, input.vars),
 		// An at-depth entry needs a chat to sit inside. Without {{chatHistory}} in the enabled
 		// preset there is no such sequence, so those entries join the block instead of landing
 		// in a position nothing renders. Decided here, once, where the preset is already known.
@@ -663,7 +665,7 @@ export function assemblePrompt(input: AssembleInput): PromptAssembly {
 	}
 
 	return {
-		messages: applyPostProcessing(messages, mode, placeholder),
+		messages: applyPostProcessing(stripTemplateBlocks(messages), mode, placeholder),
 		breakdown,
 		trimmedMessages,
 		trimmedExampleBlocks,
@@ -728,6 +730,19 @@ function systemFallback(
 		lorebook: EMPTY_LOREBOOK_TRACE,
 		continuationSent: tailMessages[0]?.content
 	};
+}
+
+/**
+ * Send-side degrade for ST extension-card template syntax (P015 档0): EJS blocks
+ * (`<% ... %>`, the SillyTavern Prompt-Template dialect) are removed from assembled
+ * messages so the model never sees raw template statements. Originals everywhere
+ * stay untouched; token pricing above ran on unstripped text, so it can only
+ * over-count, the safe direction for the budget trim.
+ */
+function stripTemplateBlocks(messages: LLMMessage[]): LLMMessage[] {
+	return messages.map((m) =>
+		m.content.includes('<%') ? { ...m, content: stripEjsBlocks(m.content) } : m
+	);
 }
 
 /**

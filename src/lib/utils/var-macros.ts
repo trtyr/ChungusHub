@@ -394,8 +394,11 @@ function expandIfBlocks(text: string, ctx: MacroContext, env: VarEnv | undefined
 
 /** A condition expands (variables then engine macros) and is judged with ST falsiness;
  *  a leading `!` inverts. The returned string is the final 'true'/'false' verdict so the
- *  caller never re-parses the negation. */
-function expandCondition(condition: string, ctx: MacroContext, env: VarEnv | undefined): string {
+ *  caller never re-parses the negation.
+ *  Exported for the ST-card `@@if` condition evaluator (P015 档1e), which translates the
+ *  supported subset into shorthand conditions here rather than growing a second copy of
+ *  the comparison/falsy semantics. */
+export function expandCondition(condition: string, ctx: MacroContext, env: VarEnv | undefined): string {
 	let inverted = false;
 	let body = condition.trim();
 	if (body.startsWith('!')) {
