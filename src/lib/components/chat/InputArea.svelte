@@ -36,7 +36,7 @@
 	} from '$lib/utils/chat-setup';
 	import { relativeClock } from '$lib/utils/time-format.svelte';
 	import { llmService } from '$lib/services/llm/provider';
-	import { imageService, imageRejectionReason, isImageFile } from '$lib/services/imageService';
+	import { createComposerImages } from './composer-images.svelte';
 	import { duplicateAsksAboutMemory } from '$lib/types/chat';
 	import type { Chat, ChatMemoryFootprint, Message, MessageAttachment } from '$lib/types/chat';
 	import SteeringPopover from '$lib/components/chat/SteeringPopover.svelte';
@@ -737,104 +737,10 @@
 		}
 	}
 
-	// ===== Image attachments =====
+	// ===== Image attachments (domain lives in composer-images.svelte.ts) =====
 
-	let pendingImages = $state<{ path: string; url: string }[]>([]);
-	let uploadingImages = $state(0);
 	let fileInput: HTMLInputElement | undefined = $state();
-	/** The attach menu. One row today; the button is a menu because the next attachable
-	 *  kind shouldn't have to re-teach the composer's toolbar what that button does. */
-	let attachOpen = $state(false);
-
-	function pickImage() {
-		attachOpen = false;
-		fileInput?.click();
-	}
-
-	async function attachImageFiles(files: File[]): Promise<void> {
-		const images: File[] = [];
-		for (const file of files) {
-			const refused = imageRejectionReason(file);
-			if (refused) toastStore.error(refused);
-			else images.push(file);
-		}
-		if (!images.length) return;
-		// Attaching is always possible; whether the images actually ride the prompt
-		// depends on the provider/model + the Send images setting, so say so up front
-		// instead of silently dropping them at generation time.
-		if (!llmService.sendsImages()) {
-			toastStore.warning(i18n.t('chat.noImageSupport'));
-		}
-		uploadingImages += images.length;
-		for (const file of images) {
-			try {
-				const path = await imageService.saveImage(file, 'chat');
-				const url = imageService.thumbnailUrl(path) ?? (await imageService.getImageUrl(path)) ?? '';
-				pendingImages = [...pendingImages, { path, url }];
-			} catch (error) {
-				toastStore.failed(i18n.t('chat.failAttach', { name: file.name }), error);
-			} finally {
-				uploadingImages -= 1;
-			}
-		}
-	}
-
-	function handlePaste(e: ClipboardEvent) {
-		const files = Array.from(e.clipboardData?.files ?? []).filter(isImageFile);
-		if (files.length) {
-			e.preventDefault();
-			void attachImageFiles(files);
-		}
-	}
-
-	function handleFilePick(e: Event) {
-		const input = e.currentTarget as HTMLInputElement;
-		void attachImageFiles(Array.from(input.files ?? []));
-		input.value = '';
-	}
-
-	// ===== Dropping a picture on the composer =====
-	// Pictures only. A story turn has nowhere to put a text file (the assistant panel is
-	// what reads those), so one dropped here is refused by name rather than silently ignored,
-	// which would read as the drop having failed.
-
-	/** Depth-counted so a drag crossing a child element doesn't flicker the overlay off. */
-	let dragDepth = $state(0);
-
-	function handleDragEnter(e: DragEvent) {
-		if (!e.dataTransfer?.types.includes('Files')) return;
-		dragDepth += 1;
-	}
-
-	function handleDragOver(e: DragEvent) {
-		if (!e.dataTransfer?.types.includes('Files')) return;
-		// Without this the browser navigates away to the dropped file.
-		e.preventDefault();
-		e.dataTransfer.dropEffect = 'copy';
-	}
-
-	function handleDragLeave() {
-		dragDepth = Math.max(0, dragDepth - 1);
-	}
-
-	function handleDrop(e: DragEvent) {
-		const dropped = Array.from(e.dataTransfer?.files ?? []);
-		dragDepth = 0;
-		if (!dropped.length) return;
-		e.preventDefault();
-		const images = dropped.filter(isImageFile);
-		for (const file of dropped.filter((f) => !isImageFile(f))) {
-			toastStore.error(i18n.t('chat.notAnImage', { name: file.name }));
-		}
-		if (images.length) void attachImageFiles(images);
-	}
-
-	function removePendingImage(path: string) {
-		pendingImages = pendingImages.filter((img) => img.path !== path);
-		// The upload is already on the server; drop the file too so abandoned
-		// attachments don't pile up in images/chat/.
-		void imageService.deleteImage(path);
-	}
+	const imgs = createComposerImages({ get current() { return fileInput; } });
 
 	function handleSubmit() {
 		// The Send button is the palette's other door, which is what makes command mode work
@@ -849,8 +755,8 @@
 		// every other refused mutation say the same thing.
 		if (isStreaming && messageStore.warnIfBusy()) return;
 		const trimmed = content.trim();
-		if ((trimmed || pendingImages.length) && !isStreaming && !uploadingImages) {
-			const attachments: MessageAttachment[] = pendingImages.map((img) => ({ kind: 'image', path: img.path }));
+		if ((trimmed || imgs.pendingImages.length) && !isStreaming && !imgs.uploadingImages) {
+			const attachments: MessageAttachment[] = imgs.pendingImages.map((img) => ({ kind: 'image', path: img.path }));
 			// The box empties when the send COMMITS, not when it is asked for. With a prompt
 			// hold on this gate those are different moments, and a review the reader cancels
 			// has to hand back exactly what they typed, pictures and all. The chat is named
@@ -864,7 +770,7 @@
 	function releaseDraft(chatId: string | null, sent: string) {
 		if (sent) inputHistoryStore.record(chatId, sent);
 		content = '';
-		pendingImages = [];
+		imgs.clear();
 		historyPos = null;
 		// The message is sent, so the draft's job is done.
 		if (chatId) inputDraftStore.clear(chatId);
@@ -1038,7 +944,7 @@
 		// has scrolled out of the list.
 		// A composer holding a picture is not empty, whatever the text box says: arming there
 		// would let `/say` land a turn while the attachment sat behind it, silently dropped.
-		if (!commandArmed && content === '/' && !pendingImages.length && !uploadingImages)
+		if (!commandArmed && content === '/' && !imgs.pendingImages.length && !imgs.uploadingImages)
 			commandArmed = true;
 		else if (commandArmed && !parseCommandInput(content)) commandArmed = false;
 		commandIndex = 0;
@@ -1082,13 +988,13 @@
 			class:composer-shell--frozen={transformOpen}
 			class:composer-shell--command={commandOpen}
 			style="box-shadow: var(--shadow-sm);"
-			ondragenter={handleDragEnter}
-			ondragover={handleDragOver}
-			ondragleave={handleDragLeave}
-			ondrop={handleDrop}
+			ondragenter={imgs.handleDragEnter}
+			ondragover={imgs.handleDragOver}
+			ondragleave={imgs.handleDragLeave}
+			ondrop={imgs.handleDrop}
 			role="presentation"
 		>
-			{#if dragDepth > 0}
+			{#if imgs.dragDepth > 0}
 				<div class="composer-drop">{i18n.t('chat.dropHint')}</div>
 			{/if}
 
@@ -1141,15 +1047,15 @@
 					onPick={pickCommand}
 				/>
 			{/if}
-			{#if pendingImages.length || uploadingImages > 0}
+			{#if imgs.pendingImages.length || imgs.uploadingImages > 0}
 				<div class="attach-strip">
-					{#each pendingImages as img (img.path)}
+					{#each imgs.pendingImages as img (img.path)}
 						<div class="attach-thumb">
 							<img src={img.url} alt={i18n.t('chat.attached')} />
 							<button
 								type="button"
 								class="attach-remove"
-								onclick={() => removePendingImage(img.path)}
+								onclick={() => imgs.removePendingImage(img.path)}
 								aria-label={i18n.t('chat.removeImage')}
 								title={i18n.t('common.remove')}
 							>
@@ -1157,7 +1063,7 @@
 							</button>
 						</div>
 					{/each}
-					{#if uploadingImages > 0}
+					{#if imgs.uploadingImages > 0}
 						<div class="attach-thumb attach-uploading" title={i18n.t('chat.uploading')}>
 							<Icon name="refresh" class="w-4 h-4 animate-spin text-text-muted" />
 						</div>
@@ -1170,7 +1076,7 @@
 					bind:value={content}
 					onkeydown={handleKeydown}
 					oninput={handleComposerInput}
-					onpaste={handlePaste}
+					onpaste={imgs.handlePaste}
 				placeholder={i18n.t('chat.typePlaceholder')}
 				disabled={draftLocked || transformOpen}
 					rows="1"
@@ -1196,9 +1102,9 @@
 						<button
 							type="button"
 							onclick={handleSubmit}
-							disabled={uploadingImages > 0 ||
+							disabled={imgs.uploadingImages > 0 ||
 							transformOpen ||
-							(commandOpen ? !commandReady : !content.trim() && !pendingImages.length)}
+							(commandOpen ? !commandReady : !content.trim() && !imgs.pendingImages.length)}
 							class="flex items-center justify-center w-9 h-9 rounded-full
 						       bg-accent text-on-accent
 						       hover:bg-accent-hover
@@ -1369,24 +1275,24 @@
 					<div class="composer-menu-wrap relative">
 						<button
 							type="button"
-							onclick={() => (attachOpen = !attachOpen)}
+							onclick={() => (imgs.attachOpen = !imgs.attachOpen)}
 							class="composer-icon-btn"
-							class:composer-icon-btn--active={attachOpen}
+							class:composer-icon-btn--active={imgs.attachOpen}
 							disabled={isStreaming}
 							aria-label={i18n.t('chat.attach')}
 							title={i18n.t('chat.attach')}
 							aria-haspopup="menu"
-							aria-expanded={attachOpen}
+							aria-expanded={imgs.attachOpen}
 						>
 							<Icon name="paperclip" class="w-4 h-4" />
 						</button>
 
-						{#if attachOpen}
+						{#if imgs.attachOpen}
 							<!-- Backdrop to close menu -->
 							<button
 								type="button"
 								class="fixed inset-0 z-10"
-								onclick={() => (attachOpen = false)}
+								onclick={() => (imgs.attachOpen = false)}
 								aria-label={i18n.t('common.closeMenu')}
 							></button>
 
@@ -1398,7 +1304,7 @@
 									type="button"
 									class="composer-menu-item"
 									title={i18n.t('chat.imageTypes')}
-									onclick={pickImage}
+									onclick={imgs.pickImage}
 								>
 									<Icon name="image" class="w-4 h-4" />
 									{i18n.t('chat.menuImage')}
@@ -1414,7 +1320,7 @@
 						accept="image/png,image/jpeg,image/webp,image/gif"
 						multiple
 						class="hidden"
-						onchange={handleFilePick}
+						onchange={imgs.handleFilePick}
 					/>
 
 					{#if featurePromptsStore.steeringEnabled && chatStore.activeChatId}
