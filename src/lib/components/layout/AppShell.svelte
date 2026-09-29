@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { labelT } from '$lib/i18n/labels';
+	import { installUrlSync } from '$lib/stores/url-sync.svelte';
 	import Workspace from '$lib/components/layout/Workspace.svelte';
 	import TitleBar from '$lib/components/layout/TitleBar.svelte';
 	import AssistantFloatingWidget from '$lib/components/assistant/AssistantFloatingWidget.svelte';
@@ -54,6 +55,11 @@
 	import { i18n } from '$lib/i18n/i18n.svelte';
 
 	type Phase = 'loading' | 'ready' | 'error' | 'denied' | 'maintenance';
+
+	// Hash deep links: apply #storymap etc. from the address bar and keep the hash
+	// mirroring the open panel from here on. Called at component init so its $effect
+	// binds to this component's lifecycle.
+	installUrlSync();
 
 	let phase = $state<Phase>('loading');
 	let error = $state<string | null>(null);
