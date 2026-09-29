@@ -23,6 +23,9 @@ import { convertSillyTavernChat } from '$lib/services/sillyTavernChatImport';
 import { toastStore } from '$lib/stores/toast.svelte';
 import { characterLibraryStore } from '$lib/stores/characterLibrary.svelte';
 import { lorebookStore } from '$lib/lorebook/store.svelte';
+import { varsStore } from '$lib/stores/vars.svelte';
+import { isInitialVariablesEntry, parseInitialVariables } from '$lib/utils/st-initial-variables';
+import type { LibraryEntry } from '$lib/types/library';
 import { chatCastStore } from '$lib/stores/chatCast.svelte';
 import { uiStore } from '$lib/stores/ui.svelte';
 import { memoryStore } from '$lib/memory/store.svelte';
@@ -152,9 +155,41 @@ class ChatStore {
 		// The chat opens on its greeting: the First Message becomes message 1 and any
 		// alternate greetings become its sibling branches (swipeable).
 		await this.seedCharacterGreetings(chat, characterId);
+		await this.seedInitialVariables(chat.id, entry);
 		await this.selectChat(chat.id);
 
 		return chat.id;
+	}
+
+	/** P015 档1a: ST Prompt-Template cards seed chat variables through `[InitialVariables]`
+	 *  world-info entries. On chat creation, parse those entries from the character's linked
+	 *  books and write the flat rows into this chat's locals (JSON literals only; YAML is
+	 *  detected and refused by name; first writer wins across books). */
+	private async seedInitialVariables(chatId: string, entry: LibraryEntry | undefined): Promise<void> {
+		if (!entry) return;
+		const books = lorebookStore.resolveLinks(entry.data.lorebookIds ?? []);
+		if (books.length === 0) return;
+		const locals = varsStore.envFor(chatId).locals;
+		let touched = false;
+		for (const book of books) {
+			for (const e of book.entries) {
+				if (!isInitialVariablesEntry(e.comment, e.content)) continue;
+				const parsed = parseInitialVariables(e.content);
+				if (!parsed.ok) {
+					console.warn(
+						`[st-card-compat] initial variables entry ${book.name}/${e.comment}: ${parsed.error}`
+					);
+					continue;
+				}
+				for (const [key, value] of Object.entries(parsed.vars)) {
+					if (!(key in locals)) {
+						locals[key] = value;
+						touched = true;
+					}
+				}
+			}
+		}
+		if (touched) await varsStore.flush(chatId, locals);
 	}
 
 	/** Lay down the character's First Message + alternate greetings as root-level sibling
