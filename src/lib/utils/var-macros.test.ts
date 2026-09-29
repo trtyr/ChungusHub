@@ -291,3 +291,49 @@ describe('ordering and nesting', () => {
 		expect(clone.locals['n']).toBe('999');
 	});
 });
+
+describe('dotted-path keys (P016 1b: 档1a seeds flat keys verbatim)', () => {
+	const seeded = (): VarEnv => {
+		const env = emptyVarEnv();
+		env.locals['hakimi.affection'] = '50';
+		env.globals['app.theme.mode'] = 'dark';
+		return env;
+	};
+
+	test('shorthand reads dotted keys from the flat table', () => {
+		const ctx = ctxWith(seeded());
+		expect(expandVarMacros('{{.hakimi.affection}}', ctx)).toBe('50');
+		expect(expandVarMacros('{{$app.theme.mode}}', ctx)).toBe('dark');
+	});
+
+	test('shorthand writes dotted keys', () => {
+		const ctx = ctxWith(seeded());
+		expandVarMacros('{{.hakimi.affection = 60}}', ctx);
+		expect(ctx.vars?.locals['hakimi.affection']).toBe('60');
+		expandVarMacros('{{$app.theme.mode = light}}', ctx);
+		expect(ctx.vars?.globals['app.theme.mode']).toBe('light');
+	});
+
+	test('operators work on dotted keys', () => {
+		const ctx = ctxWith(seeded());
+		expect(expandVarMacros('{{.hakimi.affection += 5}}', ctx)).toBe('');
+		expect(ctx.vars?.locals['hakimi.affection']).toBe('55');
+		expect(expandVarMacros('{{.hakimi.affection > 54}}', ctx)).toBe('true');
+		expect(expandVarMacros('{{if .hakimi.affection > 49}}high{{/if}}', ctx)).toBe('high');
+	});
+
+	test('getvar/setvar take dotted keys as plain literal key names', () => {
+		const ctx = ctxWith(seeded());
+		expect(expandMacros(expandVarMacros('{{getvar::hakimi.affection}}', ctx), ctx)).toBe('50');
+		expandVarMacros('{{setvar::hakimi.mood::warm}}', ctx);
+		expect(ctx.vars?.locals['hakimi.mood']).toBe('warm');
+	});
+
+	test('non-dotted behavior is unchanged: bare keys and literals stay literal', () => {
+		const ctx = ctxWith(seeded());
+		expect(expandVarMacros('{{.missing}}', ctx)).toBe('');
+		// A key that is not in the table renders empty on read; the raw text of an
+		// unknown {{name}} macro is untouched by the shorthand pass.
+		expect(expandVarMacros('{{notAVar}}', ctx)).toBe('{{notAVar}}');
+	});
+});

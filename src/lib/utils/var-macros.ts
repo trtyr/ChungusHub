@@ -200,11 +200,15 @@ function evalUtility(name: string, rawArgs: string): ReadResult {
 }
 
 // ---------------------------------------------------------------------------
-// Shorthand {{.var}} / {{$var}} with operators
+// Shorthand {{.var}} / {{$var}} with operators; keys may be dotted paths
+// (P016 1b: 档1a seeds flat keys like 'hakimi.affection', read/written verbatim)
 // ---------------------------------------------------------------------------
 
+/** A bare shorthand key, whole-string: same shape as the shorthand RE's key group. */
+const BARE_SHORTHAND_KEY_RE = /^[.$][A-Za-z][A-Za-z0-9_]*(?:[-.][A-Za-z0-9_]+)*$/;
+
 const SHORTHAND_RE_SRC =
-	'\\{\\{\\s*([.$])([A-Za-z](?:[A-Za-z0-9_-]*[A-Za-z0-9_])?)\\s*(?:(\\+\\+|--|\\+=|-=|\\|\\|=|\\?\\?=|==|!=|>=|<=|\\|\\||\\?\\??|>|<|=)\\s*(' + ARG + '))?\\s*\\}\\}';
+	'\\{\\{\\s*([.$])([A-Za-z][A-Za-z0-9_]*(?:[-.][A-Za-z0-9_]+)*)\\s*(?:(\\+\\+|--|\\+=|-=|\\|\\|=|\\?\\?=|==|!=|>=|<=|\\|\\||\\?\\??|>|<|=)\\s*(' + ARG + '))?\\s*\\}\\}';
 const SHORTHAND_RE = () => new RegExp(SHORTHAND_RE_SRC, 'g');
 
 /** Lazy right-hand side: `||`/`??` only evaluate the fallback when taken. */
@@ -406,11 +410,20 @@ export function expandCondition(condition: string, ctx: MacroContext, env: VarEn
 		body = body.slice(1).trim();
 	}
 	// A bare shorthand condition ({{if .flag}}) never enters the {{...}} pass, so a
-	// leading . / $ resolves straight against the tables; everything else expands.
+	// leading . / $ resolves straight against the tables, a BARE key only: a condition
+	// carrying an operator ({{if .x > 3}}, P016 1b dotted keys included) must be wrapped
+	// into the shorthand comparison instead, or the lookup would answer the VALUE where
+	// the author asked for a COMPARISON. Everything else expands as before.
 	let expanded: string;
-	if ((body.startsWith('.') || body.startsWith('$')) && !body.includes('{{')) {
+	if (
+		(body.startsWith('.') || body.startsWith('$')) &&
+		!body.includes('{{') &&
+		BARE_SHORTHAND_KEY_RE.test(body)
+	) {
 		const table = env ? pickTable(env, body.startsWith('$')) : undefined;
 		expanded = table?.[body.slice(1)] ?? '';
+	} else if ((body.startsWith('.') || body.startsWith('$')) && !body.includes('{{')) {
+		expanded = expandVarMacros(`{{${body}}}`, ctx, env);
 	} else {
 		expanded = expandMacros(expandVarMacros(body, ctx, env), ctx);
 	}
