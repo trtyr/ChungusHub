@@ -3,7 +3,7 @@
  *
  * Everything here is self-contained: the state is attachment-local and every dependency
  * is an external singleton (imageService, llmService, toast, i18n), so the domain moves
- * as one piece. The composer keeps a single instance and consumes it in three places —
+ * as one piece. The composer keeps a single instance and consumes it in three places:
  * the send gate (pendingImages/uploadingImages), the release after a send (clear), and
  * the template's bindings (drag overlay, attach menu, thumbnails).
  */

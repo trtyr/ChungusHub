@@ -19,31 +19,25 @@
 	import { layoutStoryTree, type StoryMapNode } from '$lib/utils/story-map-layout';
 	import { findDeepestLeafFromNode } from '$lib/utils/message-tree';
 	import { branchColorHex } from '$lib/utils/branch-labels';
+	import {
+		createStoryMapView,
+		nodeIdFromEvent,
+		clamp,
+		PAD,
+		COL_W,
+		ROW_H,
+		HIT_R,
+		DETAIL_K,
+		cxOf,
+		cyOf,
+		rOf
+	} from './story-map-view.svelte';
 	import { i18n } from '$lib/i18n/i18n.svelte';
 	import type { BranchLabel } from '$lib/types/chat';
 
 	// ===== Geometry =====
-	const PAD = 46;
-	const COL_W = 56;
-	const ROW_H = 98;
-	/** A dot's size is how much was written at it. A map where every turn is the same circle
-	 *  is a diagram of pointers; sized, the story's own rhythm is in it: a long reply reads
-	 *  as weight, a one-line aside as a beat, and a stretch of both as pacing. Square root,
-	 *  not linear: turns run from a dozen characters to several thousand, and a linear map
-	 *  would leave everything short indistinguishable at the bottom of the range. */
-	const R_MIN = 10;
-	const R_MAX = 19;
-	const R_FULL_AT = 2000;
-	/** Invisible hit disc radius: keeps touch targets ~44px without fattening the visuals. */
-	const HIT_R = 22;
-	const MIN_K = 0.05;
-	const MAX_K = 2.6;
-	/** Below this the canvas is an overview, not a document: dots are specks, and a reader
-	 *  can't tell which one they are standing on. Two things follow from that one fact:
-	 *  branch names are dropped (the bookmark bar carries them at this zoom), and the map
-	 *  refuses to OPEN here, because a story tall enough to land under it is exactly the
-	 *  story whose reader most needs to see where they are. */
-	const DETAIL_K = 0.35;
+	// Constants and world-coordinate helpers (PAD/COL_W/ROW_H/radii, cxOf/cyOf/rOf) live in
+	// story-map-view.svelte.ts beside the camera they describe.
 
 	let chat = $derived(chatStore.currentChatState?.chat ?? null);
 	let allMessages = $derived(chatStore.currentChatState?.allMessages ?? []);
@@ -80,11 +74,6 @@
 	let labeledNodes = $derived(
 		graph.nodes.filter((n) => n.label).sort((a, b) => a.depth - b.depth || a.col - b.col)
 	);
-
-	const cxOf = (n: StoryMapNode) => n.col * COL_W + PAD;
-	const cyOf = (n: StoryMapNode) => n.depth * ROW_H + PAD;
-	const rOf = (n: StoryMapNode) =>
-		R_MIN + (R_MAX - R_MIN) * Math.min(1, Math.sqrt(n.content.length / R_FULL_AT));
 
 	// Turns the memory engine has folded into a summary, ghosted here the way the transcript
 	// ghosts them: the map is where "the model only remembers this stretch in summary" is
@@ -127,369 +116,41 @@
 		);
 	}
 
-	// ===== View transform (pan/zoom) =====
-	let tx = $state(0);
-	let ty = $state(0);
-	let k = $state(1);
+	// ===== View transform + pointer gestures (camera domain in story-map-view.svelte.ts) =====
+
 	let stageEl = $state<HTMLDivElement | undefined>(undefined);
 	let canvasEl = $state<HTMLDivElement | undefined>(undefined);
 	let inspEl = $state<HTMLDivElement | undefined>(undefined);
-	let stageW = $state(0);
-	let stageH = $state(0);
-	let pct = $derived(Math.round(k * 100));
-	let lastFitKey = '';
-	/** True once the user pans/zooms by hand, after which a resize keeps their framing. */
-	let userMovedView = false;
-
-	const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
-
-	function reducedMotion(): boolean {
-		return (
-			document.documentElement.getAttribute('data-motion') === 'reduced' ||
-			window.matchMedia('(prefers-reduced-motion: reduce)').matches
-		);
-	}
-
-	let animId: number | null = null;
-	function cancelAnim() {
-		if (animId !== null) {
-			cancelAnimationFrame(animId);
-			animId = null;
-		}
-	}
-
-	/** One rule for every camera move: how long it takes follows how far it actually goes. A
-	 *  nudge to the turn next door has no business costing as much as a flight across the
-	 *  forest, and a flight crammed into a nudge's time reads as a cut rather than a move. */
-	function moveDuration(dx: number, dy: number, kRatio: number): number {
-		return clamp(150 + Math.hypot(dx, dy) * 0.16 + Math.abs(Math.log2(kRatio)) * 90, 150, 420);
-	}
-
-	/** Camera tween. Two things here are deliberate, and both are about how the move READS
-	 *  rather than how long it lasts. **Scale interpolates geometrically**: perceived zoom is
-	 *  logarithmic, so stepping k linearly across a wide range swings the actual zoom rate by
-	 *  well over 10% mid-move: the view lunges, then crawls. Stepping the ratio holds it
-	 *  constant. **The pan is then derived from the world point under the stage centre**
-	 *  instead of being lerped from tx/ty, and that half exists ONLY because of the first
-	 *  half: tx/ty are pixel offsets that mean something different at every scale, so once k
-	 *  moves geometrically a linear tx/ty bows the target's screen path (~190px on a long
-	 *  flight) instead of running it straight at its landing spot. Rebuilding tx/ty from the
-	 *  frame's own scale keeps that path straight. Change one of these without the other and
-	 *  the move gets worse, not better. Both endpoints stay exact either way. */
-	function animateView(toTx: number, toTy: number, toK = k, dur?: number) {
-		cancelAnim();
-		const kRatio = toK / k;
-		const ms = dur ?? moveDuration(toTx - tx, toTy - ty, kRatio);
-		if (reducedMotion() || ms <= 0) {
-			tx = toTx;
-			ty = toTy;
-			k = toK;
-			return;
-		}
-		const px = stageW / 2;
-		const py = stageH / 2;
-		const k0 = k;
-		const fromCx = (px - tx) / k0;
-		const fromCy = (py - ty) / k0;
-		const toCx = (px - toTx) / toK;
-		const toCy = (py - toTy) / toK;
-		const start = performance.now();
-		const step = (now: number) => {
-			const t = Math.min(1, (now - start) / ms);
-			const e = 1 - Math.pow(1 - t, 3);
-			const nk = k0 * Math.pow(kRatio, e);
-			k = nk;
-			tx = px - (fromCx + (toCx - fromCx) * e) * nk;
-			ty = py - (fromCy + (toCy - fromCy) * e) * nk;
-			animId = t < 1 ? requestAnimationFrame(step) : null;
-		};
-		animId = requestAnimationFrame(step);
-	}
-
-	function computeFit(): { tx: number; ty: number; k: number } | null {
-		if (graph.nodes.length === 0 || stageW === 0 || stageH === 0) return null;
-		const nk = clamp(Math.min((stageW - 48) / worldWidth, (stageH - 48) / worldHeight, 1), MIN_K, MAX_K);
-		return {
-			tx: (stageW - worldWidth * nk) / 2,
-			ty: Math.max(20, (stageH - worldHeight * nk) / 2),
-			k: nk
-		};
-	}
-
-	/** How the map arrives, which is NOT the same question as what Fit answers. Fitting a
-	 *  sixty-turn story into a phone screen is arithmetic: it lands at a few percent, where
-	 *  the whole tree is a column of specks and nothing about it can be read. So the opening
-	 *  view falls back to the reader's own position at a readable size, with the shape around
-	 *  it, and Fit stays one button away for when seeing all of it IS the question. */
-	function computeOpeningView(): { tx: number; ty: number; k: number } | null {
-		const f = computeFit();
-		if (!f || f.k >= DETAIL_K) return f;
-		const focusId = chat?.activeLeafId && nodeById.has(chat.activeLeafId) ? chat.activeLeafId : graph.nodes[0]?.id;
-		const n = focusId ? nodeById.get(focusId) : null;
-		if (!n) return f;
-		const nk = FOCUS_K_MIN;
-		return { tx: stageW / 2 - cxOf(n) * nk, ty: stageH / 2 - cyOf(n) * nk, k: nk };
-	}
-
-	function openView(): boolean {
-		const f = computeOpeningView();
-		if (!f) return false;
-		cancelAnim();
-		tx = f.tx;
-		ty = f.ty;
-		k = f.k;
-		userMovedView = false;
-		return true;
-	}
-
-	function fitAnimated() {
-		const f = computeFit();
-		if (!f) return;
-		animateView(f.tx, f.ty, f.k);
-		userMovedView = false;
-	}
-
-	/** The stage area the inspector card/sheet doesn't cover, i.e. where nodes are readable. */
-	function safeBox(): { left: number; top: number; right: number; bottom: number } {
-		let left = 24;
-		let top = 24;
-		let right = stageW - 24;
-		let bottom = stageH - 24;
-		if (inspEl && stageEl) {
-			const stageRect = stageEl.getBoundingClientRect();
-			const r = inspEl.getBoundingClientRect();
-			if (r.width > 0 && r.height > 0) {
-				const sheetLike = r.top - stageRect.top > stageH * 0.5;
-				if (sheetLike) bottom = Math.min(bottom, r.top - stageRect.top - 16);
-				else right = Math.min(right, r.left - stageRect.left - 16);
+	const view = createStoryMapView({
+		stageEl: {
+			get current() {
+				return stageEl;
 			}
-		}
-		return { left, top, right, bottom };
-	}
-
-	/** Zoom band a focus jump settles into. Centering at whatever scale the view happened to
-	 *  hold puts the user on an unreadable speck when they were zoomed out to see the whole
-	 *  forest, or on a lone dot with no context when they were pushed right in, so a bookmark
-	 *  chip or a search hit pulls the scale back into a band where the node and its neighbours
-	 *  both read. Framing already inside the band is left exactly as it is: nudging it would
-	 *  fight a deliberate choice for no gain. */
-	const FOCUS_K_MIN = 0.7;
-	const FOCUS_K_MAX = 1.3;
-
-	function centerOn(id: string) {
-		const n = nodeById.get(id);
-		if (!n) return;
-		const b = safeBox();
-		if (b.right - b.left < 80 || b.bottom - b.top < 80) return;
-		const nk = clamp(k, FOCUS_K_MIN, FOCUS_K_MAX);
-		animateView((b.left + b.right) / 2 - cxOf(n) * nk, (b.top + b.bottom) / 2 - cyOf(n) * nk, nk);
-		// Jumping to a branch IS a framing choice, so a later resize must keep it rather than
-		// re-fitting the whole forest and throwing the focus away.
-		userMovedView = true;
-	}
-
-	/** Minimap navigation: instant, it tracks the dragging finger 1:1. */
-	function centerWorld(wx: number, wy: number) {
-		cancelAnim();
-		tx = stageW / 2 - wx * k;
-		ty = stageH / 2 - wy * k;
-		userMovedView = true;
-	}
-
-	function zoomAt(px: number, py: number, factor: number) {
-		const nk = clamp(k * factor, MIN_K, MAX_K);
-		tx = px - (px - tx) * (nk / k);
-		ty = py - (py - ty) * (nk / k);
-		k = nk;
-		userMovedView = true;
-	}
-
-	function zoomBy(factor: number) {
-		cancelAnim();
-		zoomAt(stageW / 2, stageH / 2, factor);
-	}
-
-	/** Wheel deltas are pixels on a trackpad, lines on a Firefox mouse wheel and pages on a
-	 *  page-scroll device. Zooming absorbed the difference in its exponent; panning cannot,
-	 *  and unconverted a Firefox notch nudges the canvas three pixels. Same conversion as the
-	 *  chat column's margin wheel in `ChatContainer`. */
-	function wheelPixels(delta: number, mode: number, pageExtent: number): number {
-		return delta * (mode === 1 ? 16 : mode === 2 ? pageExtent : 1);
-	}
-
-	function onWheel(e: WheelEvent) {
-		if (!canvasEl) return;
-		e.preventDefault();
-		cancelAnim();
-		// A trackpad pinch reaches the page as ctrl+wheel, so the zoom modifier IS the pinch
-		// gesture and has to keep zooming whichever way the plain wheel is set. Shift is the
-		// other fixed one: sideways pan in both modes.
-		const zooming =
-			e.ctrlKey || e.metaKey || !generalSettingsStore.storyMapWheelPans;
-		if (zooming && !e.shiftKey) {
-			const rect = canvasEl.getBoundingClientRect();
-			const dy = wheelPixels(e.deltaY, e.deltaMode, stageH);
-			// A pinch streams tiny deltas where a notch sends one big quantized jump, and with
-			// panning on, ctrl+wheel is a mouse's only way to zoom, so the rate follows the
-			// delta's own size rather than the modifier, which would give a notch the pinch
-			// rate and swing the view several times over per click. Misreading this only makes
-			// a zoom faster or slower; it can never turn a gesture into the wrong action.
-			const factor = Math.exp(-dy * (Math.abs(dy) < 25 ? 0.012 : 0.0019));
-			zoomAt(e.clientX - rect.left, e.clientY - rect.top, factor);
-			return;
-		}
-		// Shift turns a vertical-only wheel sideways; a trackpad sends its own deltaX and
-		// needs no help, so it keeps both axes.
-		const dx = wheelPixels(e.deltaX, e.deltaMode, stageW);
-		const dy = wheelPixels(e.deltaY, e.deltaMode, stageH);
-		tx -= e.shiftKey && dx === 0 ? dy : dx;
-		if (!e.shiftKey) ty -= dy;
-		userMovedView = true;
-	}
-
-	// Stage size drives fit, the minimap and the hover card clamping. A resize keeps the
-	// user's framing when they've moved by hand, otherwise re-fits.
-	$effect(() => {
-		const el = stageEl;
-		if (!el) return;
-		const ro = new ResizeObserver(() => {
-			stageW = el.clientWidth;
-			stageH = el.clientHeight;
-			if (!userMovedView) openView();
-		});
-		ro.observe(el);
-		stageW = el.clientWidth;
-		stageH = el.clientHeight;
-		return () => ro.disconnect();
+		},
+		canvasEl: {
+			get current() {
+				return canvasEl;
+			}
+		},
+		inspEl: {
+			get current() {
+				return inspEl;
+			}
+		},
+		worldWidth: () => worldWidth,
+		worldHeight: () => worldHeight,
+		nodeCount: () => graph.nodes.length,
+		nodeById: () => nodeById,
+		activeLeafId: () => chat?.activeLeafId ?? null,
+		chatId: () => chat?.id ?? null,
+		wheelPans: () => generalSettingsStore.storyMapWheelPans,
+		onNodeClick: (id) => {
+			if (id) handleNodeClick(id);
+			else selectedId = null;
+		},
+		onHoverMove: (e) => trackHover(e),
+		onDragStart: () => hideHover()
 	});
-
-	// Reset the view once per chat (keyed on chat + has-nodes), the first time the stage has
-	// a real size. Navigation within the same chat keeps the key stable, so the user's pan
-	// / zoom survives jumping between branches.
-	$effect(() => {
-		const key = `${chat?.id ?? ''}:${graph.nodes.length > 0}`;
-		if (key === lastFitKey || !stageEl || graph.nodes.length === 0) return;
-		requestAnimationFrame(() => {
-			if (openView()) lastFitKey = key;
-		});
-	});
-
-	// ===== Pointer: pan vs. click vs. pinch =====
-	const pointers = new Map<number, { x: number; y: number }>();
-	let panning = $state(false);
-	let moved = $state(false);
-	let pinching = false;
-	let pinch0: { d: number; k: number; wx: number; wy: number } | null = null;
-	let downX = 0;
-	let downY = 0;
-	let downTx = 0;
-	let downTy = 0;
-	let downNodeId: string | null = null;
-	let lastPointerType = 'mouse';
-
-	function nodeIdFromEvent(e: Event): string | null {
-		const el = (e.target as HTMLElement | null)?.closest?.('[data-node]') as HTMLElement | null;
-		return el?.getAttribute('data-node') ?? null;
-	}
-
-	/** Chromium arms its middle-click autoscroll on mousedown, and the middle-drag pan needs it gone. */
-	function onMouseDown(e: MouseEvent) {
-		if (e.button === 1) e.preventDefault();
-	}
-
-	function onPointerDown(e: PointerEvent) {
-		// Left is drag-or-click; middle is a pure pan (never selects, never opens a turn).
-		const middlePan = e.pointerType === 'mouse' && e.button === 1;
-		if (e.pointerType === 'mouse' && e.button !== 0 && !middlePan) return;
-		lastPointerType = e.pointerType;
-		cancelAnim();
-		hideHover();
-		canvasEl?.setPointerCapture(e.pointerId);
-		pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
-		if (pointers.size === 1) {
-			downX = e.clientX;
-			downY = e.clientY;
-			downTx = tx;
-			downTy = ty;
-			downNodeId = middlePan ? null : nodeIdFromEvent(e);
-			moved = middlePan;
-			panning = true;
-		} else if (pointers.size === 2 && canvasEl) {
-			const [p1, p2] = [...pointers.values()];
-			const rect = canvasEl.getBoundingClientRect();
-			const midX = (p1.x + p2.x) / 2 - rect.left;
-			const midY = (p1.y + p2.y) / 2 - rect.top;
-			pinch0 = {
-				d: Math.max(1, Math.hypot(p1.x - p2.x, p1.y - p2.y)),
-				k,
-				wx: (midX - tx) / k,
-				wy: (midY - ty) / k
-			};
-			pinching = true;
-			moved = true; // a second finger is never a click
-			downNodeId = null;
-		}
-	}
-
-	function onPointerMove(e: PointerEvent) {
-		if (pointers.has(e.pointerId)) {
-			pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
-			if (pinching && pointers.size >= 2 && pinch0 && canvasEl) {
-				const [p1, p2] = [...pointers.values()];
-				const rect = canvasEl.getBoundingClientRect();
-				const midX = (p1.x + p2.x) / 2 - rect.left;
-				const midY = (p1.y + p2.y) / 2 - rect.top;
-				const d = Math.max(1, Math.hypot(p1.x - p2.x, p1.y - p2.y));
-				const nk = clamp(pinch0.k * (d / pinch0.d), MIN_K, MAX_K);
-				k = nk;
-				tx = midX - pinch0.wx * nk;
-				ty = midY - pinch0.wy * nk;
-				userMovedView = true;
-				return;
-			}
-			if (!panning) return;
-			const dx = e.clientX - downX;
-			const dy = e.clientY - downY;
-			if (!moved && Math.hypot(dx, dy) > 4) moved = true;
-			if (moved) {
-				tx = downTx + dx;
-				ty = downTy + dy;
-				userMovedView = true;
-			}
-			return;
-		}
-		// No captured pointer: plain mouse travel drives the hover preview.
-		if (e.pointerType === 'mouse') trackHover(e);
-	}
-
-	function onPointerUp(e: PointerEvent) {
-		if (!pointers.has(e.pointerId)) return;
-		pointers.delete(e.pointerId);
-		canvasEl?.releasePointerCapture?.(e.pointerId);
-		if (pinching) {
-			if (pointers.size < 2) {
-				pinching = false;
-				pinch0 = null;
-				if (pointers.size === 1) {
-					// One finger stays down, so hand over to panning without a jump.
-					const [p] = [...pointers.values()];
-					downX = p.x;
-					downY = p.y;
-					downTx = tx;
-					downTy = ty;
-				} else {
-					panning = false;
-				}
-			}
-			return;
-		}
-		if (pointers.size > 0) return;
-		panning = false;
-		if (moved) return; // it was a drag, not a click
-		if (downNodeId) handleNodeClick(downNodeId);
-		else selectedId = null;
-	}
-
 	// ===== Hover preview card (mouse only) =====
 	const CARD_W = 264;
 	let hover = $state<{ id: string; x: number; y: number } | null>(null);
@@ -516,11 +177,11 @@
 	function placeHover(id: string): { id: string; x: number; y: number } | null {
 		const n = nodeById.get(id);
 		if (!n) return null;
-		const sx = cxOf(n) * k + tx;
-		const sy = cyOf(n) * k + ty;
-		let x = sx + rOf(n) * k + 16;
-		if (x + CARD_W > stageW - 8) x = sx - rOf(n) * k - 16 - CARD_W;
-		const y = clamp(sy - 24, 8, Math.max(8, stageH - 180));
+		const sx = cxOf(n) * view.k + view.tx;
+		const sy = cyOf(n) * view.k + view.ty;
+		let x = sx + rOf(n) * view.k + 16;
+		if (x + CARD_W > view.stageW - 8) x = sx - rOf(n) * view.k - 16 - CARD_W;
+		const y = clamp(sy - 24, 8, Math.max(8, view.stageH - 180));
 		return { id, x: Math.max(8, x), y };
 	}
 
@@ -533,9 +194,9 @@
 
 	// Any view movement (pan, zoom, tween) invalidates the card's anchor, so drop it.
 	$effect(() => {
-		void tx;
-		void ty;
-		void k;
+		void view.tx;
+		void view.ty;
+		void view.k;
 		hover = null;
 	});
 
@@ -552,9 +213,9 @@
 
 	function selectNode(id: string, opts: { center?: boolean; focusDom?: boolean } = {}) {
 		selectedId = id;
-		// Defer a frame so the freshly-mounted inspector's rect is known to safeBox().
+		// Defer a frame so the freshly-mounted inspector's rect is known to view.safeBox().
 		requestAnimationFrame(() => {
-			if (opts.center) centerOn(id);
+			if (opts.center) view.centerOn(id);
 			else ensureVisible(id);
 		});
 		if (opts.focusDom) {
@@ -586,10 +247,10 @@
 	function ensureVisible(id: string) {
 		const n = nodeById.get(id);
 		if (!n || !stageEl) return;
-		const b = safeBox();
+		const b = view.safeBox();
 		if (b.right - b.left < 80 || b.bottom - b.top < 80) return;
-		const sx = cxOf(n) * k + tx;
-		const sy = cyOf(n) * k + ty;
+		const sx = cxOf(n) * view.k + view.tx;
+		const sy = cyOf(n) * view.k + view.ty;
 		const m = 30;
 		let dx = 0;
 		let dy = 0;
@@ -597,7 +258,7 @@
 		else if (sx > b.right - m) dx = b.right - m - sx;
 		if (sy < b.top + m) dy = b.top + m - sy;
 		else if (sy > b.bottom - m) dy = b.bottom - m - sy;
-		if (dx !== 0 || dy !== 0) animateView(tx + dx, ty + dy);
+		if (dx !== 0 || dy !== 0) view.animateView(view.tx + dx, view.ty + dy);
 	}
 
 	async function jumpTo(id: string) {
@@ -751,16 +412,16 @@
 			case '+':
 			case '=':
 				e.preventDefault();
-				zoomBy(1.2);
+				view.zoomBy(1.2);
 				break;
 			case '-':
 			case '_':
 				e.preventDefault();
-				zoomBy(1 / 1.2);
+				view.zoomBy(1 / 1.2);
 				break;
 			case '0':
 				e.preventDefault();
-				fitAnimated();
+				view.fitAnimated();
 				break;
 		}
 	}
@@ -842,10 +503,10 @@
 
 	/** Screen position of a node's centre, i.e. where the DOM chrome over the canvas anchors. */
 	function screenX(n: StoryMapNode): number {
-		return cxOf(n) * k + tx;
+		return cxOf(n) * view.k + view.tx;
 	}
 	function screenY(n: StoryMapNode): number {
-		return cyOf(n) * k + ty;
+		return cyOf(n) * view.k + view.ty;
 	}
 </script>
 
@@ -883,15 +544,15 @@
 			<!-- svelte-ignore a11y_no_noninteractive_tabindex, a11y_no_noninteractive_element_interactions -- role="application" is the correct ARIA for a pan/zoom canvas; the linter just doesn't count it as interactive -->
 			<div
 				class="map-canvas"
-				class:is-panning={panning && moved}
+				class:is-panning={view.panning && view.moved}
 				class:is-picking={!!compareFrom}
 				bind:this={canvasEl}
-				onwheel={onWheel}
-				onmousedown={onMouseDown}
-				onpointerdown={onPointerDown}
-				onpointermove={onPointerMove}
-				onpointerup={onPointerUp}
-				onpointercancel={onPointerUp}
+				onwheel={view.onWheel}
+				onmousedown={view.onMouseDown}
+				onpointerdown={view.onPointerDown}
+				onpointermove={view.onPointerMove}
+				onpointerup={view.onPointerUp}
+				onpointercancel={view.onPointerUp}
 				onpointerleave={hideHover}
 				onkeydown={onCanvasKeydown}
 				role="application"
@@ -900,7 +561,7 @@
 				aria-describedby="storymap-usage"
 			>
 				<svg class="map-svg" class:is-searching={searchActive} width="100%" height="100%">
-					<g transform="translate({tx} {ty}) scale({k})">
+					<g transform="translate({view.tx} {view.ty}) scale({view.k})">
 						<!-- Edges: orthogonal elbows (stem down from the parent, horizontal bus, drop to
 						     each child). Overlapping sibling stems/buses merge into a clean org-chart. -->
 						{#each sortedEdges as e (e.from + '>' + e.to)}
@@ -938,7 +599,7 @@
 								aria-label={nodeAria(n)}
 								aria-pressed={n.id === selectedId}
 								ondblclick={() => {
-									if (lastPointerType !== 'touch') jumpTo(n.id);
+									if (view.lastPointerType !== 'touch') jumpTo(n.id);
 								}}
 							>
 								<!-- Oversized invisible disc: the real touch/click/focus-ring target. -->
@@ -976,7 +637,7 @@
 			     real font metrics; and scaled with the canvas the name shrinks to nothing at
 			     exactly the zoom a long story is read at. Constant size here, ellipsised by
 			     the browser, and gone below DETAIL_K where the bookmark bar carries them. -->
-			{#if k >= DETAIL_K && labeledNodes.length > 0}
+			{#if view.k >= DETAIL_K && labeledNodes.length > 0}
 				<div class="map-labels">
 					{#each labeledNodes as n (n.id)}
 						<button
@@ -984,7 +645,7 @@
 							class="map-label"
 							class:is-selected={n.id === selectedId}
 							class:is-dimmed={searchActive && !matchSet.has(n.id)}
-							style="left: {screenX(n)}px; top: {screenY(n) + rOf(n) * k + 6}px; --bc: {branchColorHex(
+							style="left: {screenX(n)}px; top: {screenY(n) + rOf(n) * view.k + 6}px; --bc: {branchColorHex(
 								n.label!.color
 							)};"
 							title={n.label!.name}
@@ -1084,12 +745,12 @@
 						colW={COL_W}
 						rowH={ROW_H}
 						pad={PAD}
-						{tx}
-						{ty}
-						{k}
-						viewW={stageW}
-						viewH={stageH}
-						onNavigate={centerWorld}
+						tx={view.tx}
+						ty={view.ty}
+						k={view.k}
+						viewW={view.stageW}
+						viewH={view.stageH}
+						onNavigate={view.centerWorld}
 					/>
 				{/if}
 				<div class="map-tools surface-float" role="toolbar" aria-label={i18n.t('storymap.mapTools')}>
@@ -1107,15 +768,15 @@
 						<Icon name="search" class="w-4 h-4" />
 					</button>
 					<span class="map-tools-sep"></span>
-					<button type="button" class="map-tool-btn" aria-label={i18n.t('storymap.zoomOut')} title={i18n.t('storymap.zoomOutTitle')} onclick={() => zoomBy(1 / 1.2)}>
+					<button type="button" class="map-tool-btn" aria-label={i18n.t('storymap.zoomOut')} title={i18n.t('storymap.zoomOutTitle')} onclick={() => view.zoomBy(1 / 1.2)}>
 						<Icon name="minimize" class="w-4 h-4" />
 					</button>
-					<span class="map-zoom-level">{pct}%</span>
-					<button type="button" class="map-tool-btn" aria-label={i18n.t('storymap.zoomIn')} title={i18n.t('storymap.zoomInTitle')} onclick={() => zoomBy(1.2)}>
+					<span class="map-zoom-level">{view.pct}%</span>
+					<button type="button" class="map-tool-btn" aria-label={i18n.t('storymap.zoomIn')} title={i18n.t('storymap.zoomInTitle')} onclick={() => view.zoomBy(1.2)}>
 						<Icon name="plus" class="w-4 h-4" />
 					</button>
 					<span class="map-tools-sep"></span>
-					<button type="button" class="map-tool-btn" aria-label={i18n.t('storymap.fitAria')} title={i18n.t('storymap.fitTitle')} onclick={fitAnimated}>
+					<button type="button" class="map-tool-btn" aria-label={i18n.t('storymap.fitAria')} title={i18n.t('storymap.fitTitle')} onclick={view.fitAnimated}>
 						<Icon name="maximize" class="w-4 h-4" />
 					</button>
 					<button
@@ -1123,7 +784,7 @@
 						class="map-tool-btn"
 						aria-label={i18n.t('storymap.centerAria')}
 						title={i18n.t('storymap.centerAria')}
-						onclick={() => chat?.activeLeafId && centerOn(chat.activeLeafId)}
+						onclick={() => chat?.activeLeafId && view.centerOn(chat.activeLeafId)}
 					>
 						<Icon name="target" class="w-4 h-4" />
 					</button>
