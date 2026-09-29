@@ -1,5 +1,14 @@
 import { describe, expect, test } from 'bun:test';
-import { isNodeVisible, CULL_MARGIN, cxOf, cyOf, PAD, COL_W, ROW_H } from './story-map-view.svelte';
+import {
+	isNodeVisible,
+	isEdgeVisible,
+	CULL_MARGIN,
+	cxOf,
+	cyOf,
+	PAD,
+	COL_W,
+	ROW_H
+} from './story-map-view.svelte';
 import type { StoryMapNode } from '../../../utils/story-map-layout';
 
 function nodeAt(col: number, depth: number): StoryMapNode {
@@ -43,20 +52,39 @@ describe('story map viewport culling', () => {
 		expect(isNodeVisible(n, shifted, 0)).toBe(false);
 	});
 
-	test('at overview zoom every node of a huge map fits the stage', () => {
+	test('at overview zoom the arithmetic is pinned, not self-compared', () => {
 		const view = { k: 0.05, tx: 10, ty: 10, stageW: 1000, stageH: 800 };
-		const n = nodeAt(300, 800); // world (16846, 44846) -> screen (852, 2252) hmm
-		// y is off: at k=0.05 that depth is below the fold and MAY cull, which is correct
-		// behaviour, so assert the boundary honestly instead.
-		expect(isNodeVisible(n, view)).toBe(isNodeVisible(n, view));
-		const top = nodeAt(300, 10); // screen (852, 65)
-		expect(isNodeVisible(top, view)).toBe(true);
+		// col 300, depth 10: screen (cxOf*0.05+10, cyOf*0.05+10) = (852, 65). On stage.
+		expect(isNodeVisible(nodeAt(300, 10), view)).toBe(true);
+		// col 300, depth 800: screen (852, 2252). Below the 800px stage, beyond margin.
+		expect(isNodeVisible(nodeAt(300, 800), view)).toBe(false);
 	});
 
 	test('culling follows the camera: pan right brings left-column nodes back', () => {
 		const n = nodeAt(1, 2); // (102, 242)
 		expect(isNodeVisible(n, { ...STAGE, tx: -2000 })).toBe(false);
 		expect(isNodeVisible(n, { ...STAGE, tx: 0 })).toBe(true);
+	});
+
+	test('an edge whose elbow reaches the stage survives even with both endpoints off it', () => {
+		const parent = nodeAt(0, 0); // (46, 46)
+		const child = nodeAt(1, 1); // (102, 144)
+		// Pan far down: both endpoints below the stage, but the child's drop still runs
+		// through the top margin band of the viewport.
+		const view = { ...STAGE, ty: -250 };
+		// y1 = 46-250 = -204, my = 95-250 = -155, y2 = 144-250 = -106: whole elbow above -48.
+		expect(isEdgeVisible(parent, child, view)).toBe(false);
+		const nearer = { ...STAGE, ty: -120 };
+		// y1 = -74, my = -25, y2 = 24: the bus crosses into view though both dots sit high.
+		expect(isEdgeVisible(parent, child, nearer)).toBe(true);
+	});
+
+	test('an edge wholly to the left of the viewport is culled', () => {
+		const parent = nodeAt(0, 0); // x 46
+		const child = nodeAt(1, 1); // x 102
+		// Pan right by 2000: x spans 46-2000 = -1954 to 102-2000 = -1898, both < -48.
+		expect(isEdgeVisible(parent, child, { ...STAGE, tx: -2000 })).toBe(false);
+		expect(isEdgeVisible(parent, child, { ...STAGE, tx: -60 })).toBe(true);
 	});
 
 	test('margin covers the geometry constants it protects', () => {

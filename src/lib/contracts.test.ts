@@ -52,7 +52,9 @@ const ROOT = join(import.meta.dir, '..', '..');
 const read = (...parts: string[]): string => readFileSync(join(ROOT, ...parts), 'utf8');
 
 /** All matches of `re`'s first capture group, asserted non-empty so a stale pattern fails
- *  loudly instead of quietly agreeing with everything. */
+ *  loudly instead of quietly agreeing with everything. Contract-critical scans MUST pass
+ *  `min` explicitly: the default of 1 only proves the pattern still matches something,
+ *  not that the contract it guards is really exercised (risk-debt #8). */
 function scan(source: string, re: RegExp, what: string, min = 1): string[] {
 	const found = [...source.matchAll(re)].map((m) => m[1]);
 	expect(
@@ -1401,6 +1403,68 @@ describe('settings page arms (architecture/ui-shell-settings.md #3: the blank-pa
 		expect(union.filter((p) => !arms.has(p))).toEqual([]);
 		expect([...arms].filter((p) => !union.includes(p))).toEqual([]);
 	});
+
+	test('TAB_FALLBACK_PAGE covers every SettingsTab and lands on real pages', () => {
+		// The assistant deep-links by tab id; a tab missing from the fallback map sends that
+		// link to undefined, and a fallback naming a page the union dropped opens blank.
+		// Svelte's compiler checks neither direction, so this does.
+		const pages = read('src', 'lib', 'config', 'settings-pages.ts');
+		const tabs = scan(
+			block(pages, /export type SettingsTab =[\s\S]*?;/, 'SettingsTab'),
+			/'([a-zA-Z]+)'/g,
+			'SettingsTab values',
+			5
+		);
+		const pageUnion = new Set(
+			scan(
+				block(pages, /export type SettingsPage =[\s\S]*?;/, 'SettingsPage'),
+				/'([a-z-]+)'/g,
+				'settings page values',
+				10
+			)
+		);
+		const fallback = block(
+			pages,
+			/export const TAB_FALLBACK_PAGE[^=]*= \{[\s\S]*?\n\};/,
+			'TAB_FALLBACK_PAGE'
+		);
+		const entries = [...fallback.matchAll(/([a-zA-Z]+):\s*'([a-z-]+)'/g)].map(
+			(m) => [m[1], m[2]] as const
+		);
+		expect(entries.length, 'TAB_FALLBACK_PAGE entries').toBeGreaterThanOrEqual(5);
+		for (const tab of tabs) {
+			const hit = entries.find(([k]) => k === tab);
+			expect(hit, `SettingsTab ${tab} has no TAB_FALLBACK_PAGE entry`).toBeDefined();
+			expect(
+				pageUnion.has(hit![1]),
+				`TAB_FALLBACK_PAGE[${tab}] = ${hit![1]} is not a SettingsPage`
+			).toBe(true);
+		}
+		for (const [k] of entries) {
+			expect(tabs.includes(k), `TAB_FALLBACK_PAGE key ${k} is not a SettingsTab`).toBe(true);
+		}
+	});
+
+	test('every assistant settings control anchors to a page the assistant can reach', () => {
+		// First hand of the coupling: a control registered server-side with an anchor that
+		// ANCHOR_PAGES does not map is a navigate target that resolves to nowhere.
+		const pages = read('src', 'lib', 'config', 'settings-pages.ts');
+		const anchorsBlock = block(pages, /export const ANCHOR_PAGES[^=]*= \{[\s\S]*?\n\};/, 'ANCHOR_PAGES');
+		// Keys appear both quoted and bare (`connections:` next to `'model-routing':`),
+		// so the scan takes either shape.
+		const anchors = new Set(
+			[...anchorsBlock.matchAll(/[\t ](?:'([^']+)'|([a-zA-Z][\w-]*)):\s*'/g)].map(
+				(m) => m[1] ?? m[2]
+			)
+		);
+		expect(anchors.size, 'ANCHOR_PAGES keys (guards a stale scan)').toBeGreaterThanOrEqual(30);
+		const registry = read('server', 'assistant', 'registry', 'settings.ts');
+		const used = scan(registry, /anchor:\s*'([^']+)'/g, 'assistant settings anchors', 5);
+		const missing = used.filter((a) => !anchors.has(a));
+		expect(missing, 'assistant anchors with no ANCHOR_PAGES entry: navigate cannot reach them').toEqual(
+			[]
+		);
+	});
 });
 
 describe('beautify scoping is load-bearing (P003)', () => {
@@ -1418,6 +1482,73 @@ describe('beautify scoping is load-bearing (P003)', () => {
 		expect(read('src', 'lib', 'utils', 'style-scope.ts')).toContain(
 			`export const STYLE_SCOPE_CLASS = 'msg-style-scope';`
 		);
+	});
+
+	test('every host that renders model markup declares its scoping stance', () => {
+		// The scope class is load-bearing only where PRESET CSS should apply: the message
+		// body. The other renderMarkdown hosts render app-owned UI (assistant transcript,
+		// streaming placeholder, reasoning trace) that preset styles must NOT reach, so an
+		// unscoped host is a stance, not an oversight. This inventory is the full host
+		// list: a new renderMarkdown call site must join one of the two stances here, so
+		// "another renderer forgot the class" cannot happen silently.
+		const hosts = [
+			['chat', 'Message.svelte', true],
+			['assistant', 'AssistantTurnTimeline.svelte', false],
+			['chat', 'StreamingIndicator.svelte', false],
+			['chat', 'MessageReasoning.svelte', false]
+		] as const;
+		for (const [dir, file, scoped] of hosts) {
+			const src = read('src', 'lib', 'components', dir, file);
+			expect(
+				src.includes('renderMarkdown'),
+				`${dir}/${file} no longer renders model markup; move it out of this inventory`
+			).toBe(true);
+			if (scoped) {
+				expect(
+					src.includes('STYLE_SCOPE_CLASS'),
+					`${dir}/${file} renders the message body and must mount STYLE_SCOPE_CLASS`
+				).toBe(true);
+			} else {
+				expect(
+					src.includes('STYLE_SCOPE_CLASS'),
+					`${dir}/${file} is app-owned UI and must NOT mount the preset scope class`
+				).toBe(false);
+			}
+		}
+	});
+});
+
+describe('i18n dictionaries stay in lockstep (risk-debt #16)', () => {
+	// Keys live in both quote styles (long values flip to double quotes), so the scan
+	// accepts either. A key present in one dictionary only ships untranslated on the
+	// other, which is exactly the drift the audit line exists to burn down.
+	const keyOf = (line: string): string | null => {
+		const m = line.match(/^\t['"]([^'"]+)['"]:/);
+		return m ? m[1] : null;
+	};
+	const keysOf = (path: string[]): Set<string> => {
+		const lines = read(...path).split('\n').map(keyOf).filter((k): k is string => k !== null);
+		expect(lines.length, `${path.join('/')} key count (guards a stale scan)`).toBeGreaterThanOrEqual(3700);
+		return new Set(lines);
+	};
+
+	test('zh and en define exactly the same key set', () => {
+		const zh = keysOf(['src', 'lib', 'i18n', 'zh.ts']);
+		const en = keysOf(['src', 'lib', 'i18n', 'en.ts']);
+		expect([...zh].filter((k) => !en.has(k)), 'zh keys missing from en').toEqual([]);
+		expect([...en].filter((k) => !zh.has(k)), 'en keys missing from zh').toEqual([]);
+	});
+
+	test('the engine hint keys once called placeholders carry real copy', () => {
+		// eng.x200-203 were placeholder keys when the risk list was written; they hold real
+		// guidance now. This pins them: a revert to placeholders fails here.
+		const zh = read('src', 'lib', 'i18n', 'zh.ts');
+		for (const key of ['eng.x200', 'eng.x201', 'eng.x202', 'eng.x203']) {
+			const line = zh.split('\n').find((l) => l.includes(`'${key}':`));
+			expect(line, `${key} missing from zh`).toBeDefined();
+			const value = line!.split(':').slice(1).join(':').replace(/^[\s"']+|[\s"',$]+$/g, '');
+			expect(value.length, `${key} looks like a placeholder`).toBeGreaterThan(10);
+		}
 	});
 });
 

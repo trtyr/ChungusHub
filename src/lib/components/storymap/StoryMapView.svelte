@@ -24,6 +24,7 @@
 		nodeIdFromEvent,
 		clamp,
 		isNodeVisible,
+		isEdgeVisible,
 		PAD,
 		COL_W,
 		ROW_H,
@@ -397,6 +398,17 @@
 		)
 	);
 
+	// Edges cull by the same budget: an elbow shows when any part of its x or y span
+	// reaches the stage, so off-screen parents still draw their bus into view, while an
+	// edge wholly outside the viewport stops costing an element.
+	let visibleEdges = $derived(
+		sortedEdges.filter((e) => {
+			const p = nodeById.get(e.from);
+			const c = nodeById.get(e.to);
+			return p !== undefined && c !== undefined && isEdgeVisible(p, c, view);
+		})
+	);
+
 	function keyContextNode(e: KeyboardEvent): StoryMapNode | null {
 		const focused = nodeIdFromEvent(e);
 		const id = selected?.id ?? focused ?? rovingId;
@@ -578,8 +590,9 @@
 				<svg class="map-svg" class:is-searching={searchActive} width="100%" height="100%">
 					<g transform="translate({view.tx} {view.ty}) scale({view.k})">
 						<!-- Edges: orthogonal elbows (stem down from the parent, horizontal bus, drop to
-						     each child). Overlapping sibling stems/buses merge into a clean org-chart. -->
-						{#each sortedEdges as e (e.from + '>' + e.to)}
+						     each child). Overlapping sibling stems/buses merge into a clean org-chart.
+						     Culled to the viewport like the nodes (see visibleEdges). -->
+						{#each visibleEdges as e (e.from + '>' + e.to)}
 							{@const p = nodeById.get(e.from)}
 							{@const c = nodeById.get(e.to)}
 							{#if p && c}

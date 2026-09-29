@@ -15,6 +15,27 @@ export const OVERLAY_HASHES = {
 
 export const LIBRARY_TABS = ['characters', 'personas', 'lorebooks'] as const;
 
+/** The hash that names a panel state, or '' for the plain workspace. Pure: the sync
+ *  module feeds it the live store, tests feed it literal states. */
+export function hashForPanels(state: {
+	activeOverlay: string | null;
+	settingsOpen: boolean;
+	libraryOpen: boolean;
+	libraryTab: string;
+	assistantOpen: boolean;
+}): string {
+	if (state.activeOverlay) {
+		const name = Object.entries(OVERLAY_HASHES).find(([, v]) => v === state.activeOverlay)?.[0];
+		if (name) return `#${name}`;
+	}
+	if (state.settingsOpen) return '#settings';
+	if (state.libraryOpen) {
+		return state.libraryTab === 'characters' ? '#library' : `#library/${state.libraryTab}`;
+	}
+	if (state.assistantOpen) return '#assistant';
+	return '';
+}
+
 export type HashTarget =
 	| { kind: 'overlay'; overlay: (typeof OVERLAY_HASHES)[keyof typeof OVERLAY_HASHES] }
 	| { kind: 'settings' }

@@ -52,6 +52,33 @@ export function isNodeVisible(
 	);
 }
 
+/** The elbow an edge draws: stem down from the parent, horizontal bus at midY, drop to
+ *  the child (`M x1 y1 V my H x2 V y2`). It can show whenever any part of that path
+ *  reaches the stage: its x span crosses the viewport, or its y span does. Pure
+ *  arithmetic, same budget as the node test. */
+export function isEdgeVisible(
+	p: StoryMapNode,
+	c: StoryMapNode,
+	view: { k: number; tx: number; ty: number; stageW: number; stageH: number },
+	margin = CULL_MARGIN
+): boolean {
+	const x1 = cxOf(p) * view.k + view.tx;
+	const x2 = cxOf(c) * view.k + view.tx;
+	const y1 = cyOf(p) * view.k + view.ty;
+	const y2 = cyOf(c) * view.k + view.ty;
+	const my = ((cyOf(p) + cyOf(c)) / 2) * view.k + view.ty;
+	const lo = -margin;
+	const hiW = view.stageW + margin;
+	const hiH = view.stageH + margin;
+	const xMin = Math.min(x1, x2);
+	const xMax = Math.max(x1, x2);
+	if (xMax < lo || xMin > hiW) return false;
+	const yMin = Math.min(y1, y2, my);
+	const yMax = Math.max(y1, y2, my);
+	if (yMax < lo || yMin > hiH) return false;
+	return true;
+}
+
 const R_MIN = 10;
 const R_MAX = 19;
 /** Square root, not linear: turns run from a dozen characters to several thousand. */
