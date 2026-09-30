@@ -4,15 +4,18 @@
  * world-info entry whose content is a JSON (or, upstream, YAML) object; when a chat
  * with that card starts, the object becomes the chat's starting variable table.
  *
- * Scope decisions (P015 README): JSON only this round, because YAML needs a real parser
- * dependency this app does not carry, so YAML content is detected and refused with a
- * named error instead of half-parsed. Values are literals: no macro expansion, no
+ * Scope decisions (P015 README, extended in the P018-goal): JSON first, then a
+ * hand-written zero-dependency YAML SUBSET parser (`./st-yaml-subset`) for the other
+ * documented format: no js-yaml, keeping the runtime dependency set untouched. The
+ * subset rejects anything it cannot read confidently with a named error instead of
+ * half-parsing. Values are literals: no macro expansion, no
  * template execution. The upstream variable model is a nested tree while ours is a
  * flat string table, so the tree is flattened to dotted-path keys and non-scalar
  * subtrees travel as JSON strings, so nothing is dropped, and a flat
  * `{{getvar::hakimi.affection}}` reads the same value upstream's
  * `variables.hakimi.affection` would.
  */
+import { parseYamlSubset } from './st-yaml-subset';
 
 /** Entry-title tag upstream matches with startsWith; the decorator form is content-led. */
 const TITLE_TAG = '[InitialVariables]';
@@ -25,7 +28,7 @@ export function isInitialVariablesEntry(title: string, content: string): boolean
 
 export type InitialVariablesResult =
 	| { ok: true; vars: Record<string, string> }
-	| { ok: false; error: 'invalid-json' | 'yaml-unsupported' | 'not-an-object' | 'empty' };
+	| { ok: false; error: 'invalid-json' | 'yaml-invalid' | 'not-an-object' | 'empty' };
 
 /** Parse one entry's content into flat chat-variable rows. */
 export function parseInitialVariables(content: string): InitialVariablesResult {
@@ -36,9 +39,16 @@ export function parseInitialVariables(content: string): InitialVariablesResult {
 	try {
 		data = JSON.parse(body);
 	} catch {
-		// A body that doesn't even look like JSON is YAML upstream's other documented
-		// format; report it by name instead of failing as broken JSON.
-		return { ok: false, error: /^\s*[[{]/.test(body) ? 'invalid-json' : 'yaml-unsupported' };
+		// The other documented format is YAML: try the zero-dependency subset parser
+		// before reporting failure. A body that looks like broken JSON still reports
+		// invalid-json by name; a body the YAML subset cannot read confidently is
+		// yaml-invalid rather than half-parsed.
+		const yaml = parseYamlSubset(body);
+		if (yaml.ok) {
+			data = yaml.data;
+		} else {
+			return { ok: false, error: /^\s*[[{]/.test(body) ? 'invalid-json' : 'yaml-invalid' };
+		}
 	}
 
 	if (data === null || typeof data !== 'object' || Array.isArray(data)) {

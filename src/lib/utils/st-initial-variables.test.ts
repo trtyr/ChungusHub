@@ -45,9 +45,9 @@ describe('parseInitialVariables', () => {
 		expect(r).toEqual({ ok: true, vars: { keep: '1' } });
 	});
 
-	test('YAML bodies are refused by name, not failed as broken JSON', () => {
+	test('YAML bodies parse through the zero-dependency subset', () => {
 		const r = parseInitialVariables('hakimi:\n  affection: 0\n  status: normal');
-		expect(r).toEqual({ ok: false, error: 'yaml-unsupported' });
+		expect(r).toEqual({ ok: true, vars: { 'hakimi.affection': '0', 'hakimi.status': 'normal' } });
 	});
 
 	test('JSON-shaped bodies that fail to parse say invalid-json', () => {
