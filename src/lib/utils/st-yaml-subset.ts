@@ -30,7 +30,7 @@ export function parseYamlSubset(text: string): YamlSubsetResult {
 	const trimmed = (text ?? '').trim();
 	if (trimmed.startsWith('{') || trimmed.startsWith('[')) return { ok: false, error: 'yaml-invalid' };
 	const lines: Line[] = [];
-	for (const raw of (text ?? '').split('\n')) {
+	for (const raw of (text ?? '').split(/\r?\n/)) {
 		if (/^[ ]*\t/.test(raw)) return { ok: false, error: 'yaml-invalid' };
 		const body = stripComment(raw);
 		if (!body.trim()) continue;
@@ -65,7 +65,7 @@ function parseBlock(
 		let i = start;
 		while (i < lines.length && lines[i].indent === indent && lines[i].item) {
 			const t = lines[i].text;
-			if (t.startsWith('{') || t.startsWith('[') || t.startsWith('|') || t.startsWith('>')) return null;
+			if (/^[{[|>&*]/.test(t)) return null;
 			items.push(parseScalar(t));
 			i++;
 		}
@@ -83,9 +83,9 @@ function parseBlock(
 		if (!key) return null;
 		if (kv.value !== undefined) {
 			const v = kv.value;
-			// Flow collections and block scalars are outside the subset: refuse the
-			// line (the block returns null) rather than storing a mangled string.
-			if (v.startsWith('{') || v.startsWith('[') || v.startsWith('|') || v.startsWith('>')) return null;
+			// Flow collections, block scalars and anchors/aliases are outside the subset:
+			// refuse the line (the block returns null) rather than storing a mangled string.
+			if (/^[{[|>&*]/.test(v)) return null;
 			map[key] = parseScalar(v);
 			i++;
 			continue;

@@ -75,3 +75,16 @@ describe('parseYamlSubset (P015 档1a YAML fallback)', () => {
 		expect(r).toEqual({ ok: true, data: { hakimi: { affection: 50 } } });
 	});
 });
+
+describe('CRLF input and anchors/aliases (auditor findings)', () => {
+	test('CRLF line endings parse identically to LF, end to end', () => {
+		const r = parseYamlSubset('hakimi:\r\n  affection: 0\r\n  status: normal\r\n');
+		expect(r).toEqual({ ok: true, data: { hakimi: { affection: 0, status: 'normal' } } });
+	});
+
+	test('anchors and aliases are refused, not stored as mystery strings', () => {
+		expect(parseYamlSubset('a: &anchor 1')).toEqual({ ok: false, error: 'yaml-invalid' });
+		expect(parseYamlSubset('a: *ref')).toEqual({ ok: false, error: 'yaml-invalid' });
+		expect(parseYamlSubset('list:\n  - &item x')).toEqual({ ok: false, error: 'yaml-invalid' });
+	});
+});
