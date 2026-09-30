@@ -94,15 +94,16 @@ describe('evaluateStIfCondition: unsupported JavaScript', () => {
 	const env = emptyVarEnv();
 	env.locals['a'] = '1';
 
-	test('compound expressions are null, never guessed', () => {
+	test('unstructured expressions are null, never guessed', () => {
 		for (const cond of [
-			'variables.a > 0 && variables.a < 9',
-			'variables.a > 0 || variables.a < 9',
 			'variables.a + 1 > 1',
 			'getvar("a") > 0',
 			'variables',
 			'a > 0',
-			''
+			'',
+			// P018: && / || are supported, but a null leaf poisons the composition.
+			'variables.a > 0 && getvar("a") > 0',
+			'variables.a > 0 || variables.a + 1 > 1'
 		]) {
 			expect(evaluateStIfCondition(cond, ctxWith(env), env)).toBeNull();
 		}
@@ -153,5 +154,51 @@ describe('the engine hook drops false entries and keeps everything else', () => 
 		expect(applyStCardCompat(books, ctxWith(env), env)).toBe(books);
 		const out = resolveLorebooks({ books: applyStCardCompat(books, ctxWith(env), env), messages: [] });
 		expect(out.text).toBe('plain lore');
+	});
+});
+
+describe('composed conditions (P018: && / ||, JS precedence)', () => {
+	const env = emptyVarEnv();
+	env.locals['a'] = '1';
+	env.locals['mood'] = 'warm';
+
+	test('an && interval over one variable, true and false sides', () => {
+		expect(evaluateStIfCondition('variables.a > 0 && variables.a < 9', ctxWith(env), env)).toBe(true);
+		expect(evaluateStIfCondition('variables.a > 5 && variables.a < 9', ctxWith(env), env)).toBe(false);
+	});
+
+	test('an || composition, true and false sides', () => {
+		expect(evaluateStIfCondition('variables.a === 2 || variables.a === 1', ctxWith(env), env)).toBe(true);
+		expect(evaluateStIfCondition('variables.a === 2 || variables.a === 3', ctxWith(env), env)).toBe(false);
+	});
+
+	test('&& binds tighter than ||, so a || b && c is a || (b && c)', () => {
+		// Left-to-right would give ((true || false) && false) = false; JS gives true.
+		expect(
+			evaluateStIfCondition(
+				"variables.mood == 'warm' || variables.a === 9 && variables.mood == 'x'",
+				ctxWith(env),
+				env
+			)
+		).toBe(true);
+	});
+
+	test('quoted literals survive the split: && inside quotes is not an operator', () => {
+		expect(evaluateStIfCondition("variables.mood == 'a && b'", ctxWith(env), env)).toBe(false);
+		expect(evaluateStIfCondition("variables.mood == 'warm'", ctxWith(env), env)).toBe(true);
+	});
+
+	test('three leaves fold into ||-groups of &&-runs', () => {
+		expect(
+			evaluateStIfCondition('variables.a > 0 && variables.a < 9 || variables.mood == "x"', ctxWith(env), env)
+		).toBe(true);
+		expect(
+			evaluateStIfCondition('variables.a > 9 && variables.a < 20 || variables.mood == "x"', ctxWith(env), env)
+		).toBe(false);
+	});
+
+	test('a dangling operator is null, never guessed', () => {
+		expect(evaluateStIfCondition('variables.a > 0 &&', ctxWith(env), env)).toBeNull();
+		expect(evaluateStIfCondition('&& variables.a > 0', ctxWith(env), env)).toBeNull();
 	});
 });

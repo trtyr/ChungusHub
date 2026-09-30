@@ -10,10 +10,11 @@
  *                                                  toNumber coercion, strings equal)
  *   OP: === !== == != >= <= > <
  *
- * Anything else (&&, ||, arithmetic, function calls, multi-clause lines) evaluates to
- * `null`: the caller leaves the entry untouched, warns once per entry, and the entry
- * carries the marker badge in the UI. That keeps the degrade honest instead of guessing
- * at JavaScript.
+ * Leaves may be joined by `&&` / `||` (P018): JS precedence (&& before ||), no
+ * parentheses, and a null leaf poisons the whole composition. Anything else
+ * (arithmetic, function calls, unknown identifiers) evaluates to `null`: the caller
+ * leaves the entry untouched, warns once per entry, and the entry carries the marker
+ * badge in the UI. That keeps the degrade honest instead of guessing at JavaScript.
  *
  * `variables.hakimi.affection` reads our flat table at the dotted-path key (the same
  * key 档1a's InitialVariables seeding writes); bare `variables` reads locals first,
@@ -51,6 +52,32 @@ export function evaluateStIfCondition(
 	env: VarEnv | undefined
 ): boolean | null {
 	const body = raw.trim();
+	// Composed conditions: leaves joined by && / ||. A null leaf poisons the whole
+	// composition (conservative: an unguessable part means we keep the entry).
+	const compose = splitCompose(body);
+	if (compose) {
+		const leaves = compose.parts.map((p) => evalSingle(p, ctx, env));
+		if (leaves.some((v) => v === null)) return null;
+		// JS precedence: && binds tighter than ||. Fold into ||-groups of &&-runs.
+		const groups: boolean[] = [];
+		let curAnd = leaves[0] as boolean;
+		for (let i = 0; i < compose.ops.length; i++) {
+			const v = leaves[i + 1] as boolean;
+			if (compose.ops[i] === '&&') curAnd = curAnd && v;
+			else {
+				groups.push(curAnd);
+				curAnd = v;
+			}
+		}
+		groups.push(curAnd);
+		return groups.some((g) => g);
+	}
+	return evalSingle(body, ctx, env);
+}
+
+/** One supported leaf: existence or comparison, exactly as before P018. */
+function evalSingle(raw: string, ctx: MacroContext, env: VarEnv | undefined): boolean | null {
+	const body = raw.trim();
 
 	const existence = EXISTENCE_RE.exec(body);
 	if (existence) {
@@ -80,6 +107,41 @@ export function evaluateStIfCondition(
 	}
 
 	return null;
+}
+
+/** Split a composed condition on top-level && / ||, ignoring & and | inside quoted
+ *  literals. null when there is no composition or the split is not clean: a dangling
+ *  operator is upstream's bug to expose, not ours to guess around. */
+function splitCompose(raw: string): { parts: string[]; ops: ('&&' | '||')[] } | null {
+	const parts: string[] = [];
+	const ops: ('&&' | '||')[] = [];
+	let cur = '';
+	let quote: string | null = null;
+	for (let i = 0; i < raw.length; i++) {
+		const ch = raw[i];
+		if (quote) {
+			cur += ch;
+			if (ch === quote) quote = null;
+			continue;
+		}
+		if (ch === '"' || ch === "'") {
+			quote = ch;
+			cur += ch;
+			continue;
+		}
+		if ((ch === '&' || ch === '|') && raw[i + 1] === ch) {
+			parts.push(cur);
+			ops.push((ch + ch) as '&&' | '||');
+			cur = '';
+			i++;
+			continue;
+		}
+		cur += ch;
+	}
+	parts.push(cur);
+	if (ops.length === 0) return null;
+	if (parts.some((p) => !p.trim())) return null;
+	return { parts: parts.map((p) => p.trim()), ops };
 }
 
 export interface StIfFilterResult {
