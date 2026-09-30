@@ -7,7 +7,7 @@
 - engram project：`ChungusHub`（id `01a0e895-e1ec-7793-a2f8-f0c261fffc0b`，type=dev）
 - codegraph：`ChungusHub`（status=ready · usable，查询前看 freshness；stale 先 sync。索引基线 HEAD `bc9ef16`）
 - 文档基线：HEAD `bc9ef16eca0f65242797e454a5bc472c55bf9799`（2026-09-30 update-project 对齐时点；上一基线 `d14f349`，期间并入风险债处置线 W1-W6 与 ST 兼容线）
-- 代码交付（不入基线口径）：2026-09-30 ST 美化卡完整渲染——df56a07（渲染通道 + regex 搬运）+ f1f6815（sandbox 时序 fix）+ 51aaf86（em dash 清理），EN-17 verified
+- 代码交付（不入基线口径）：2026-09-30 ST 美化卡完整渲染：df56a07（渲染通道 + regex 搬运）、f1f6815（sandbox 时序 fix）、51aaf86（em dash 清理），EN-17 verified
 
 ## 文档清单（15 篇，doc_get 按 id 一跳直达）
 
