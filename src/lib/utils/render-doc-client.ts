@@ -51,7 +51,16 @@ function applyLive(frame: HTMLIFrameElement, srcdoc: string, url: string): void 
 	frame.dataset.docFp = fp;
 	frame.setAttribute('sandbox', SANDBOX_LIVE);
 	frame.removeAttribute('srcdoc');
-	frame.setAttribute('src', url);
+	// Chrome quirk, observed live (EN-17 acceptance): a sandbox change made in the SAME
+	// task that starts the navigation can apply the OLD sandbox to the new document —
+	// scripts stay inert, the reporter never speaks, and the frame looks loaded but is
+	// frozen. Splitting the src assignment across a task boundary lets the new sandbox
+	// set become authoritative before the frame navigates. The self-heal in hydrate()
+	// below catches any residual timing path.
+	setTimeout(() => {
+		if (frame.getAttribute('src') === url) return;
+		frame.setAttribute('src', url);
+	}, 0);
 }
 
 async function hydrate(frame: HTMLIFrameElement): Promise<void> {
@@ -62,6 +71,7 @@ async function hydrate(frame: HTMLIFrameElement): Promise<void> {
 	const cached = urlCache.get(fp);
 	if (cached) {
 		applyLive(frame, srcdoc, cached);
+		armSelfHeal(frame, cached);
 		return;
 	}
 
@@ -83,10 +93,27 @@ async function hydrate(frame: HTMLIFrameElement): Promise<void> {
 		// over a frame that still shows the exact content we uploaded.
 		if (frame.isConnected && frame.getAttribute('srcdoc') === srcdoc) {
 			applyLive(frame, srcdoc, data.url);
+			armSelfHeal(frame, data.url);
 		}
 	} catch {
 		// Offline or server without the channel: leave the srcdoc sandbox as is.
 	}
+}
+
+/** One-shot self-heal: a live frame that never reported a height within 3s has either
+ *  failed to load its document or is running it under a dead sandbox (the Chrome quirk
+ *  applyLive works around). Re-issue the navigation once — the sandbox attribute is by
+ *  then long-settled, and the reload lands live. Frames that DID report carry an inline
+ *  height and are left alone. */
+function armSelfHeal(frame: HTMLIFrameElement, url: string): void {
+	setTimeout(() => {
+		if (!frame.isConnected) return;
+		if (frame.getAttribute('src') !== url) return; // re-patched to other content
+		if (frame.style.height) return; // reporter spoke; the frame is alive
+		frame.removeAttribute('src');
+		void frame.offsetWidth;
+		frame.setAttribute('src', url);
+	}, 3000);
 }
 
 /** Upgrade every pending html-doc frame under `root`. Called after each reconcile patch
