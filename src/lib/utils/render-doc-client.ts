@@ -52,7 +52,7 @@ function applyLive(frame: HTMLIFrameElement, srcdoc: string, url: string): void 
 	frame.setAttribute('sandbox', SANDBOX_LIVE);
 	frame.removeAttribute('srcdoc');
 	// Chrome quirk, observed live (EN-17 acceptance): a sandbox change made in the SAME
-	// task that starts the navigation can apply the OLD sandbox to the new document —
+	// task that starts the navigation can apply the OLD sandbox to the new document -
 	// scripts stay inert, the reporter never speaks, and the frame looks loaded but is
 	// frozen. Splitting the src assignment across a task boundary lets the new sandbox
 	// set become authoritative before the frame navigates. The self-heal in hydrate()
@@ -102,7 +102,7 @@ async function hydrate(frame: HTMLIFrameElement): Promise<void> {
 
 /** One-shot self-heal: a live frame that never reported a height within 3s has either
  *  failed to load its document or is running it under a dead sandbox (the Chrome quirk
- *  applyLive works around). Re-issue the navigation once — the sandbox attribute is by
+ *  applyLive works around). Re-issue the navigation once - the sandbox attribute is by
  *  then long-settled, and the reload lands live. Frames that DID report carry an inline
  *  height and are left alone. */
 function armSelfHeal(frame: HTMLIFrameElement, url: string): void {
