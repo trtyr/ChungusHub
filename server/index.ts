@@ -59,6 +59,7 @@ import { storeAssistantFile } from './assistant/files-ingest';
 import { clampRange, splitLines } from './assistant/files-core';
 import type { AssistantFile } from '../shared/assistant-files';
 import type { AssistantFileRow } from './db';
+import { handleRenderDocPost, serveRenderDocGet } from './render-doc';
 import { complete, fetchAccount, fetchAvailableModels, fetchModelEndpoints, isProvider, providerMetadata, resolvedBaseUrl, validateCredentials, type RoutingConfig } from './llm/registry';
 import { handleAssistant, type AssistantRequest } from './assistant/loop';
 import * as promptLog from './promptLog';
@@ -2048,8 +2049,17 @@ function serve(hostname: string) {
 
 			// Password gate: with a password set, every non-loopback device needs a
 			// session cookie. Page loads bounce to the unlock screen; API/files/WS get 401.
+			// /render-doc/ joins the 401 list because its reader is a same-origin iframe:
+			// same-site, so a valid session cookie rides along and the frame loads; a
+			// device without one gets an honest 401 inside the frame rather than the
+			// unlock page silently rendered where a document was supposed to be.
 			if (needsUnlock) {
-				if (path.startsWith('/api/') || path.startsWith('/files/') || path === '/ws') {
+				if (
+					path.startsWith('/api/') ||
+					path.startsWith('/files/') ||
+					path.startsWith('/render-doc/') ||
+					path === '/ws'
+				) {
 					return json({ error: 'Password required.' }, 401);
 				}
 				return new Response(null, { status: 302, headers: { location: '/unlock' } });
@@ -2092,6 +2102,19 @@ function serve(hostname: string) {
 				const ip = clientIp ? normalizeIp(clientIp) : null;
 				if (srv.upgrade(req, { data: { clientId, ip } })) return undefined as unknown as Response;
 				return new Response('Upgrade failed', { status: 400 });
+			}
+
+			// Document-render channel (P003 phase 2, opened 2026-09-30): the client
+			// uploads a complete ```html document and points an iframe at the returned
+			// token URL, whose response headers carry the execution CSP (see render-doc.ts).
+			// Both halves sit behind every gate above: the POST is an /api/ mutation
+			// (cross-site checked, session-checked), and the GET is a same-origin iframe
+			// load riding the same session cookie.
+			if (path === '/api/render-doc' && req.method === 'POST') {
+				return await handleRenderDocPost(req);
+			}
+			if (path.startsWith('/render-doc/')) {
+				return serveRenderDocGet(path);
 			}
 
 			// Image files (served directly; access is already gated by IP above).

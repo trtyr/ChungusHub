@@ -28,6 +28,7 @@ const { applyPromptRegex,
 	depthInverted,
 	depthSentence,
 	isRuleInert,
+	mergeRulesById,
 	normalizeCarriedRules,
 	normalizeRegexRules,
 	normalizeRuleFlags,
@@ -504,6 +505,31 @@ describe('a carried rule the author shipped off', () => {
 
 	test('a shipped-on rule stops when the reader switches it off', () => {
 		expect(run({ always: false })).toBe('foo baz');
+	});
+});
+
+describe('mergeRulesById', () => {
+	const base = (id: string, pattern: string) => ({ ...rule(), id, pattern });
+
+	test('appends rules the reader does not have yet', () => {
+		const [merged, added] = mergeRulesById([base('a', 'x')], [base('b', 'y'), base('c', 'z')]);
+		expect(added).toBe(2);
+		expect(merged.map((r) => r.id)).toEqual(['a', 'b', 'c']);
+	});
+
+	test('a rule already present is left exactly as the reader has it', () => {
+		const mine = base('a', 'MY EDIT');
+		const [merged, added] = mergeRulesById([mine], [base('a', 'theirs'), base('b', 'y')]);
+		expect(added).toBe(1);
+		expect(merged.find((r) => r.id === 'a')?.pattern).toBe('MY EDIT');
+		expect(merged).toHaveLength(2);
+	});
+
+	test('nothing new returns the same list untouched', () => {
+		const existing = [base('a', 'x')];
+		const [merged, added] = mergeRulesById(existing, [base('a', 'theirs')]);
+		expect(added).toBe(0);
+		expect(merged).toBe(existing);
 	});
 });
 

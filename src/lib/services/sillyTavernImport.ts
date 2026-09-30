@@ -12,6 +12,7 @@ import type { Lorebook } from '$lib/lorebook/types';
 import { lorebookFromCharacterBook } from '$lib/lorebook/sillytavern';
 import { clampSteeringDepth, type SteeringRole } from '$lib/types/steering';
 import { decodeBase64Utf8, readTextChunk } from '$lib/services/pngText';
+import { normalizeCarriedRules, type RegexRule } from '$lib/utils/regex-rules';
 
 /** SillyTavern character card V2 format */
 interface SillyTavernCharacter {
@@ -80,6 +81,14 @@ export interface ImportResult {
 	 * character-scoped steering note rather than a trait. Null when the card names none.
 	 */
 	depthPrompt: ImportedDepthPrompt | null;
+	/**
+	 * The card's regex scripts (`extensions.regex_scripts`), parsed through the same
+	 * reader the Regex page's own imports use. These land in the reader's global rule
+	 * list - a card has no preset of its own to carry them, and SillyTavern itself runs
+	 * card scripts globally. Null when the card ships none. Merged by id on import, so
+	 * re-importing a card never duplicates or clobbers a rule the reader edited.
+	 */
+	regexRules: RegexRule[] | null;
 	/** Character versions from a ChungusHub v2 export, in order, recreated with fresh
 	 *  ids on import. Exactly one carries `active`. Absent for SillyTavern cards and v1. */
 	versions?: { name: string; data: LibraryEntryData; active: boolean }[];
@@ -136,6 +145,8 @@ async function importChungusExport(entry: ExportedLibraryEntry): Promise<ImportR
 		lorebook: null,
 		worldName: null,
 		depthPrompt: null,
+		// Our own export format has no ST regex scripts to carry.
+		regexRules: null,
 		...(versions ? { versions } : {})
 	};
 }
@@ -223,6 +234,20 @@ function readDepthPrompt(stChar: SillyTavernCharacter): ImportedDepthPrompt | nu
 }
 
 /**
+ * The card's regex scripts (`extensions.regex_scripts`).
+ *
+ * The third field read outside `mapSillyTavernToCharacter`, and like the Character's Note it
+ * is not a trait: it is behaviour, not description. SillyTavern runs card scripts globally, and
+ * a card has no preset here to carry them, so they land in the reader's own rule list - through
+ * the same parser the Regex page imports with, so placement/markdownOnly/promptOnly all read
+ * exactly as they do on the preset path.
+ */
+function readRegexScripts(stChar: SillyTavernCharacter): RegexRule[] | null {
+	const raw = stChar.data?.extensions?.regex_scripts ?? stChar.extensions?.regex_scripts;
+	return normalizeCarriedRules(raw) ?? null;
+}
+
+/**
  * Import a SillyTavern character card from a File.
  * Supports both PNG (with embedded JSON) and JSON files.
  */
@@ -302,6 +327,7 @@ export async function importSillyTavernCard(file: File): Promise<ImportResult> {
 		imageFile,
 		lorebook,
 		worldName: readWorldName(stChar),
-		depthPrompt: readDepthPrompt(stChar)
+		depthPrompt: readDepthPrompt(stChar),
+		regexRules: readRegexScripts(stChar)
 	};
 }

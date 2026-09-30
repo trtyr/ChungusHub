@@ -7,6 +7,9 @@
  *
  * The Character's Note is the other thing read out here rather than onto a trait: it is
  * guidance at a depth, so it leaves as a steering note and carries the placement the card chose.
+ *
+ * The card's regex scripts (`extensions.regex_scripts`) are the third: behaviour, not
+ * description, parsed by the same reader the Regex page imports with.
  */
 import { describe, expect, test } from 'bun:test';
 
@@ -92,5 +95,40 @@ describe("the card's Character's Note", () => {
 		expect(deep.depthPrompt?.depth).toBe(100);
 		const none = await importSillyTavernCard(noteCard({ prompt: 'Stay in scene.' }));
 		expect(none.depthPrompt?.depth).toBeNull();
+	});
+});
+
+describe('the regex scripts a card carries', () => {
+	const SCRIPT = {
+		id: '11111111-2222-3333-4444-555555555555',
+		scriptName: '状态栏',
+		findRegex: '<jiang_status>([\\s\\S]*?)</jiang_status>',
+		replaceString: '```html\n<status>$1</status>\n```',
+		placement: [2]
+	};
+
+	// A V2 card nests extensions under data; a V1 card keeps them at the top level.
+	test('are read from a V2 card, through the ST script reader', async () => {
+		const result = await importSillyTavernCard(
+			jsonCard({ spec: 'chara_card_v2', data: { name: 'Alice', extensions: { regex_scripts: [SCRIPT] } } })
+		);
+		expect(result.regexRules).toHaveLength(1);
+		const rule = result.regexRules![0];
+		expect(rule.id).toBe(SCRIPT.id); // the card's own id survives, for idempotent merge
+		expect(rule.name).toBe('状态栏');
+		expect(rule.pattern).toContain('jiang_status');
+		expect(rule.replacement).toContain('```html');
+		expect(rule.targets).toEqual(['assistant']); // placement [2]
+	});
+
+	test('are read from a V1 card too', async () => {
+		const result = await importSillyTavernCard(jsonCard({ name: 'Alice', extensions: { regex_scripts: [SCRIPT] } }));
+		expect(result.regexRules).toHaveLength(1);
+	});
+
+	test('are null where the card ships none', async () => {
+		expect((await importSillyTavernCard(jsonCard({ name: 'Alice' }))).regexRules).toBeNull();
+		const empty = jsonCard({ name: 'Alice', data: { extensions: { regex_scripts: [] } } });
+		expect((await importSillyTavernCard(empty)).regexRules).toBeNull();
 	});
 });

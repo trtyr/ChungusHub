@@ -16,6 +16,7 @@ import type { ImportResult } from '$lib/services/sillyTavernImport';
 import { lorebookStore } from '$lib/lorebook/store.svelte';
 import type { BookIndex } from '$lib/lorebook/identity';
 import { steeringStore } from '$lib/stores/steering.svelte';
+import { regexRulesStore } from '$lib/stores/regex-rules.svelte';
 import { toastStore } from '$lib/stores/toast.svelte';
 import { DebouncedWriter } from '$lib/utils/debounced-write';
 import {
@@ -538,6 +539,14 @@ class CharacterLibraryStore {
 				depth,
 				role
 			});
+		}
+
+		// The card's regex scripts land in the reader's global rule list - SillyTavern runs
+		// card scripts globally, and a card has no preset here to carry them. Merged by id,
+		// so re-importing a card neither duplicates nor clobbers. Persona cards carry none
+		// (normalizeCarriedRules over an absent extension is null before this even runs).
+		if (!isPersona && importResult.regexRules?.length) {
+			regexRulesStore.mergeCardRules(importResult.regexRules);
 		}
 
 		// The card's lorebook, but only when the caller opted in (import is user-confirmed).

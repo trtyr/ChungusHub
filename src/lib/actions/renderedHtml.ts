@@ -31,7 +31,23 @@
  *  deciding whether it is being imported somewhere without one. */
 let parser: HTMLTemplateElement | null = null;
 
+import { docFingerprint, hydrateHtmlDocs } from '../utils/render-doc-client';
+
 function patchAttributes(target: Element, source: Element): void {
+	// A live html-doc frame is ours, not the text's: its src and data-doc-fp exist only
+	// after an upload this module's hydrate made, and the incoming template never
+	// carries them. While the incoming srcdoc still fingerprints equal to what was
+	// uploaded, the live frame IS the correct rendering - letting the generic loop
+	// "fix" it would strip src, restore the frozen srcdoc form, and flash the frame on
+	// every streamed patch. A different fingerprint means the document itself was
+	// rewritten (an edit, a reroll): drop the live state and fall through, so the frame
+	// returns to pending and hydrateHtmlDocs re-uploads it.
+	if (target.tagName === 'IFRAME' && (target as HTMLElement).dataset?.docFp !== undefined) {
+		const incoming = source.getAttribute('srcdoc');
+		const el = target as HTMLElement;
+		if (incoming !== null && el.dataset.docFp === docFingerprint(incoming)) return;
+		delete el.dataset.docFp;
+	}
 	// `open` on a panel belongs to the reader, not to the text: a panel that survives a
 	// patch keeps whatever they set, while one that arrives fresh is built from the source
 	// node and so still honours whatever the reply asked for.
@@ -96,6 +112,10 @@ function patch(node: HTMLElement, html: string): void {
 	parser.innerHTML = html;
 	patchChildren(node, parser.content);
 	parser.innerHTML = '';
+	// After every reconcile: pending html-doc frames need their upload, and a frame that
+	// just lost its live state (rewritten document) needs it again. Already-live frames
+	// cost one fingerprint each, so this stays cheap on the streaming path.
+	hydrateHtmlDocs(node);
 }
 
 export function renderedHtml(node: HTMLElement, html: string) {

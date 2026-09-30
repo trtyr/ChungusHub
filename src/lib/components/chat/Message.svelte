@@ -1207,12 +1207,14 @@
 		line-height: var(--user-line-height, 1.72);
 	}
 
-	/* P003 phase 2: document-type beautify renders as a sandboxed iframe. Generous
-	 * viewport-proportional height with native scrolling: auto-resize would need script
-	 * inside the frame, which the sandbox forbids by design. User decision 2026-09-30
-	 * (risk-debt #4 closure): this clamp IS the final state; relaxing the sandbox to
-	 * measure content height was offered and declined, so a long document scrolls
-	 * inside the frame by design. The background rides the
+	/* P003 phase 2: document-type beautify renders as a sandboxed iframe. The clamp is
+	 * the FALLBACK height: what a frame shows before (or without) the height reporter -
+	 * the frozen srcdoc form when the render-doc upload failed, and the first paint of a
+	 * live frame. A live frame (scripts allowed, 2026-09-30 second user decision, goal
+	 * munw6bi7 / ticket EN-17 - supersedes the risk-debt #4 "clamp is final" closure the
+	 * same day) gets its real height postMessage'd by the reporter the server injects,
+	 * applied as an inline style that overrides this clamp. A long document scrolls
+	 * inside the frame exactly when it never went live. The background rides the
 	 * theme so a dark theme does not flash a white sheet; a document that ships its own
 	 * background still paints its own. */
 	.message-prose :global(iframe.html-doc) {

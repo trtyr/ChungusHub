@@ -593,3 +593,18 @@ export function normalizeCarriedOverrides(raw: unknown): Record<string, boolean>
 	}
 	return out;
 }
+
+/** Merge card-carried rules into the reader's list, idempotently by id: a rule already
+ *  present is left EXACTLY as it is - the reader may have edited or disabled it, and
+ *  re-importing the card it came from must not duplicate it or resurrect their changes.
+ *  Incoming rules keep the id SillyTavern shipped (normalizeCarriedRules preserves one),
+ *  so "same card again" and "same rule" are the same question. Returns [list, added]. */
+export function mergeRulesById(
+	existing: RegexRule[],
+	incoming: RegexRule[]
+): [rules: RegexRule[], added: number] {
+	const known = new Set(existing.map((r) => r.id));
+	const fresh = incoming.filter((r) => !known.has(r.id));
+	if (fresh.length === 0) return [existing, 0];
+	return [[...existing, ...fresh], fresh.length];
+}

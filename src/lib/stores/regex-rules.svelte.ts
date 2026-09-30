@@ -6,6 +6,7 @@ import {
 	carriedRuleEnabled,
 	createRegexRule,
 	defaultRegexRules,
+	mergeRulesById,
 	normalizeCarriedOverrides,
 	normalizeRegexRules,
 	rulesWithCarried,
@@ -153,6 +154,17 @@ class RegexRulesStore {
 	importRules(rules: RegexRule[]): void {
 		this.rules.push(...rules);
 		this.persist();
+	}
+
+	/** Merge card-carried ST scripts (see sillyTavernImport.ts) into the reader's list,
+	 *  idempotently by id - re-importing a card neither duplicates its rules nor disturbs
+	 *  ones the reader has since edited. Returns how many rules were added. */
+	mergeCardRules(rules: RegexRule[]): number {
+		const [next, added] = mergeRulesById(this.rules, rules);
+		if (added === 0) return 0;
+		this.rules = next;
+		this.persist();
+		return added;
 	}
 
 	/** Replace everything with a fresh copy of the shipped starter pack. */
