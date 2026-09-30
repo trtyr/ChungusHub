@@ -436,7 +436,7 @@ export function expandCondition(condition: string, ctx: MacroContext, env: VarEn
 // ---------------------------------------------------------------------------
 
 const PARAM_MACROS_RE_SRC =
-	'\\{\\{\\s*(getvar|setvar|addvar|incvar|decvar|hasvar|deletevar|getglobalvar|setglobalvar|addglobalvar|incglobalvar|decglobalvar|hasglobalvar|deleteglobalvar|random|pick|roll|noop|newline|space)\\s*(?:::|\\s+|:)?\\s*(' + ARG + ')\\}\\}';
+	'\\{\\{\\s*(getvar|setvar|addvar|incvar|decvar|hasvar|deletevar|getglobalvar|setglobalvar|addglobalvar|incglobalvar|decglobalvar|hasglobalvar|deleteglobalvar|random|pick|roll|setmsgvar|getmsgvar|noop|newline|space)\\s*(?:::|\\s+|:)?\\s*(' + ARG + ')\\}\\}';
 const PARAM_MACROS_RE = () => new RegExp(PARAM_MACROS_RE_SRC, 'gi');
 
 /** One sweep of the variable/random/utility pass. Order inside a sweep: conditional
@@ -449,6 +449,36 @@ const TRIM_RE = () => /\n?[ \t]*\{\{\s*trim\s*\}\}[ \t]*\n?/gi;
  *  forms, then {{trim}} (it rewrites its own surroundings, so it runs on whole text),
  *  then parameterized macros left-to-right (side effects land in reading order), then
  *  shorthands. */
+/** P017 1c: parse a row's msg_vars blob. Returns an empty table on null or torn blobs
+ *  rather than throwing; callers treat an unreadable row as a row without vars. */
+export function parseMessageVars(raw: string | null): Record<string, string> {
+	if (!raw) return {};
+	try {
+		const parsed = JSON.parse(raw) as unknown;
+		if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return {};
+		const out: Record<string, string> = {};
+		for (const [k, v] of Object.entries(parsed)) {
+			if (typeof v === 'string') out[k] = v;
+		}
+		return out;
+	} catch {
+		return {};
+	}
+}
+
+/** P017 1c: walk the chat tail backwards for the newest message whose msg_vars table
+ *  carries `key` (TH's findPreviousMessageVariables over flat keys; each row is its own
+ *  swipe in this app, so one flat table per row is the whole shape). A torn blob skips
+ *  rather than failing the walk; no history means an empty read, not an error. */
+function inheritMsgVar(ctx: MacroContext, key: string): string {
+	const messages = ctx.chatMessages;
+	for (let i = (messages?.length ?? 0) - 1; i >= 0; i--) {
+		const vars = parseMessageVars(messages![i].msgVars);
+		if (key in vars) return vars[key];
+	}
+	return '';
+}
+
 function sweep(text: string, ctx: MacroContext, env: VarEnv | undefined): string {
 	text = expandIfBlocks(text, ctx, env);
 	text = expandScopedSets(text, env, (inner) => expandMacros(expandVarMacros(inner, ctx, env), ctx));
@@ -460,6 +490,23 @@ function sweep(text: string, ctx: MacroContext, env: VarEnv | undefined): string
 		if (name === 'random') return evalRandom(rawArgs);
 		if (name === 'pick') return evalPick(match, rawArgs, env);
 		if (name === 'roll') return evalRoll(rawArgs);
+		if (name === 'setmsgvar') {
+			// P017 1c: accumulate onto the assembly's message-scoped write area. No env
+			// involvement; the flush onto the produced message happens after generation.
+			// The value expands macros first, same as setvar's value.
+			const args = argsOf(rawArgs);
+			const key = (args[0] ?? '').trim();
+			if (key && ctx.msgVarWrites) {
+				ctx.msgVarWrites[key] = expandMacros(expandVarMacros(args[1] ?? '', ctx, env), ctx);
+			}
+			return '';
+		}
+		if (name === 'getmsgvar') {
+			// This assembly's writes win the timeline; otherwise walk the chat tail.
+			const key = argsOf(rawArgs)[0]?.trim() ?? '';
+			if (key && ctx.msgVarWrites && key in ctx.msgVarWrites) return ctx.msgVarWrites[key];
+			return inheritMsgVar(ctx, key);
+		}
 		if (name === 'noop' || name === 'trim' || name === 'newline' || name === 'space') {
 			return evalUtility(name, rawArgs).out;
 		}

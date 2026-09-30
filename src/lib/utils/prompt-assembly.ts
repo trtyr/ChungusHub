@@ -168,13 +168,17 @@ export interface PromptAssembly {
 	 *  restated by the model in its expanded form, and comparing against the stored text
 	 *  waves that copy through to be appended twice (continuation.ts). */
 	continuationSent?: string;
+	/** P017 1c: message-scoped writes accumulated by {{setmsgvar}} during the assembly.
+	 *  The generation path flushes them onto the turn this prompt produces; every other
+	 *  surface (meters, the Prompt Builder) is free to ignore them. */
+	msgVarWrites?: Record<string, string>;
 }
 
 /**
  * Construct the MacroContext from resolved inputs. The single place this happens, so macro
  * resolution is identical at every surface (real prompt, chat meter, Prompt Builder).
  */
-export function buildMacroContext(input: AssembleInput): MacroContext {
+export function buildMacroContext(input: AssembleInput, msgVarWrites: Record<string, string> = {}): MacroContext {
 	// Prompt-scope regex rules rewrite the chat turns HERE, before anything derives
 	// from them: structural injection, lorebook scanning and the budget trim all
 	// read ctx.chatMessages, so every surface prices exactly what is sent.
@@ -196,6 +200,7 @@ export function buildMacroContext(input: AssembleInput): MacroContext {
 			: undefined;
 	const base: MacroContext = {
 		vars: input.vars,
+		msgVarWrites,
 		resolvedPersona: input.resolvedPersona,
 		resolvedCharacters: input.resolvedCharacters,
 		chatMessages,
@@ -543,6 +548,10 @@ function withEntryToggles(
  * No db, no async. The live meters can therefore call it on every reactive change.
  */
 export function assemblePrompt(input: AssembleInput): PromptAssembly {
+	// P017 1c: one message-scoped write area per assembly, shared across every
+	// re-resolve (budget trims rebuild their context) so writes never disappear
+	// between passes, and returned to the caller that flushes them onto the turn.
+	const msgVarWrites: Record<string, string> = {};
 	const mode = input.postProcessing?.mode ?? 'merge';
 	const placeholder = input.postProcessing?.placeholder;
 	const preset = withEntryToggles(input.preset, input.controls, input.customFields);
@@ -552,14 +561,14 @@ export function assemblePrompt(input: AssembleInput): PromptAssembly {
 		let fallbackTail: { messages: LLMMessage[]; tokens: number } | undefined;
 		let fallbackSteering: DepthSplice[] = [];
 		if (input.continuation || input.steering) {
-			const fallbackCtx = buildMacroContext(input);
+			const fallbackCtx = buildMacroContext(input, msgVarWrites);
 			fallbackTail = input.continuation ? continuationTail(input, fallbackCtx) : undefined;
 			fallbackSteering = buildSteeringMessages(input, fallbackCtx, input.model);
 		}
 		return systemFallback(mode, placeholder, fallbackTail, fallbackSteering);
 	}
 
-	let ctx: SplicedContext = buildMacroContext(input);
+	let ctx: SplicedContext = buildMacroContext(input, msgVarWrites);
 	// Two kinds of turn ride inside the chat, and they share one placement rule. Lore is built
 	// first so that at a shared slot the background sits ahead of the reader's own direction.
 	// Facts sit between them: standing world state ahead of the reader's own direction.
@@ -667,6 +676,7 @@ export function assemblePrompt(input: AssembleInput): PromptAssembly {
 
 	return {
 		messages: applyPostProcessing(stripTemplateBlocks(messages), mode, placeholder),
+		msgVarWrites,
 		breakdown,
 		trimmedMessages,
 		trimmedExampleBlocks,

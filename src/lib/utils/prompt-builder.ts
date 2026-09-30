@@ -54,6 +54,9 @@ export interface PromptBuildContext {
 /** A built prompt: what goes on the wire, and the lorebook scan that shaped it. */
 export interface BuiltPrompt {
 	messages: LLMMessage[];
+	/** P017 1c: message-scoped writes accumulated by {{setmsgvar}} during assembly.
+	 *  Carried out for the caller that flushes them onto the produced turn. */
+	msgVarWrites?: Record<string, string>;
 	/** The connection this prompt was assembled for, and the one it must be sent on. Carried
 	 *  out rather than re-derived by each caller, so the review dialog names the model the
 	 *  budget was counted against. */
@@ -164,7 +167,7 @@ export async function buildPromptMessages(context: PromptBuildContext): Promise<
 	// The fact board rides the tail: load the chat's rows (cached after the first read)
 	// and derive the effective set against the same path the assembly will inject.
 	await factsStore.ensure(chat?.id ?? '');
-	const { messages, lorebook, continuationSent } = assemblePrompt({
+	const { messages, lorebook, continuationSent, msgVarWrites } = assemblePrompt({
 		vars,
 		preset,
 		resolvedCharacters: character ? [toPromptCharacter(character)!] : [],
@@ -189,5 +192,5 @@ export async function buildPromptMessages(context: PromptBuildContext): Promise<
 
 	await varsStore.flush(chat?.id ?? '', vars.locals);
 
-	return { messages, target: promptTarget.target, lorebook, continuationSent, oneShotSteering };
+	return { messages, target: promptTarget.target, lorebook, continuationSent, oneShotSteering, msgVarWrites };
 }

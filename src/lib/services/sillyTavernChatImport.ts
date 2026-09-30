@@ -198,6 +198,7 @@ export function convertSillyTavernChat(
 				personaId: null,
 				branchLabel: null,
 				thinking: role === 'assistant' ? firstNonEmpty(extra?.reasoning) : null,
+				msgVars: null,
 				attachments: null,
 				createdAt,
 				editedAt: null,

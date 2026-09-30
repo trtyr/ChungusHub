@@ -164,6 +164,11 @@ class MessageStore {
 	 *  reply. Other failures throw. */
 	async generateResponse(chatId: string, parentId: string, prompt: BuiltPrompt): Promise<string | null> {
 		const { messages, target: callTarget, lorebook, oneShotSteering } = prompt;
+		// P017 1c: an empty write area writes no column. null means the turn carries no
+		// vars, which every reader (inherit walk, duplicate) treats as the plain case.
+		const flushedMsgVars = Object.keys(prompt.msgVarWrites ?? {}).length
+			? prompt.msgVarWrites
+			: undefined;
 		this.abortController = new AbortController();
 		chatStore.startStream(chatId);
 
@@ -189,7 +194,8 @@ class MessageStore {
 					expectedLeafId: parentId,
 					claimsRoot: false,
 					lorebook,
-					spendSteeringIds: oneShotSteering.map((note) => note.id)
+					spendSteeringIds: oneShotSteering.map((note) => note.id),
+					msgVars: flushedMsgVars
 				}
 			});
 
@@ -927,6 +933,7 @@ class MessageStore {
 				personaId: null,
 				branchLabel: null,
 				thinking: null,
+				msgVars: null,
 				attachments: null,
 				createdAt: Date.now(),
 				editedAt: null,
@@ -950,7 +957,7 @@ class MessageStore {
 			// {{chatHistory}} injects the direction as the one user turn. Rides the engine
 			// target: Opening Scene resolves to its own assignment on the Connections page,
 			// and assembly must follow the serving connection.
-			const { messages, target: callTarget, lorebook, oneShotSteering } = await buildPromptMessages({
+			const { messages, target: callTarget, lorebook, oneShotSteering, msgVarWrites } = await buildPromptMessages({
 				chatId: chat.id,
 				chatMessages: [virtualUserMessage],
 				target: { engine: 'opening-scene' }
@@ -980,7 +987,9 @@ class MessageStore {
 					expectedLeafId: chat.activeLeafId,
 					claimsRoot: true,
 					lorebook,
-					spendSteeringIds: oneShotSteering.map((note) => note.id)
+					spendSteeringIds: oneShotSteering.map((note) => note.id),
+					// P017 1c: an empty area writes no column (null, not an empty object).
+					msgVars: Object.keys(msgVarWrites ?? {}).length ? msgVarWrites : undefined
 				}
 			});
 
@@ -1117,6 +1126,7 @@ class MessageStore {
 					: null,
 			branchLabel: data.branchLabel ?? null,
 			thinking: data.thinking ?? null,
+			msgVars: data.msgVars ?? null,
 			attachments: data.attachments?.length ? data.attachments : null,
 			createdAt: Date.now(),
 			editedAt: null,

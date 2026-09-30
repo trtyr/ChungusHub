@@ -1271,7 +1271,8 @@ function commitGeneration(
 		firstTokenMs: timings.firstTokenMs,
 		reasoningMs: timings.reasoningMs,
 		lorebook: commit.lorebook ?? null,
-		spendSteeringIds: commit.spendSteeringIds
+		spendSteeringIds: commit.spendSteeringIds,
+		msgVars: commit.msgVars
 	});
 	if (!landed) return null;
 

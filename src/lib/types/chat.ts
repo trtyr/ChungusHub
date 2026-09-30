@@ -297,6 +297,10 @@ export interface Message {
 	 *  unlabeled messages (the vast majority). Story-map metadata only. */
 	branchLabel: BranchLabel | null;
 	thinking: string | null;
+	/** P017 1c: message-scoped variables for this row, a flat string table (ST
+	 *  Prompt-Template semantics; P014 1c). A JSON string on the wire, parsed through
+	 *  parseMessageVars, never by hand. Null = no message vars. */
+	msgVars: string | null;
 	/** Images the user sent with this turn (paths under images/chat/ on the server).
 	 *  Null for text-only messages. Vision-capable providers inline them at request time. */
 	attachments: MessageAttachment[] | null;

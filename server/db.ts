@@ -570,6 +570,16 @@ const MIGRATIONS: Migration[] = [
 		-- the flag down, maintenance runs the Phase 1 fixed pipeline unchanged.
 		ALTER TABLE memory_state ADD COLUMN agent_enabled INTEGER NOT NULL DEFAULT 0;
 		`
+	},
+	{
+		version: 48,
+		name: 'message_vars',
+		sql: `
+		-- P017 1c: per-message, per-swipe variable rows for ST Prompt-Template cards
+		-- ([InitialVariables] seeding + {{setmsgvar}} writes). A JSON object keyed by
+		-- swipe index, each value a flat string table. NULL on every pre-existing row.
+		ALTER TABLE messages ADD COLUMN msg_vars TEXT;
+		`
 	}
 ];
 
@@ -756,6 +766,7 @@ class ServerDatabase {
 			personaId: row.persona_id ?? null,
 			branchLabel: row.branch_label ? JSON.parse(row.branch_label as string) : null,
 			thinking: row.thinking ?? null,
+			msgVars: row.msg_vars ?? null,
 			attachments: row.attachments_json ? JSON.parse(row.attachments_json as string) : null,
 			createdAt: row.created_at,
 			editedAt: row.edited_at,
@@ -918,9 +929,9 @@ class ServerDatabase {
 				// rows rest at 0 and the first open reads them full like any other chat.
 				this.execute(
 					`INSERT INTO messages
-					 (id, chat_id, parent_id, role, content, persona_id, branch_label, thinking, attachments_json, created_at, edited_at, minor_edited_at, sprite_label,
+					 (id, chat_id, parent_id, role, content, persona_id, branch_label, thinking, msg_vars, attachments_json, created_at, edited_at, minor_edited_at, sprite_label,
 					  model, provider, tokens_prompt, tokens_completion, finish_reason, generation_ms, first_token_ms, reasoning_ms, lore_json, sibling_index)
-					 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+					 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 					[
 						idMap.get(row.id as string),
 						newChatId,
@@ -930,6 +941,7 @@ class ServerDatabase {
 						row.persona_id ?? null,
 						row.branch_label ?? null,
 						row.thinking ?? null,
+						row.msg_vars ?? null,
 						row.attachments_json ?? null,
 						row.created_at,
 						row.edited_at ?? null,
@@ -1181,6 +1193,9 @@ class ServerDatabase {
 		 *  than by the caller so a page that never comes back cannot leave guidance armed to
 		 *  apply itself twice (architecture/chat-sessions.md). */
 		spendSteeringIds: string[];
+		/** P017 1c: message-scoped writes carried from the prompt's assembly. Serialized
+		 *  to the row's msg_vars here, so the wire never carries pre-baked JSON. */
+		msgVars?: Record<string, string>;
 	}): { messageId: string; spentSteeringIds: string[] } | null {
 		return this.inTransaction(() => {
 			const chat = this.select<{ active_leaf_id: string | null; root_message_id: string | null }[]>(
@@ -1220,6 +1235,7 @@ class ServerDatabase {
 				firstTokenMs: commit.firstTokenMs,
 				reasoningMs: commit.reasoningMs,
 				lorebook: commit.lorebook,
+				msgVars: commit.msgVars ? JSON.stringify(commit.msgVars) : null,
 				siblingIndex: this.getNextSiblingIndex(commit.chatId, commit.parentId)
 			});
 
@@ -1925,9 +1941,9 @@ class ServerDatabase {
 			]);
 			this.execute(
 				`INSERT INTO messages
-				 (id, chat_id, parent_id, role, content, persona_id, branch_label, thinking, attachments_json, created_at, edited_at, minor_edited_at, sprite_label,
+				 (id, chat_id, parent_id, role, content, persona_id, branch_label, thinking, msg_vars, attachments_json, created_at, edited_at, minor_edited_at, sprite_label,
 				  model, provider, tokens_prompt, tokens_completion, finish_reason, generation_ms, first_token_ms, reasoning_ms, lore_json, sibling_index, rev)
-				 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+				 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 				[
 					message.id,
 					message.chatId,
@@ -1937,6 +1953,7 @@ class ServerDatabase {
 					message.personaId ?? null,
 					message.branchLabel ? JSON.stringify(message.branchLabel) : null,
 					message.thinking ?? null,
+					message.msgVars ?? null,
 					Array.isArray(message.attachments) && message.attachments.length
 						? JSON.stringify(message.attachments)
 						: null,

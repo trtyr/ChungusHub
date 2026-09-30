@@ -225,6 +225,7 @@ class ChatStore {
 				personaId: null,
 				branchLabel: null,
 				thinking: null,
+				msgVars: null,
 				attachments: null,
 				createdAt: now + i,
 				editedAt: null,

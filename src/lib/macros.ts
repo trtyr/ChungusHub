@@ -317,6 +317,10 @@ export interface MacroContext {
 	/** ST-style variable tables: chat-scoped locals, app-scoped globals. Absent = the
 	 *  variable pass renders reads empty and discards writes (old callers, tests). */
 	vars?: VarEnv;
+	/** P017 1c: message-scoped writes accumulated by {{setmsgvar}} during THIS assembly,
+	 *  keyed flat like VarEnv. Mutated in place (same contract as vars); the generation
+	 *  path flushes it onto the message the turn produces, meters just drop it. */
+	msgVarWrites?: Record<string, string>;
 	resolvedPersona?: PromptCharacter | null;
 	resolvedCharacters?: PromptCharacter[];
 	/** The lorebook block injected at {{lorebook}}, already scanned and rendered by the context

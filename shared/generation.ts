@@ -20,6 +20,9 @@ export interface GenerationCommit {
 	lorebook: unknown;
 	/** Ids of the 'once' steering notes this prompt resolved, spent inside the commit. */
 	spendSteeringIds: string[];
+	/** P017 1c: message-scoped writes accumulated by {{setmsgvar}} during this prompt's
+	 *  assembly. Stored flat on the produced row; absent means the turn carries none. */
+	msgVars?: Record<string, string>;
 }
 
 /** Whether an inbound placement is shaped like one. Every field is checked, `spendSteeringIds`
@@ -36,6 +39,13 @@ export function isGenerationCommit(value: unknown): value is GenerationCommit {
 		(c.expectedLeafId === null || typeof c.expectedLeafId === 'string') &&
 		typeof c.claimsRoot === 'boolean' &&
 		Array.isArray(c.spendSteeringIds) &&
-		c.spendSteeringIds.every((id) => typeof id === 'string')
+		c.spendSteeringIds.every((id) => typeof id === 'string') &&
+		(c.msgVars === undefined || flatStringRecord(c.msgVars))
 	);
+}
+
+/** P017 1c: a flat string table, no nesting. The values reach a JSON.stringify inside the
+ *  commit, so anything but strings would store a shape the reader macros cannot answer. */
+function flatStringRecord(value: Record<string, string>): boolean {
+	return Object.values(value).every((v) => typeof v === 'string');
 }
