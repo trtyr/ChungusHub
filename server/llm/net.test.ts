@@ -46,7 +46,7 @@ const silentServer = Bun.serve({
 	}
 });
 
-const trickle = dribbleServer(12, 40);
+const trickle = dribbleServer(24, 20);
 const stalls = dribbleServer(1, 0, true);
 
 afterAll(() => {
@@ -70,7 +70,7 @@ describe('the idle timeout measures silence, not total time', () => {
 			read += value.byteLength;
 		}
 		const elapsed = performance.now() - startedAt;
-		expect(read).toBe(12);
+		expect(read).toBe(24);
 		// The proof is in the arithmetic: the whole read outlived the bound several times over.
 		expect(elapsed).toBeGreaterThan(300);
 	});

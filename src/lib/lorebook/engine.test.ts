@@ -1151,6 +1151,8 @@ describe('an archive-sized book', () => {
 		const big = book(Array.from({ length: 4000 }, (_, i) => ({ key: [`k${i}`], content: `c${i}` })));
 		const started = Date.now();
 		expect(resolveLorebooks({ books: [big], messages: ['nothing matches here'] }).text).toBe('');
-		expect(Date.now() - started).toBeLessThan(8000);
+		// 20s: a quadratic scan on 4000 entries takes minutes, so this still catches the
+		// regression it exists for while tolerating a loaded machine's slow second.
+		expect(Date.now() - started).toBeLessThan(20000);
 	});
 });
