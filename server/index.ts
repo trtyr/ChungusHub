@@ -1329,6 +1329,10 @@ async function handleLlm(ws: ServerWebSocket<SocketData>, msg: {
 	deliverTokens?: boolean;
 	/** Debug-panel label for what kind of query this is ('chat', 'memory', …). */
 	source?: string;
+	/** The chat a commitless call is anchored to (the message continuation), so `llm-status`
+	 *  still reports the generation and a reloaded page can find and stop it (EN-29).
+	 *  Mirrors the client's `LlmRequest.statusChatId`. Null for engine calls. */
+	statusChatId?: string;
 	/** Where this generation's reply belongs in the story, when it belongs in one at all.
 	 *  Present for the two paths that CREATE a turn (a reply, an opening scene) and absent
 	 *  for every other call, which is what decides who writes the answer down. See
