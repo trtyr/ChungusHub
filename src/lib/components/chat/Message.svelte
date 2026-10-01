@@ -18,6 +18,7 @@
 	import { chatStore } from '$lib/stores/chat.svelte';
 	import { themeStore } from '$lib/stores/theme.svelte';
 	import { renderMarkdown } from '$lib/utils/markdown';
+	import { streamSlice } from '$lib/utils/stream-slice.svelte';
 	import { STYLE_SCOPE_CLASS } from '$lib/utils/style-scope';
 	import { renderedHtml } from '$lib/actions/renderedHtml';
 	import { copyText } from '$lib/utils/clipboard';
@@ -474,9 +475,12 @@
 	// model re-typing the message never paints it duplicating itself). The anchor is the
 	// content with self-refs expanded: the model restates the expanded text it was sent,
 	// not the stored macros. Any new reasoning streams in after the stored block.
+	// The tail feeds the same O(n) display pipeline as a fresh reply, so it reads a SLICED
+	// mirror too: per-token recomputation over a growing turn is O(n²) (EN-21).
+	const slicedTail = streamSlice(() => streamTail ?? '');
 	const displayedContent = $derived(
 		streamTail != null
-			? previewContinuation(message.content, streamTail, expandSelfRefs(message.content, selfRefChar, selfRefUser))
+			? previewContinuation(message.content, slicedTail.value, expandSelfRefs(message.content, selfRefChar, selfRefUser))
 			: message.content
 	);
 	const liveThinking = $derived(

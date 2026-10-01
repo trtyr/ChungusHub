@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { renderMarkdown } from '$lib/utils/markdown';
 	import { renderedHtml } from '$lib/actions/renderedHtml';
+	import { streamSlice } from '$lib/utils/stream-slice.svelte';
 	import { regexRulesStore } from '$lib/stores/regex-rules.svelte';
 	import { countTokens } from '$lib/tokenizer';
 	import MessageReasoning from './MessageReasoning.svelte';
@@ -43,10 +44,15 @@
 	// Resolved on its own line: `displayContent` recomputes per streamed token, and resolving
 	// a preset parses the chat's feature-state blob.
 	const displayPreset = $derived(openChatSetup.preset);
-	let displayContent = $derived(regexRulesStore.forDisplay(content, 'assistant', 0, displayPreset));
+	// The expensive pipeline (display regex → markdown → tokenizer) reads a SLICED mirror
+	// of the stream, not the raw token rate: per-token recomputation is O(n²) over a reply
+	// and the paint fell minutes behind the server on long outputs (EN-21). See
+	// stream-slice.svelte.ts.
+	const sliced = streamSlice(() => content);
+	let displayContent = $derived(regexRulesStore.forDisplay(sliced.value, 'assistant', 0, displayPreset));
 	let bodyHtml = $derived(renderMarkdown(displayContent));
 	// Counts the raw stream, not the display transform: it estimates what the model emits.
-	let streamingTokens = $derived(countTokens(content));
+	let streamingTokens = $derived(countTokens(sliced.value));
 	// Same rule as Message.svelte: MessageReasoning is a pure renderer, so the caller
 	// decides whether there is anything to show.
 	const hasReasoning = $derived(Boolean(thinking.trim()));
