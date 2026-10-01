@@ -7,7 +7,7 @@ import { untrack } from 'svelte';
  * O(content length) per recomputation. Recomputing it per streamed token made the
  * work O(n²) over a reply: by a few thousand characters the paint fell minutes
  * behind the server, which is exactly the "服务端已经 5000 字、屏幕才 1000 字"
- * report — the server accumulates at full speed while the UI crawls.
+ * report: the server accumulates at full speed while the UI crawls.
  *
  * Slice the stream instead: the raw state still updates per token, while anything
  * reading `.value` recomputes at most once per slice (trailing edge guaranteed, so
