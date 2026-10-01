@@ -429,6 +429,9 @@ export interface LLMCompletionOptions {
 	 *  (a reply, an opening scene). Absent everywhere else, which is what keeps every other
 	 *  call's result the client's to persist. See architecture/chat-sessions.md. */
 	commit?: import('$shared/generation').GenerationCommit;
+	/** The chat a commitless call is anchored to (the message continuation), so `llm-status`
+	 *  reports it and a page that reloads mid-run can still find and stop the reply (EN-29). */
+	statusChatId?: string;
 }
 
 export interface LLMCompletionResult {

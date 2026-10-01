@@ -359,6 +359,7 @@ class LLMService {
 			onToken: stream ? options.onToken : undefined,
 			onThinkingToken: stream ? options.onThinkingToken : undefined,
 			signal: options.signal,
+			statusChatId: options.statusChatId,
 			commit: options.commit
 		});
 		return result as LLMCompletionResult;

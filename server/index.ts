@@ -132,6 +132,13 @@ interface LiveGeneration {
 	/** The chat this generation will write a turn into, for the single-flight rule below.
 	 *  Null for every call that writes nothing. */
 	commitChatId: string | null;
+	/** The chat a commitless call is anchored to, for `llm-status` only. The message
+	 *  continuation writes its result back onto an existing turn from the client, so it
+	 *  carries no commit, and before EN-29 that made it invisible: a page that reloaded
+	 *  mid-continuation left the generation running with no indicator and no Stop
+	 *  anywhere, and its answer was dropped unclaimed. Reported alongside commitChatId;
+	 *  engine calls set neither and stay unreported, as they should. */
+	statusChatId: string | null;
 	/** When the request went out, for `handleLlmStatus`. Wall clock rather than the monotonic
 	 *  one the timings use, because this number is answered to a client rather than measured:
 	 *  the elapsed time is computed here and sent, so the two clocks never have to agree. */
@@ -1361,6 +1368,7 @@ async function handleLlm(ws: ServerWebSocket<SocketData>, msg: {
 		dropTimer: null,
 		source: msg.source ?? 'completion',
 		commitChatId: msg.commit?.chatId ?? null,
+		statusChatId: typeof msg.statusChatId === 'string' && msg.statusChatId ? msg.statusChatId : null,
 		startedAt: Date.now()
 	};
 	generations.set(msg.id, gen);
@@ -1547,8 +1555,9 @@ function handleLlmAttach(
  * exists. This is how the chat learns to say what it is doing, and how the Stop becomes
  * reachable again (`llm-cancel` already matches by request id from any socket).
  *
- * Only the calls that WRITE a turn are reported, since only those hold that rule; an engine
- * call blocks nothing and has its own surfaces. The answer carries no tokens and does NOT
+ * Only the calls that WRITE a turn are reported, plus the message continuation (EN-29),
+ * which writes onto an existing turn from the client and anchors itself by statusChatId;
+ * engine calls hold neither and have their own surfaces. The answer carries no tokens and does NOT
  * claim the stream: `gen.ws` stays with whoever is still watching, so a second device asking
  * this question cannot cut the first one off mid-reply.
  */
@@ -1561,8 +1570,11 @@ function handleLlmStatus(ws: ServerWebSocket<SocketData>, msg: { id?: unknown; c
 	);
 	const running: { chatId: string; requestId: string; runningMs: number }[] = [];
 	for (const [requestId, gen] of generations) {
-		if (gen.settled || !gen.commitChatId || !wanted.has(gen.commitChatId)) continue;
-		running.push({ chatId: gen.commitChatId, requestId, runningMs: Date.now() - gen.startedAt });
+		// A continuation anchors to its chat without a commit (EN-29), so the status
+		// question matches on either handle; engine calls carry neither and stay dark.
+		const chatId = gen.commitChatId ?? gen.statusChatId;
+		if (gen.settled || !chatId || !wanted.has(chatId)) continue;
+		running.push({ chatId, requestId, runningMs: Date.now() - gen.startedAt });
 	}
 	ws.send(JSON.stringify({ t: 'llm-status-result', id: msg.id, running }));
 }

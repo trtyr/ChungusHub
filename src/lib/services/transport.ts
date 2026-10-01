@@ -1383,6 +1383,12 @@ export interface LlmRequest {
 	routing?: import('$lib/types/llm').RoutingConfig | null;
 	/** Debug-panel label for what kind of query this is (e.g. 'chat', 'memory'). */
 	source?: string;
+	/** The chat a commitless call is anchored to: the message continuation, which
+	 *  writes its result back onto an existing turn from the client and so carries no
+	 *  `commit`. Rides the generation so `llm-status` reports it: a page that reloads
+	 *  mid-continuation must still find the reply being written and be able to stop
+	 *  it (EN-29). Null for engine calls, which stay unreported. */
+	statusChatId?: string;
 	/** The resolved connection's Stream response setting: the request's WIRE shape, which is
 	 *  a different question from whether this caller wants the tokens. A call that streams
 	 *  with no `onToken` is deliberate (see llmService.complete). */
@@ -1462,6 +1468,7 @@ export async function llmComplete(req: LlmRequest): Promise<LlmResult> {
 				stream: req.stream,
 				deliverTokens: req.deliverTokens,
 				source: req.source ?? 'completion',
+				statusChatId: req.statusChatId,
 				commit: req.commit
 			})
 		);

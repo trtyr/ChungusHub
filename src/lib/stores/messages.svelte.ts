@@ -784,11 +784,14 @@ class MessageStore {
 			chatStore.startStream(state.chat.id, { continuingMessageId: leaf.id });
 
 			// The LLM call alone, no db awaits. Continue is the one story path that still
-			// persists its own turn, so this clock is still its own to keep.
+			// persists its own turn, so this clock is still its own to keep. It anchors to
+			// the chat without a commit (EN-29): llm-status must still report it, or a
+			// page that reloads mid-continuation strands a reply nobody can see or stop.
 			const startedAt = performance.now();
 			const result = await llmService.complete(callTarget, {
 				messages,
 				source: 'continue',
+				statusChatId: state.chat.id,
 				onToken: (token) => {
 					chatStore.appendStreamingContent(token);
 				},
