@@ -439,13 +439,22 @@ function servedFileHeaders(type: string, cache = 'no-cache'): Record<string, str
 	};
 }
 
-function serveDefaultBackground(pathname: string): Response {
+function serveDefaultBackground(pathname: string, req: Request): Response {
 	// pathname like /files/backgrounds/<file>. Bundled defaults, served from the repo.
 	const rel = requestedFilePath(pathname, '/files/backgrounds/');
 	const filePath = join(DEFAULT_BACKGROUNDS_DIR, rel);
 	const type = imageContentType(filePath);
 	if (type && existsSync(filePath) && statSync(filePath).isFile()) {
-		return new Response(Bun.file(filePath), { headers: servedFileHeaders(type) });
+		// Same validator treatment as serveImage: bundled backgrounds ship with the build,
+		// so the ETag almost always matches and repeat installs answer 304.
+		const stat = statSync(filePath);
+		const etag = `W/"${stat.size}-${stat.mtimeMs}"`;
+		const headers = servedFileHeaders(type);
+		headers.etag = etag;
+		if (req.headers.get('if-none-match') === etag) {
+			return new Response(null, { status: 304, headers });
+		}
+		return new Response(Bun.file(filePath), { headers });
 	}
 	return new Response('Not found', { status: 404 });
 }
@@ -480,7 +489,7 @@ function serveDefaultSound(pathname: string): Response {
 	return new Response('Not found', { status: 404 });
 }
 
-function serveImage(pathname: string): Response {
+function serveImage(pathname: string, req: Request): Response {
 	// pathname like /files/images/<category>/<file>, and what is under /files/ IS the stored
 	// path: nothing is stripped and re-added. files.ts owns that layout, thumbnails included,
 	// so a request for one that was never written is answered with the original beside it
@@ -491,7 +500,18 @@ function serveImage(pathname: string): Response {
 	// a stored file becomes a page on this origin.
 	const type = filePath && imageContentType(filePath);
 	if (filePath && type) {
-		return new Response(Bun.file(filePath), { headers: servedFileHeaders(type) });
+		// `no-cache` alone made every view re-download the full body: without a validator the
+		// browser had nothing to revalidate WITH. A weak ETag from size+mtime keeps the
+		// same-name-replacement correctness (overwriting a picture changes both) while an
+		// unchanged picture answers 304 with no body (2026-10-01, EN-21 follow-up).
+		const file = Bun.file(filePath);
+		const etag = `W/"${file.size}-${file.lastModified}"`;
+		const headers = servedFileHeaders(type);
+		headers.etag = etag;
+		if (req.headers.get('if-none-match') === etag) {
+			return new Response(null, { status: 304, headers });
+		}
+		return new Response(file, { headers });
 	}
 	return new Response('Not found', { status: 404 });
 }
@@ -2131,13 +2151,13 @@ function serve(hostname: string) {
 
 			// Image files (served directly; access is already gated by IP above).
 			if (path.startsWith('/files/backgrounds/')) {
-				return serveDefaultBackground(path);
+				return serveDefaultBackground(path, req);
 			}
 			if (path.startsWith('/files/sounds/')) {
 				return serveDefaultSound(path);
 			}
 			if (path.startsWith('/files/')) {
-				return serveImage(path);
+				return serveImage(path, req);
 			}
 
 			if (path.startsWith('/api/')) {
