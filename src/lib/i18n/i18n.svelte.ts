@@ -23,8 +23,17 @@ class I18nStore {
 	/** Active UI language. Defaults to zh before the stored setting resolves. */
 	lang = $state<Lang>('zh');
 
-	/** Look up a user-visible string in the active language, {param}-interpolated. */
-	t(key: string, params?: Record<string, string | number>): string {
+	/** Look up a user-visible string in the active language, {param}-interpolated.
+	 *
+	 * Arrow FIELD, not a method, and that is load-bearing: seven call sites hand
+	 * `i18n.t` to formatters as a bare callback (activationSummary,
+	 * lorebookDeleteMessage, describeMemoryImpact, parsePromptJson,
+	 * formatMonthYear), and a method's `this` dies at the call site. Before the
+	 * arrow, the first `this.lang` read inside those formatters threw
+	 * "Cannot read properties of undefined (reading 'lang')"; in LorebooksView
+	 * it fired inside a mount-time $derived and the whole 世界书 shelf branch
+	 * never mounted (EN-19). Pinned by i18n.bare-ref.test.ts. */
+	t = (key: string, params?: Record<string, string | number>): string => {
 		let text = DICTS[this.lang][key] ?? DICTS.en[key] ?? key;
 		if (params) {
 			for (const [name, value] of Object.entries(params)) {
@@ -32,7 +41,7 @@ class I18nStore {
 			}
 		}
 		return text;
-	}
+	};
 
 	/** Switch the UI language and persist across devices via the settings spine. */
 	async setLang(lang: Lang): Promise<void> {
