@@ -132,3 +132,32 @@ describe('the regex scripts a card carries', () => {
 		expect((await importSillyTavernCard(empty)).regexRules).toBeNull();
 	});
 });
+
+describe('the greetings a card ships', () => {
+	// Import fidelity (2026-10-01 江晚棠 audit): ST exports greet with a trailing newline, and
+	// the first message already keeps it verbatim (firstMessage is `first_mes || ''`), so the
+	// alternates must not be trimmed either: a greeting is the author's text, byte for byte.
+	const G1 = '  开场白A\n';
+	const G2 = '开场白B\r\n';
+
+	test('alternate greetings land verbatim, whitespace and all', async () => {
+		const result = await importSillyTavernCard(
+			jsonCard({ spec: 'chara_card_v2', data: { name: 'Alice', alternate_greetings: [G1, G2] } })
+		);
+		expect(result.character.alternateGreetings).toEqual([G1, G2]);
+	});
+
+	test('a blank greeting is skipped, not stored', async () => {
+		const result = await importSillyTavernCard(
+			jsonCard({ spec: 'chara_card_v2', data: { name: 'Alice', alternate_greetings: ['   \r\n', '真问候'] } })
+		);
+		expect(result.character.alternateGreetings).toEqual(['真问候']);
+	});
+
+	test('a card with no alternates stores none', async () => {
+		const result = await importSillyTavernCard(
+			jsonCard({ spec: 'chara_card_v2', data: { name: 'Alice' } })
+		);
+		expect(result.character.alternateGreetings).toBeUndefined();
+	});
+});

@@ -184,8 +184,8 @@ function mapSillyTavernToCharacter(stChar: SillyTavernCharacter): LibrarySeed {
 	};
 
 	const alternateGreetings = (charData.alternate_greetings ?? [])
-		.map((g) => (g ?? '').trim())
-		.filter((g) => g.length > 0);
+		.map((g) => g ?? '')
+		.filter((g) => g.trim().length > 0);
 
 	return {
 		id: crypto.randomUUID(),
