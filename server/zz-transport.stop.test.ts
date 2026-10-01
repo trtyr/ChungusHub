@@ -5,14 +5,14 @@ import { describe, expect, test } from 'bun:test';
  *
  * EN-20 (2026-09-30): a reader reported that Stop did nothing during a streaming
  * reply. The server side of `llm-cancel` is pinned by generationSurvival.test.ts
- * and the provider abort semantics by openai-compatible.test.ts — but the ONE link
+ * and the provider abort semantics by openai-compatible.test.ts, but the ONE link
  * nobody had under test is the client itself: that aborting the page's own
  * AbortController (what `cancelGeneration` does for a reply this page started)
  * actually sends `llm-cancel`, the upstream actually stops, and everything that
  * streamed before the stop lands as the turn.
  *
  * The real transport module is exercised against the real server over a real
- * WebSocket — and it runs in a CHILD PROCESS. This suite boots an isolated bun
+ * WebSocket, and it runs in a CHILD PROCESS. This suite boots an isolated bun
  * test run for the actual work: the transport module holds live sockets, heartbeats
  * and a reconnect loop that outlive its tests, and Bun's module registry is shared
  * by every file in the outer run (see presets.test.ts), so a leaked timer here
@@ -20,7 +20,7 @@ import { describe, expect, test } from 'bun:test';
  *
  * The endpoint holds the rest of its answer behind a gate that the tests never
  * open: if the cancel did not reach the upstream, the only way the promise could
- * settle is the backstop timers — and the assertions on the upstream-side flag
+ * settle is the backstop timers, and the assertions on the upstream-side flag
  * would fail. There is no path to a false green here.
  */
 
